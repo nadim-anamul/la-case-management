@@ -21,13 +21,21 @@
             </a>
         </div>
 
+        <!-- Search Form -->
+        <form action="{{ route('order.index') }}" method="GET" class="mb-6">
+            <div class="flex items-center max-w-lg ml-auto justify-end">
+                <input type="text" name="search" placeholder="মামলার নং বা আবেদনকারী দিয়ে খুঁজুন..." class="w-full px-4 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ $search ?? '' }}">
+                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">খুঁজুন</button>
+            </div>
+        </form>
+
         @if (session('success'))
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
                 <span class="block sm:inline">{!! session('success') !!}</span>
             </div>
         @endif
 
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="bg-white shadow-md rounded-lg overflow-x-auto">
             <table class="min-w-full leading-normal">
                 <thead>
                     <tr>
@@ -53,7 +61,7 @@
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                             <p class="text-gray-900 whitespace-no-wrap">{{ \Carbon\Carbon::parse($order->order_date)->format('d-M-Y') }}</p>
                         </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm text-right">
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm text-right whitespace-nowrap">
                             <a href="{{ route('order.preview', $order->id) }}" target="_blank" class="text-green-600 hover:text-green-900 mr-3">Preview</a>
                             <a href="{{ route('order.pdf', $order->id) }}" target="_blank" class="text-blue-600 hover:text-blue-900 mr-3">Download PDF</a>
                             <a href="{{ route('order.edit', $order->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
@@ -67,12 +75,22 @@
                     @empty
                     <tr>
                         <td colspan="5" class="text-center py-10">
-                            <p>No orders found. <a href="{{ route('order.create') }}" class="text-blue-600">Create one now</a>.</p>
+                            <p class="text-gray-600">কোনো আদেশ পাওয়া যায়নি। 
+                                @if($search)
+                                    "{{ $search }}" লিখে খোঁজার পরও কিছু পাওয়া যায়নি।
+                                @endif
+                            </p>
+                            <a href="{{ route('order.index') }}" class="text-blue-600 underline mt-2 inline-block">সকল আদেশ দেখুন</a>
                         </td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
+        </div>
+        
+        <!-- Pagination Links -->
+        <div class="mt-8">
+            {{ $orders->appends(['search' => $search])->links() }}
         </div>
     </div>
 </body>

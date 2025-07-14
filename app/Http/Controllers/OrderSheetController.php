@@ -11,10 +11,25 @@ class OrderSheetController extends Controller
     /**
      * Display a listing of all order sheets.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $orders = OrderSheet::orderBy('id', 'desc')->get();
-        return view('order_list', compact('orders'));
+        $search = $request->input('search');
+
+        // Start the query
+        $query = OrderSheet::query();
+
+        // If there is a search term, apply the where clauses
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('case_number', 'like', "%{$search}%")
+                  ->orWhere('applicant_name', 'like', "%{$search}%");
+            });
+        }
+
+        // Order by the latest and paginate the results
+        $orders = $query->orderBy('id', 'desc')->paginate(10); // Show 10 items per page
+
+        return view('order_list', compact('orders', 'search'));
     }
 
     /**
