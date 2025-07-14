@@ -1,0 +1,20 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderSheetController;
+
+// The main page will now list all existing orders
+Route::get('/', [OrderSheetController::class, 'index'])->name('order.index');
+
+// Routes for creating a new order
+Route::get('/create', [OrderSheetController::class, 'create'])->name('order.create');
+Route::post('/store', [OrderSheetController::class, 'store'])->name('order.store');
+
+// Routes for viewing, editing, and updating an order
+Route::get('/order/{id}/preview', [OrderSheetController::class, 'showPreview'])->name('order.preview'); // New preview route
+Route::get('/order/{id}/pdf', [OrderSheetController::class, 'generatePdf'])->name('order.pdf');
+Route::get('/order/{id}/edit', [OrderSheetController::class, 'edit'])->name('order.edit');
+Route::put('/order/{id}', [OrderSheetController::class, 'update'])->name('order.update');
+
+// Route for deleting an order
+Route::delete('/order/{id}', [OrderSheetController::class, 'destroy'])->name('order.destroy');
