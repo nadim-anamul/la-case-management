@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderSheetController;
+use App\Http\Controllers\CompensationController;
 
 // The main page will now list all existing orders
 Route::get('/', [OrderSheetController::class, 'index'])->name('order.index');
@@ -18,3 +19,8 @@ Route::put('/order/{id}', [OrderSheetController::class, 'update'])->name('order.
 
 // Route for deleting an order
 Route::delete('/order/{id}', [OrderSheetController::class, 'destroy'])->name('order.destroy');
+
+// Compensation Form Routes <-- NEW
+Route::get('/compensations', [CompensationController::class, 'index'])->name('compensation.index');
+Route::get('/compensation/create', [CompensationController::class, 'create'])->name('compensation.create');
+Route::post('/compensation/store', [CompensationController::class, 'store'])->name('compensation.store');

@@ -1,18 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Order Sheets</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Tiro Bangla', serif;
-        }
-    </style>
-</head>
-<body class="bg-gray-100">
+@extends('layouts.app')
+
+@section('title', 'সকল আদেশপত্র')
+
+@section('content')
     <div class="container mx-auto p-8">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold">সকল আদেশপত্র</h1>
@@ -88,10 +78,8 @@
             </table>
         </div>
         
-        <!-- Pagination Links -->
         <div class="mt-8">
             {{ $orders->appends(['search' => $search])->links() }}
         </div>
     </div>
-</body>
-</html>
+@endsection

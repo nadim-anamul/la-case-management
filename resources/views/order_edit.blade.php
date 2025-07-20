@@ -1,17 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Order Sheet</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Tiro Bangla', serif; }
-        label { font-weight: bold; margin-top: 1rem; }
-    </style>
-</head>
-<body class="bg-gray-100">
+@extends('layouts.app')
+
+@section('title', 'আদেশপত্র সম্পাদনা করুন')
+
+@section('content')
     <div class="container mx-auto p-8">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold">আদেশপত্র সম্পাদনা করুন</h1>
@@ -114,5 +105,4 @@
             </div>
         </form>
     </div>
-</body>
-</html>
+@endsection
