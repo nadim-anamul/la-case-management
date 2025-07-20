@@ -38,6 +38,7 @@ return new class extends Migration
             $table->json('mutation_info');
             $table->json('tax_info');
             $table->json('additional_documents_info');
+            $table->json('kanungo_opinion');
             $table->timestamps();
         });
     }

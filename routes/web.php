@@ -24,3 +24,5 @@ Route::delete('/order/{id}', [OrderSheetController::class, 'destroy'])->name('or
 Route::get('/compensations', [CompensationController::class, 'index'])->name('compensation.index');
 Route::get('/compensation/create', [CompensationController::class, 'create'])->name('compensation.create');
 Route::post('/compensation/store', [CompensationController::class, 'store'])->name('compensation.store');
+Route::get('/compensation/{id}/edit', [CompensationController::class, 'edit'])->name('compensation.edit');
+Route::put('/compensation/{id}', [CompensationController::class, 'update'])->name('compensation.update');

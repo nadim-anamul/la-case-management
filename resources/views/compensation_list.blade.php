@@ -46,7 +46,9 @@
                             <p class="text-gray-900 whitespace-no-wrap">{{ $item->applicant_acquired_land }}</p>
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm text-right whitespace-nowrap">
-                            {{-- Add View/Edit/Delete buttons here if needed in the future --}}
+                            <a href="{{ route('compensation.edit', $item->id) }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm">
+                                সম্পাদনা করুন
+                            </a>
                         </td>
                     </tr>
                     @empty
