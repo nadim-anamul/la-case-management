@@ -34,7 +34,10 @@ return new class extends Migration
             $table->string('rs_khatian_no');
             $table->string('current_plot_no');
             $table->boolean('is_applicant_sa_owner');
-            $table->string('sa_owner_name')->nullable();
+            $table->json('ownership_details');
+            $table->json('mutation_info');
+            $table->json('tax_info');
+            $table->json('additional_documents_info');
             $table->timestamps();
         });
     }

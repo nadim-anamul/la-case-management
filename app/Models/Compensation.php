@@ -17,7 +17,7 @@ class Compensation extends Model
         'objector_details', 'is_applicant_in_award', 'total_acquired_land',
         'total_compensation', 'applicant_acquired_land', 'mouza_name',
         'jl_no', 'sa_khatian_no', 'former_plot_no', 'rs_khatian_no',
-        'current_plot_no', 'is_applicant_sa_owner', 'sa_owner_name',
+        'current_plot_no', 'ownership_details', 'mutation_info', 'tax_info', 'additional_documents_info'
     ];
 
     /**
@@ -29,6 +29,9 @@ class Compensation extends Model
         'applicants' => 'array',
         'award_type' => 'array',
         'is_applicant_in_award' => 'boolean',
-        'is_applicant_sa_owner' => 'boolean',
+        'ownership_details' => 'array',
+        'mutation_info' => 'array',
+        'tax_info' => 'array',
+        'additional_documents_info' => 'array',
     ];
 }
