@@ -419,23 +419,40 @@
             @method('PUT')
         @endif
         
-        <!-- Include all form sections as components -->
+        <!-- Compensation Case Filing Section -->
+        <div class="form-section mb-6">
+            <div class="form-section-title">ক্ষতিপূরণ কেস দায়ের</div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="floating-label">
+                    <input type="text" name="case_number" id="case_number" class="form-input" placeholder=" " value="{{ old('case_number', $compensation->case_number ?? '') }}" required aria-required="true">
+                    <label for="case_number">ক্ষতিপূরণ কেস নং<span class="text-red-500">*</span></label>
+                </div>
+                <div class="floating-label">
+                    <input type="date" name="case_date" id="case_date" class="form-input" placeholder=" " value="{{ old('case_date', $compensation->case_date ?? '') }}" required aria-required="true">
+                    <label for="case_date">তারিখ<span class="text-red-500">*</span></label>
+                </div>
+            </div>
+        </div>
+        <!-- Applicant Section (required fields) -->
         @include('components.compensation.applicant-section')
+        <!-- Award Section (required fields) -->
         @include('components.compensation.award-section')
+        <!-- Land Schedule Section (required fields) -->
         @include('components.compensation.land-schedule-section')
+        <!-- Ownership Continuity Section -->
         @include('components.compensation.ownership-continuity-section')
+        <!-- Mutation Section -->
         @include('components.compensation.mutation-section')
+        <!-- Tax Section -->
         @include('components.compensation.tax-section')
+        <!-- Additional Documents Section -->
         @include('components.compensation.additional-documents-section')
+        <!-- Kanungo Opinion Section -->
         @include('components.compensation.kanungo-opinion-section')
-
         <div class="form-footer">
             <button type="submit" class="btn-primary">
                 জমা দিন
             </button>
-            <a href="{{ route('compensation.index') }}" class="btn-secondary">
-                বাতিল করুন
-            </a>
         </div>
     </form>
 </div>

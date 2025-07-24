@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('compensations', function (Blueprint $table) {
             $table->id();
+            $table->string('case_number');
+            $table->date('case_date');
+            $table->string('sa_plot_no')->nullable();
+            $table->string('rs_plot_no')->nullable();
             $table->json('applicants');
             $table->string('la_case_no');
             $table->json('award_type')->nullable();

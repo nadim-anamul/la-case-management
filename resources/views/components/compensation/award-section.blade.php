@@ -13,6 +13,7 @@
             <div class="checkbox-group">
                 <label><input type="checkbox" name="award_type[]" value="জমি/অবকাঠামো" {{ (old('award_type', isset($compensation) ? $compensation->award_type : [])) && in_array('জমি/অবকাঠামো', old('award_type', isset($compensation) ? $compensation->award_type : [])) ? 'checked' : '' }} class="mr-2"><span>জমি/অবকাঠামো</span></label>
                 <label><input type="checkbox" name="award_type[]" value="জমি/গাছপালা" {{ (old('award_type', isset($compensation) ? $compensation->award_type : [])) && in_array('জমি/গাছপালা', old('award_type', isset($compensation) ? $compensation->award_type : [])) ? 'checked' : '' }} class="mr-2"><span>জমি/গাছপালা</span></label>
+                <label><input type="checkbox" name="award_type[]" value="অবকাঠামো" {{ (old('award_type', isset($compensation) ? $compensation->award_type : [])) && in_array('অবকাঠামো', old('award_type', isset($compensation) ? $compensation->award_type : [])) ? 'checked' : '' }} class="mr-2"><span>অবকাঠামো</span></label>
             </div>
         </div>
         <div class="floating-label">
@@ -20,13 +21,51 @@
             <label>রোয়েদাদের ক্রমিক নং</label>
         </div>
         <div class="floating-label">
-            <input type="text" name="acquisition_record_basis" value="{{ old('acquisition_record_basis', isset($compensation) ? $compensation->acquisition_record_basis : '') }}" placeholder=" ">
-            <label>যে রেকর্ড মূলে অধিগ্রহণ</label>
+            <select name="acquisition_record_basis" id="acquisition_record_basis" x-model="acquisition_record_basis" class="form-input" required aria-required="true">
+                <option value="">-- নির্বাচন করুন --</option>
+                <option value="SA" {{ old('acquisition_record_basis', isset($compensation) ? $compensation->acquisition_record_basis : '') == 'SA' ? 'selected' : '' }}>SA</option>
+                <option value="RS" {{ old('acquisition_record_basis', isset($compensation) ? $compensation->acquisition_record_basis : '') == 'RS' ? 'selected' : '' }}>RS</option>
+            </select>
+            <label for="acquisition_record_basis">যে রেকর্ড মূলে অধিগ্রহণ<span class="text-red-500">*</span></label>
+            @error('acquisition_record_basis')
+                <span class="text-red-500 text-sm">{{ $message }}</span>
+            @enderror
         </div>
-        <div class="floating-label">
-            <input type="text" name="plot_no" value="{{ old('plot_no', isset($compensation) ? $compensation->plot_no : '') }}" placeholder=" ">
-            <label>দাগ নং</label>
-        </div>
+        <template x-if="acquisition_record_basis === 'SA'">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2">
+                <div class="floating-label">
+                    <input type="text" name="sa_plot_no" id="sa_plot_no" value="{{ old('sa_plot_no', isset($compensation) ? $compensation->sa_plot_no : '') }}" placeholder=" ">
+                    <label for="sa_plot_no">SA দাগ নং<span class="text-red-500">*</span></label>
+                    @if(old('acquisition_record_basis', isset($compensation) ? $compensation->acquisition_record_basis : '') == 'SA')
+                        @error('sa_plot_no')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    @endif
+                </div>
+                <div class="floating-label">
+                    <input type="text" name="rs_plot_no" id="rs_plot_no" value="{{ old('rs_plot_no', isset($compensation) ? $compensation->rs_plot_no : '') }}" placeholder=" ">
+                    <label for="rs_plot_no">RS দাগ নং</label>
+                    @if(old('acquisition_record_basis', isset($compensation) ? $compensation->acquisition_record_basis : '') == 'SA')
+                        @error('rs_plot_no')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    @endif
+                </div>
+            </div>
+        </template>
+        <template x-if="acquisition_record_basis === 'RS'">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2">
+                <div class="floating-label">
+                    <input type="text" name="rs_plot_no" id="rs_plot_no" value="{{ old('rs_plot_no', isset($compensation) ? $compensation->rs_plot_no : '') }}" placeholder=" ">
+                    <label for="rs_plot_no">RS দাগ নং<span class="text-red-500">*</span></label>
+                    @if(old('acquisition_record_basis', isset($compensation) ? $compensation->acquisition_record_basis : '') == 'RS')
+                        @error('rs_plot_no')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    @endif
+                </div>
+            </div>
+        </template>
         <div class="floating-label">
             <input type="text" name="award_holder_name" value="{{ old('award_holder_name', isset($compensation) ? $compensation->award_holder_name : '') }}" placeholder=" ">
             <label>রোয়েদাদভুক্ত মালিকের নাম</label>

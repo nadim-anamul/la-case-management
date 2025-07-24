@@ -3,6 +3,7 @@
         window.compensationForm = () => ({
             applicants: [],
             is_sa_owner: 'yes',
+            is_rs_owner: 'yes',
             ownership_type: 'deed',
             is_heir_applicant: 'yes',
             deed_transfers: [],
@@ -13,27 +14,83 @@
             field_investigation_info: '',
             submitted_docs: [],
             inheritance_records: [],
+            acquisition_record_basis: '',
+            selected_doc_types: [],
+            additional_documents_details: {},
+            sa_owners: [{ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' }],
+            rs_owners: [{ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' }],
             
             init() {
                 // Get compensation data from data attribute if editing
                 const compensationData = this.$el.dataset.compensation;
-                if (compensationData && compensationData !== 'null') {
+                // Helper to get old() values from window if available
+                const old = window.oldFormData || {};
+                if (Object.keys(old).length > 0) {
+                    this.applicants = old.applicants || [{ name: '', father_name: '', address: '', nid: '' }];
+                    this.is_sa_owner = old.ownership_details?.is_applicant_sa_owner || 'yes';
+                    this.is_rs_owner = old.ownership_details?.is_applicant_rs_owner || 'yes';
+                    this.sa_owners = old.ownership_details?.sa_owners || [{ name: '' }];
+                    this.rs_owners = old.ownership_details?.rs_owners || [{ name: '' }];
+                    this.ownership_type = old.ownership_details?.ownership_type || 'deed';
+                    this.deed_transfers = old.ownership_details?.deed_transfers || [{ 
+                        donor_name: '', recipient_name: '', deed_number: '', deed_date: '', 
+                        sale_type: '', plot_no: '', sold_land_amount: '', total_sotangsho: '', 
+                        total_shotok: '', possession_mentioned: 'yes', possession_plot_no: '', 
+                        possession_description: '', mutation_case_no: '', mutation_plot_no: '', 
+                        mutation_land_amount: '' 
+                    }];
+                    this.inheritance_records = old.ownership_details?.inheritance_records || [{
+                        is_heir_applicant: 'yes',
+                        has_death_cert: 'yes',
+                        heirship_certificate_info: '',
+                        previous_owner_name: '',
+                        death_date: '',
+                        inheritance_type: 'direct'
+                    }];
+                    this.mutation_records = old.mutation_info?.records || [];
+                    this.distribution_records = old.additional_documents_info?.distribution_records || [];
+                    this.no_claim_type = old.additional_documents_info?.no_claim_type || 'donor';
+                    this.field_investigation_info = old.additional_documents_info?.field_investigation_info || '';
+                    this.submitted_docs = old.additional_documents_info?.submitted_docs || [];
+                    this.acquisition_record_basis = old.acquisition_record_basis || '';
+                    this.selected_doc_types = old.additional_documents_info?.selected_types || [];
+                    this.additional_documents_details = old.additional_documents_info?.details || {};
+                    // Add other dynamic arrays as needed
+                } else if (compensationData && compensationData !== 'null') {
                     const data = JSON.parse(compensationData);
                     this.applicants = data.applicants || [{ name: '', father_name: '', address: '', nid: '' }];
                     this.is_sa_owner = data.is_applicant_sa_owner ? 'yes' : 'no';
+                    this.is_rs_owner = data.ownership_details?.is_applicant_rs_owner ?? 'yes';
+                    this.sa_owners = data.ownership_details?.sa_owners || [{ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' }];
+                    this.rs_owners = data.ownership_details?.rs_owners || [{ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' }];
                     this.ownership_type = data.ownership_details?.ownership_type || 'deed';
-                    this.is_heir_applicant = data.ownership_details?.inheritance?.is_heir_applicant || 'yes';
-                    this.deed_transfers = data.ownership_details?.deed_transfers || [];
-                    this.inheritance_details = data.ownership_details?.inheritance || {};
-                    this.inheritance_records = data.ownership_details?.inheritance_records || [];
+                    this.deed_transfers = data.ownership_details?.deed_transfers || [{ 
+                        donor_name: '', recipient_name: '', deed_number: '', deed_date: '', 
+                        sale_type: '', plot_no: '', sold_land_amount: '', total_sotangsho: '', 
+                        total_shotok: '', possession_mentioned: 'yes', possession_plot_no: '', 
+                        possession_description: '', mutation_case_no: '', mutation_plot_no: '', 
+                        mutation_land_amount: '' 
+                    }];
+                    this.inheritance_records = data.ownership_details?.inheritance_records || [{
+                        is_heir_applicant: 'yes',
+                        has_death_cert: 'yes',
+                        heirship_certificate_info: '',
+                        previous_owner_name: '',
+                        death_date: '',
+                        inheritance_type: 'direct'
+                    }];
                     this.mutation_records = data.mutation_info?.records || [];
                     this.distribution_records = data.additional_documents_info?.distribution_records || [];
                     this.no_claim_type = data.additional_documents_info?.no_claim_type || 'donor';
                     this.field_investigation_info = data.additional_documents_info?.field_investigation_info || '';
                     this.submitted_docs = data.additional_documents_info?.submitted_docs || [];
+                    this.acquisition_record_basis = data.acquisition_record_basis || '';
+                    this.selected_doc_types = (data.additional_documents_info?.selected_types) || [];
+                    this.additional_documents_details = (data.additional_documents_info?.details) || {};
                 } else {
-                    // Initialize with default values for new form
                     this.applicants = [{ name: '', father_name: '', address: '', nid: '' }];
+                    this.sa_owners = [{ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' }];
+                    this.rs_owners = [{ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' }];
                     this.deed_transfers = [{ 
                         donor_name: '', recipient_name: '', deed_number: '', deed_date: '', 
                         sale_type: '', plot_no: '', sold_land_amount: '', total_sotangsho: '', 
@@ -56,6 +113,19 @@
                         has_death_cert: 'yes',
                         heirship_certificate_info: ''
                     };
+                    this.acquisition_record_basis = (document.querySelector('[name=acquisition_record_basis]')?.value) || '';
+                    this.selected_doc_types = (Array.from(document.querySelectorAll('[name="additional_documents_info[selected_types][]"]:checked')).map(e => e.value)) || [];
+                    this.additional_documents_details = {};
+                    (Array.from(document.querySelectorAll('[name^="additional_documents_info[details]"]'))).forEach(el => {
+                        const match = el.name.match(/additional_documents_info\[details\]\[(.*)\]/);
+                        if (match) {
+                            this.additional_documents_details[match[1]] = el.value;
+                        }
+                    });
+                    this.sa_owners = [{ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' }];
+                    this.rs_owners = [{ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' }];
+                    this.is_sa_owner = (document.querySelector('[name="ownership_details[is_applicant_sa_owner]"]:checked')?.value) || 'yes';
+                    this.is_rs_owner = (document.querySelector('[name="ownership_details[is_applicant_rs_owner]"]:checked')?.value) || 'yes';
                 }
             },
             
@@ -101,6 +171,18 @@
             },
             removeDistributionRecord(index) {
                 this.distribution_records.splice(index, 1);
+            },
+            addSaOwner() {
+                this.sa_owners.push({ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' });
+            },
+            removeSaOwner(index) {
+                this.sa_owners.splice(index, 1);
+            },
+            addRsOwner() {
+                this.rs_owners.push({ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' });
+            },
+            removeRsOwner(index) {
+                this.rs_owners.splice(index, 1);
             }
         });
     });
