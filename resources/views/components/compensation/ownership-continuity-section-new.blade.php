@@ -140,8 +140,8 @@
 
         <!-- Deed Transfer Forms -->
         <template x-for="(deed, index) in deed_transfers" :key="'deed_' + index">
-            <div class="record-card mb-4" x-show="deed.isVisible">
-                <h5 x-text="'দলিল #' + (deed_transfers.filter(d => d.isVisible).length - deed_transfers.filter(d => d.isVisible).indexOf(deed))" class="text-lg font-semibold mb-3"></h5>
+            <div class="record-card mb-4">
+                <h5 x-text="'দলিল #' + (index + 1)" class="text-lg font-semibold mb-3"></h5>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="floating-label">
                         <input type="text" :id="'deed_donor_name_' + index" :name="'ownership_details[transfer_info][deed_transfers][' + index + '][donor_name]'" x-model="deed.donor_name" placeholder=" ">
@@ -200,8 +200,8 @@
 
         <!-- Inheritance Transfer Forms -->
         <template x-for="(inheritance, index) in inheritance_records" :key="'inheritance_' + index">
-            <div class="record-card mb-4" x-show="inheritance.isVisible">
-                <h5 x-text="'ওয়ারিশ #' + (inheritance_records.filter(i => i.isVisible).length - inheritance_records.filter(i => i.isVisible).indexOf(inheritance))" class="text-lg font-semibold mb-3"></h5>
+            <div class="record-card mb-4">
+                <h5 x-text="'ওয়ারিশ #' + (index + 1)" class="text-lg font-semibold mb-3"></h5>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="floating-label">
                         <input type="text" :id="'inheritance_previous_owner_name_' + index" :name="'ownership_details[transfer_info][inheritance_records][' + index + '][previous_owner_name]'" x-model="inheritance.previous_owner_name" placeholder=" ">
@@ -232,8 +232,8 @@
 
         <!-- RS Record Form -->
         <template x-for="(rs, index) in rs_records" :key="'rs_' + index">
-            <div class="record-card mb-4" x-show="rs.isVisible">
-                <h5 x-text="'আরএস রেকর্ড #' + (rs_records.filter(r => r.isVisible).length - rs_records.filter(r => r.isVisible).indexOf(rs))" class="text-lg font-semibold mb-3"></h5>
+            <div class="record-card mb-4">
+                <h5 x-text="'আরএস রেকর্ড #' + (index + 1)" class="text-lg font-semibold mb-3"></h5>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="floating-label">
                         <input type="text" :id="'rs_record_plot_no_' + index" :name="'ownership_details[rs_records][' + index + '][plot_no]'" x-model="rs.plot_no" placeholder=" ">
@@ -539,8 +539,7 @@ function ownershipContinuity() {
                 total_shotok: '',
                 possession_mentioned: 'no',
                 possession_plot_no: '',
-                possession_description: '',
-                isVisible: true
+                possession_description: ''
             };
             // Insert at the beginning of the array to show at top
             this.deed_transfers.unshift(newDeed);
@@ -553,8 +552,7 @@ function ownershipContinuity() {
                 death_date: '',
                 inheritance_type: '',
                 has_death_cert: 'no',
-                heirship_certificate_info: '',
-                isVisible: true
+                heirship_certificate_info: ''
             };
             // Insert at the beginning of the array to show at top
             this.inheritance_records.unshift(newInheritance);
@@ -566,8 +564,7 @@ function ownershipContinuity() {
                 plot_no: '',
                 khatian_no: '',
                 land_amount: '',
-                owner_name: '',
-                isVisible: true
+                owner_name: ''
             };
             // Insert at the beginning of the array to show at top
             this.rs_records.unshift(newRs);
@@ -578,11 +575,11 @@ function ownershipContinuity() {
         removeTransferItem(index) {
             const item = this.transferItems[index];
             if (item.type === 'দলিল') {
-                this.deed_transfers[item.index].isVisible = false;
+                this.deed_transfers.splice(item.index, 1);
             } else if (item.type === 'ওয়ারিশ') {
-                this.inheritance_records[item.index].isVisible = false;
+                this.inheritance_records.splice(item.index, 1);
             } else if (item.type === 'আরএস রেকর্ড') {
-                this.rs_records[item.index].isVisible = false;
+                this.rs_records.splice(item.index, 1);
                 this.rs_record_disabled = false;
             }
             this.transferItems.splice(index, 1);
@@ -593,17 +590,11 @@ function ownershipContinuity() {
             setTimeout(() => {
                 let selector = '';
                 if (item.type === 'দলিল') {
-                    const visibleDeeds = this.deed_transfers.filter(d => d.isVisible);
-                    const deedNumber = visibleDeeds.length - visibleDeeds.indexOf(this.deed_transfers[item.index]);
-                    selector = `[x-text="'দলিল #' + ${deedNumber}"]`;
+                    selector = `[x-text="'দলিল #' + ${item.index + 1}"]`;
                 } else if (item.type === 'ওয়ারিশ') {
-                    const visibleInheritances = this.inheritance_records.filter(i => i.isVisible);
-                    const inheritanceNumber = visibleInheritances.length - visibleInheritances.indexOf(this.inheritance_records[item.index]);
-                    selector = `[x-text="'ওয়ারিশ #' + ${inheritanceNumber}"]`;
+                    selector = `[x-text="'ওয়ারিশ #' + ${item.index + 1}"]`;
                 } else if (item.type === 'আরএস রেকর্ড') {
-                    const visibleRs = this.rs_records.filter(r => r.isVisible);
-                    const rsNumber = visibleRs.length - visibleRs.indexOf(this.rs_records[item.index]);
-                    selector = `[x-text="'আরএস রেকর্ড #' + ${rsNumber}"]`;
+                    selector = `[x-text="'আরএস রেকর্ড #' + ${item.index + 1}"]`;
                 }
                 
                 const element = document.querySelector(selector);
@@ -654,9 +645,9 @@ function ownershipContinuity() {
                 rs_info: this.rs_info,
                 sa_owners: this.sa_owners,
                 rs_owners: this.rs_owners,
-                deed_transfers: this.deed_transfers.filter(d => d.isVisible),
-                inheritance_records: this.inheritance_records.filter(i => i.isVisible),
-                rs_records: this.rs_records.filter(r => r.isVisible),
+                deed_transfers: this.deed_transfers,
+                inheritance_records: this.inheritance_records,
+                rs_records: this.rs_records,
                 applicant_info: this.applicant_info,
                 transferItems: this.transferItems
             };
