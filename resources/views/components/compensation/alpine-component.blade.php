@@ -8,7 +8,7 @@
             is_heir_applicant: 'yes',
             deed_transfers: [],
             inheritance_details: {},
-            mutation_records: [],
+
             distribution_records: [],
             no_claim_type: 'donor',
             field_investigation_info: '',
@@ -47,7 +47,7 @@
                         death_date: '',
                         inheritance_type: 'direct'
                     }];
-                    this.mutation_records = old.mutation_info?.records || [];
+
                     this.distribution_records = old.additional_documents_info?.distribution_records || [];
                     this.no_claim_type = old.additional_documents_info?.no_claim_type || 'donor';
                     this.field_investigation_info = old.additional_documents_info?.field_investigation_info || '';
@@ -79,7 +79,7 @@
                         death_date: '',
                         inheritance_type: 'direct'
                     }];
-                    this.mutation_records = data.mutation_info?.records || [];
+
                     this.distribution_records = data.additional_documents_info?.distribution_records || [];
                     this.no_claim_type = data.additional_documents_info?.no_claim_type || 'donor';
                     this.field_investigation_info = data.additional_documents_info?.field_investigation_info || '';
@@ -106,7 +106,7 @@
                         death_date: '',
                         inheritance_type: 'direct'
                     }];
-                    this.mutation_records = [{ khatian_no: '', case_no: '', plot_no: '', land_amount: '' }];
+
                     this.distribution_records = [{ details: '' }];
                     this.inheritance_details = {
                         is_heir_applicant: 'yes',
@@ -160,12 +160,7 @@
             removeInheritanceRecord(index) {
                 this.inheritance_records.splice(index, 1);
             },
-            addMutationRecord() {
-                this.mutation_records.push({ khatian_no: '', case_no: '', plot_no: '', land_amount: '' });
-            },
-            removeMutationRecord(index) {
-                this.mutation_records.splice(index, 1);
-            },
+
             addDistributionRecord() {
                 this.distribution_records.push({ details: '' });
             },

@@ -76,7 +76,7 @@
                         </div>
                         <div class="floating-label">
                             <input type="text" id="rs_land_in_khatian" name="ownership_details[rs_land_in_khatian]" value="{{ old('ownership_details.rs_land_in_khatian', isset($compensation) ? $compensation->ownership_details['rs_land_in_khatian'] ?? '' : '') }}" placeholder=" ">
-                            <label for="rs_land_in_khatian">RS উক্ত খতিয়ানে জমির পরিমাণ</label>
+                            <label for="rs_land_in_khatian">RS খতিয়ানে মোট জমির পরিমাণ</label>
                         </div>
                     </div>
                 </div>

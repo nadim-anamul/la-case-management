@@ -1,7 +1,7 @@
 <div class="form-section">
     <h2 class="form-section-title">
         <span class="section-icon">৭</span>
-        বণ্টন / না-দাবি / আপসনামা / সরেজমিন তদন্তের তথ্য
+        বণ্টন / না-দাবি / আপসনামা / এফিডেভিটের তথ্য
     </h2>
     <div class="sub-section">
         <h3 class="font-bold mb-4">দাখিলকৃত ডকুমেন্টের ধরন:</h3>
