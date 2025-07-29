@@ -19,6 +19,7 @@ services:
       - DB_DATABASE=laravel
       - DB_USERNAME=laravel
       - DB_PASSWORD=password
+      - APP_ENV=production
     networks:
       - laravel-network
 
