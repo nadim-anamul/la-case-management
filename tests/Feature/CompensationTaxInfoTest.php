@@ -26,6 +26,7 @@ class CompensationTaxInfoTest extends TestCase
             'la_case_no' => 'LA-001',
             'award_serial_no' => 'AWD-001',
             'acquisition_record_basis' => 'SA',
+            'sa_plot_no' => 'SA-PLOT-001',
             'plot_no' => 'PLOT-001',
             'award_holder_name' => 'Test Award Holder',
             'is_applicant_in_award' => true,
@@ -81,7 +82,7 @@ class CompensationTaxInfoTest extends TestCase
                 ]
             ],
             'kanungo_opinion' => [
-                'ownership_continuity' => 'yes',
+                'has_ownership_continuity' => 'yes',
                 'opinion_details' => 'Test opinion'
             ]
         ];
@@ -116,6 +117,7 @@ class CompensationTaxInfoTest extends TestCase
             'la_case_no' => 'LA-002',
             'award_serial_no' => 'AWD-002',
             'acquisition_record_basis' => 'SA',
+            'sa_plot_no' => 'SA-PLOT-002',
             'plot_no' => 'PLOT-002',
             'award_holder_name' => 'Test Award Holder',
             'is_applicant_in_award' => true,
@@ -171,7 +173,7 @@ class CompensationTaxInfoTest extends TestCase
                 ]
             ],
             'kanungo_opinion' => [
-                'ownership_continuity' => 'yes',
+                'has_ownership_continuity' => 'yes',
                 'opinion_details' => 'Test opinion'
             ]
         ]);

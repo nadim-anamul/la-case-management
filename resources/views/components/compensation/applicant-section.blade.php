@@ -9,19 +9,31 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="floating-label">
                     <input type="text" :name="'applicants[' + index + '][name]'" x-model="applicant.name" placeholder=" " required>
-                    <label>নাম</label>
+                    <label>নাম<span class="text-red-500">*</span></label>
+                    @error('applicants.*.name')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="floating-label">
                     <input type="text" :name="'applicants[' + index + '][father_name]'" x-model="applicant.father_name" placeholder=" " required>
-                    <label>পিতার নাম</label>
+                    <label>পিতার নাম<span class="text-red-500">*</span></label>
+                    @error('applicants.*.father_name')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="floating-label md:col-span-2">
                     <input type="text" :name="'applicants[' + index + '][address]'" x-model="applicant.address" placeholder=" " required>
-                    <label>ঠিকানা</label>
+                    <label>ঠিকানা<span class="text-red-500">*</span></label>
+                    @error('applicants.*.address')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="floating-label">
                     <input type="text" :name="'applicants[' + index + '][nid]'" x-model="applicant.nid" placeholder=" " required>
-                    <label>এন আই ডি</label>
+                    <label>এন আই ডি<span class="text-red-500">*</span></label>
+                    @error('applicants.*.nid')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
                 </div>
             </div>
             <button

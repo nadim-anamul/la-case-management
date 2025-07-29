@@ -17,6 +17,7 @@
             acquisition_record_basis: '',
             selected_doc_types: [],
             additional_documents_details: {},
+            award_types: [],
             sa_owners: [{ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' }],
             rs_owners: [{ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' }],
             
@@ -25,7 +26,13 @@
                 const compensationData = this.$el.dataset.compensation;
                 // Helper to get old() values from window if available
                 const old = window.oldFormData || {};
-                if (Object.keys(old).length > 0) {
+                
+                // Check if old data has meaningful content
+                const hasOldData = old.applicants && old.applicants.length > 0 && old.applicants[0].name;
+                const hasCompensationData = compensationData && compensationData !== 'null';
+                
+                if (hasOldData) {
+                    // Handle validation errors - use old form data
                     this.applicants = old.applicants || [{ name: '', father_name: '', address: '', nid: '' }];
                     this.is_sa_owner = old.ownership_details?.is_applicant_sa_owner || 'yes';
                     this.is_rs_owner = old.ownership_details?.is_applicant_rs_owner || 'yes';
@@ -55,9 +62,11 @@
                     this.acquisition_record_basis = old.acquisition_record_basis || '';
                     this.selected_doc_types = old.additional_documents_info?.selected_types || [];
                     this.additional_documents_details = old.additional_documents_info?.details || {};
-                    // Add other dynamic arrays as needed
-                } else if (compensationData && compensationData !== 'null') {
+                    this.award_types = old.award_type || [];
+                } else if (hasCompensationData) {
+                    // Handle edit mode - use compensation data
                     const data = JSON.parse(compensationData);
+                    
                     this.applicants = data.applicants || [{ name: '', father_name: '', address: '', nid: '' }];
                     this.is_sa_owner = data.is_applicant_sa_owner ? 'yes' : 'no';
                     this.is_rs_owner = data.ownership_details?.is_applicant_rs_owner ?? 'yes';
@@ -87,7 +96,9 @@
                     this.acquisition_record_basis = data.acquisition_record_basis || '';
                     this.selected_doc_types = (data.additional_documents_info?.selected_types) || [];
                     this.additional_documents_details = (data.additional_documents_info?.details) || {};
+                    this.award_types = data.award_type || [];
                 } else {
+                    // Handle new form - use default values
                     this.applicants = [{ name: '', father_name: '', address: '', nid: '' }];
                     this.sa_owners = [{ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' }];
                     this.rs_owners = [{ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' }];
@@ -126,6 +137,7 @@
                     this.rs_owners = [{ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' }];
                     this.is_sa_owner = (document.querySelector('[name="ownership_details[is_applicant_sa_owner]"]:checked')?.value) || 'yes';
                     this.is_rs_owner = (document.querySelector('[name="ownership_details[is_applicant_rs_owner]"]:checked')?.value) || 'yes';
+                    this.award_types = [];
                 }
             },
             

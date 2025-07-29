@@ -26,6 +26,7 @@ class OwnershipContinuityFlowTest extends TestCase
             'la_case_no' => 'LA-001',
             'award_serial_no' => 'AWD-001',
             'acquisition_record_basis' => 'SA',
+            'sa_plot_no' => 'SA-PLOT-001',
             'plot_no' => 'PLOT-001',
             'award_holder_name' => 'Test Award Holder',
             'is_applicant_in_award' => true,
@@ -40,53 +41,48 @@ class OwnershipContinuityFlowTest extends TestCase
             'current_plot_no' => 'CURRENT-001',
             'ownership_details' => [
                 'sa_info' => [
-                    'sa_owners' => [['name' => 'SA Owner 1']],
                     'sa_plot_no' => 'SA-PLOT-001',
-                    'previous_owner_name' => 'Previous Owner',
                     'sa_khatian_no' => 'SA-KHATIAN-001',
                     'sa_total_land_in_plot' => '2.00',
                     'sa_land_in_khatian' => '1.50',
                 ],
                 'rs_info' => [
-                    'rs_owners' => [['name' => 'RS Owner 1']],
                     'rs_plot_no' => 'RS-PLOT-001',
-                    'rs_previous_owner_name' => 'RS Previous Owner',
                     'rs_khatian_no' => 'RS-KHATIAN-001',
                     'rs_total_land_in_plot' => '2.00',
                     'rs_land_in_khatian' => '1.50',
                 ],
-                'transfer_info' => [
-                    'ownership_type' => 'deed',
-                    'deed_transfers' => [
-                        [
-                            'donor_name' => 'Deed Donor',
-                            'recipient_name' => 'Deed Recipient',
-                            'deed_number' => 'DEED-001',
-                            'deed_date' => '2024-01-01',
-                            'sale_type' => 'Specific Plot',
-                            'plot_no' => 'PLOT-001',
-                            'sold_land_amount' => '1.00',
-                            'total_sotangsho' => '50',
-                            'total_shotok' => '25',
-                            'possession_mentioned' => 'yes',
-                            'possession_plot_no' => 'POSSESSION-001',
-                            'possession_description' => 'Possession details',
-                            'mutation_case_no' => 'MUTATION-001',
-                            'mutation_plot_no' => 'MUTATION-PLOT-001',
-                            'mutation_land_amount' => '1.00',
-                        ]
-                    ],
-                    'inheritance_records' => [],
+                'sa_owners' => [['name' => 'SA Owner 1']],
+                'rs_owners' => [['name' => 'RS Owner 1']],
+                'deed_transfers' => [
+                    [
+                        'donor_name' => 'Deed Donor',
+                        'recipient_name' => 'Deed Recipient',
+                        'deed_number' => 'DEED-001',
+                        'deed_date' => '2024-01-01',
+                        'sale_type' => 'Specific Plot',
+                        'plot_no' => 'PLOT-001',
+                        'sold_land_amount' => '1.00',
+                        'total_sotangsho' => '50',
+                        'total_shotok' => '25',
+                        'possession_mentioned' => 'yes',
+                        'possession_plot_no' => 'POSSESSION-001',
+                        'possession_description' => 'Possession details',
+                    ]
                 ],
-                'mutation_info' => [
-                    'mutation_case_no' => 'MUTATION-001',
-                    'mutation_plot_no' => 'MUTATION-PLOT-001',
-                    'mutation_land_amount' => '1.00',
-                    'mutation_date' => '2024-01-01',
-                    'mutation_details' => 'Mutation details',
+                'inheritance_records' => [],
+                'rs_records' => [],
+                'applicant_info' => [
+                    'applicant_name' => 'Test Applicant',
+                    'kharij_case_no' => 'KHARIJ-001',
+                    'kharij_plot_no' => 'KHARIJ-PLOT-001',
+                    'kharij_land_amount' => '1.00',
+                    'kharij_date' => '2024-01-01',
+                    'kharij_details' => 'Kharij details',
                 ],
-                'flow_state' => 'transfer',
-                'rs_record_disabled' => false,
+                'transferItems' => [
+                    ['type' => 'দলিল', 'index' => 0]
+                ]
             ],
             'mutation_info' => [
                 'records' => []
@@ -117,10 +113,20 @@ class OwnershipContinuityFlowTest extends TestCase
 
         $compensation = Compensation::where('case_number', 'TEST-SA-001')->first();
         $this->assertNotNull($compensation);
-        $this->assertEquals('transfer', $compensation->ownership_details['flow_state']);
-        $this->assertEquals('deed', $compensation->ownership_details['transfer_info']['ownership_type']);
-        $this->assertEquals('SA Owner 1', $compensation->ownership_details['sa_info']['sa_owners'][0]['name']);
-        $this->assertEquals('Deed Donor', $compensation->ownership_details['transfer_info']['deed_transfers'][0]['donor_name']);
+        // Check that ownership_details contains the expected data
+        $this->assertArrayHasKey('sa_info', $compensation->ownership_details);
+        $this->assertArrayHasKey('rs_info', $compensation->ownership_details);
+        $this->assertArrayHasKey('sa_owners', $compensation->ownership_details);
+        $this->assertArrayHasKey('rs_owners', $compensation->ownership_details);
+        $this->assertArrayHasKey('deed_transfers', $compensation->ownership_details);
+        $this->assertArrayHasKey('inheritance_records', $compensation->ownership_details);
+        $this->assertArrayHasKey('rs_records', $compensation->ownership_details);
+        $this->assertArrayHasKey('applicant_info', $compensation->ownership_details);
+        $this->assertArrayHasKey('transferItems', $compensation->ownership_details);
+        
+        // Check specific data
+        $this->assertEquals('SA Owner 1', $compensation->ownership_details['sa_owners'][0]['name']);
+        $this->assertEquals('Deed Donor', $compensation->ownership_details['deed_transfers'][0]['donor_name']);
     }
 
     public function test_rs_flow_with_applicant_owner_option()
@@ -139,6 +145,7 @@ class OwnershipContinuityFlowTest extends TestCase
             'la_case_no' => 'LA-002',
             'award_serial_no' => 'AWD-002',
             'acquisition_record_basis' => 'RS',
+            'rs_plot_no' => 'RS-PLOT-002',
             'plot_no' => 'PLOT-002',
             'award_holder_name' => 'Test Award Holder',
             'is_applicant_in_award' => true,
@@ -153,35 +160,48 @@ class OwnershipContinuityFlowTest extends TestCase
             'current_plot_no' => 'CURRENT-002',
             'ownership_details' => [
                 'sa_info' => [
-                    'sa_owners' => [['name' => 'SA Owner 1']],
                     'sa_plot_no' => 'SA-PLOT-002',
-                    'previous_owner_name' => 'Previous Owner',
                     'sa_khatian_no' => 'SA-KHATIAN-002',
                     'sa_total_land_in_plot' => '2.00',
                     'sa_land_in_khatian' => '1.50',
                 ],
                 'rs_info' => [
-                    'rs_owners' => [['name' => 'RS Owner 1']],
                     'rs_plot_no' => 'RS-PLOT-002',
-                    'rs_previous_owner_name' => 'RS Previous Owner',
                     'rs_khatian_no' => 'RS-KHATIAN-002',
                     'rs_total_land_in_plot' => '2.00',
                     'rs_land_in_khatian' => '1.50',
                 ],
-                'transfer_info' => [
-                    'ownership_type' => '',
-                    'deed_transfers' => [],
-                    'inheritance_records' => [],
+                'sa_owners' => [['name' => 'SA Owner 1']],
+                'rs_owners' => [['name' => 'RS Owner 1']],
+                'deed_transfers' => [
+                    [
+                        'donor_name' => 'Deed Donor',
+                        'recipient_name' => 'Deed Recipient',
+                        'deed_number' => 'DEED-001',
+                        'deed_date' => '2024-01-01',
+                        'sale_type' => 'Specific Plot',
+                        'plot_no' => 'PLOT-001',
+                        'sold_land_amount' => '1.00',
+                        'total_sotangsho' => '50',
+                        'total_shotok' => '25',
+                        'possession_mentioned' => 'yes',
+                        'possession_plot_no' => 'POSSESSION-001',
+                        'possession_description' => 'Possession details',
+                    ]
                 ],
-                'mutation_info' => [
-                    'mutation_case_no' => 'MUTATION-002',
-                    'mutation_plot_no' => 'MUTATION-PLOT-002',
-                    'mutation_land_amount' => '1.00',
-                    'mutation_date' => '2024-01-01',
-                    'mutation_details' => 'Mutation details for RS',
+                'inheritance_records' => [],
+                'rs_records' => [],
+                'applicant_info' => [
+                    'applicant_name' => 'Test Applicant',
+                    'kharij_case_no' => 'KHARIJ-002',
+                    'kharij_plot_no' => 'KHARIJ-PLOT-002',
+                    'kharij_land_amount' => '1.00',
+                    'kharij_date' => '2024-01-01',
+                    'kharij_details' => 'Kharij details for RS',
                 ],
-                'flow_state' => 'applicant_owner',
-                'rs_record_disabled' => false,
+                'transferItems' => [
+                    ['type' => 'দলিল', 'index' => 0]
+                ]
             ],
             'mutation_info' => [
                 'records' => []
@@ -212,8 +232,19 @@ class OwnershipContinuityFlowTest extends TestCase
 
         $compensation = Compensation::where('case_number', 'TEST-RS-001')->first();
         $this->assertNotNull($compensation);
-        $this->assertEquals('applicant_owner', $compensation->ownership_details['flow_state']);
-        $this->assertEquals('RS Owner 1', $compensation->ownership_details['rs_info']['rs_owners'][0]['name']);
-        $this->assertEquals('MUTATION-002', $compensation->ownership_details['mutation_info']['mutation_case_no']);
+        // Check that ownership_details contains the expected data
+        $this->assertArrayHasKey('sa_info', $compensation->ownership_details);
+        $this->assertArrayHasKey('rs_info', $compensation->ownership_details);
+        $this->assertArrayHasKey('sa_owners', $compensation->ownership_details);
+        $this->assertArrayHasKey('rs_owners', $compensation->ownership_details);
+        $this->assertArrayHasKey('deed_transfers', $compensation->ownership_details);
+        $this->assertArrayHasKey('inheritance_records', $compensation->ownership_details);
+        $this->assertArrayHasKey('rs_records', $compensation->ownership_details);
+        $this->assertArrayHasKey('applicant_info', $compensation->ownership_details);
+        $this->assertArrayHasKey('transferItems', $compensation->ownership_details);
+        
+        // Check specific data
+        $this->assertEquals('RS Owner 1', $compensation->ownership_details['rs_owners'][0]['name']);
+        $this->assertEquals('KHARIJ-002', $compensation->ownership_details['applicant_info']['kharij_case_no']);
     }
 } 

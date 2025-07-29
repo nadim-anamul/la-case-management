@@ -380,11 +380,57 @@
             gap: 0.75rem;
         }
     }
+    
+    /* Required field indicator styles */
+    .text-red-500 {
+        color: #ef4444;
+    }
+    
+    label .text-red-500 {
+        font-weight: 600;
+    }
+    
+    /* Conditional field note styles */
+    .bg-yellow-50 {
+        background-color: #fefce8;
+    }
+    
+    .border-yellow-200 {
+        border-color: #fde047;
+    }
+    
+    .text-yellow-800 {
+        color: #92400e;
+    }
+    
+    /* Required fields note styles */
+    .bg-blue-50 {
+        background-color: #eff6ff;
+    }
+    
+    .border-blue-200 {
+        border-color: #bfdbfe;
+    }
+    
+    .text-blue-800 {
+        color: #1e40af;
+    }
 </style>
 @endsection
 
 @section('scripts')
 @include('components.compensation.alpine-component')
+<script>
+    // Pass old form data to Alpine.js for validation error handling
+    window.oldFormData = {
+        applicants: @json(old('applicants', [])),
+        acquisition_record_basis: @json(old('acquisition_record_basis', '')),
+        ownership_details: @json(old('ownership_details', [])),
+        additional_documents_info: @json(old('additional_documents_info', [])),
+        tax_info: @json(old('tax_info', [])),
+        kanungo_opinion: @json(old('kanungo_opinion', []))
+    };
+</script>
 @endsection
 
 @section('content')
@@ -412,12 +458,20 @@
         </div>
     @endif
 
-    <form action="{{ isset($compensation) ? route('compensation.update', $compensation->id) : route('compensation.store') }}" method="POST" class="form-container p-8" x-data="compensationForm" 
+    <form action="{{ isset($compensation) ? route('compensation.update', $compensation->id) : route('compensation.store') }}" method="POST" class="form-container p-8" x-data="compensationForm()" 
           data-compensation="{{ isset($compensation) ? $compensation->toJson() : 'null' }}">
         @csrf
         @if(isset($compensation))
             @method('PUT')
         @endif
+        
+        <!-- Required Fields Note -->
+        <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <p class="text-sm text-blue-800">
+                <span class="text-red-500 font-semibold">*</span> চিহ্নিত ক্ষেত্রগুলি অবশ্যই পূরণ করতে হবে। 
+                <span class="text-gray-600">(Fields marked with <span class="text-red-500">*</span> are required)</span>
+            </p>
+        </div>
         
         <!-- Compensation Case Filing Section -->
         <div class="form-section mb-6">

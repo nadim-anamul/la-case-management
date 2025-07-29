@@ -5,10 +5,10 @@
     </h2>
     <div class="space-y-6">
         <div>
-            <label>মালিকানার ধারাবাহিকতা আছে কিনা</label>
+            <label>মালিকানার ধারাবাহিকতা আছে কিনা<span class="text-red-500">*</span></label>
             <div class="radio-group">
-                <label><input type="radio" name="kanungo_opinion[ownership_continuity]" value="yes" {{ (old('kanungo_opinion.ownership_continuity', isset($compensation) ? $compensation->kanungo_opinion['ownership_continuity'] ?? '' : '') == 'yes') ? 'checked' : '' }} class="mr-2"><span>হ্যাঁ</span></label>
-                <label><input type="radio" name="kanungo_opinion[ownership_continuity]" value="no" {{ (old('kanungo_opinion.ownership_continuity', isset($compensation) ? $compensation->kanungo_opinion['ownership_continuity'] ?? '' : '') == 'no') ? 'checked' : '' }} class="mr-2"><span>না</span></label>
+                <label><input type="radio" name="kanungo_opinion[has_ownership_continuity]" value="yes" {{ (old('kanungo_opinion.has_ownership_continuity', isset($compensation) ? $compensation->kanungo_opinion['has_ownership_continuity'] ?? '' : '') == 'yes') ? 'checked' : '' }} class="mr-2"><span>হ্যাঁ</span></label>
+                <label><input type="radio" name="kanungo_opinion[has_ownership_continuity]" value="no" {{ (old('kanungo_opinion.has_ownership_continuity', isset($compensation) ? $compensation->kanungo_opinion['has_ownership_continuity'] ?? '' : '') == 'no') ? 'checked' : '' }} class="mr-2"><span>না</span></label>
             </div>
         </div>
         

@@ -38,7 +38,7 @@
                     <div>
                         <template x-for="(owner, index) in sa_owners" :key="index">
                             <div class="flex items-center mb-2">
-                                <input type="text" :id="'sa_owner_name_' + index" :name="'ownership_details[sa_info][sa_owners][' + index + '][name]'" x-model="owner.name" class="form-input flex-1" placeholder="SA মালিকের নাম">
+                                <input type="text" :id="'sa_owner_name_' + index" :name="'ownership_details[sa_owners][' + index + '][name]'" x-model="owner.name" class="form-input flex-1" placeholder="SA মালিকের নাম">
                                 <label :for="'sa_owner_name_' + index" class="ml-2">SA মালিকের নাম</label>
                                 <button type="button" @click="removeSaOwner(index)" x-show="sa_owners.length > 1" class="btn-danger ml-2" title="মালিক মুছুন">×</button>
                             </div>
@@ -48,18 +48,30 @@
                     <div class="floating-label">
                         <input type="text" id="sa_plot_no" name="ownership_details[sa_info][sa_plot_no]" x-model="sa_info.sa_plot_no" placeholder=" ">
                         <label for="sa_plot_no">SA দাগ নম্বর</label>
+                        @error('ownership_details.sa_info.sa_plot_no')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="floating-label">
                         <input type="text" id="sa_khatian_no" name="ownership_details[sa_info][sa_khatian_no]" x-model="sa_info.sa_khatian_no" placeholder=" ">
                         <label for="sa_khatian_no">SA খতিয়ান নম্বর</label>
+                        @error('ownership_details.sa_info.sa_khatian_no')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="floating-label">
                         <input type="text" id="sa_total_land_in_plot" name="ownership_details[sa_info][sa_total_land_in_plot]" x-model="sa_info.sa_total_land_in_plot" placeholder=" ">
                         <label for="sa_total_land_in_plot">SA দাগে মোট জমি</label>
+                        @error('ownership_details.sa_info.sa_total_land_in_plot')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="floating-label">
                         <input type="text" id="sa_land_in_khatian" name="ownership_details[sa_info][sa_land_in_khatian]" x-model="sa_info.sa_land_in_khatian" placeholder=" ">
                         <label for="sa_land_in_khatian">SA উক্ত খতিয়ানে জমির পরিমাণ</label>
+                        @error('ownership_details.sa_info.sa_land_in_khatian')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
             </div>
@@ -73,7 +85,7 @@
                     <div>
                         <template x-for="(owner, index) in rs_owners" :key="index">
                             <div class="flex items-center mb-2">
-                                <input type="text" :id="'rs_owner_name_' + index" :name="'ownership_details[rs_info][rs_owners][' + index + '][name]'" x-model="owner.name" class="form-input flex-1" placeholder="RS মালিকের নাম">
+                                <input type="text" :id="'rs_owner_name_' + index" :name="'ownership_details[rs_owners][' + index + '][name]'" x-model="owner.name" class="form-input flex-1" placeholder="RS মালিকের নাম">
                                 <label :for="'rs_owner_name_' + index" class="ml-2">RS মালিকের নাম</label>
                                 <button type="button" @click="removeRsOwner(index)" x-show="rs_owners.length > 1" class="btn-danger ml-2" title="মালিক মুছুন">×</button>
                             </div>
@@ -83,28 +95,43 @@
                     <div class="floating-label">
                         <input type="text" id="rs_plot_no" name="ownership_details[rs_info][rs_plot_no]" x-model="rs_info.rs_plot_no" placeholder=" ">
                         <label for="rs_plot_no">RS দাগ নম্বর</label>
+                        @error('ownership_details.rs_info.rs_plot_no')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="floating-label">
                         <input type="text" id="rs_khatian_no" name="ownership_details[rs_info][rs_khatian_no]" x-model="rs_info.rs_khatian_no" placeholder=" ">
                         <label for="rs_khatian_no">RS খতিয়ান নম্বর</label>
+                        @error('ownership_details.rs_info.rs_khatian_no')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="floating-label">
                         <input type="text" id="rs_total_land_in_plot" name="ownership_details[rs_info][rs_total_land_in_plot]" x-model="rs_info.rs_total_land_in_plot" placeholder=" ">
                         <label for="rs_total_land_in_plot">RS দাগে মোট জমি</label>
+                        @error('ownership_details.rs_info.rs_total_land_in_plot')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="floating-label">
                         <input type="text" id="rs_land_in_khatian" name="ownership_details[rs_info][rs_land_in_khatian]" x-model="rs_info.rs_land_in_khatian" placeholder=" ">
-                        <label for="rs_land_in_khatian">RS খতিয়ানে মোট জমির পরিমাণ</label>
+                        <label for="rs_land_in_khatian">RS উক্ত খতিয়ানে জমির পরিমাণ</label>
+                        @error('ownership_details.rs_info.rs_land_in_khatian')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
             </div>
         </template>
 
-        <div class="mt-6">
-            <button type="button" @click="nextStep()" class="btn-primary" :disabled="!isStep1Valid()" :class="!isStep1Valid() ? 'opacity-50 cursor-not-allowed' : ''">পরবর্তী ধাপ</button>
-            <div x-show="!isStep1Valid()" class="mt-2 text-sm text-red-600">
-                <span>দয়া করে প্রথমে SA/RS তথ্য প্রবেশ করুন</span>
-            </div>
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between mt-6">
+            <button type="button" @click="saveStepData()" class="btn-primary" :disabled="!isStep1Valid()">
+                বর্তমান ধাপ সংরক্ষণ করুন
+            </button>
+            <button type="button" @click="nextStep()" class="btn-secondary" :disabled="!isStep1Valid()">
+                পরবর্তী ধাপ
+            </button>
         </div>
     </div>
 
@@ -144,55 +171,67 @@
                 <h5 x-text="'দলিল #' + (index + 1)" class="text-lg font-semibold mb-3"></h5>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="floating-label">
-                        <input type="text" :id="'deed_donor_name_' + index" :name="'ownership_details[transfer_info][deed_transfers][' + index + '][donor_name]'" x-model="deed.donor_name" placeholder=" ">
+                        <input type="text" :id="'deed_donor_name_' + index" :name="'ownership_details[deed_transfers][' + index + '][donor_name]'" x-model="deed.donor_name" placeholder=" ">
                         <label :for="'deed_donor_name_' + index">দলিল দাতার নাম<span class="text-red-500">*</span></label>
                     </div>
                     <div class="floating-label">
-                        <input type="text" :id="'deed_recipient_name_' + index" :name="'ownership_details[transfer_info][deed_transfers][' + index + '][recipient_name]'" x-model="deed.recipient_name" placeholder=" ">
+                        <input type="text" :id="'deed_recipient_name_' + index" :name="'ownership_details[deed_transfers][' + index + '][recipient_name]'" x-model="deed.recipient_name" placeholder=" ">
                         <label :for="'deed_recipient_name_' + index">দলিল গ্রহীতার নাম<span class="text-red-500">*</span></label>
                     </div>
                     <div class="floating-label">
-                        <input type="text" :id="'deed_number_' + index" :name="'ownership_details[transfer_info][deed_transfers][' + index + '][deed_number]'" x-model="deed.deed_number" placeholder=" ">
+                        <input type="text" :id="'deed_number_' + index" :name="'ownership_details[deed_transfers][' + index + '][deed_number]'" x-model="deed.deed_number" placeholder=" ">
                         <label :for="'deed_number_' + index">দলিল নম্বর<span class="text-red-500">*</span></label>
                     </div>
                     <div class="floating-label">
-                        <input type="date" :id="'deed_date_' + index" :name="'ownership_details[transfer_info][deed_transfers][' + index + '][deed_date]'" x-model="deed.deed_date" placeholder=" ">
+                        <input type="date" :id="'deed_date_' + index" :name="'ownership_details[deed_transfers][' + index + '][deed_date]'" x-model="deed.deed_date" placeholder=" ">
                         <label :for="'deed_date_' + index">দলিলের তারিখ<span class="text-red-500">*</span></label>
                     </div>
                     <div class="floating-label">
-                        <input type="text" :name="'ownership_details[transfer_info][deed_transfers][' + index + '][sale_type]'" placeholder="সুনির্দিষ্ট দাগে অথবা সম্মিলিত দাগের হতে" x-model="deed.sale_type">
+                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][sale_type]'" placeholder="সুনির্দিষ্ট দাগে অথবা সম্মিলিত দাগের হতে" x-model="deed.sale_type">
                         <label>বিক্রয়ের ধরন</label>
                     </div>
                     <div class="floating-label">
-                        <input type="text" :name="'ownership_details[transfer_info][deed_transfers][' + index + '][plot_no]'" x-model="deed.plot_no" placeholder=" ">
+                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][plot_no]'" x-model="deed.plot_no" placeholder=" ">
                         <label>দাগ নম্বর</label>
                     </div>
                     <div class="floating-label">
-                        <input type="text" :name="'ownership_details[transfer_info][deed_transfers][' + index + '][sold_land_amount]'" x-model="deed.sold_land_amount" placeholder=" ">
+                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][sold_land_amount]'" x-model="deed.sold_land_amount" placeholder=" ">
                         <label>বিক্রিত জমির পরিমাণ</label>
                     </div>
                     <div class="floating-label">
-                        <input type="text" :name="'ownership_details[transfer_info][deed_transfers][' + index + '][total_sotangsho]'" x-model="deed.total_sotangsho" placeholder=" ">
+                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][total_sotangsho]'" x-model="deed.total_sotangsho" placeholder=" ">
                         <label>মোট কত শতাংশ</label>
                     </div>
                     <div class="floating-label">
-                        <input type="text" :name="'ownership_details[transfer_info][deed_transfers][' + index + '][total_shotok]'" x-model="deed.total_shotok" placeholder=" ">
+                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][total_shotok]'" x-model="deed.total_shotok" placeholder=" ">
                         <label>মোট কত শতক</label>
                     </div>
                     <div class="floating-label">
-                        <select :name="'ownership_details[transfer_info][deed_transfers][' + index + '][possession_mentioned]'" x-model="deed.possession_mentioned">
+                        <select :name="'ownership_details[deed_transfers][' + index + '][possession_mentioned]'" x-model="deed.possession_mentioned">
                             <option value="yes">হ্যাঁ</option>
                             <option value="no">না</option>
                         </select>
                         <label>দখল উল্লেখ করা আছে কিনা?</label>
                     </div>
                     <div class="floating-label">
-                        <input type="text" :name="'ownership_details[transfer_info][deed_transfers][' + index + '][possession_plot_no]'" x-model="deed.possession_plot_no" placeholder=" ">
+                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][possession_plot_no]'" x-model="deed.possession_plot_no" placeholder=" ">
                         <label>দখলের দাগ নম্বর</label>
                     </div>
                     <div class="floating-label md:col-span-2">
-                        <textarea :name="'ownership_details[transfer_info][deed_transfers][' + index + '][possession_description]'" rows="3" x-model="deed.possession_description" placeholder=" "></textarea>
+                        <textarea :name="'ownership_details[deed_transfers][' + index + '][possession_description]'" rows="3" x-model="deed.possession_description" placeholder=" "></textarea>
                         <label>দখল এর বর্ণনা</label>
+                    </div>
+                    <div class="floating-label">
+                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][mutation_case_no]'" x-model="deed.mutation_case_no" placeholder=" ">
+                        <label>খারিজ কেস নম্বর</label>
+                    </div>
+                    <div class="floating-label">
+                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][mutation_plot_no]'" x-model="deed.mutation_plot_no" placeholder=" ">
+                        <label>খারিজ দাগ নম্বর</label>
+                    </div>
+                    <div class="floating-label">
+                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][mutation_land_amount]'" x-model="deed.mutation_land_amount" placeholder=" ">
+                        <label>খারিজকৃত জমির পরিমাণ</label>
                     </div>
                 </div>
             </div>
@@ -204,27 +243,27 @@
                 <h5 x-text="'ওয়ারিশ #' + (index + 1)" class="text-lg font-semibold mb-3"></h5>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="floating-label">
-                        <input type="text" :id="'inheritance_previous_owner_name_' + index" :name="'ownership_details[transfer_info][inheritance_records][' + index + '][previous_owner_name]'" x-model="inheritance.previous_owner_name" placeholder=" ">
-                        <label :for="'inheritance_previous_owner_name_' + index">যে মালিকের থেকে আগত তার নাম<span class="text-red-500">*</span></label>
+                        <input type="text" :id="'inheritance_previous_owner_name_' + index" :name="'ownership_details[inheritance_records][' + index + '][previous_owner_name]'" x-model="inheritance.previous_owner_name" placeholder=" ">
+                        <label :for="'inheritance_previous_owner_name_' + index">পূর্ববর্তী মালিকের নাম<span class="text-red-500">*</span></label>
                     </div>
                     <div class="floating-label">
-                        <input type="date" :id="'inheritance_death_date_' + index" :name="'ownership_details[transfer_info][inheritance_records][' + index + '][death_date]'" x-model="inheritance.death_date" placeholder=" ">
-                        <label :for="'inheritance_death_date_' + index">পূর্বতন মালিকের মৃত্যুর তারিখ<span class="text-red-500">*</span></label>
+                        <input type="date" :id="'inheritance_death_date_' + index" :name="'ownership_details[inheritance_records][' + index + '][death_date]'" x-model="inheritance.death_date" placeholder=" ">
+                        <label :for="'inheritance_death_date_' + index">মৃত্যুর তারিখ<span class="text-red-500">*</span></label>
                     </div>
                     <div class="floating-label">
-                        <input type="text" :id="'inheritance_type_' + index" :name="'ownership_details[transfer_info][inheritance_records][' + index + '][inheritance_type]'" x-model="inheritance.inheritance_type" placeholder=" ">
-                        <label :for="'inheritance_type_' + index">হস্তান্তরের ধরন<span class="text-red-500">*</span></label>
+                        <input type="text" :id="'inheritance_type_' + index" :name="'ownership_details[inheritance_records][' + index + '][inheritance_type]'" x-model="inheritance.inheritance_type" placeholder=" ">
+                        <label :for="'inheritance_type_' + index">ওয়ারিশের ধরন<span class="text-red-500">*</span></label>
                     </div>
                     <div class="floating-label">
-                        <select :name="'ownership_details[transfer_info][inheritance_records][' + index + '][has_death_cert]'" x-model="inheritance.has_death_cert">
+                        <select :name="'ownership_details[inheritance_records][' + index + '][has_death_cert]'" x-model="inheritance.has_death_cert">
                             <option value="yes">হ্যাঁ</option>
                             <option value="no">না</option>
                         </select>
-                        <label>পূর্বতন মালিকের মৃত্যুসনদ দাখিল করা হয়েছে কিনা?</label>
+                        <label>মৃত্যু সনদ আছে কিনা</label>
                     </div>
                     <div class="floating-label md:col-span-2">
-                        <textarea :name="'ownership_details[transfer_info][inheritance_records][' + index + '][heirship_certificate_info]'" rows="3" x-model="inheritance.heirship_certificate_info" placeholder=" "></textarea>
-                        <label>ওয়ারিশান সনদের তথ্য</label>
+                        <textarea :name="'ownership_details[inheritance_records][' + index + '][heirship_certificate_info]'" rows="3" x-model="inheritance.heirship_certificate_info" placeholder=" "></textarea>
+                        <label>ওয়ারিশ সনদের তথ্য</label>
                     </div>
                 </div>
             </div>
@@ -426,33 +465,88 @@ function ownershipContinuity() {
         
         // Data objects
         sa_info: {
-            sa_plot_no: '',
-            sa_khatian_no: '',
-            sa_total_land_in_plot: '',
-            sa_land_in_khatian: ''
+            sa_plot_no: @json(old('ownership_details.sa_info.sa_plot_no', '')),
+            sa_khatian_no: @json(old('ownership_details.sa_info.sa_khatian_no', '')),
+            sa_total_land_in_plot: @json(old('ownership_details.sa_info.sa_total_land_in_plot', '')),
+            sa_land_in_khatian: @json(old('ownership_details.sa_info.sa_land_in_khatian', ''))
         },
         rs_info: {
-            rs_plot_no: '',
-            rs_khatian_no: '',
-            rs_total_land_in_plot: '',
-            rs_land_in_khatian: ''
+            rs_plot_no: @json(old('ownership_details.rs_info.rs_plot_no', '')),
+            rs_khatian_no: @json(old('ownership_details.rs_info.rs_khatian_no', '')),
+            rs_total_land_in_plot: @json(old('ownership_details.rs_info.rs_total_land_in_plot', '')),
+            rs_land_in_khatian: @json(old('ownership_details.rs_info.rs_land_in_khatian', ''))
         },
         applicant_info: {
-            applicant_name: '',
-            kharij_case_no: '',
-            kharij_plot_no: '',
-            kharij_land_amount: '',
-            kharij_date: '',
-            kharij_details: ''
+            applicant_name: @json(old('ownership_details.applicant_info.applicant_name', '')),
+            kharij_case_no: @json(old('ownership_details.applicant_info.kharij_case_no', '')),
+            kharij_plot_no: @json(old('ownership_details.applicant_info.kharij_plot_no', '')),
+            kharij_land_amount: @json(old('ownership_details.applicant_info.kharij_land_amount', '')),
+            kharij_date: @json(old('ownership_details.applicant_info.kharij_date', '')),
+            kharij_details: @json(old('ownership_details.applicant_info.kharij_details', ''))
         },
 
         
         // Arrays
-        sa_owners: [{'name': ''}],
-        rs_owners: [{'name': ''}],
-        deed_transfers: [],
-        inheritance_records: [],
-        rs_records: [],
+        sa_owners: @json(old('ownership_details.sa_owners', [['name' => '']])),
+        rs_owners: @json(old('ownership_details.rs_owners', [['name' => '']])),
+        deed_transfers: @json(old('ownership_details.deed_transfers', [])),
+        inheritance_records: @json(old('ownership_details.inheritance_records', [])),
+        rs_records: @json(old('ownership_details.rs_records', [])),
+        
+        init() {
+            // Get compensation data from parent form
+            const form = this.$el.closest('form');
+            if (form) {
+                const compensationData = form.dataset.compensation;
+                if (compensationData && compensationData !== 'null') {
+                    const data = JSON.parse(compensationData);
+                    if (data.ownership_details) {
+                        // Update SA info
+                        if (data.ownership_details.sa_info) {
+                            this.sa_info = {
+                                sa_plot_no: data.ownership_details.sa_info.sa_plot_no || '',
+                                sa_khatian_no: data.ownership_details.sa_info.sa_khatian_no || '',
+                                sa_total_land_in_plot: data.ownership_details.sa_info.sa_total_land_in_plot || '',
+                                sa_land_in_khatian: data.ownership_details.sa_info.sa_land_in_khatian || ''
+                            };
+                        }
+                        
+                        // Update RS info
+                        if (data.ownership_details.rs_info) {
+                            this.rs_info = {
+                                rs_plot_no: data.ownership_details.rs_info.rs_plot_no || '',
+                                rs_khatian_no: data.ownership_details.rs_info.rs_khatian_no || '',
+                                rs_total_land_in_plot: data.ownership_details.rs_info.rs_total_land_in_plot || '',
+                                rs_land_in_khatian: data.ownership_details.rs_info.rs_land_in_khatian || ''
+                            };
+                        }
+                        
+                        // Update applicant info
+                        if (data.ownership_details.applicant_info) {
+                            this.applicant_info = {
+                                applicant_name: data.ownership_details.applicant_info.applicant_name || '',
+                                kharij_case_no: data.ownership_details.applicant_info.kharij_case_no || '',
+                                kharij_plot_no: data.ownership_details.applicant_info.kharij_plot_no || '',
+                                kharij_land_amount: data.ownership_details.applicant_info.kharij_land_amount || '',
+                                kharij_date: data.ownership_details.applicant_info.kharij_date || '',
+                                kharij_details: data.ownership_details.applicant_info.kharij_details || ''
+                            };
+                        }
+                        
+                        // Update arrays
+                        this.sa_owners = data.ownership_details.sa_owners || [{'name': ''}];
+                        this.rs_owners = data.ownership_details.rs_owners || [{'name': ''}];
+                        this.deed_transfers = data.ownership_details.deed_transfers || [];
+                        this.inheritance_records = data.ownership_details.inheritance_records || [];
+                        this.rs_records = data.ownership_details.rs_records || [];
+                        this.transferItems = data.ownership_details.transferItems || [];
+                        this.currentStep = data.ownership_details.currentStep || 'info';
+                        this.completedSteps = data.ownership_details.completedSteps || [];
+                        this.rs_record_disabled = data.ownership_details.rs_record_disabled || false;
+                    }
+                }
+            }
+        },
         
         showAlert(message, type = 'success') {
             this.alert.message = message;
@@ -539,7 +633,10 @@ function ownershipContinuity() {
                 total_shotok: '',
                 possession_mentioned: 'no',
                 possession_plot_no: '',
-                possession_description: ''
+                possession_description: '',
+                mutation_case_no: '',
+                mutation_plot_no: '',
+                mutation_land_amount: ''
             };
             // Insert at the beginning of the array to show at top
             this.deed_transfers.unshift(newDeed);
@@ -625,7 +722,6 @@ function ownershipContinuity() {
             };
             
             // You can implement AJAX call here to save to server
-            console.log('Saving step data:', stepData);
             
             // Show success alert
             this.showAlert('বর্তমান ধাপের তথ্য সফলভাবে সংরক্ষিত হয়েছে!', 'success');
@@ -653,7 +749,6 @@ function ownershipContinuity() {
             };
             
             // You can implement AJAX call here to save to server
-            console.log('Saving all data:', allData);
             
             // Show comprehensive summary alert
             this.showAlert('সব তথ্য সফলভাবে সংরক্ষিত হয়েছে! মালিকানার ধারাবাহিকতা সম্পূর্ণ হয়েছে।', 'success');

@@ -46,9 +46,14 @@
                             <p class="text-gray-900 whitespace-no-wrap">{{ $item->applicant_acquired_land }}</p>
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm text-right whitespace-nowrap">
-                            <a href="{{ route('compensation.edit', $item->id) }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm">
-                                সম্পাদনা করুন
-                            </a>
+                            <div class="flex space-x-2">
+                                <a href="{{ route('compensation.preview', $item->id) }}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm">
+                                    প্রিভিউ
+                                </a>
+                                <a href="{{ route('compensation.edit', $item->id) }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm">
+                                    সম্পাদনা করুন
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     @empty

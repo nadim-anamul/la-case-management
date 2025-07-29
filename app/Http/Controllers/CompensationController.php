@@ -26,6 +26,24 @@ class CompensationController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function preview($id)
+    {
+        $compensation = Compensation::findOrFail($id);
+        return view('compensation_preview', compact('compensation'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id)
+    {
+        $compensation = Compensation::findOrFail($id);
+        return view('compensation_form', compact('compensation'));
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -33,8 +51,8 @@ class CompensationController extends Controller
         $validatedData = $request->validate([
             'case_number' => 'required|string|max:255',
             'case_date' => 'required|date',
-            'sa_plot_no' => 'nullable|string|max:255',
-            'rs_plot_no' => 'nullable|string|max:255',
+            'sa_plot_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
+            'rs_plot_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
             'applicants' => 'required|array|min:1',
             'applicants.*.name' => 'required|string|max:255',
             'applicants.*.father_name' => 'required|string|max:255',
@@ -53,11 +71,11 @@ class CompensationController extends Controller
             'applicant_acquired_land' => 'required|string|max:255',
             'mouza_name' => 'required|string|max:255',
             'jl_no' => 'required|string|max:255',
-            'sa_khatian_no' => 'required_if:acquisition_record_basis,SA|string|max:255',
-            'rs_khatian_no' => 'required_if:acquisition_record_basis,RS|string|max:255',
+            'sa_khatian_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
+            'rs_khatian_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
             'former_plot_no' => 'required|string|max:255',
             'current_plot_no' => 'required|string|max:255',
-            'ownership_details' => 'required|array',
+            'ownership_details' => 'nullable|array',
             'ownership_details.sa_info' => 'nullable|array',
             'ownership_details.sa_info.sa_plot_no' => 'nullable|string|max:255',
             'ownership_details.sa_info.sa_khatian_no' => 'nullable|string|max:255',
@@ -109,7 +127,7 @@ class CompensationController extends Controller
             'ownership_details.applicant_info.kharij_land_amount' => 'nullable|string|max:255',
             'ownership_details.applicant_info.kharij_date' => 'nullable|date',
             'ownership_details.applicant_info.kharij_details' => 'nullable|string',
-            'tax_info' => 'required|array',
+            'tax_info' => 'nullable|array',
             'tax_info.english_year' => 'nullable|string|max:255',
             'tax_info.bangla_year' => 'nullable|string|max:255',
             'additional_documents_info' => 'required|array',
@@ -117,7 +135,7 @@ class CompensationController extends Controller
             'additional_documents_info.details' => 'required|array',
             'additional_documents_info.details.*' => 'nullable|string',
             'kanungo_opinion' => 'required|array',
-            'kanungo_opinion.ownership_continuity' => 'required|in:yes,no',
+            'kanungo_opinion.has_ownership_continuity' => 'required|in:yes,no',
             'kanungo_opinion.opinion_details' => 'nullable|string',
         ]);
 
@@ -142,15 +160,6 @@ class CompensationController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        $compensation = Compensation::findOrFail($id);
-        return view('compensation_form', compact('compensation'));
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
@@ -160,8 +169,8 @@ class CompensationController extends Controller
         $validatedData = $request->validate([
             'case_number' => 'required|string|max:255',
             'case_date' => 'required|date',
-            'sa_plot_no' => 'nullable|string|max:255',
-            'rs_plot_no' => 'nullable|string|max:255',
+            'sa_plot_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
+            'rs_plot_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
             'applicants' => 'required|array|min:1',
             'applicants.*.name' => 'required|string|max:255',
             'applicants.*.father_name' => 'required|string|max:255',
@@ -180,11 +189,11 @@ class CompensationController extends Controller
             'applicant_acquired_land' => 'required|string|max:255',
             'mouza_name' => 'required|string|max:255',
             'jl_no' => 'required|string|max:255',
-            'sa_khatian_no' => 'required_if:acquisition_record_basis,SA|string|max:255',
-            'rs_khatian_no' => 'required_if:acquisition_record_basis,RS|string|max:255',
+            'sa_khatian_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
+            'rs_khatian_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
             'former_plot_no' => 'required|string|max:255',
             'current_plot_no' => 'required|string|max:255',
-            'ownership_details' => 'required|array',
+            'ownership_details' => 'nullable|array',
             'ownership_details.sa_info' => 'nullable|array',
             'ownership_details.sa_info.sa_plot_no' => 'nullable|string|max:255',
             'ownership_details.sa_info.sa_khatian_no' => 'nullable|string|max:255',
@@ -223,7 +232,6 @@ class CompensationController extends Controller
             'ownership_details.rs_records.*.khatian_no' => 'nullable|string|max:255',
             'ownership_details.rs_records.*.land_amount' => 'nullable|string|max:255',
             'ownership_details.rs_records.*.owner_name' => 'nullable|string|max:255',
-
             'ownership_details.transferItems' => 'nullable|array',
             'ownership_details.transferItems.*.type' => 'nullable|string|max:255',
             'ownership_details.transferItems.*.index' => 'nullable|integer',
@@ -237,7 +245,7 @@ class CompensationController extends Controller
             'ownership_details.applicant_info.kharij_land_amount' => 'nullable|string|max:255',
             'ownership_details.applicant_info.kharij_date' => 'nullable|date',
             'ownership_details.applicant_info.kharij_details' => 'nullable|string',
-            'tax_info' => 'required|array',
+            'tax_info' => 'nullable|array',
             'tax_info.english_year' => 'nullable|string|max:255',
             'tax_info.bangla_year' => 'nullable|string|max:255',
             'additional_documents_info' => 'required|array',
@@ -245,7 +253,7 @@ class CompensationController extends Controller
             'additional_documents_info.details' => 'required|array',
             'additional_documents_info.details.*' => 'nullable|string',
             'kanungo_opinion' => 'required|array',
-            'kanungo_opinion.ownership_continuity' => 'required|in:yes,no',
+            'kanungo_opinion.has_ownership_continuity' => 'required|in:yes,no',
             'kanungo_opinion.opinion_details' => 'nullable|string',
         ]);
 
