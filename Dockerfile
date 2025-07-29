@@ -10,10 +10,9 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     nodejs \
-    npm
-
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+    npm \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
@@ -24,13 +23,13 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Copy existing application directory contents
+# Copy the entire application
 COPY . /var/www
 
 # Install PHP dependencies
-RUN composer install --no-interaction
+RUN composer install --no-interaction --no-dev --optimize-autoloader
 
-# Install Node.js dependencies and build assets
+# Install Node.js dependencies (including dev dependencies for build)
 RUN npm install && npm run build
 
 # Set permissions

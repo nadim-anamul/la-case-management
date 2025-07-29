@@ -26,18 +26,13 @@ else
     echo "✅ .env file already exists"
 fi
 
-# Ensure MySQL configuration in .env
-echo "🔧 Ensuring MySQL database configuration..."
-docker compose exec app sed -i 's/DB_CONNECTION=sqlite/DB_CONNECTION=mysql/' .env 2>/dev/null || true
-docker compose exec app sed -i 's/# DB_HOST=127.0.0.1/DB_HOST=db/' .env 2>/dev/null || true
-docker compose exec app sed -i 's/# DB_PORT=3306/DB_PORT=3306/' .env 2>/dev/null || true
-docker compose exec app sed -i 's/# DB_DATABASE=laravel/DB_DATABASE=laravel/' .env 2>/dev/null || true
-docker compose exec app sed -i 's/# DB_USERNAME=root/DB_USERNAME=laravel/' .env 2>/dev/null || true
-docker compose exec app sed -i 's/# DB_PASSWORD=/DB_PASSWORD=password/' .env 2>/dev/null || true
-
 # Stop any existing containers
 echo "🛑 Stopping existing containers..."
 docker compose down
+
+# Clean up any existing images to ensure fresh build
+echo "🧹 Cleaning up existing images..."
+docker compose build --no-cache
 
 # Build and start containers
 echo "🐳 Building and starting containers..."
@@ -45,11 +40,11 @@ docker compose up -d --build
 
 # Wait for containers to be ready
 echo "⏳ Waiting for containers to be ready..."
-sleep 15
+sleep 20
 
 # Wait for database to be ready
 echo "⏳ Waiting for database..."
-max_attempts=20
+max_attempts=30
 attempt=1
 
 while [ $attempt -le $max_attempts ]; do
@@ -69,6 +64,16 @@ if [ $attempt -gt $max_attempts ]; then
     exit 1
 fi
 
+# Check if app container is running properly
+echo "🔍 Checking application container..."
+if ! docker compose exec app php --version > /dev/null 2>&1; then
+    echo "❌ Application container is not responding"
+    docker compose logs app
+    echo "🔄 Attempting to restart application container..."
+    docker compose restart app
+    sleep 10
+fi
+
 # Setup Laravel application
 echo "🔧 Setting up Laravel application..."
 
@@ -76,6 +81,21 @@ echo "🔧 Setting up Laravel application..."
 echo "🧹 Clearing cached configurations..."
 docker compose exec app php artisan config:clear
 docker compose exec app php artisan cache:clear
+
+# Check if vendor directory exists, if not install dependencies
+echo "📦 Checking PHP dependencies..."
+if ! docker compose exec app test -d vendor; then
+    echo "📦 Installing PHP dependencies..."
+    docker compose exec app composer install --no-interaction --optimize-autoloader
+fi
+
+# Check if node_modules exists, if not install Node.js dependencies
+echo "📦 Checking Node.js dependencies..."
+if ! docker compose exec app test -d node_modules; then
+    echo "📦 Installing Node.js dependencies..."
+    docker compose exec app npm install
+    docker compose exec app npm run build
+fi
 
 # Generate application key
 echo "🔑 Generating application key..."

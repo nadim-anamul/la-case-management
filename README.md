@@ -66,6 +66,43 @@ docker compose down
 docker compose logs -f
 ```
 
+## 🔧 Troubleshooting
+
+### Server Deployment Issues
+
+If you encounter issues like "Failed to open stream: No such file or directory" for vendor/autoload.php:
+
+1. **Use the fix script:**
+   ```bash
+   ./fix-server-issues.sh
+   ```
+
+2. **Manual fix:**
+   ```bash
+   # Stop containers
+   docker compose down
+   
+   # Remove images and rebuild
+   docker rmi $(docker images -q pdf-generate-app) 2>/dev/null || true
+   docker compose build --no-cache
+   
+   # Start and install dependencies
+   docker compose up -d
+   docker compose exec app composer install --no-interaction --optimize-autoloader
+   docker compose exec app npm install
+   docker compose exec app npm run build
+   
+   # Setup Laravel
+   docker compose exec app php artisan key:generate
+   docker compose exec app php artisan migrate:fresh --seed
+   ```
+
+### Common Issues
+
+- **Container restarting**: Usually indicates missing dependencies
+- **Database connection errors**: Check if MySQL container is running
+- **Permission errors**: Run `docker compose exec app chmod -R 775 storage bootstrap/cache`
+
 ### Manual Setup
 
 If the automated script doesn't work:
