@@ -13,7 +13,7 @@ A comprehensive Laravel-based compensation management system for land acquisitio
 - **Preview System**: Section-wise data preview functionality
 - **Demo Data**: Pre-populated with 4 comprehensive compensation records
 
-## 🐳 Simple Docker Setup
+## 🐳 Docker Setup
 
 ### Prerequisites
 
@@ -39,6 +39,20 @@ A comprehensive Laravel-based compensation management system for land acquisitio
    - **Compensation List**: http://localhost:8000/compensations
    - **Database**: localhost:3307
 
+### Server Deployment
+
+For server deployment, use the simplified setup:
+
+```bash
+# Use server-specific configuration
+./server-setup.sh
+```
+
+This uses:
+- **`Dockerfile.simple`**: Optimized for server environments
+- **`docker-entrypoint.sh`**: Handles dependency installation and Laravel setup
+- **`docker-compose.server.yml`**: Server-specific configuration
+
 ### Demo Data Included
 
 The setup automatically populates the database with 4 comprehensive compensation records:
@@ -59,6 +73,9 @@ Each record includes complete form data for testing all features.
 # Fresh setup with demo data
 ./docker-setup.sh
 
+# Server deployment
+./server-setup.sh
+
 # Stop the application
 docker compose down
 
@@ -70,32 +87,43 @@ docker compose logs -f
 
 ### Server Deployment Issues
 
-If you encounter issues like "Failed to open stream: No such file or directory" for vendor/autoload.php:
+If you encounter issues with server deployment:
 
-1. **Use the fix script:**
+1. **Use the server-specific setup:**
    ```bash
-   ./fix-server-issues.sh
+   ./server-setup.sh
    ```
 
-2. **Manual fix:**
+2. **Manual server setup:**
    ```bash
    # Stop containers
    docker compose down
    
-   # Remove images and rebuild
-   docker rmi $(docker images -q pdf-generate-app) 2>/dev/null || true
-   docker compose build --no-cache
+   # Clean up
+   docker system prune -a -f
    
-   # Start and install dependencies
-   docker compose up -d
-   docker compose exec app composer install --no-interaction --optimize-autoloader
-   docker compose exec app npm install
-   docker compose exec app npm run build
-   
-   # Setup Laravel
-   docker compose exec app php artisan key:generate
-   docker compose exec app php artisan migrate:fresh --seed
+   # Use server configuration
+   docker compose -f docker-compose.server.yml up -d --build
    ```
+
+### Database Connection Issues
+
+If you get database connection errors:
+
+```bash
+# Stop containers
+docker compose down
+
+# Remove database volume
+docker volume rm pdf-generate_dbdata 2>/dev/null || true
+
+# Restart with fresh database
+docker compose up -d
+
+# Wait and setup
+sleep 30
+docker compose exec app php artisan migrate:fresh --seed
+```
 
 ### Common Issues
 
@@ -158,6 +186,9 @@ docker compose exec app npm run dev
 
 # Rebuild containers
 docker compose up -d --build
+
+# Server-specific commands
+docker compose -f docker-compose.server.yml up -d --build
 ```
 
 ### Database Access
@@ -167,6 +198,21 @@ docker compose up -d --build
 - **Database**: laravel
 - **Username**: laravel
 - **Password**: password
+
+## 📁 Project Structure
+
+### Key Files for Server Deployment
+
+- **`Dockerfile.simple`**: Optimized Dockerfile for server environments
+- **`docker-entrypoint.sh`**: Handles dependency installation and Laravel setup
+- **`docker-compose.server.yml`**: Server-specific Docker Compose configuration
+- **`server-setup.sh`**: Automated server deployment script
+
+### Configuration Files
+
+- **`docker-compose.yml`**: Standard Docker Compose configuration
+- **`docker-setup.sh`**: Local development setup script
+- **`start.sh`**: Quick start script for running application
 
 ## 📊 Getting Started with Existing Data
 
