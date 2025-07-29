@@ -108,7 +108,10 @@ class DatabaseSeeder extends Seeder
                 ],
                 'currentStep' => 'applicant',
                 'completedSteps' => ['info', 'transfers', 'applicant'],
-                'rs_record_disabled' => false
+                'rs_record_disabled' => false,
+                'status' => 'pending',
+                'order_signature_date' => null,
+                'signing_officer_name' => null
             ],
             'mutation_info' => [
                 'mutation_case_no' => 'MUT-001',
@@ -131,7 +134,10 @@ class DatabaseSeeder extends Seeder
             'kanungo_opinion' => [
                 'has_ownership_continuity' => 'yes',
                 'opinion_details' => 'মালিকানার ধারাবাহিকতা আছে'
-            ]
+            ],
+            'status' => 'pending',
+            'order_signature_date' => null,
+            'signing_officer_name' => null
         ]);
 
         // Demo Record 2: RS-based compensation
@@ -231,7 +237,10 @@ class DatabaseSeeder extends Seeder
             'kanungo_opinion' => [
                 'has_ownership_continuity' => 'yes',
                 'opinion_details' => 'মালিকানার ধারাবাহিকতা আছে'
-            ]
+            ],
+            'status' => 'pending',
+            'order_signature_date' => null,
+            'signing_officer_name' => null
         ]);
 
         // Demo Record 3: Complex SA-based with multiple transfers
@@ -375,7 +384,10 @@ class DatabaseSeeder extends Seeder
             'kanungo_opinion' => [
                 'has_ownership_continuity' => 'yes',
                 'opinion_details' => 'মালিকানার ধারাবাহিকতা আছে'
-            ]
+            ],
+            'status' => 'pending',
+            'order_signature_date' => null,
+            'signing_officer_name' => null
         ]);
 
         // Demo Record 4: Mixed inheritance and deed
@@ -493,7 +505,10 @@ class DatabaseSeeder extends Seeder
             'kanungo_opinion' => [
                 'has_ownership_continuity' => 'yes',
                 'opinion_details' => 'মালিকানার ধারাবাহিকতা আছে'
-            ]
+            ],
+            'status' => 'pending',
+            'order_signature_date' => null,
+            'signing_officer_name' => null
         ]);
     }
 }
