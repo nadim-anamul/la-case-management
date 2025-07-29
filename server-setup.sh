@@ -28,7 +28,7 @@ fi
 
 # Stop any existing containers
 echo "🛑 Stopping existing containers..."
-docker compose down
+docker compose -f docker-compose.server.yml down
 
 # Clean up everything
 echo "🧹 Cleaning up everything..."
@@ -44,36 +44,57 @@ sleep 30
 
 # Wait for database to be ready
 echo "⏳ Waiting for database..."
-max_attempts=30
+max_attempts=60
 attempt=1
 
 while [ $attempt -le $max_attempts ]; do
-    if docker compose exec db mysqladmin ping -h"localhost" --silent 2>/dev/null; then
-        echo "✅ Database is ready"
-        break
-    else
-        echo "⏳ Waiting for database... (attempt $attempt/$max_attempts)"
-        sleep 3
-        attempt=$((attempt + 1))
+    # Check if the database container is running
+    if docker compose -f docker-compose.server.yml ps db | grep -q "Up"; then
+        # Try to connect to the database
+        if docker compose -f docker-compose.server.yml exec -T db mysqladmin ping -h"localhost" --silent 2>/dev/null; then
+            echo "✅ Database is ready"
+            break
+        fi
     fi
+    
+    echo "⏳ Waiting for database... (attempt $attempt/$max_attempts)"
+    sleep 5
+    attempt=$((attempt + 1))
 done
 
 if [ $attempt -gt $max_attempts ]; then
     echo "❌ Database failed to start"
-    docker compose logs db
+    echo "📋 Database container logs:"
+    docker compose -f docker-compose.server.yml logs db
+    echo "📋 All container status:"
+    docker compose -f docker-compose.server.yml ps
     exit 1
 fi
 
 # Check if app container is running
 echo "🔍 Checking application container..."
-sleep 10
+sleep 15
 
 # Verify the application is working
 echo "✅ Verifying application..."
-if curl -f http://localhost:8000 > /dev/null 2>&1; then
-    echo "✅ Application is responding"
-else
+max_app_attempts=20
+app_attempt=1
+
+while [ $app_attempt -le $max_app_attempts ]; do
+    if curl -f http://localhost:8000 > /dev/null 2>&1; then
+        echo "✅ Application is responding"
+        break
+    else
+        echo "⏳ Waiting for application... (attempt $app_attempt/$max_app_attempts)"
+        sleep 5
+        app_attempt=$((app_attempt + 1))
+    fi
+done
+
+if [ $app_attempt -gt $max_app_attempts ]; then
     echo "⚠️  Application may still be starting up"
+    echo "📋 Application container logs:"
+    docker compose -f docker-compose.server.yml logs app
 fi
 
 echo ""
@@ -87,7 +108,7 @@ echo ""
 echo "📊 Demo data should be automatically loaded"
 echo ""
 echo "🔧 Useful commands:"
-echo "   View logs: docker compose logs -f"
-echo "   Stop services: docker compose down"
-echo "   Restart services: docker compose restart"
+echo "   View logs: docker compose -f docker-compose.server.yml logs -f"
+echo "   Stop services: docker compose -f docker-compose.server.yml down"
+echo "   Restart services: docker compose -f docker-compose.server.yml restart"
 echo "" 
