@@ -19,13 +19,12 @@ docker compose up -d
 echo "⏳ Waiting for application to be ready..."
 sleep 10
 
-# Verify data is available
-echo "📊 Verifying data availability..."
-record_count=$(docker compose exec app php artisan tinker --execute="echo App\Models\Compensation::count();" 2>/dev/null | tail -1)
-if [ "$record_count" -ge 4 ]; then
-    echo "✅ Demo data is available ($record_count records)"
+# Verify the application is working
+echo "✅ Verifying application..."
+if curl -f http://localhost:8000 > /dev/null 2>&1; then
+    echo "✅ Application is responding"
 else
-    echo "⚠️  Demo data may not be loaded. Run 'docker-setup.sh' for fresh setup."
+    echo "⚠️  Application may still be starting up"
 fi
 
 echo ""

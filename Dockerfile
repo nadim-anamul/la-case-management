@@ -39,8 +39,9 @@ RUN chown -R www-data:www-data /var/www
 
 # Create a startup script to ensure dependencies are available
 RUN echo '#!/bin/bash\n\
+echo "Starting Laravel application..."\n\
 if [ ! -f "/var/www/vendor/autoload.php" ]; then\n\
-    echo "Installing dependencies..."\n\
+    echo "Installing PHP dependencies..."\n\
     composer install --no-interaction --no-dev --optimize-autoloader\n\
 fi\n\
 if [ ! -d "/var/www/node_modules" ]; then\n\
@@ -48,6 +49,12 @@ if [ ! -d "/var/www/node_modules" ]; then\n\
     npm install\n\
     npm run build\n\
 fi\n\
+echo "Setting up Laravel..."\n\
+php artisan key:generate\n\
+php artisan migrate:fresh --seed\n\
+php artisan storage:link\n\
+chmod -R 775 storage bootstrap/cache\n\
+echo "Starting server..."\n\
 php artisan serve --host=0.0.0.0 --port=8000' > /var/www/start.sh && \
     chmod +x /var/www/start.sh
 
