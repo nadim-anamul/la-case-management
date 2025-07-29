@@ -258,9 +258,6 @@
             // Get CSRF token from meta tag
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             
-            console.log('Submitting form to:', form.action);
-            console.log('Form data:', Object.fromEntries(formData));
-            
             fetch(form.action, {
                 method: 'POST', // Change to POST and use _method field
                 body: formData,
@@ -270,14 +267,12 @@
                 }
             })
             .then(response => {
-                console.log('Response status:', response.status);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then(data => {
-                console.log('Response data:', data);
                 if (data.success) {
                     // Show success message
                     showMessage(data.message, 'success');
@@ -350,9 +345,6 @@
             // Get CSRF token from meta tag
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             
-            console.log('Submitting order form to:', form.action);
-            console.log('Form data:', Object.fromEntries(formData));
-            
             fetch(form.action, {
                 method: 'POST',
                 body: formData,
@@ -362,14 +354,12 @@
                 }
             })
             .then(response => {
-                console.log('Response status:', response.status);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then(data => {
-                console.log('Response data:', data);
                 if (data.success) {
                     // Show success message
                     showMessage(data.message, 'success');
