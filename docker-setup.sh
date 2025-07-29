@@ -1,7 +1,7 @@
 #!/bin/bash
 
-echo "🚀 Laravel PDF Generator - Docker Setup"
-echo "========================================"
+echo "🚀 Laravel PDF Generator - Simple Docker Setup"
+echo "=============================================="
 
 # Check if Docker is installed
 if ! command -v docker &> /dev/null; then
@@ -21,24 +21,26 @@ echo "✅ Docker and Docker Compose are available"
 if [ ! -f .env ]; then
     echo "📝 Copying .env.example to .env"
     cp .env.example .env
-    echo "⚠️  Please update .env file with your database credentials"
-    echo "   - Set DB_PASSWORD to a secure password"
-    echo "   - Set DB_ROOT_PASSWORD to a secure password"
+    echo "✅ Environment file created"
 else
     echo "✅ .env file already exists"
 fi
 
+# Stop any existing containers
+echo "🛑 Stopping existing containers..."
+docker compose down
+
 # Build and start containers
-echo "🐳 Building and starting Docker containers..."
+echo "🐳 Building and starting containers..."
 docker compose up -d --build
 
 # Wait for containers to be ready
 echo "⏳ Waiting for containers to be ready..."
-sleep 20
+sleep 15
 
 # Wait for database to be ready
-echo "⏳ Waiting for database to be ready..."
-max_attempts=30
+echo "⏳ Waiting for database..."
+max_attempts=20
 attempt=1
 
 while [ $attempt -le $max_attempts ]; do
@@ -46,39 +48,20 @@ while [ $attempt -le $max_attempts ]; do
         echo "✅ Database is ready"
         break
     else
-        echo "⏳ Waiting for database connection... (attempt $attempt/$max_attempts)"
-        sleep 5
+        echo "⏳ Waiting for database... (attempt $attempt/$max_attempts)"
+        sleep 3
         attempt=$((attempt + 1))
     fi
 done
 
 if [ $attempt -gt $max_attempts ]; then
-    echo "❌ Database failed to start within expected time"
-    echo "📋 Checking container logs..."
+    echo "❌ Database failed to start"
     docker compose logs db
     exit 1
 fi
 
-# Check if vendor directory exists, if not install PHP dependencies
-echo "📦 Checking PHP dependencies..."
-if ! docker compose exec app test -d vendor; then
-    echo "📦 Installing PHP dependencies..."
-    if ! docker compose exec app composer install --no-interaction; then
-        echo "❌ Failed to install PHP dependencies. Trying with dev dependencies..."
-        docker compose exec app composer install --no-interaction
-    fi
-else
-    echo "✅ PHP dependencies already installed"
-fi
-
-# Check if node_modules exists, if not install Node.js dependencies
-echo "📦 Checking Node.js dependencies..."
-if ! docker compose exec app test -d node_modules; then
-    echo "📦 Installing Node.js dependencies..."
-    docker compose exec app npm install
-else
-    echo "✅ Node.js dependencies already installed"
-fi
+# Setup Laravel application
+echo "🔧 Setting up Laravel application..."
 
 # Generate application key
 echo "🔑 Generating application key..."
@@ -96,19 +79,12 @@ docker compose exec app php artisan storage:link
 echo "🔐 Setting proper permissions..."
 docker compose exec app chmod -R 775 storage bootstrap/cache
 
-# Build assets (only if not already built)
-echo "🎨 Building frontend assets..."
-docker compose exec app npm run build
-
 echo ""
 echo "🎉 Setup completed successfully!"
 echo ""
 echo "📱 Access your application:"
 echo "   Web Application: http://localhost:8000"
 echo "   Database: localhost:3306"
-echo "   Redis: localhost:6379"
-echo ""
-echo "📊 Demo data has been loaded with 4 compensation records"
 echo ""
 echo "🔧 Useful commands:"
 echo "   View logs: docker compose logs -f"

@@ -1,7 +1,4 @@
-FROM php:8.2-fpm
-
-# Set working directory
-WORKDIR /var/www
+FROM php:8.2-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -24,24 +21,23 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy composer files first for better caching
-COPY composer.json composer.lock ./
-
-# Install Composer dependencies
-RUN composer install --no-interaction --optimize-autoloader
+# Set working directory
+WORKDIR /var/www
 
 # Copy existing application directory contents
 COPY . /var/www
 
-# Copy existing application directory permissions
-COPY --chown=www-data:www-data . /var/www
+# Install PHP dependencies
+RUN composer install --no-interaction
 
 # Install Node.js dependencies and build assets
 RUN npm install && npm run build
 
-# Change current user to www
-USER www-data
+# Set permissions
+RUN chown -R www-data:www-data /var/www
 
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
-CMD ["php-fpm"] 
+# Expose port 8000
+EXPOSE 8000
+
+# Start PHP's built-in server
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"] 

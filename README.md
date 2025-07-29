@@ -12,16 +12,15 @@ A comprehensive Laravel-based compensation management system for land acquisitio
 - **Validation**: Comprehensive form validation with error handling
 - **Preview System**: Section-wise data preview functionality
 
-## 🚀 Setup Options
+## 🐳 Simple Docker Setup
 
-### Option 1: Docker Setup (Recommended)
+### Prerequisites
 
-#### Prerequisites
 - Docker
 - Docker Compose
 - Git
 
-#### Quick Start with Docker
+### Quick Start
 
 1. **Clone the repository**
    ```bash
@@ -36,121 +35,39 @@ A comprehensive Laravel-based compensation management system for land acquisitio
 
 3. **Access the application**
    - **Web Application**: http://localhost:8000
-   - **Database**: localhost:3306
-   - **Redis**: localhost:6379
+   - **Database**: localhost:3307
 
-### Option 2: Local Setup
+### Manual Setup
 
-#### Prerequisites
-- PHP 8.1+
-- Composer
-- Node.js
-- MySQL
-- Git
+If the automated script doesn't work:
 
-#### Quick Start with Local Setup
-
-1. **Clone the repository**
+1. **Copy environment file**
    ```bash
-   git clone <repository-url>
-   cd laravel-pdf-generator
+   cp .env.example .env
    ```
 
-2. **Run the automated setup**
-   ```bash
-   ./local-setup.sh
-   ```
-
-3. **Start the development server**
-   ```bash
-   php artisan serve
-   ```
-
-4. **Access the application**
-   - **Web Application**: http://localhost:8000
-
-### Option 3: Production Deployment
-
-#### Prerequisites
-- Docker
-- Docker Compose
-- SSL Certificate
-- Domain Name
-- Strong Passwords
-
-#### Production Setup
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd laravel-pdf-generator
-   ```
-
-2. **Configure production environment**
-   ```bash
-   # Copy and edit production environment
-   cp .env.production .env
-   # Edit .env with your production settings
-   ```
-
-3. **Set up SSL certificates**
-   ```bash
-   # Create SSL directory
-   mkdir -p docker/nginx/ssl
-   # Add your SSL certificates
-   # cert.pem and key.pem
-   ```
-
-4. **Run production setup**
-   ```bash
-   ./production-setup.sh
-   ```
-
-5. **Access the application**
-   - **Web Application**: https://yourdomain.com
-
-#### Production Updates
-```bash
-# Update application with zero downtime
-./production-update.sh
-```
-
-4. **Build and start containers**
+2. **Build and start containers**
    ```bash
    docker compose up -d --build
    ```
 
-5. **Install dependencies**
+3. **Wait for database and run setup**
    ```bash
-   docker compose exec app composer install
-   docker compose exec app npm install
-   ```
-
-6. **Generate application key**
-   ```bash
+   # Wait for database to be ready
+   sleep 15
+   
+   # Generate application key
    docker compose exec app php artisan key:generate
-   ```
-
-7. **Run migrations and seeders**
-   ```bash
+   
+   # Run migrations and seeders
    docker compose exec app php artisan migrate --seed
-   ```
-
-8. **Create storage link**
-   ```bash
+   
+   # Create storage link
    docker compose exec app php artisan storage:link
-   ```
-
-9. **Set proper permissions**
-   ```bash
+   
+   # Set permissions
    docker compose exec app chmod -R 775 storage bootstrap/cache
    ```
-
-### Access the Application
-
-- **Web Application**: http://localhost:8000
-- **Database**: localhost:3306
-- **Redis**: localhost:6379
 
 ### Docker Commands
 
@@ -171,14 +88,17 @@ docker compose exec app npm run dev
 
 # Rebuild containers
 docker compose up -d --build
-
-# Remove all containers and volumes
-docker compose down -v
 ```
 
-## 📊 Getting Started with Existing Data
+### Database Access
 
-### Option 1: Using Docker with Pre-seeded Data
+- **Host**: localhost
+- **Port**: 3307 (changed from 3306 to avoid conflicts)
+- **Database**: laravel
+- **Username**: laravel
+- **Password**: password
+
+## 📊 Getting Started with Existing Data
 
 The application comes with demo data that will be automatically loaded when you run the seeders:
 
@@ -193,23 +113,6 @@ This will create 4 demo compensation records with comprehensive data including:
 - Deed transfers and inheritance records
 - Applicant information
 - Tax and document details
-
-### Option 2: Import Your Own Data
-
-1. **Prepare your data** in the correct format
-2. **Create a custom seeder** or modify `DatabaseSeeder.php`
-3. **Run the seeder**:
-   ```bash
-   docker compose exec app php artisan db:seed --class=YourCustomSeeder
-   ```
-
-### Option 3: Database Dump Import
-
-1. **Place your SQL dump** in the project root
-2. **Import the dump**:
-   ```bash
-   docker compose exec -T db mysql -u your_mysql_user -p your_mysql_password laravel_pdf_generator < your_dump.sql
-   ```
 
 ## 🏗️ Project Structure
 
@@ -229,10 +132,6 @@ laravel-pdf-generator/
 ├── database/
 │   ├── migrations/
 │   └── seeders/
-├── docker/
-│   ├── nginx/
-│   ├── php/
-│   └── mysql/
 ├── Dockerfile
 ├── docker-compose.yml
 └── README.md
@@ -254,26 +153,22 @@ APP_URL=http://localhost:8000
 DB_CONNECTION=mysql
 DB_HOST=db
 DB_PORT=3306
-DB_DATABASE=laravel_pdf_generator
-DB_USERNAME=your_mysql_user
-DB_PASSWORD=your_mysql_password
+DB_DATABASE=laravel
+DB_USERNAME=laravel
+DB_PASSWORD=password
 
-CACHE_DRIVER=redis
-SESSION_DRIVER=redis
-QUEUE_CONNECTION=redis
-
-REDIS_HOST=redis
-REDIS_PASSWORD=null
-REDIS_PORT=6379
+CACHE_DRIVER=file
+SESSION_DRIVER=file
+QUEUE_CONNECTION=sync
 ```
 
 ### Database Configuration
 
 The application uses MySQL 8.0 with the following default settings:
-- **Database**: laravel_pdf_generator
-- **User**: your_mysql_user
-- **Password**: your_mysql_password
-- **Root Password**: your_mysql_root_password
+- **Database**: laravel
+- **User**: laravel
+- **Password**: password
+- **Root Password**: root_password
 
 ## 🧪 Testing
 
@@ -317,7 +212,7 @@ The project follows Laravel coding standards:
 
 ## 📈 Performance
 
-- Redis caching for sessions and cache
+- File-based caching for sessions and cache
 - Database query optimization
 - Asset compilation with Vite
 - Gzip compression enabled
@@ -338,7 +233,7 @@ The project follows Laravel coding standards:
 
 3. **Composer Dependencies**
    ```bash
-   docker compose exec app composer install --no-dev
+   docker compose exec app composer install
    ```
 
 4. **NPM Dependencies**
@@ -354,10 +249,8 @@ View application logs:
 # Laravel logs
 docker compose exec app tail -f storage/logs/laravel.log
 
-# Nginx logs
-docker compose logs webserver
-
-# MySQL logs
+# Container logs
+docker compose logs app
 docker compose logs db
 ```
 
