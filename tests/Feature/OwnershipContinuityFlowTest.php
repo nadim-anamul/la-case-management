@@ -96,10 +96,6 @@ class OwnershipContinuityFlowTest extends TestCase
                 'details' => [
                     'deed' => 'Test deed details'
                 ]
-            ],
-            'kanungo_opinion' => [
-                'ownership_continuity' => 'yes',
-                'opinion_details' => 'Test opinion'
             ]
         ];
 
@@ -215,10 +211,6 @@ class OwnershipContinuityFlowTest extends TestCase
                 'details' => [
                     'deed' => 'Test deed details'
                 ]
-            ],
-            'kanungo_opinion' => [
-                'ownership_continuity' => 'yes',
-                'opinion_details' => 'Test opinion'
             ]
         ];
 

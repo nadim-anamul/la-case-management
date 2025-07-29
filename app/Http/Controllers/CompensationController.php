@@ -5,16 +5,33 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Compensation;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class CompensationController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $compensations = Compensation::orderBy('id', 'desc')->paginate(10);
-        return view('compensation_list', compact('compensations'));
+        $query = Compensation::query();
+        
+        // Filter by status
+        $status = $request->get('status', 'pending');
+        $query->where('status', $status);
+        
+        // Search functionality
+        $search = $request->get('search');
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('la_case_no', 'like', "%{$search}%")
+                  ->orWhereJsonContains('applicants', ['name' => $search]);
+            });
+        }
+        
+        $compensations = $query->orderBy('id', 'desc')->paginate(10);
+        
+        return view('compensation_list', compact('compensations', 'status', 'search'));
     }
 
     /**
@@ -134,9 +151,6 @@ class CompensationController extends Controller
             'additional_documents_info.selected_types' => 'required|array|min:1',
             'additional_documents_info.details' => 'required|array',
             'additional_documents_info.details.*' => 'nullable|string',
-            'kanungo_opinion' => 'required|array',
-            'kanungo_opinion.has_ownership_continuity' => 'required|in:yes,no',
-            'kanungo_opinion.opinion_details' => 'nullable|string',
         ]);
 
         // Custom validation for additional_documents_info.details
@@ -252,9 +266,6 @@ class CompensationController extends Controller
             'additional_documents_info.selected_types' => 'required|array|min:1',
             'additional_documents_info.details' => 'required|array',
             'additional_documents_info.details.*' => 'nullable|string',
-            'kanungo_opinion' => 'required|array',
-            'kanungo_opinion.has_ownership_continuity' => 'required|in:yes,no',
-            'kanungo_opinion.opinion_details' => 'nullable|string',
         ]);
 
         // Custom validation for additional_documents_info.details
@@ -275,5 +286,92 @@ class CompensationController extends Controller
         $compensation->update($validatedData);
 
         return redirect()->route('compensation.index')->with('success', 'ক্ষতিপূরণ তথ্য সফলভাবে আপডেট করা হয়েছে।');
+    }
+
+    /**
+     * Get kanungo opinion for a compensation record
+     */
+    public function getKanungoOpinion($id)
+    {
+        $compensation = Compensation::findOrFail($id);
+        
+        return response()->json([
+            'kanungo_opinion' => $compensation->kanungo_opinion
+        ]);
+    }
+
+    /**
+     * Update kanungo opinion for a compensation record
+     */
+    public function updateKanungoOpinion(Request $request, $id)
+    {
+        try {
+            $compensation = Compensation::findOrFail($id);
+            $validatedData = $request->validate([
+                'kanungo_opinion' => 'required|array',
+                'kanungo_opinion.has_ownership_continuity' => 'required|in:yes,no',
+                'kanungo_opinion.opinion_details' => 'nullable|string',
+            ]);
+            
+            // Update only the kanungo_opinion field
+            $compensation->update([
+                'kanungo_opinion' => $validatedData['kanungo_opinion']
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'কানুনগো/সার্ভেয়ারের মতামত সফলভাবে আপডেট করা হয়েছে।'
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Kanungo opinion update error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'কিছু সমস্যা হয়েছে: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get order data for a compensation record
+     */
+    public function getOrder($id)
+    {
+        $compensation = Compensation::findOrFail($id);
+        return response()->json([
+            'order_signature_date' => $compensation->order_signature_date,
+            'signing_officer_name' => $compensation->signing_officer_name
+        ]);
+    }
+
+    /**
+     * Update order data for a compensation record
+     */
+    public function updateOrder(Request $request, $id)
+    {
+        try {
+            $compensation = Compensation::findOrFail($id);
+            $validatedData = $request->validate([
+                'order_signature_date' => 'required|date',
+                'signing_officer_name' => 'required|string|max:255',
+            ]);
+            
+            // Update order data and mark as done
+            $compensation->update([
+                'order_signature_date' => $validatedData['order_signature_date'],
+                'signing_officer_name' => $validatedData['signing_officer_name'],
+                'status' => 'done'
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'আদেশ সফলভাবে সম্পন্ন করা হয়েছে।'
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Order update error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'কিছু সমস্যা হয়েছে: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

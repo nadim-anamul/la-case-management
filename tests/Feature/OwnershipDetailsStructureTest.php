@@ -115,10 +115,6 @@ class OwnershipDetailsStructureTest extends TestCase
             'additional_documents_info' => [
                 'selected_types' => ['type1'],
                 'details' => ['type1' => 'Test document details']
-            ],
-            'kanungo_opinion' => [
-                'ownership_continuity' => 'yes',
-                'opinion_details' => 'Test opinion details'
             ]
         ];
 
@@ -214,10 +210,6 @@ class OwnershipDetailsStructureTest extends TestCase
             'additional_documents_info' => [
                 'selected_types' => ['type1'],
                 'details' => ['type1' => 'Test document details']
-            ],
-            'kanungo_opinion' => [
-                'ownership_continuity' => 'yes',
-                'opinion_details' => 'Test opinion details'
             ]
         ];
 

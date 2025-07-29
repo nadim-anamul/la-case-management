@@ -20,7 +20,7 @@
         <div>
             <label>রোয়েদাদের ধরন</label>
             <div class="checkbox-group">
-                <label><input type="checkbox" name="award_type[]" value="জমি/অবকাঠামো" x-model="award_types" class="mr-2"><span>জমি/অবকাঠামো</span></label>
+                <label><input type="checkbox" name="award_type[]" value="জমি" x-model="award_types" class="mr-2"><span>জমি</span></label>
                 <label><input type="checkbox" name="award_type[]" value="জমি/গাছপালা" x-model="award_types" class="mr-2"><span>জমি/গাছপালা</span></label>
                 <label><input type="checkbox" name="award_type[]" value="অবকাঠামো" x-model="award_types" class="mr-2"><span>অবকাঠামো</span></label>
             </div>

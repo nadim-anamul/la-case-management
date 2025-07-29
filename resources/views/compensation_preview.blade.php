@@ -108,6 +108,12 @@
                 <label class="font-semibold text-gray-700">আবেদনকারীর অধিগ্রহণকৃত জমির পরিমাণ:</label>
                 <p class="text-gray-900">{{ $compensation->applicant_acquired_land }}</p>
             </div>
+            @if($compensation->award_type && count($compensation->award_type) > 0)
+            <div>
+                <label class="font-semibold text-gray-700">রোয়েদাদের ধরন:</label>
+                <p class="text-gray-900">{{ implode(', ', $compensation->award_type) }}</p>
+            </div>
+            @endif
             @if($compensation->acquisition_record_basis === 'SA')
             <div>
                 <label class="font-semibold text-gray-700">SA দাগ নং:</label>

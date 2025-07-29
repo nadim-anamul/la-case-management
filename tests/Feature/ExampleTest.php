@@ -12,6 +12,9 @@ class ExampleTest extends TestCase
      */
     public function test_the_application_returns_a_successful_response(): void
     {
+        // Since the home route now shows compensation list, we need to ensure the database is set up
+        $this->artisan('migrate:fresh');
+        
         $response = $this->get('/');
 
         $response->assertStatus(200);

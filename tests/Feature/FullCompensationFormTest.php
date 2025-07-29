@@ -69,17 +69,14 @@ class FullCompensationFormTest extends TestCase
             
             // Additional Documents Information
             'additional_documents_info' => [
-                'selected_types' => ['deed', 'map'],
+                'selected_types' => ['distribution', 'no_claim', 'compromise', 'affidavit'],
                 'details' => [
-                    'deed' => 'Test deed document details',
+                    'distribution' => 'Test distribution document details',
+                    'no_claim' => 'Test no claim document details',
+                    'compromise' => 'Test compromise document details',
+                    'affidavit' => 'Test affidavit document details',
                     'map' => 'Test map document details'
                 ]
-            ],
-            
-            // Kanungo Opinion
-            'kanungo_opinion' => [
-                'has_ownership_continuity' => 'yes',
-                'opinion_details' => 'Test kanungo opinion details'
             ],
             
             // Ownership Details - SA Info
@@ -336,15 +333,7 @@ class FullCompensationFormTest extends TestCase
             // Additional Documents Information
             'additional_documents_info' => [
                 'selected_types' => ['deed'],
-                'details' => [
-                    'deed' => 'RS Test deed document details'
-                ]
-            ],
-            
-            // Kanungo Opinion
-            'kanungo_opinion' => [
-                'has_ownership_continuity' => 'no',
-                'opinion_details' => 'RS Test kanungo opinion details'
+                'details' => ['deed' => 'RS Test deed document details']
             ],
             
             // Ownership Details
@@ -467,7 +456,7 @@ class FullCompensationFormTest extends TestCase
         $response->assertSessionHasErrors(['current_plot_no']);
         // ownership_details is now optional, so we don't check for it
         $response->assertSessionHasErrors(['additional_documents_info']);
-        $response->assertSessionHasErrors(['kanungo_opinion']);
+        // kanungo_opinion is now handled separately, so we don't check for it
 
         // Test with invalid acquisition_record_basis
         $response = $this->post('/compensation/store', [
@@ -507,10 +496,6 @@ class FullCompensationFormTest extends TestCase
             'additional_documents_info' => [
                 'selected_types' => ['deed'],
                 'details' => ['deed' => 'Test deed details']
-            ],
-            'kanungo_opinion' => [
-                'has_ownership_continuity' => 'yes',
-                'opinion_details' => 'Test opinion'
             ],
             'ownership_details' => [
                 'sa_info' => ['sa_plot_no' => 'SA-PLOT-001'],

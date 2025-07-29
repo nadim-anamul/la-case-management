@@ -81,10 +81,6 @@ class CompensationTaxInfoTest extends TestCase
                     'deed' => 'Test deed details'
                 ]
             ],
-            'kanungo_opinion' => [
-                'has_ownership_continuity' => 'yes',
-                'opinion_details' => 'Test opinion'
-            ]
         ];
 
         $response = $this->post('/compensation/store', $compensationData);
@@ -172,10 +168,6 @@ class CompensationTaxInfoTest extends TestCase
                     'deed' => 'Test deed details'
                 ]
             ],
-            'kanungo_opinion' => [
-                'has_ownership_continuity' => 'yes',
-                'opinion_details' => 'Test opinion'
-            ]
         ]);
 
         $response->assertSessionHasNoErrors();

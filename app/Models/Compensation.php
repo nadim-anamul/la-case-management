@@ -19,7 +19,7 @@ class Compensation extends Model
         'total_compensation', 'applicant_acquired_land', 'mouza_name',
         'jl_no', 'sa_khatian_no', 'former_plot_no', 'rs_khatian_no',
         'current_plot_no', 'is_applicant_sa_owner', 'ownership_details', 'mutation_info', 'tax_info', 'additional_documents_info', 'kanungo_opinion',
-        'sa_owners', 'rs_owners'
+        'sa_owners', 'rs_owners', 'order_signature_date', 'signing_officer_name', 'status'
     ];
 
     /**

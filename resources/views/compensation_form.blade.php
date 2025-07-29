@@ -428,7 +428,6 @@
         ownership_details: @json(old('ownership_details', [])),
         additional_documents_info: @json(old('additional_documents_info', [])),
         tax_info: @json(old('tax_info', [])),
-        kanungo_opinion: @json(old('kanungo_opinion', []))
     };
 </script>
 @endsection
@@ -500,8 +499,6 @@
         @include('components.compensation.tax-section')
         <!-- Additional Documents Section -->
         @include('components.compensation.additional-documents-section')
-        <!-- Kanungo Opinion Section -->
-        @include('components.compensation.kanungo-opinion-section')
         <div class="form-footer">
             <button type="submit" class="btn-primary">
                 জমা দিন

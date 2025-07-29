@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
             'sa_khatian_no' => 'SA-KH-001',
             'rs_khatian_no' => null,
             'is_applicant_sa_owner' => true,
-            'award_type' => ['জমি/অবকাঠামো', 'জমি/গাছপালা'],
+            'award_type' => ['জমি', 'জমি/গাছপালা'],
             'ownership_details' => [
                 'sa_info' => [
                     'sa_plot_no' => 'SA-PLOT-001',
@@ -164,7 +164,7 @@ class DatabaseSeeder extends Seeder
             'sa_khatian_no' => null,
             'rs_khatian_no' => 'RS-KH-002',
             'is_applicant_sa_owner' => false,
-            'award_type' => ['অবকাঠামো'],
+            'award_type' => ['জমি', 'জমি/গাছপালা', 'অবকাঠামো'],
             'ownership_details' => [
                 'sa_info' => [
                     'sa_plot_no' => '',
@@ -270,7 +270,7 @@ class DatabaseSeeder extends Seeder
             'sa_khatian_no' => 'SA-KH-003',
             'rs_khatian_no' => null,
             'is_applicant_sa_owner' => true,
-            'award_type' => ['জমি/অবকাঠামো', 'জমি/গাছপালা', 'অবকাঠামো'],
+            'award_type' => ['জমি', 'জমি/গাছপালা', 'অবকাঠামো'],
             'ownership_details' => [
                 'sa_info' => [
                     'sa_plot_no' => 'SA-PLOT-003',
