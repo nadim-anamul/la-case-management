@@ -7,9 +7,14 @@ echo "=================================="
 echo "🛑 Stopping all containers..."
 docker compose down
 
-# Remove all images to force fresh build
-echo "🧹 Removing existing images..."
+# Remove all images and containers
+echo "🧹 Removing all images and containers..."
+docker system prune -a -f
+
+# Remove specific images
+echo "🧹 Removing specific images..."
 docker rmi $(docker images -q pdf-generate-app) 2>/dev/null || true
+docker rmi $(docker images -q laravel-pdf-generator-app) 2>/dev/null || true
 
 # Clean up any dangling images
 echo "🧹 Cleaning up dangling images..."
@@ -36,9 +41,9 @@ if ! docker compose exec app php --version > /dev/null 2>&1; then
     exit 1
 fi
 
-# Install dependencies if missing
-echo "📦 Installing dependencies..."
-docker compose exec app composer install --no-interaction --optimize-autoloader
+# Force install dependencies inside container
+echo "📦 Force installing dependencies inside container..."
+docker compose exec app composer install --no-interaction --no-dev --optimize-autoloader
 docker compose exec app npm install
 docker compose exec app npm run build
 
@@ -62,6 +67,6 @@ fi
 
 echo ""
 echo "🎉 Server issues fixed!"
-echo "🌐 Access at: http://localhost:8000"
-echo "📊 Data at: http://localhost:8000/compensations"
+echo "🌐 Access at: http://152.42.201.131:8000"
+echo "📊 Data at: http://152.42.201.131:8000/compensations"
 echo "" 
