@@ -26,6 +26,15 @@ else
     echo "✅ .env file already exists"
 fi
 
+# Ensure MySQL configuration in .env
+echo "🔧 Ensuring MySQL database configuration..."
+docker compose exec app sed -i 's/DB_CONNECTION=sqlite/DB_CONNECTION=mysql/' .env 2>/dev/null || true
+docker compose exec app sed -i 's/# DB_HOST=127.0.0.1/DB_HOST=db/' .env 2>/dev/null || true
+docker compose exec app sed -i 's/# DB_PORT=3306/DB_PORT=3306/' .env 2>/dev/null || true
+docker compose exec app sed -i 's/# DB_DATABASE=laravel/DB_DATABASE=laravel/' .env 2>/dev/null || true
+docker compose exec app sed -i 's/# DB_USERNAME=root/DB_USERNAME=laravel/' .env 2>/dev/null || true
+docker compose exec app sed -i 's/# DB_PASSWORD=/DB_PASSWORD=password/' .env 2>/dev/null || true
+
 # Stop any existing containers
 echo "🛑 Stopping existing containers..."
 docker compose down
@@ -63,13 +72,18 @@ fi
 # Setup Laravel application
 echo "🔧 Setting up Laravel application..."
 
+# Clear any cached configurations
+echo "🧹 Clearing cached configurations..."
+docker compose exec app php artisan config:clear
+docker compose exec app php artisan cache:clear
+
 # Generate application key
 echo "🔑 Generating application key..."
 docker compose exec app php artisan key:generate
 
-# Run migrations and seeders
+# Run migrations and seeders with fresh data
 echo "🗄️  Running database migrations and seeders..."
-docker compose exec app php artisan migrate --seed
+docker compose exec app php artisan migrate:fresh --seed
 
 # Create storage link
 echo "🔗 Creating storage link..."
@@ -79,12 +93,28 @@ docker compose exec app php artisan storage:link
 echo "🔐 Setting proper permissions..."
 docker compose exec app chmod -R 775 storage bootstrap/cache
 
+# Verify data population
+echo "📊 Verifying data population..."
+record_count=$(docker compose exec app php artisan tinker --execute="echo App\Models\Compensation::count();" 2>/dev/null | tail -1)
+if [ "$record_count" -ge 4 ]; then
+    echo "✅ Successfully populated with $record_count compensation records"
+else
+    echo "⚠️  Warning: Only $record_count records found (expected 4)"
+fi
+
 echo ""
 echo "🎉 Setup completed successfully!"
 echo ""
 echo "📱 Access your application:"
 echo "   Web Application: http://localhost:8000"
-echo "   Database: localhost:3306"
+echo "   Compensation List: http://localhost:8000/compensations"
+echo "   Database: localhost:3307"
+echo ""
+echo "📊 Demo data includes:"
+echo "   • 4 comprehensive compensation records"
+echo "   • SA and RS-based cases"
+echo "   • Multiple applicants and ownership details"
+echo "   • Complete form data for testing"
 echo ""
 echo "🔧 Useful commands:"
 echo "   View logs: docker compose logs -f"

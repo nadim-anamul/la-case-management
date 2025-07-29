@@ -11,6 +11,7 @@ A comprehensive Laravel-based compensation management system for land acquisitio
 - **Responsive Design**: Modern UI with Tailwind CSS
 - **Validation**: Comprehensive form validation with error handling
 - **Preview System**: Section-wise data preview functionality
+- **Demo Data**: Pre-populated with 4 comprehensive compensation records
 
 ## 🐳 Simple Docker Setup
 
@@ -35,7 +36,35 @@ A comprehensive Laravel-based compensation management system for land acquisitio
 
 3. **Access the application**
    - **Web Application**: http://localhost:8000
+   - **Compensation List**: http://localhost:8000/compensations
    - **Database**: localhost:3307
+
+### Demo Data Included
+
+The setup automatically populates the database with 4 comprehensive compensation records:
+
+- **CASE-2024-001**: SA-based case with multiple applicants
+- **CASE-2024-002**: RS-based case with inheritance records
+- **CASE-2024-003**: Complex SA case with multiple transfers
+- **CASE-2024-004**: Mixed case with deed and inheritance
+
+Each record includes complete form data for testing all features.
+
+### Quick Commands
+
+```bash
+# Start the application (if already set up)
+./start.sh
+
+# Fresh setup with demo data
+./docker-setup.sh
+
+# Stop the application
+docker compose down
+
+# View logs
+docker compose logs -f
+```
 
 ### Manual Setup
 
@@ -56,11 +85,15 @@ If the automated script doesn't work:
    # Wait for database to be ready
    sleep 15
    
+   # Clear cached configurations
+   docker compose exec app php artisan config:clear
+   docker compose exec app php artisan cache:clear
+   
    # Generate application key
    docker compose exec app php artisan key:generate
    
-   # Run migrations and seeders
-   docker compose exec app php artisan migrate --seed
+   # Run migrations and seeders with demo data
+   docker compose exec app php artisan migrate:fresh --seed
    
    # Create storage link
    docker compose exec app php artisan storage:link

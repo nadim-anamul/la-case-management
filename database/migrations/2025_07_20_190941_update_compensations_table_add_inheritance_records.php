@@ -13,11 +13,8 @@ return new class extends Migration
     public function up(): void
     {
         // Since ownership_details is already JSON, we don't need to add new columns
-        // But we can add an index to improve query performance for inheritance-related searches
-        Schema::table('compensations', function (Blueprint $table) {
-            // Add an index on ownership_details for better performance when querying inheritance data
-            $table->index('ownership_details', 'idx_ownership_details');
-        });
+        // Note: MySQL doesn't support direct indexing on JSON columns without generated columns
+        // We'll skip the index for now as it's not critical for functionality
 
         // Migrate existing inheritance data to new structure if needed
         $this->migrateExistingInheritanceData();
@@ -28,9 +25,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('compensations', function (Blueprint $table) {
-            $table->dropIndex('idx_ownership_details');
-        });
+        // No index to drop since we're not creating one
     }
 
     /**
