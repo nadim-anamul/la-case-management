@@ -246,11 +246,19 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="font-semibold text-gray-700">দাতার নাম:</label>
-                        <p class="text-gray-900">{{ $deed['donor_name'] ?? '' }}</p>
+                        @if(isset($deed['donor_names']))
+                            @foreach($deed['donor_names'] as $donor)
+                                <p class="text-gray-900">• {{ $donor['name'] ?? '' }}</p>
+                            @endforeach
+                        @endif
                     </div>
                     <div>
                         <label class="font-semibold text-gray-700">গ্রহীতার নাম:</label>
-                        <p class="text-gray-900">{{ $deed['recipient_name'] ?? '' }}</p>
+                        @if(isset($deed['recipient_names']))
+                            @foreach($deed['recipient_names'] as $recipient)
+                                <p class="text-gray-900">• {{ $recipient['name'] ?? '' }}</p>
+                            @endforeach
+                        @endif
                     </div>
                     <div>
                         <label class="font-semibold text-gray-700">দলিল নম্বর:</label>
@@ -422,6 +430,14 @@
             <div>
                 <label class="font-semibold text-gray-700">বাংলা বছর:</label>
                 <p class="text-gray-900">{{ $compensation->tax_info['bangla_year'] ?? '' }}</p>
+            </div>
+            <div>
+                <label class="font-semibold text-gray-700">হোল্ডিং নম্বর:</label>
+                <p class="text-gray-900">{{ $compensation->tax_info['holding_no'] ?? '' }}</p>
+            </div>
+            <div>
+                <label class="font-semibold text-gray-700">খাজনা প্রদানকৃত জমির পরিমান:</label>
+                <p class="text-gray-900">{{ $compensation->tax_info['paid_land_amount'] ?? '' }}</p>
             </div>
         </div>
     </div>
