@@ -17,16 +17,16 @@
             <label>এসএ খতিয়ান নং</label>
         </div>
         <div class="floating-label">
-            <input type="text" name="former_plot_no" value="{{ old('former_plot_no', isset($compensation) ? $compensation->former_plot_no : '') }}" placeholder=" " required>
-            <label>সাবেক দাগ নং<span class="text-red-500">*</span></label>
+            <input type="text" name="land_schedule_sa_plot_no" value="{{ old('land_schedule_sa_plot_no', isset($compensation) ? $compensation->land_schedule_sa_plot_no : '') }}" placeholder=" " required>
+            <label>SA দাগ নং<span class="text-red-500">*</span></label>
         </div>
         <div class="floating-label">
             <input type="text" name="rs_khatian_no" value="{{ old('rs_khatian_no', isset($compensation) ? $compensation->rs_khatian_no : '') }}" placeholder=" ">
             <label>আর এস খতিয়ান নং</label>
         </div>
         <div class="floating-label">
-            <input type="text" name="current_plot_no" value="{{ old('current_plot_no', isset($compensation) ? $compensation->current_plot_no : '') }}" placeholder=" " required>
-            <label>হাল দাগ নং<span class="text-red-500">*</span></label>
+            <input type="text" name="land_schedule_rs_plot_no" value="{{ old('land_schedule_rs_plot_no', isset($compensation) ? $compensation->land_schedule_rs_plot_no : '') }}" placeholder=" " required>
+            <label>RS দাগ নং<span class="text-red-500">*</span></label>
         </div>
     </div>
 </div> 

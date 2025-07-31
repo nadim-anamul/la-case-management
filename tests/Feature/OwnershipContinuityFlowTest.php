@@ -37,8 +37,8 @@ class OwnershipContinuityFlowTest extends TestCase
             'jl_no' => 'JL-001',
             'sa_khatian_no' => 'SA-001',
             'rs_khatian_no' => 'RS-001',
-            'former_plot_no' => 'FORMER-001',
-            'current_plot_no' => 'CURRENT-001',
+            'land_schedule_sa_plot_no' => 'SA-FORMER-001',
+            'land_schedule_rs_plot_no' => 'RS-CURRENT-001',
             'ownership_details' => [
                 'sa_info' => [
                     'sa_plot_no' => 'SA-PLOT-001',
@@ -152,8 +152,8 @@ class OwnershipContinuityFlowTest extends TestCase
             'jl_no' => 'JL-002',
             'sa_khatian_no' => 'SA-002',
             'rs_khatian_no' => 'RS-002',
-            'former_plot_no' => 'FORMER-002',
-            'current_plot_no' => 'CURRENT-002',
+            'land_schedule_sa_plot_no' => 'SA-FORMER-002',
+            'land_schedule_rs_plot_no' => 'RS-CURRENT-002',
             'ownership_details' => [
                 'sa_info' => [
                     'sa_plot_no' => 'SA-PLOT-002',

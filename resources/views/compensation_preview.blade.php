@@ -153,12 +153,12 @@
                 <p class="text-gray-900">{{ $compensation->jl_no }}</p>
             </div>
             <div>
-                <label class="font-semibold text-gray-700">সাবেক দাগ নং:</label>
-                <p class="text-gray-900">{{ $compensation->former_plot_no }}</p>
+                <label class="font-semibold text-gray-700">SA দাগ নং:</label>
+                <p class="text-gray-900">{{ $compensation->land_schedule_sa_plot_no }}</p>
             </div>
             <div>
-                <label class="font-semibold text-gray-700">হাল দাগ নং:</label>
-                <p class="text-gray-900">{{ $compensation->current_plot_no }}</p>
+                <label class="font-semibold text-gray-700">RS দাগ নং:</label>
+                <p class="text-gray-900">{{ $compensation->land_schedule_rs_plot_no }}</p>
             </div>
         </div>
     </div>

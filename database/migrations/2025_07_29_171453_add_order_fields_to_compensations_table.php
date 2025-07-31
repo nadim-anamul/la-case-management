@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('compensations', function (Blueprint $table) {
-            $table->date('order_signature_date')->nullable();
+            $table->string('order_signature_date')->nullable();
             $table->string('signing_officer_name')->nullable();
+            $table->string('land_schedule_sa_plot_no')->nullable(); // SA দাগ নং (land schedule)
+            $table->string('land_schedule_rs_plot_no')->nullable(); // RS দাগ নং (land schedule)
             $table->enum('status', ['pending', 'done'])->default('pending');
         });
     }

@@ -34,9 +34,9 @@ class OwnershipDetailsStructureTest extends TestCase
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-001',
             'sa_khatian_no' => 'SA-KH-001',
-            'former_plot_no' => 'FP-001',
+            'land_schedule_sa_plot_no' => 'SA-FP-001',
             'rs_khatian_no' => 'RS-KH-001',
-            'current_plot_no' => 'CP-001',
+            'land_schedule_rs_plot_no' => 'RS-CP-001',
             'is_applicant_sa_owner' => false,
             'ownership_details' => [
                 'sa_info' => [
@@ -167,9 +167,9 @@ class OwnershipDetailsStructureTest extends TestCase
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-001',
             'sa_khatian_no' => 'SA-KH-001',
-            'former_plot_no' => 'FP-001',
+            'land_schedule_sa_plot_no' => 'SA-FP-001',
             'rs_khatian_no' => 'RS-KH-001',
-            'current_plot_no' => 'CP-001',
+            'land_schedule_rs_plot_no' => 'RS-CP-001',
             'is_applicant_sa_owner' => false,
             'ownership_details' => [
                 'sa_info' => [

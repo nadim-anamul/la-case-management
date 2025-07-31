@@ -39,8 +39,8 @@ class FullCompensationFormTest extends TestCase
             'applicant_acquired_land' => '2 acres',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-001',
-            'former_plot_no' => 'FORMER-PLOT-001',
-            'current_plot_no' => 'CURRENT-PLOT-001',
+            'land_schedule_sa_plot_no' => 'SA-PLOT-001',
+            'land_schedule_rs_plot_no' => 'RS-PLOT-001',
             
             // Award Information (SA/RS)
             'acquisition_record_basis' => 'SA',
@@ -305,8 +305,8 @@ class FullCompensationFormTest extends TestCase
             'applicant_acquired_land' => '1.5 acres',
             'mouza_name' => 'RS Test Mouza',
             'jl_no' => 'JL-002',
-            'former_plot_no' => 'RS-FORMER-PLOT-001',
-            'current_plot_no' => 'RS-CURRENT-PLOT-001',
+            'land_schedule_sa_plot_no' => 'RS-SA-PLOT-001',
+            'land_schedule_rs_plot_no' => 'RS-RS-PLOT-001',
             
             // Award Information (RS)
             'acquisition_record_basis' => 'RS',
@@ -456,8 +456,8 @@ class FullCompensationFormTest extends TestCase
         $response->assertSessionHasErrors(['applicant_acquired_land']);
         $response->assertSessionHasErrors(['mouza_name']);
         $response->assertSessionHasErrors(['jl_no']);
-        $response->assertSessionHasErrors(['former_plot_no']);
-        $response->assertSessionHasErrors(['current_plot_no']);
+        $response->assertSessionHasErrors(['land_schedule_sa_plot_no']);
+        $response->assertSessionHasErrors(['land_schedule_rs_plot_no']);
         // ownership_details is now optional, so we don't check for it
         $response->assertSessionHasErrors(['additional_documents_info']);
         // kanungo_opinion is now handled separately, so we don't check for it
@@ -484,8 +484,8 @@ class FullCompensationFormTest extends TestCase
             'applicant_acquired_land' => '2 acres',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-001',
-            'former_plot_no' => 'FORMER-PLOT-001',
-            'current_plot_no' => 'CURRENT-PLOT-001',
+            'land_schedule_sa_plot_no' => 'SA-PLOT-001',
+            'land_schedule_rs_plot_no' => 'RS-PLOT-001',
             'acquisition_record_basis' => 'INVALID', // Invalid value
             'sa_plot_no' => 'SA-PLOT-001',
             'sa_khatian_no' => 'SA-KHATIAN-001',
