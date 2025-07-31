@@ -220,13 +220,6 @@
                                         @enderror
                                     </div>
                                     <div class="floating-label">
-                                        <input type="text" :id="'inheritance_type_' + index" :name="'ownership_details[inheritance_records][' + index + '][inheritance_type]'" x-model="inheritance.inheritance_type" placeholder=" ">
-                                        <label :for="'inheritance_type_' + index">হস্তান্তরের ধরন<span x-show="ownership_type === 'inheritance'" class="text-red-500">*</span></label>
-                                        @error('ownership_details.inheritance_records.*.inheritance_type')
-                                            <span class="text-red-500 text-sm">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                    <div class="floating-label">
                                         <select :name="'ownership_details[inheritance_records][' + index + '][has_death_cert]'" x-model="inheritance.has_death_cert">
                                             <option value="yes">হ্যাঁ</option>
                                             <option value="no">না</option>
@@ -426,10 +419,6 @@
                                     <div class="floating-label">
                                         <input type="date" :name="'ownership_details[inheritance_records][' + index + '][death_date]'" x-model="inheritance.death_date" placeholder=" ">
                                         <label>পূর্বতন মালিকের মৃত্যুর তারিখ</label>
-                                    </div>
-                                    <div class="floating-label">
-                                        <input type="text" :name="'ownership_details[inheritance_records][' + index + '][inheritance_type]'" x-model="inheritance.inheritance_type" placeholder="সরাসরি বা অন্যান্য">
-                                        <label>হস্তান্তরের ধরন</label>
                                     </div>
                                     <div class="floating-label">
                                         <select :name="'ownership_details[inheritance_records][' + index + '][has_death_cert]'" x-model="inheritance.has_death_cert">

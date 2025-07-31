@@ -75,8 +75,8 @@ class DatabaseSeeder extends Seeder
                 'rs_owners' => [],
                 'deed_transfers' => [
                     [
-                        'donor_name' => 'মোহাম্মদ আলী',
-                        'recipient_name' => 'আব্দুল রহমান',
+                        'donor_names' => [ ['name' => 'মোহাম্মদ আলী'] ],
+                        'recipient_names' => [ ['name' => 'আব্দুল রহমান'] ],
                         'deed_number' => 'DEED-001',
                         'deed_date' => '2020-01-15',
                         'sale_type' => 'বিক্রয়',
@@ -122,7 +122,9 @@ class DatabaseSeeder extends Seeder
             ],
             'tax_info' => [
                 'english_year' => '2024',
-                'bangla_year' => '১৪৩১'
+                'bangla_year' => '১৪৩১',
+                'holding_no' => 'HLD-001',
+                'paid_land_amount' => '2.5 acres'
             ],
             'additional_documents_info' => [
                 'selected_types' => ['আপস- বন্টননামা', 'সরেজমিন তদন্ত'],
@@ -195,8 +197,7 @@ class DatabaseSeeder extends Seeder
                         'has_death_cert' => 'yes',
                         'heirship_certificate_info' => 'ওয়ারিশ সনদ আছে',
                         'previous_owner_name' => 'আব্দুল মালেক',
-                        'death_date' => '2023-06-15',
-                        'inheritance_type' => 'direct'
+                        'death_date' => '2023-06-15'
                     ]
                 ],
                 'rs_records' => [],
@@ -225,7 +226,9 @@ class DatabaseSeeder extends Seeder
             ],
             'tax_info' => [
                 'english_year' => '2024',
-                'bangla_year' => '১৪৩১'
+                'bangla_year' => '১৪৩১',
+                'holding_no' => 'HLD-002',
+                'paid_land_amount' => '1.5 acres'
             ],
             'additional_documents_info' => [
                 'selected_types' => ['না-দাবী নামা', 'এফিডেভিটের তথ্য'],
@@ -300,8 +303,8 @@ class DatabaseSeeder extends Seeder
                 'rs_owners' => [],
                 'deed_transfers' => [
                     [
-                        'donor_name' => 'মোহাম্মদ সফিক',
-                        'recipient_name' => 'সাবরিনা আক্তার',
+                        'donor_names' => [ ['name' => 'মোহাম্মদ সফিক'] ],
+                        'recipient_names' => [ ['name' => 'সাবরিনা আক্তার'] ],
                         'deed_number' => 'DEED-002',
                         'deed_date' => '2021-03-20',
                         'sale_type' => 'বিক্রয়',
@@ -317,8 +320,8 @@ class DatabaseSeeder extends Seeder
                         'mutation_land_amount' => '1.5 acres'
                     ],
                     [
-                        'donor_name' => 'আব্দুল হামিদ',
-                        'recipient_name' => 'মাহমুদা সুলতানা',
+                        'donor_names' => [ ['name' => 'আব্দুল হামিদ'] ],
+                        'recipient_names' => [ ['name' => 'মাহমুদা সুলতানা'] ],
                         'deed_number' => 'DEED-003',
                         'deed_date' => '2022-05-10',
                         'sale_type' => 'বিক্রয়',
@@ -370,7 +373,9 @@ class DatabaseSeeder extends Seeder
             ],
             'tax_info' => [
                 'english_year' => '2024',
-                'bangla_year' => '১৪৩১'
+                'bangla_year' => '১৪৩১',
+                'holding_no' => 'HLD-003',
+                'paid_land_amount' => '1.5 acres'
             ],
             'additional_documents_info' => [
                 'selected_types' => ['আপস- বন্টননামা', 'না-দাবী নামা', 'সরেজমিন তদন্ত'],
@@ -439,8 +444,8 @@ class DatabaseSeeder extends Seeder
                 'rs_owners' => [],
                 'deed_transfers' => [
                     [
-                        'donor_name' => 'আব্দুল মতিন',
-                        'recipient_name' => 'নাসরিন আক্তার',
+                        'donor_names' => [ ['name' => 'আব্দুল মতিন'] ],
+                        'recipient_names' => [ ['name' => 'নাসরিন আক্তার'] ],
                         'deed_number' => 'DEED-004',
                         'deed_date' => '2020-08-15',
                         'sale_type' => 'বিক্রয়',
@@ -462,8 +467,7 @@ class DatabaseSeeder extends Seeder
                         'has_death_cert' => 'yes',
                         'heirship_certificate_info' => 'ওয়ারিশ সনদ আছে',
                         'previous_owner_name' => 'আব্দুল মতিন',
-                        'death_date' => '2023-12-10',
-                        'inheritance_type' => 'direct'
+                        'death_date' => '2023-12-10'
                     ]
                 ],
                 'rs_records' => [],
@@ -493,7 +497,9 @@ class DatabaseSeeder extends Seeder
             ],
             'tax_info' => [
                 'english_year' => '2024',
-                'bangla_year' => '১৪৩১'
+                'bangla_year' => '১৪৩১',
+                'holding_no' => 'HLD-004',
+                'paid_land_amount' => '2 acres'
             ],
             'additional_documents_info' => [
                 'selected_types' => ['এফিডেভিটের তথ্য'],

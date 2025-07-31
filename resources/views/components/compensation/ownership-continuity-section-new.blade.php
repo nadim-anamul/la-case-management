@@ -10,7 +10,7 @@
             <div class="flex items-center space-x-4">
                 <div class="flex items-center cursor-pointer" @click="goToStep('info')">
                     <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold">১</div>
-                    <span class="ml-2 text-sm hover:text-blue-600">SA/RS তথ্য</span>
+                    <span class="ml-2 text-sm hover:text-blue-600">SA/RS রেকর্ডের তথ্য</span>
                 </div>
                 <div class="flex-1 h-1 bg-gray-300"></div>
                 <div class="flex items-center cursor-pointer" @click="goToStep('transfers')" x-show="completedSteps.includes('info')">
@@ -138,8 +138,8 @@
         
         <!-- Action Buttons -->
         <div class="flex flex-wrap gap-4 mb-6">
-            <button type="button" @click="addDeedTransfer()" class="btn-primary">মালিকানা হস্তান্তর যোগ করুন</button>
-            <button type="button" @click="addInheritanceRecord()" class="btn-secondary">ওয়ারিশ রেকর্ড যোগ করুন</button>
+            <button type="button" @click="addDeedTransfer()" class="btn-primary">দলিলমূলে মালিকানা হস্তান্তর যোগ করুন</button>
+            <button type="button" @click="addInheritanceRecord()" class="btn-secondary">ওয়ারিশমূলে হস্তান্তর যোগ করুন</button>
             <button type="button" @click="addRsRecord()" :disabled="rs_record_disabled" class="btn-secondary" :class="{ 'opacity-50 cursor-not-allowed': rs_record_disabled }" x-show="acquisition_record_basis === 'SA'">আরএস রেকর্ড যোগ করুন</button>
             <button type="button" @click="nextStep()" class="btn-success">উপরোক্ত মালিকই আবেদনকারী</button>
         </div>
@@ -167,13 +167,27 @@
             <div class="record-card mb-4">
                 <h5 x-text="'দলিল #' + (index + 1)" class="text-lg font-semibold mb-3"></h5>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="floating-label">
-                        <input type="text" :id="'deed_donor_name_' + index" :name="'ownership_details[deed_transfers][' + index + '][donor_name]'" x-model="deed.donor_name" placeholder=" ">
-                        <label :for="'deed_donor_name_' + index">দলিল দাতার নাম<span class="text-red-500">*</span></label>
+                    <!-- Multiple Donors -->
+                    <div>
+                        <template x-for="(donor, donorIdx) in deed.donor_names" :key="donorIdx">
+                            <div class="flex items-center mb-2">
+                                <input type="text" :id="'deed_donor_name_' + index + '_' + donorIdx" :name="'ownership_details[deed_transfers][' + index + '][donor_names][' + donorIdx + '][name]'" x-model="donor.name" class="form-input flex-1" placeholder="দলিল দাতার নাম">
+                                <label :for="'deed_donor_name_' + index + '_' + donorIdx" class="ml-2">দলিল দাতার নাম</label>
+                                <button type="button" @click="removeDeedDonor(index, donorIdx)" x-show="deed.donor_names.length > 1" class="btn-danger ml-2" title="দাতার নাম মুছুন">×</button>
+                            </div>
+                        </template>
+                        <button type="button" @click="addDeedDonor(index)" class="btn-success mt-2">+ দলিল দাতার নাম যোগ করুন</button>
                     </div>
-                    <div class="floating-label">
-                        <input type="text" :id="'deed_recipient_name_' + index" :name="'ownership_details[deed_transfers][' + index + '][recipient_name]'" x-model="deed.recipient_name" placeholder=" ">
-                        <label :for="'deed_recipient_name_' + index">দলিল গ্রহীতার নাম<span class="text-red-500">*</span></label>
+                    <!-- Multiple Recipients -->
+                    <div>
+                        <template x-for="(recipient, recipientIdx) in deed.recipient_names" :key="recipientIdx">
+                            <div class="flex items-center mb-2">
+                                <input type="text" :id="'deed_recipient_name_' + index + '_' + recipientIdx" :name="'ownership_details[deed_transfers][' + index + '][recipient_names][' + recipientIdx + '][name]'" x-model="recipient.name" class="form-input flex-1" placeholder="দলিল গ্রহীতার নাম">
+                                <label :for="'deed_recipient_name_' + index + '_' + recipientIdx" class="ml-2">দলিল গ্রহীতার নাম</label>
+                                <button type="button" @click="removeDeedRecipient(index, recipientIdx)" x-show="deed.recipient_names.length > 1" class="btn-danger ml-2" title="গ্রহীতার নাম মুছুন">×</button>
+                            </div>
+                        </template>
+                        <button type="button" @click="addDeedRecipient(index)" class="btn-success mt-2">+ দলিল গ্রহীতার নাম যোগ করুন</button>
                     </div>
                     <div class="floating-label">
                         <input type="text" :id="'deed_number_' + index" :name="'ownership_details[deed_transfers][' + index + '][deed_number]'" x-model="deed.deed_number" placeholder=" ">
@@ -248,10 +262,6 @@
                         <label :for="'inheritance_death_date_' + index">মৃত্যুর তারিখ<span class="text-red-500">*</span></label>
                     </div>
                     <div class="floating-label">
-                        <input type="text" :id="'inheritance_type_' + index" :name="'ownership_details[inheritance_records][' + index + '][inheritance_type]'" x-model="inheritance.inheritance_type" placeholder=" ">
-                        <label :for="'inheritance_type_' + index">ওয়ারিশের ধরন<span class="text-red-500">*</span></label>
-                    </div>
-                    <div class="floating-label">
                         <select :name="'ownership_details[inheritance_records][' + index + '][has_death_cert]'" x-model="inheritance.has_death_cert">
                             <option value="yes">হ্যাঁ</option>
                             <option value="no">না</option>
@@ -260,7 +270,7 @@
                     </div>
                     <div class="floating-label md:col-span-2">
                         <textarea :name="'ownership_details[inheritance_records][' + index + '][heirship_certificate_info]'" rows="3" x-model="inheritance.heirship_certificate_info" placeholder=" "></textarea>
-                        <label>ওয়ারিশ সনদের তথ্য</label>
+                        <label>ওয়ারিশ সনদের বিবরণ</label>
                     </div>
                 </div>
             </div>
@@ -381,7 +391,7 @@
         <div class="bg-white p-6 rounded-lg border border-gray-200">
             <h4 class="font-bold text-lg mb-4 text-blue-800">উপরোক্ত মালিকই আবেদনকারী</h4>
             <p class="text-gray-600 mb-4">আবেদনকারী যদি উপরোক্ত মালিক হন, তাহলে তার খারিজের তথ্য দিন:</p>
-            
+            <h5 class="font-semibold text-blue-700 mb-2">খারিজের তথ্য</h5>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="floating-label">
                     <input type="text" name="ownership_details[applicant_info][applicant_name]" x-model="applicant_info.applicant_name" placeholder=" ">
@@ -627,8 +637,8 @@ function ownershipContinuity() {
         
         addDeedTransfer() {
             const newDeed = {
-                donor_name: '',
-                recipient_name: '',
+                donor_names: [{name: ''}],
+                recipient_names: [{name: ''}],
                 deed_number: '',
                 deed_date: '',
                 sale_type: '',
@@ -648,11 +658,30 @@ function ownershipContinuity() {
             this.transferItems.push({ type: 'দলিল', index: 0 });
         },
         
+        addDeedDonor(index) {
+            this.deed_transfers[index].donor_names.push({ name: '' });
+        },
+        
+        removeDeedDonor(index, donorIdx) {
+            if (this.deed_transfers[index].donor_names.length > 1) {
+                this.deed_transfers[index].donor_names.splice(donorIdx, 1);
+            }
+        },
+        
+        addDeedRecipient(index) {
+            this.deed_transfers[index].recipient_names.push({ name: '' });
+        },
+        
+        removeDeedRecipient(index, recipientIdx) {
+            if (this.deed_transfers[index].recipient_names.length > 1) {
+                this.deed_transfers[index].recipient_names.splice(recipientIdx, 1);
+            }
+        },
+        
         addInheritanceRecord() {
             const newInheritance = {
                 previous_owner_name: '',
                 death_date: '',
-                inheritance_type: '',
                 has_death_cert: 'no',
                 heirship_certificate_info: ''
             };

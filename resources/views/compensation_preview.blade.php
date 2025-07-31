@@ -329,7 +329,6 @@
                     </div>
                     <div>
                         <label class="font-semibold text-gray-700">ওয়ারিশের ধরন:</label>
-                        <p class="text-gray-900">{{ $inheritance['inheritance_type'] ?? '' }}</p>
                     </div>
                     <div>
                         <label class="font-semibold text-gray-700">মৃত্যু সনদ আছে কিনা:</label>

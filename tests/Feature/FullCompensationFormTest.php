@@ -64,7 +64,9 @@ class FullCompensationFormTest extends TestCase
             // Tax Information
             'tax_info' => [
                 'english_year' => '2024',
-                'bangla_year' => '১৪৩১'
+                'bangla_year' => '১৪৩১',
+                'holding_no' => 'HLD-001',
+                'paid_land_amount' => '2.5 acres'
             ],
             
             // Additional Documents Information
@@ -111,8 +113,8 @@ class FullCompensationFormTest extends TestCase
                 // Deed Transfers
                 'deed_transfers' => [
                     [
-                        'donor_name' => 'Original Owner',
-                        'recipient_name' => 'New Owner',
+                        'donor_names' => [ ['name' => 'Mohammad Ali'] ],
+                        'recipient_names' => [ ['name' => 'Abdul Rahman'] ],
                         'deed_number' => 'DEED-001',
                         'deed_date' => '2024-01-15',
                         'sale_type' => 'Specific Plot',
@@ -131,7 +133,6 @@ class FullCompensationFormTest extends TestCase
                     [
                         'previous_owner_name' => 'Deceased Owner',
                         'death_date' => '2023-12-01',
-                        'inheritance_type' => 'Natural Death',
                         'has_death_cert' => 'yes',
                         'heirship_certificate_info' => 'Certificate number: HEIR-001'
                     ]
@@ -186,6 +187,8 @@ class FullCompensationFormTest extends TestCase
         // Verify Tax Information
         $this->assertEquals('2024', $compensation->tax_info['english_year']);
         $this->assertEquals('১৪৩১', $compensation->tax_info['bangla_year']);
+        $this->assertEquals('HLD-001', $compensation->tax_info['holding_no']);
+        $this->assertEquals('2.5 acres', $compensation->tax_info['paid_land_amount']);
 
         // Verify Award Information
         $this->assertEquals('SA', $compensation->acquisition_record_basis);
@@ -226,8 +229,8 @@ class FullCompensationFormTest extends TestCase
         $this->assertEquals('Alice Brown', $ownershipDetails['rs_owners'][1]['name']);
 
         // Verify Deed Transfers
-        $this->assertEquals('Original Owner', $ownershipDetails['deed_transfers'][0]['donor_name']);
-        $this->assertEquals('New Owner', $ownershipDetails['deed_transfers'][0]['recipient_name']);
+        $this->assertEquals('Mohammad Ali', $ownershipDetails['deed_transfers'][0]['donor_names'][0]['name']);
+        $this->assertEquals('Abdul Rahman', $ownershipDetails['deed_transfers'][0]['recipient_names'][0]['name']);
         $this->assertEquals('DEED-001', $ownershipDetails['deed_transfers'][0]['deed_number']);
         $this->assertEquals('2024-01-15', $ownershipDetails['deed_transfers'][0]['deed_date']);
         $this->assertEquals('Specific Plot', $ownershipDetails['deed_transfers'][0]['sale_type']);
@@ -242,7 +245,6 @@ class FullCompensationFormTest extends TestCase
         // Verify Inheritance Records
         $this->assertEquals('Deceased Owner', $ownershipDetails['inheritance_records'][0]['previous_owner_name']);
         $this->assertEquals('2023-12-01', $ownershipDetails['inheritance_records'][0]['death_date']);
-        $this->assertEquals('Natural Death', $ownershipDetails['inheritance_records'][0]['inheritance_type']);
         $this->assertEquals('yes', $ownershipDetails['inheritance_records'][0]['has_death_cert']);
         $this->assertEquals('Certificate number: HEIR-001', $ownershipDetails['inheritance_records'][0]['heirship_certificate_info']);
 
@@ -327,7 +329,9 @@ class FullCompensationFormTest extends TestCase
             // Tax Information
             'tax_info' => [
                 'english_year' => '2024',
-                'bangla_year' => '১৪৩১'
+                'bangla_year' => '১৪৩১',
+                'holding_no' => 'RS-HLD-001',
+                'paid_land_amount' => '1.5 acres'
             ],
             
             // Additional Documents Information
@@ -359,8 +363,8 @@ class FullCompensationFormTest extends TestCase
                 ],
                 'deed_transfers' => [
                     [
-                        'donor_name' => 'RS Original Owner',
-                        'recipient_name' => 'RS New Owner',
+                        'donor_names' => [ ['name' => 'RS Original Owner'] ],
+                        'recipient_names' => [ ['name' => 'RS New Owner'] ],
                         'deed_number' => 'RS-DEED-001',
                         'deed_date' => '2024-02-15',
                         'sale_type' => 'RS Specific Plot',
@@ -411,8 +415,8 @@ class FullCompensationFormTest extends TestCase
         $ownershipDetails = $compensation->ownership_details;
 
         // Verify deed transfers for RS basis
-        $this->assertEquals('RS Original Owner', $ownershipDetails['deed_transfers'][0]['donor_name']);
-        $this->assertEquals('RS New Owner', $ownershipDetails['deed_transfers'][0]['recipient_name']);
+        $this->assertEquals('RS Original Owner', $ownershipDetails['deed_transfers'][0]['donor_names'][0]['name']);
+        $this->assertEquals('RS New Owner', $ownershipDetails['deed_transfers'][0]['recipient_names'][0]['name']);
         $this->assertEquals('RS-DEED-001', $ownershipDetails['deed_transfers'][0]['deed_number']);
 
         // Verify applicant info for RS basis
@@ -491,7 +495,9 @@ class FullCompensationFormTest extends TestCase
             'rs_owners' => [['name' => 'Bob Johnson']],
             'tax_info' => [
                 'english_year' => '2024',
-                'bangla_year' => '১৪৩১'
+                'bangla_year' => '১৪৩১',
+                'holding_no' => 'HLD-001',
+                'paid_land_amount' => '2.5 acres'
             ],
             'additional_documents_info' => [
                 'selected_types' => ['deed'],
@@ -502,7 +508,22 @@ class FullCompensationFormTest extends TestCase
                 'rs_info' => ['rs_plot_no' => 'RS-PLOT-001'],
                 'sa_owners' => [['name' => 'John Doe']],
                 'rs_owners' => [['name' => 'Bob Johnson']],
-                'deed_transfers' => [],
+                'deed_transfers' => [
+                    [
+                        'donor_names' => [ ['name' => 'Mohammad Ali'] ],
+                        'recipient_names' => [ ['name' => 'Abdul Rahman'] ],
+                        'deed_number' => 'DEED-001',
+                        'deed_date' => '2024-01-15',
+                        'sale_type' => 'Specific Plot',
+                        'plot_no' => 'PLOT-001',
+                        'sold_land_amount' => '2 acres',
+                        'total_sotangsho' => '50%',
+                        'total_shotok' => '25%',
+                        'possession_mentioned' => 'yes',
+                        'possession_plot_no' => 'POSS-001',
+                        'possession_description' => 'Full possession transferred'
+                    ]
+                ],
                 'inheritance_records' => [],
                 'rs_records' => [],
                 'applicant_info' => ['applicant_name' => 'Test Applicant'],

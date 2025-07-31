@@ -49,7 +49,6 @@ return new class extends Migration
                     'heirship_certificate_info' => $oldInheritance['heirship_certificate_info'] ?? '',
                     'previous_owner_name' => $oldInheritance['previous_owner_name'] ?? '',
                     'death_date' => $oldInheritance['death_date'] ?? '',
-                    'inheritance_type' => $oldInheritance['inheritance_type'] ?? 'direct'
                 ];
                 
                 // Add to new inheritance_records array

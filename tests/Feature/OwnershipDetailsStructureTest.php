@@ -78,7 +78,6 @@ class OwnershipDetailsStructureTest extends TestCase
                     [
                         'previous_owner_name' => 'Previous Owner',
                         'death_date' => '2023-01-01',
-                        'inheritance_type' => 'Direct',
                         'has_death_cert' => 'yes',
                         'heirship_certificate_info' => 'Test heirship info'
                     ]

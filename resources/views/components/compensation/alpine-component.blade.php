@@ -52,7 +52,6 @@
                         heirship_certificate_info: '',
                         previous_owner_name: '',
                         death_date: '',
-                        inheritance_type: 'direct'
                     }];
 
                     this.distribution_records = old.additional_documents_info?.distribution_records || [];
@@ -86,7 +85,6 @@
                         heirship_certificate_info: '',
                         previous_owner_name: '',
                         death_date: '',
-                        inheritance_type: 'direct'
                     }];
 
                     this.distribution_records = data.additional_documents_info?.distribution_records || [];
@@ -115,7 +113,6 @@
                         heirship_certificate_info: '',
                         previous_owner_name: '',
                         death_date: '',
-                        inheritance_type: 'direct'
                     }];
 
                     this.distribution_records = [{ details: '' }];
@@ -166,7 +163,6 @@
                     heirship_certificate_info: '',
                     previous_owner_name: '',
                     death_date: '',
-                    inheritance_type: 'direct'
                 });
             },
             removeInheritanceRecord(index) {

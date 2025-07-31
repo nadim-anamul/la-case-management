@@ -12,5 +12,15 @@
             <input type="text" name="tax_info[bangla_year]" value="{{ old('tax_info.bangla_year', isset($compensation) ? $compensation->tax_info['bangla_year'] ?? '' : '') }}" placeholder=" ">
             <label>বাংলা সাল পর্যন্ত পরিশোধিত</label>
         </div>
+        <div class="floating-label">
+            <input type="text" name="tax_info[holding_no]" value="{{ old('tax_info.holding_no', isset(
+                $compensation) ? $compensation->tax_info['holding_no'] ?? '' : '') }}" placeholder=" ">
+            <label>হোল্ডিং নম্বর</label>
+        </div>
+        <div class="floating-label">
+            <input type="text" name="tax_info[paid_land_amount]" value="{{ old('tax_info.paid_land_amount', isset(
+                $compensation) ? $compensation->tax_info['paid_land_amount'] ?? '' : '') }}" placeholder=" ">
+            <label>খাজনা প্রদানকৃত জমির পরিমান</label>
+        </div>
     </div>
 </div> 

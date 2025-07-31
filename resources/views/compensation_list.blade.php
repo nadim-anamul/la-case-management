@@ -6,8 +6,13 @@
     <div class="container mx-auto p-8">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold">ক্ষতিপূরণ কেসের তালিকা</h1>
-            <a href="{{ route('compensation.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                + নতুন ক্ষতিপূরণ কেস দায়ের
+            <a href="{{ route('compensation.create') }}"
+                class="inline-flex items-center bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white font-extrabold text-lg md:text-xl px-6 md:px-10 py-3 md:py-4 rounded-lg shadow-lg transform transition-all duration-500 ease-in-out hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 w-full sm:w-auto justify-center"
+                >
+                    <svg class="w-6 h-6 mr-2 -ml-1 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m-4-4h8"/>
+                    </svg>
+                    + নতুন ক্ষতিপূরণ কেস দায়ের
             </a>
         </div>
 

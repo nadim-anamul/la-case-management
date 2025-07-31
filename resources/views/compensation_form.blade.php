@@ -437,7 +437,7 @@
     <div class="page-header">
         <div class="flex justify-between items-center">
             <div>
-                <h1>{{ isset($compensation) ? 'ক্ষতিপূরণ তথ্য ফরম আপডেট' : 'ক্ষতিপূরণ তথ্য ফরম' }}</h1>
+                <h1>{{ isset($compensation) ? 'ক্ষতিপূরণ আবেদন ফরম আপডেট' : 'ক্ষতিপূরণ আবেদন ফরম' }}</h1>
                 <p>ভূমি অধিগ্রহণ সম্পর্কিত ক্ষতিপূরণের জন্য আবেদন ফরম</p>
             </div>
             <a href="{{ route('compensation.index') }}" class="btn-secondary">
