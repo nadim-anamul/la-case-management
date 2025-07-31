@@ -126,9 +126,6 @@
 
         <!-- Navigation Buttons -->
         <div class="flex justify-between mt-6">
-            <button type="button" @click="saveStepData()" class="btn-primary" :disabled="!isStep1Valid()">
-                বর্তমান ধাপ সংরক্ষণ করুন
-            </button>
             <button type="button" @click="nextStep()" class="btn-secondary" :disabled="!isStep1Valid()">
                 পরবর্তী ধাপ
             </button>
@@ -293,6 +290,14 @@
                 </div>
             </div>
         </template>
+        
+        <!-- Action Buttons at Bottom -->
+        <div class="flex flex-wrap gap-4 mt-6">
+            <button type="button" @click="addDeedTransfer()" class="btn-primary">মালিকানা হস্তান্তর যোগ করুন</button>
+            <button type="button" @click="addInheritanceRecord()" class="btn-secondary">ওয়ারিশ রেকর্ড যোগ করুন</button>
+            <button type="button" @click="addRsRecord()" :disabled="rs_record_disabled" class="btn-secondary" :class="{ 'opacity-50 cursor-not-allowed': rs_record_disabled }" x-show="acquisition_record_basis === 'SA'">আরএস রেকর্ড যোগ করুন</button>
+            <button type="button" @click="nextStep()" class="btn-success">উপরোক্ত মালিকই আবেদনকারী</button>
+        </div>
     </div>
 
     <!-- Step 3: Applicant Owner Information -->

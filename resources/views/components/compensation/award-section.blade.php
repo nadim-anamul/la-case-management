@@ -42,7 +42,7 @@
         </div>
         <div class="floating-label">
             <input type="text" name="plot_no" value="{{ old('plot_no', isset($compensation) ? $compensation->plot_no : '') }}" placeholder=" " required>
-            <label>দাগ নং<span class="text-red-500">*</span></label>
+                                    <label>খতিয়ান নং<span class="text-red-500">*</span></label>
         </div>
         <template x-if="acquisition_record_basis === 'SA'">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2">

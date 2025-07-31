@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'ক্ষতিপূরণ তথ্যের তালিকা')
+@section('title', 'ক্ষতিপূরণ কেসের তালিকা')
 
 @section('content')
     <div class="container mx-auto p-8">
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold">ক্ষতিপূরণ তথ্যের তালিকা</h1>
+            <h1 class="text-3xl font-bold">ক্ষতিপূরণ কেসের তালিকা</h1>
             <a href="{{ route('compensation.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                + নতুন তথ্য যোগ করুন
+                + নতুন ক্ষতিপূরণ কেস দায়ের
             </a>
         </div>
 
@@ -21,8 +21,8 @@
                 <div class="min-w-48">
                     <label class="block text-sm font-medium text-gray-700 mb-2">অবস্থা</label>
                     <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="pending" {{ ($status ?? 'pending') === 'pending' ? 'selected' : '' }}>অপেক্ষমান</option>
-                        <option value="done" {{ ($status ?? 'pending') === 'done' ? 'selected' : '' }}>সম্পন্ন</option>
+                        <option value="pending" {{ ($status ?? 'pending') === 'pending' ? 'selected' : '' }}>চলমান</option>
+                        <option value="done" {{ ($status ?? 'pending') === 'done' ? 'selected' : '' }}>নিষ্পত্তিকৃত</option>
                     </select>
                 </div>
                 <div class="flex gap-2">
@@ -87,7 +87,7 @@
                                 </button>
                                 @else
                                 <span class="bg-green-100 text-green-800 font-bold py-2 px-4 rounded text-sm">
-                                    সম্পন্ন
+                                    নিষ্পত্তিকৃত
                                 </span>
                                 @endif
                             </div>
@@ -194,7 +194,7 @@
                             বাতিল
                         </button>
                         <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                            আদেশ সম্পন্ন করুন
+                            আদেশ নিষ্পত্তিকৃত করুন
                         </button>
                     </div>
                 </form>
