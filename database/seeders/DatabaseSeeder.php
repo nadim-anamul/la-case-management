@@ -337,11 +337,10 @@ class DatabaseSeeder extends Seeder
                 'inheritance_records' => [],
                 'rs_records' => [
                     [
-                        'rs_plot_no' => 'RS-PLOT-003',
-                        'rs_khatian_no' => 'RS-KH-003',
-                        'rs_total_land_in_plot' => '3 acres',
-                        'rs_land_in_khatian' => '1.5 acres',
-                        'rs_owner_name' => 'সাবরিনা আক্তার'
+                        'plot_no' => 'RS-PLOT-003',
+                        'khatian_no' => 'RS-KH-003',
+                        'land_amount' => '3 acres',
+                        'owner_name' => 'সাবরিনা আক্তার'
                     ]
                 ],
                 'applicant_info' => [

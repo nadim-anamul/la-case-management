@@ -354,23 +354,19 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="font-semibold text-gray-700">আরএস দাগ নম্বর:</label>
-                        <p class="text-gray-900">{{ $rs['rs_plot_no'] ?? '' }}</p>
+                        <p class="text-gray-900">{{ $rs['plot_no'] ?? '' }}</p>
                     </div>
                     <div>
                         <label class="font-semibold text-gray-700">আরএস খতিয়ান নম্বর:</label>
-                        <p class="text-gray-900">{{ $rs['rs_khatian_no'] ?? '' }}</p>
+                        <p class="text-gray-900">{{ $rs['khatian_no'] ?? '' }}</p>
                     </div>
                     <div>
-                        <label class="font-semibold text-gray-700">আরএস দাগে মোট জমি:</label>
-                        <p class="text-gray-900">{{ $rs['rs_total_land_in_plot'] ?? '' }}</p>
-                    </div>
-                    <div>
-                        <label class="font-semibold text-gray-700">আরএস খতিয়ানে জমির পরিমাণ:</label>
-                        <p class="text-gray-900">{{ $rs['rs_land_in_khatian'] ?? '' }}</p>
+                        <label class="font-semibold text-gray-700">আরএস জমির পরিমাণ:</label>
+                        <p class="text-gray-900">{{ $rs['land_amount'] ?? '' }}</p>
                     </div>
                     <div>
                         <label class="font-semibold text-gray-700">আরএস মালিকের নাম:</label>
-                        <p class="text-gray-900">{{ $rs['rs_owner_name'] ?? '' }}</p>
+                        <p class="text-gray-900">{{ $rs['owner_name'] ?? '' }}</p>
                     </div>
                 </div>
             </div>
