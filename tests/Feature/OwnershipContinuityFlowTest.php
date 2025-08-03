@@ -33,9 +33,7 @@ class OwnershipContinuityFlowTest extends TestCase
                 ['name' => 'Test Award Holder']
             ],
             'is_applicant_in_award' => true,
-            'total_acquired_land' => '1.00',
-            'total_compensation' => '100000',
-            'source_tax_percentage' => '5.00',
+            'source_tax_percentage' => '3%',
             'applicant_acquired_land' => '1.00',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-001',
@@ -153,9 +151,7 @@ class OwnershipContinuityFlowTest extends TestCase
                 ['name' => 'Test Award Holder']
             ],
             'is_applicant_in_award' => true,
-            'total_acquired_land' => '1.00',
-            'total_compensation' => '100000',
-            'source_tax_percentage' => '5.00',
+            'source_tax_percentage' => '3%',
             'applicant_acquired_land' => '1.00',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-002',

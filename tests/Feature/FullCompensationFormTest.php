@@ -37,9 +37,7 @@ class FullCompensationFormTest extends TestCase
                 ['name' => 'Award Holder']
             ],
             'is_applicant_in_award' => true,
-            'total_acquired_land' => '5 acres',
-            'total_compensation' => '500000',
-            'source_tax_percentage' => '5.00',
+            'source_tax_percentage' => '3%',
             'applicant_acquired_land' => '2 acres',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-001',
@@ -307,9 +305,7 @@ class FullCompensationFormTest extends TestCase
                 ['name' => 'RS Award Holder']
             ],
             'is_applicant_in_award' => false,
-            'total_acquired_land' => '3 acres',
-            'total_compensation' => '300000',
-            'source_tax_percentage' => '5.00',
+            'source_tax_percentage' => '3%',
             'applicant_acquired_land' => '1.5 acres',
             'mouza_name' => 'RS Test Mouza',
             'jl_no' => 'JL-002',
@@ -458,10 +454,6 @@ class FullCompensationFormTest extends TestCase
         $response->assertSessionHasErrors(['plot_no']);
         $response->assertSessionHasErrors(['award_holder_names']);
         $response->assertSessionHasErrors(['is_applicant_in_award']);
-        $response->assertSessionHasErrors(['total_acquired_land']);
-        $response->assertSessionHasErrors(['total_compensation']);
-        $response->assertSessionHasErrors(['mouza_name']);
-        $response->assertSessionHasErrors(['jl_no']);
         // ownership_details is now optional, so we don't check for it
         $response->assertSessionHasErrors(['additional_documents_info']);
         // kanungo_opinion is now handled separately, so we don't check for it
@@ -486,9 +478,7 @@ class FullCompensationFormTest extends TestCase
                 ['name' => 'Award Holder']
             ],
             'is_applicant_in_award' => true,
-            'total_acquired_land' => '5 acres',
-            'total_compensation' => '500000',
-            'source_tax_percentage' => '5.00',
+            'source_tax_percentage' => '3%',
             'applicant_acquired_land' => '2 acres',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-001',

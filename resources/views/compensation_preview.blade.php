@@ -118,11 +118,31 @@
             </div>
             <div>
                 <label class="font-semibold text-gray-700">অধিগ্রহণকৃত মোট জমির পরিমাণ:</label>
-                <p class="text-gray-900">{{ $compensation->total_acquired_land }}</p>
+                <p class="text-gray-900">
+                    @php
+                        $totalLand = 0;
+                        if($compensation->land_category && is_array($compensation->land_category)) {
+                            foreach($compensation->land_category as $category) {
+                                $totalLand += floatval($category['total_land'] ?? 0);
+                            }
+                        }
+                        echo number_format($totalLand, 2) . ' একর';
+                    @endphp
+                </p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">অধিগ্রহণকৃত জমির মোট ক্ষতিপূরণ:</label>
-                <p class="text-gray-900">{{ $compensation->total_compensation }}</p>
+                <p class="text-gray-900">
+                    @php
+                        $totalCompensation = 0;
+                        if($compensation->land_category && is_array($compensation->land_category)) {
+                            foreach($compensation->land_category as $category) {
+                                $totalCompensation += floatval($category['total_compensation'] ?? 0);
+                            }
+                        }
+                        echo number_format($totalCompensation, 2) . ' টাকা';
+                    @endphp
+                </p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">উৎস কর %:</label>

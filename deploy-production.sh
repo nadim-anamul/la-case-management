@@ -249,7 +249,7 @@ generate_deployment_summary() {
     echo "   - Automatic database backup before changes"
     echo "   - Rollback capability on migration failure"
     echo "   - Robust application health checks"
-    echo "   - CDN assets (no Vite build required)"
+    echo "   - Vite asset compilation (CSS/JS build)"
     echo "   - Production environment"
     echo "   - Updated database seeder"
     echo "   - All new fields (status, order_signature_date, etc.)"
@@ -366,6 +366,17 @@ main() {
     fi
     if grep -r "award_serial_no" database/seeders/ 2>/dev/null | grep -q .; then
         echo "   - Conditional award serial number demo data"
+    fi
+    echo ""
+    
+    # Build Vite assets for production
+    print_status "🎨 Building Vite assets for production..."
+    if docker compose -f docker-compose.server.yml exec -T app npm run build 2>&1; then
+        print_success "✅ Vite assets built successfully"
+        echo "   - CSS and JS assets compiled for production"
+    else
+        print_warning "⚠️ Vite build failed, but continuing deployment..."
+        echo "   - Assets will be built during container startup"
     fi
     echo ""
     

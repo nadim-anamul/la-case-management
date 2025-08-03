@@ -30,9 +30,7 @@ class OwnershipDetailsStructureTest extends TestCase
             ],
             'objector_details' => 'Test objections',
             'is_applicant_in_award' => true,
-            'total_acquired_land' => '10 acres',
-            'total_compensation' => '100000',
-            'source_tax_percentage' => '5.00',
+            'source_tax_percentage' => '3%',
             'applicant_acquired_land' => '5 acres',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-001',
@@ -162,13 +160,11 @@ class OwnershipDetailsStructureTest extends TestCase
             'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-001',
             'award_holder_names' => [
-                ['name' => 'Test Holder']
+                ['name' => 'Test Applicant']
             ],
             'objector_details' => 'Test objections',
             'is_applicant_in_award' => true,
-            'total_acquired_land' => '10 acres',
-            'total_compensation' => '100000',
-            'source_tax_percentage' => '5.00',
+            'source_tax_percentage' => '3%',
             'applicant_acquired_land' => '5 acres',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-001',
