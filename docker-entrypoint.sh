@@ -33,9 +33,15 @@ echo "Generating application key..."
 php artisan key:generate
 
 echo "Running migrations and seeding..."
-php artisan migrate:fresh --seed
+# Use --force to avoid interactive prompts and handle production environment
+php artisan migrate --force
 
 echo "Creating storage link..."
+# Remove existing link if it exists, then create new one
+if [ -L "public/storage" ]; then
+    echo "Removing existing storage link..."
+    rm public/storage
+fi
 php artisan storage:link
 
 echo "Setting permissions..."

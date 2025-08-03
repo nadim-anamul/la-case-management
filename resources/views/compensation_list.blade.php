@@ -75,14 +75,22 @@
                             <p class="text-gray-900 whitespace-no-wrap">{{ $item->case_number }}</p>
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            @foreach($item->applicants as $applicant)
-                                <p class="text-gray-900 whitespace-no-wrap">{{ $applicant['name'] }}</p>
-                            @endforeach
+                            @if(is_array($item->applicants))
+                                @foreach($item->applicants as $applicant)
+                                    <p class="text-gray-900 whitespace-no-wrap">{{ is_array($applicant) ? ($applicant['name'] ?? '') : $applicant }}</p>
+                                @endforeach
+                            @else
+                                <p class="text-gray-900 whitespace-no-wrap">{{ $item->applicants }}</p>
+                            @endif
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            @foreach($item->award_holder_names as $holder)
-                                <p class="text-gray-900 whitespace-no-wrap">{{ $holder['name'] }}</p>
-                            @endforeach
+                            @if(is_array($item->award_holder_names))
+                                @foreach($item->award_holder_names as $holder)
+                                    <p class="text-gray-900 whitespace-no-wrap">{{ is_array($holder) ? ($holder['name'] ?? '') : $holder }}</p>
+                                @endforeach
+                            @else
+                                <p class="text-gray-900 whitespace-no-wrap">{{ $item->award_holder_names }}</p>
+                            @endif
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $item->applicant_acquired_land }}</p>

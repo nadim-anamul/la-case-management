@@ -85,6 +85,20 @@ ls -la backup_*.sql
 ./check-migration-status.sh
 ```
 
+### 4. Deployment Issue Fixer (`fix-deployment-issues.sh`)
+
+**Features:**
+- ✅ Fixes storage link conflicts
+- ✅ Corrects permission issues
+- ✅ Clears application caches
+- ✅ Restarts application container
+- ✅ Provides diagnostic information
+
+**Usage:**
+```bash
+./fix-deployment-issues.sh
+```
+
 ## 🗄️ Database Management
 
 ### Automatic Backups
@@ -151,6 +165,30 @@ ls -la backup_*.sql
 
 # Restore from backup
 ./restore-from-backup.sh backup_YYYYMMDD_HHMMSS.sql
+```
+
+#### 5. Application Health Check Failed
+```bash
+# Run the deployment issue fixer
+./fix-deployment-issues.sh
+
+# Check application logs
+docker compose -f docker-compose.server.yml logs -f app
+
+# Check if storage link exists
+docker compose -f docker-compose.server.yml exec app ls -la public/storage
+
+# Restart application container
+docker compose -f docker-compose.server.yml restart app
+```
+
+#### 6. Storage Link Already Exists
+```bash
+# Remove existing storage link
+docker compose -f docker-compose.server.yml exec app rm -f public/storage
+
+# Create new storage link
+docker compose -f docker-compose.server.yml exec app php artisan storage:link
 ```
 
 ### Manual Database Operations

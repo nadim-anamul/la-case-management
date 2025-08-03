@@ -120,23 +120,33 @@ run_seeders() {
 # Function to check application health
 check_application_health() {
     print_status "🔍 Checking application health..."
-    local max_attempts=20
+    local max_attempts=30
     local attempt=1
     
     while [ $attempt -le $max_attempts ]; do
-        if curl -f http://localhost:8000 > /dev/null 2>&1; then
-            print_success "✅ Application is responding"
+        # Check if application is responding with HTTP 200
+        if curl -s -o /dev/null -w "%{http_code}" http://localhost:8000 | grep -q "200"; then
+            print_success "✅ Application is responding with HTTP 200"
             return 0
         else
             print_warning "⏳ Waiting for application... (attempt $attempt/$max_attempts)"
+            
+            # Show recent logs every 5 attempts
+            if [ $((attempt % 5)) -eq 0 ]; then
+                print_status "📋 Recent application logs:"
+                docker compose -f docker-compose.server.yml logs --tail=10 app
+            fi
+            
             sleep 3
             attempt=$((attempt + 1))
         fi
     done
     
     print_error "❌ Application failed to start"
-    print_status "📋 Container logs:"
+    print_status "📋 Full container logs:"
     docker compose -f docker-compose.server.yml logs app
+    print_status "📋 Container status:"
+    docker ps | grep laravel
     return 1
 }
 
@@ -171,6 +181,27 @@ main() {
     # Wait for database to be ready
     if ! wait_for_database; then
         print_error "❌ Database failed to start properly"
+        exit 1
+    fi
+    
+    # Wait for application container to be ready
+    print_status "⏳ Waiting for application container to be ready..."
+    local app_attempts=0
+    while [ $app_attempts -lt 60 ]; do
+        if docker compose -f docker-compose.server.yml exec -T app php artisan --version > /dev/null 2>&1; then
+            print_success "✅ Application container is ready"
+            break
+        else
+            print_warning "⏳ Waiting for application container... (attempt $((app_attempts + 1))/60)"
+            sleep 2
+            app_attempts=$((app_attempts + 1))
+        fi
+    done
+    
+    if [ $app_attempts -ge 60 ]; then
+        print_error "❌ Application container failed to start properly"
+        print_status "📋 Application container logs:"
+        docker compose -f docker-compose.server.yml logs app
         exit 1
     fi
     
