@@ -12,6 +12,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Check if demo data already exists to avoid conflicts
+        if (Compensation::where('case_number', 'CASE-2024-001')->exists()) {
+            $this->command->info('Demo compensation records already exist. Skipping seeder.');
+            return;
+        }
+        
         // Create demo compensation records
         $this->createDemoCompensations();
     }
