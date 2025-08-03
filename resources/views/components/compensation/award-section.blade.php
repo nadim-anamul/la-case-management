@@ -12,12 +12,15 @@
         </p>
     </div>
     
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div x-data="{ 
+        award_type: '{{ old('award_type', isset($compensation) ? (is_array($compensation->award_type) ? $compensation->award_type[0] ?? '' : $compensation->award_type) : '') }}',
+        acquisition_record_basis: '{{ old('acquisition_record_basis', isset($compensation) ? $compensation->acquisition_record_basis : '') }}'
+    }" class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="floating-label">
             <input type="text" name="la_case_no" value="{{ old('la_case_no', isset($compensation) ? $compensation->la_case_no : '') }}" placeholder=" " required>
             <label>এলএ কেস নং<span class="text-red-500">*</span></label>
         </div>
-        <div x-data="{ award_type: '{{ old('award_type', isset($compensation) ? (is_array($compensation->award_type) ? $compensation->award_type[0] ?? '' : $compensation->award_type) : '') }}' }">
+        <div>
             <label>রোয়েদাদের ধরন<span class="text-red-500">*</span></label>
             <div class="radio-group">
                 <label><input type="radio" name="award_type" value="জমি" x-model="award_type" class="mr-2" required 
