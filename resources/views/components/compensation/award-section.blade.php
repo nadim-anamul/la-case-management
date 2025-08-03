@@ -13,7 +13,7 @@
     </div>
     
     <div x-data="{ 
-        award_type: '{{ old('award_type', isset($compensation) ? (is_array($compensation->award_type) ? $compensation->award_type[0] ?? '' : $compensation->award_type) : '') }}',
+        award_type: '{{ old('award_type', isset($compensation) ? ($compensation->award_type[0] ?? '') : '') }}',
         acquisition_record_basis: '{{ old('acquisition_record_basis', isset($compensation) ? $compensation->acquisition_record_basis : '') }}'
     }" class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="floating-label">
@@ -23,12 +23,9 @@
         <div>
             <label>রোয়েদাদের ধরন<span class="text-red-500">*</span></label>
             <div class="radio-group">
-                <label><input type="radio" name="award_type" value="জমি" x-model="award_type" class="mr-2" required 
-                    {{ (old('award_type', isset($compensation) ? (is_array($compensation->award_type) ? $compensation->award_type[0] ?? '' : $compensation->award_type) : '')) == 'জমি' ? 'checked' : '' }}><span>জমি</span></label>
-                <label><input type="radio" name="award_type" value="জমি ও গাছপালা" x-model="award_type" class="mr-2" required 
-                    {{ (old('award_type', isset($compensation) ? (is_array($compensation->award_type) ? $compensation->award_type[0] ?? '' : $compensation->award_type) : '')) == 'জমি ও গাছপালা' ? 'checked' : '' }}><span>জমি ও গাছপালা</span></label>
-                <label><input type="radio" name="award_type" value="অবকাঠামো" x-model="award_type" class="mr-2" required 
-                    {{ (old('award_type', isset($compensation) ? (is_array($compensation->award_type) ? $compensation->award_type[0] ?? '' : $compensation->award_type) : '')) == 'অবকাঠামো' ? 'checked' : '' }}><span>অবকাঠামো</span></label>
+                <label><input type="radio" name="award_type" value="জমি" x-model="award_type" class="mr-2" required><span>জমি</span></label>
+                <label><input type="radio" name="award_type" value="জমি ও গাছপালা" x-model="award_type" class="mr-2" required><span>জমি ও গাছপালা</span></label>
+                <label><input type="radio" name="award_type" value="অবকাঠামো" x-model="award_type" class="mr-2" required><span>অবকাঠামো</span></label>
             </div>
         </div>
         <div class="floating-label">

@@ -33,6 +33,7 @@ class Compensation extends Model
      */
     protected $casts = [
         'applicants' => 'array',
+        'award_type' => 'array',
         'award_holder_names' => 'array',
         'is_applicant_in_award' => 'boolean',
         'ownership_details' => 'array',
