@@ -247,6 +247,49 @@ docker compose -f docker-compose.server.yml logs -f db
 docker compose -f docker-compose.server.yml logs -f
 ```
 
+## 🆕 Recent Updates & New Features
+
+### Database Schema Updates
+- **land_category JSON field**: New field for storing land category information with award types
+- **Conditional award serial numbers**: Separate fields for land, tree, and infrastructure awards
+- **Enhanced RS records**: Support for multiple owner names and DP khatian checkbox
+- **Updated award_serial_no**: Made nullable to prevent database errors
+
+### UI/UX Improvements
+- **Improved button colors**: Orange color for RS record buttons, consistent styling
+- **Enhanced checkbox alignment**: Better spacing and styling for DP khatian checkbox
+- **Conditional field display**: Dynamic form fields based on award type selection
+- **Multiple owner names**: Support for adding multiple RS record owners
+
+### New Migrations Applied
+```bash
+# Recent migrations included in deployment:
+- 2025_08_03_190921_add_land_category_to_compensations_table.php
+- 2025_08_03_193616_add_award_serial_no_fields_to_compensations_table.php
+- 2025_08_03_193935_make_award_serial_no_nullable.php
+```
+
+### Updated Database Seeder
+- **Enhanced demo data**: Includes new RS records structure with owner_names array
+- **DP khatian support**: Default checked state for new RS records
+- **Multiple owner examples**: Demo data shows various owner name combinations
+- **Backward compatibility**: Handles both old and new data structures
+
+### 🚀 Dynamic Deployment System
+- **Automatic change detection**: Scripts now automatically detect new migrations, features, and changes
+- **Smart feature detection**: Identifies database schema updates, UI improvements, and new components
+- **Real-time summaries**: Generates deployment summaries based on actual code changes
+- **Independent summary generator**: `./generate-deployment-summary.sh` for standalone deployment analysis
+
+**Usage:**
+```bash
+# Generate deployment summary without deploying
+./generate-deployment-summary.sh
+
+# Full deployment with dynamic summaries
+./deploy-production.sh
+```
+
 ## 🔒 Security Notes
 
 1. **Database Credentials**: Stored in `docker-compose.server.yml`
@@ -294,5 +337,5 @@ If you encounter issues:
 
 ---
 
-**Last Updated**: December 2024
-**Version**: Enhanced with Database Error Handling 
+**Last Updated**: August 2025
+**Version**: Enhanced with Database Error Handling & New Features 
