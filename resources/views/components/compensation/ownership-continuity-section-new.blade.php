@@ -194,7 +194,7 @@
                         <label :for="'deed_number_' + index">দলিল নম্বর<span class="text-red-500">*</span></label>
                     </div>
                     <div class="floating-label">
-                        <input type="date" :id="'deed_date_' + index" :name="'ownership_details[deed_transfers][' + index + '][deed_date]'" x-model="deed.deed_date" placeholder=" ">
+                        <input type="text" :id="'deed_date_' + index" :name="'ownership_details[deed_transfers][' + index + '][deed_date]'" x-model="deed.deed_date" placeholder="দিন/মাস/বছর">
                         <label :for="'deed_date_' + index">দলিলের তারিখ<span class="text-red-500">*</span></label>
                     </div>
                     <div class="floating-label">
@@ -258,7 +258,7 @@
                         <label :for="'inheritance_previous_owner_name_' + index">পূর্ববর্তী মালিকের নাম<span class="text-red-500">*</span></label>
                     </div>
                     <div class="floating-label">
-                        <input type="date" :id="'inheritance_death_date_' + index" :name="'ownership_details[inheritance_records][' + index + '][death_date]'" x-model="inheritance.death_date" placeholder=" ">
+                        <input type="text" :id="'inheritance_death_date_' + index" :name="'ownership_details[inheritance_records][' + index + '][death_date]'" x-model="inheritance.death_date" placeholder="দিন/মাস/বছর">
                         <label :for="'inheritance_death_date_' + index">মৃত্যুর তারিখ<span class="text-red-500">*</span></label>
                     </div>
                     <div class="floating-label">
@@ -409,10 +409,10 @@
                     <input type="text" name="ownership_details[applicant_info][kharij_land_amount]" x-model="applicant_info.kharij_land_amount" placeholder=" ">
                     <label>খারিজকৃত জমির পরিমাণ</label>
                 </div>
-                <div class="floating-label">
-                    <input type="date" name="ownership_details[applicant_info][kharij_date]" x-model="applicant_info.kharij_date" placeholder=" ">
-                    <label>খারিজের তারিখ</label>
-                </div>
+                                    <div class="floating-label">
+                        <input type="text" name="ownership_details[applicant_info][kharij_date]" x-model="applicant_info.kharij_date" placeholder="দিন/মাস/বছর">
+                        <label>খারিজের তারিখ</label>
+                    </div>
                 <div class="floating-label md:col-span-2">
                     <textarea name="ownership_details[applicant_info][kharij_details]" rows="3" x-model="applicant_info.kharij_details" placeholder=" "></textarea>
                     <label>খারিজের বিস্তারিত বিবরণ</label>

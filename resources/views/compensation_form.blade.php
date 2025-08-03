@@ -437,7 +437,7 @@
     <div class="page-header">
         <div class="flex justify-between items-center">
             <div>
-                <h1>{{ isset($compensation) ? 'ক্ষতিপূরণ আবেদন ফরম আপডেট' : 'ক্ষতিপূরণ আবেদন ফরম' }}</h1>
+                <h1>{{ isset($compensation) ? 'ক্ষতিপূরণ প্রাপ্তির আবেদন ফরম আপডেট' : 'ক্ষতিপূরণ প্রাপ্তির আবেদন ফরম' }}</h1>
                 <p>ভূমি অধিগ্রহণ সম্পর্কিত ক্ষতিপূরণের জন্য আবেদন ফরম</p>
             </div>
             <a href="{{ route('compensation.index') }}" class="btn-secondary">
@@ -481,7 +481,7 @@
                     <label for="case_number">ক্ষতিপূরণ কেস নং<span class="text-red-500">*</span></label>
                 </div>
                 <div class="floating-label">
-                    <input type="date" name="case_date" id="case_date" class="form-input" placeholder=" " value="{{ old('case_date', $compensation->case_date ?? '') }}" required aria-required="true">
+                    <input type="text" name="case_date" id="case_date" class="form-input" placeholder="দিন/মাস/বছর" value="{{ old('case_date', isset($compensation) ? $compensation->case_date_bengali : '') }}" required aria-required="true">
                     <label for="case_date">তারিখ<span class="text-red-500">*</span></label>
                 </div>
             </div>

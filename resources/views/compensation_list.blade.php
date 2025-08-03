@@ -12,7 +12,7 @@
                     <svg class="w-6 h-6 mr-2 -ml-1 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m-4-4h8"/>
                     </svg>
-                    + নতুন ক্ষতিপূরণ কেস দায়ের
+                    নতুন ক্ষতিপূরণ কেস দায়ের
             </a>
         </div>
 
@@ -21,7 +21,7 @@
             <form method="GET" action="{{ route('compensation.index') }}" class="flex flex-wrap gap-4 items-end">
                 <div class="flex-1 min-w-64">
                     <label class="block text-sm font-medium text-gray-700 mb-2">অনুসন্ধান</label>
-                    <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="এলএ কেস নং বা আবেদনকারীর নাম লিখুন..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="এলএ কেস নং, ক্ষতিপূরণ কেস নং, আবেদনকারীর নাম, মৌজা নং, দাগ নং লিখুন..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div class="min-w-48">
                     <label class="block text-sm font-medium text-gray-700 mb-2">অবস্থা</label>
@@ -53,8 +53,12 @@
                     <tr>
                         <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ID</th>
                         <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">এলএ কেস নং</th>
+                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ক্ষতিপূরণ কেস নং</th>
                         <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">আবেদনকারীগণ</th>
+                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">রোয়েদাদভুক্ত মালিক</th>
                         <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">জমির পরিমাণ</th>
+                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">মৌজা নং</th>
+                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">দাগ নং</th>
                         <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50"></th>
                     </tr>
                 </thead>
@@ -68,12 +72,26 @@
                             <p class="text-gray-900 whitespace-no-wrap">{{ $item->la_case_no }}</p>
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <p class="text-gray-900 whitespace-no-wrap">{{ $item->case_number }}</p>
+                        </td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                             @foreach($item->applicants as $applicant)
                                 <p class="text-gray-900 whitespace-no-wrap">{{ $applicant['name'] }}</p>
                             @endforeach
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            @foreach($item->award_holder_names as $holder)
+                                <p class="text-gray-900 whitespace-no-wrap">{{ $holder['name'] }}</p>
+                            @endforeach
+                        </td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $item->applicant_acquired_land }}</p>
+                        </td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <p class="text-gray-900 whitespace-no-wrap">{{ $item->mouza_name }}</p>
+                        </td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <p class="text-gray-900 whitespace-no-wrap">{{ $item->jl_no }}</p>
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm text-right whitespace-nowrap">
                             <div class="flex space-x-2">
@@ -100,7 +118,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="text-center py-10">
+                        <td colspan="9" class="text-center py-10">
                             <p class="text-gray-600">কোনো তথ্য পাওয়া যায়নি।</p>
                         </td>
                     </tr>
@@ -185,7 +203,7 @@
                     <div class="space-y-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">আদেশ স্বাক্ষরের তারিখ<span class="text-red-500">*</span></label>
-                            <input type="date" name="order_signature_date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                            <input type="text" name="order_signature_date" placeholder="দিন/মাস/বছর" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
                         </div>
                         
                         <div>

@@ -9,7 +9,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="floating-label">
                     <input type="text" :name="'applicants[' + index + '][name]'" x-model="applicant.name" placeholder=" " required>
-                    <label>নাম<span class="text-red-500">*</span></label>
+                    <label>নাম (এন আই ডি অনুযায়ী)<span class="text-red-500">*</span></label>
                     @error('applicants.*.name')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
@@ -30,7 +30,7 @@
                 </div>
                 <div class="floating-label">
                     <input type="text" :name="'applicants[' + index + '][nid]'" x-model="applicant.nid" placeholder=" " required>
-                    <label>এন আই ডি<span class="text-red-500">*</span></label>
+                    <label>এন আই ডি নং<span class="text-red-500">*</span></label>
                     @error('applicants.*.nid')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
@@ -49,6 +49,5 @@
         <button type="button" @click="addApplicant()" class="btn-success">
             + আবেদনকারী যোগ করুন
         </button>
-        <span class="text-gray-600 text-sm">কমপক্ষে একজন আবেদনকারীর তথ্য প্রয়োজন</span>
     </div>
 </div> 

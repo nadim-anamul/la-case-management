@@ -17,12 +17,15 @@
             <input type="text" name="la_case_no" value="{{ old('la_case_no', isset($compensation) ? $compensation->la_case_no : '') }}" placeholder=" " required>
             <label>এলএ কেস নং<span class="text-red-500">*</span></label>
         </div>
-        <div>
-            <label>রোয়েদাদের ধরন</label>
-            <div class="checkbox-group">
-                <label><input type="checkbox" name="award_type[]" value="জমি" x-model="award_types" class="mr-2"><span>জমি</span></label>
-                <label><input type="checkbox" name="award_type[]" value="জমি ও গাছপালা" x-model="award_types" class="mr-2"><span>জমি ও গাছপালা</span></label>
-                <label><input type="checkbox" name="award_type[]" value="অবকাঠামো" x-model="award_types" class="mr-2"><span>অবকাঠামো</span></label>
+        <div x-data="{ award_type: '{{ old('award_type', isset($compensation) ? (is_array($compensation->award_type) ? $compensation->award_type[0] ?? '' : $compensation->award_type) : '') }}' }">
+            <label>রোয়েদাদের ধরন<span class="text-red-500">*</span></label>
+            <div class="radio-group">
+                <label><input type="radio" name="award_type" value="জমি" x-model="award_type" class="mr-2" required 
+                    {{ (old('award_type', isset($compensation) ? (is_array($compensation->award_type) ? $compensation->award_type[0] ?? '' : $compensation->award_type) : '')) == 'জমি' ? 'checked' : '' }}><span>জমি</span></label>
+                <label><input type="radio" name="award_type" value="জমি ও গাছপালা" x-model="award_type" class="mr-2" required 
+                    {{ (old('award_type', isset($compensation) ? (is_array($compensation->award_type) ? $compensation->award_type[0] ?? '' : $compensation->award_type) : '')) == 'জমি ও গাছপালা' ? 'checked' : '' }}><span>জমি ও গাছপালা</span></label>
+                <label><input type="radio" name="award_type" value="অবকাঠামো" x-model="award_type" class="mr-2" required 
+                    {{ (old('award_type', isset($compensation) ? (is_array($compensation->award_type) ? $compensation->award_type[0] ?? '' : $compensation->award_type) : '')) == 'অবকাঠামো' ? 'checked' : '' }}><span>অবকাঠামো</span></label>
             </div>
         </div>
         <div class="floating-label">
@@ -56,8 +59,8 @@
                     @endif
                 </div>
                 <div class="floating-label">
-                    <input type="text" name="rs_plot_no" id="rs_plot_no" value="{{ old('rs_plot_no', isset($compensation) ? $compensation->rs_plot_no : '') }}" placeholder=" ">
-                    <label for="rs_plot_no">RS দাগ নং</label>
+                    <input type="text" name="rs_plot_no" id="rs_plot_no_sa" value="{{ old('rs_plot_no', isset($compensation) ? $compensation->rs_plot_no : '') }}" placeholder=" ">
+                    <label for="rs_plot_no_sa">RS দাগ নং</label>
                     @if(old('acquisition_record_basis', isset($compensation) ? $compensation->acquisition_record_basis : '') == 'SA')
                         @error('rs_plot_no')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -69,8 +72,8 @@
         <template x-if="acquisition_record_basis === 'RS'">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2">
                 <div class="floating-label">
-                    <input type="text" name="rs_plot_no" id="rs_plot_no" value="{{ old('rs_plot_no', isset($compensation) ? $compensation->rs_plot_no : '') }}" placeholder=" " required>
-                    <label for="rs_plot_no">RS দাগ নং<span class="text-red-500">*</span></label>
+                    <input type="text" name="rs_plot_no" id="rs_plot_no_rs" value="{{ old('rs_plot_no', isset($compensation) ? $compensation->rs_plot_no : '') }}" placeholder=" " required>
+                    <label for="rs_plot_no_rs">RS দাগ নং<span class="text-red-500">*</span></label>
                     @if(old('acquisition_record_basis', isset($compensation) ? $compensation->acquisition_record_basis : '') == 'RS')
                         @error('rs_plot_no')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -79,9 +82,36 @@
                 </div>
             </div>
         </template>
-        <div class="floating-label">
-            <input type="text" name="award_holder_name" value="{{ old('award_holder_name', isset($compensation) ? $compensation->award_holder_name : '') }}" placeholder=" " required>
-            <label>রোয়েদাদভুক্ত মালিকের নাম<span class="text-red-500">*</span></label>
+        <!-- Award Holder Names Section -->
+        <div class="md:col-span-2">
+            <div class="sub-section">
+                <h4 class="text-lg font-semibold mb-4">রোয়েদাদভুক্ত মালিকের নাম<span class="text-red-500">*</span></h4>
+                <div x-data="{ award_holder_names: {{ old('award_holder_names', isset($compensation) ? json_encode($compensation->award_holder_names ?? [['name' => '']]) : '[{\"name\": \"\"}]') }} }">
+                    <template x-for="(holder, index) in award_holder_names" :key="index">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="flex-1">
+                                <input type="text" 
+                                       :name="'award_holder_names[' + index + '][name]'" 
+                                       x-model="holder.name" 
+                                       placeholder="মালিকের নাম" 
+                                       class="form-input w-full" 
+                                       required>
+                            </div>
+                            <button type="button" 
+                                    @click="award_holder_names.splice(index, 1)" 
+                                    class="btn-danger"
+                                    x-show="award_holder_names.length > 1">
+                                ×
+                            </button>
+                        </div>
+                    </template>
+                    <button type="button" 
+                            @click="award_holder_names.push({name: ''})" 
+                            class="btn-success">
+                        + মালিকের নাম যোগ করুন
+                    </button>
+                </div>
+            </div>
         </div>
         <div class="floating-label md:col-span-2">
             <textarea name="objector_details" rows="3" placeholder=" ">{{ old('objector_details', isset($compensation) ? $compensation->objector_details : '') }}</textarea>
@@ -100,11 +130,37 @@
         </div>
         <div class="floating-label">
             <input type="text" name="total_compensation" value="{{ old('total_compensation', isset($compensation) ? $compensation->total_compensation : '') }}" placeholder=" " required>
-            <label>অধিগ্রহণকৃত জমির মোট ক্ষতিপূরণ (উৎস কর সহ)<span class="text-red-500">*</span></label>
+            <label>অধিগ্রহণকৃত জমির মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
         </div>
         <div class="floating-label">
-            <input type="text" name="applicant_acquired_land" value="{{ old('applicant_acquired_land', isset($compensation) ? $compensation->applicant_acquired_land : '') }}" placeholder=" " required>
-            <label>আবেদনকারীর অধিগ্রহণকৃত জমির পরিমাণ<span class="text-red-500">*</span></label>
+            <input type="text" name="source_tax_percentage" value="{{ old('source_tax_percentage', isset($compensation) ? $compensation->source_tax_percentage : '') }}" placeholder=" " required>
+            <label>উৎস কর %<span class="text-red-500">*</span></label>
         </div>
+        <!-- Conditional Fields based on Award Type -->
+        <template x-if="award_type === 'জমি ও গাছপালা'">
+            <div class="floating-label">
+                <input type="text" name="tree_compensation" value="{{ old('tree_compensation', isset($compensation) ? $compensation->tree_compensation : '') }}" placeholder=" " required>
+                <label>গাছপালার মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
+            </div>
+        </template>
+        <template x-if="award_type === 'অবকাঠামো'">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2">
+                <div class="floating-label">
+                    <input type="text" name="infrastructure_compensation" value="{{ old('infrastructure_compensation', isset($compensation) ? $compensation->infrastructure_compensation : '') }}" placeholder=" " required>
+                    <label>অবকাঠামোর মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
+                </div>
+                <div class="floating-label">
+                    <input type="text" name="infrastructure_source_tax_percentage" value="{{ old('infrastructure_source_tax_percentage', isset($compensation) ? $compensation->infrastructure_source_tax_percentage : '') }}" placeholder=" " required>
+                    <label>উৎস কর %<span class="text-red-500">*</span></label>
+                </div>
+            </div>
+        </template>
+        <!-- Land-related fields - only show if NOT infrastructure -->
+        <template x-if="award_type !== 'অবকাঠামো'">
+            <div class="floating-label">
+                <input type="text" name="applicant_acquired_land" value="{{ old('applicant_acquired_land', isset($compensation) ? $compensation->applicant_acquired_land : '') }}" placeholder=" " required>
+                <label>আবেদনকারীর অধিগ্রহণকৃত জমির পরিমাণ<span class="text-red-500">*</span></label>
+            </div>
+        </template>
     </div>
 </div> 

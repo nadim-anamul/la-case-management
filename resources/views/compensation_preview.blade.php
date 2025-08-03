@@ -90,7 +90,13 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
                 <label class="font-semibold text-gray-700">রোয়েদাদভুক্ত মালিকের নাম:</label>
-                <p class="text-gray-900">{{ $compensation->award_holder_name }}</p>
+                <div class="text-gray-900">
+                    @foreach($compensation->award_holder_names as $index => $holder)
+                        <div class="mb-1">
+                            {{ $index + 1 }}. {{ $holder['name'] }}
+                        </div>
+                    @endforeach
+                </div>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">আবেদনকারীর নাম রোয়েদাদে আছে কিনা:</label>
@@ -105,13 +111,35 @@
                 <p class="text-gray-900">{{ $compensation->total_compensation }}</p>
             </div>
             <div>
+                <label class="font-semibold text-gray-700">উৎস কর %:</label>
+                <p class="text-gray-900">{{ $compensation->source_tax_percentage }}</p>
+            </div>
+            @if($compensation->tree_compensation)
+            <div>
+                <label class="font-semibold text-gray-700">গাছপালার মোট ক্ষতিপূরণ:</label>
+                <p class="text-gray-900">{{ $compensation->tree_compensation }}</p>
+            </div>
+            @endif
+            @if($compensation->infrastructure_compensation)
+            <div>
+                <label class="font-semibold text-gray-700">অবকাঠামোর মোট ক্ষতিপূরণ:</label>
+                <p class="text-gray-900">{{ $compensation->infrastructure_compensation }}</p>
+            </div>
+            <div>
+                <label class="font-semibold text-gray-700">উৎস কর %:</label>
+                <p class="text-gray-900">{{ $compensation->infrastructure_source_tax_percentage }}</p>
+            </div>
+            @endif
+            @if($compensation->applicant_acquired_land)
+            <div>
                 <label class="font-semibold text-gray-700">আবেদনকারীর অধিগ্রহণকৃত জমির পরিমাণ:</label>
                 <p class="text-gray-900">{{ $compensation->applicant_acquired_land }}</p>
             </div>
-            @if($compensation->award_type && count($compensation->award_type) > 0)
+            @endif
+            @if($compensation->award_type)
             <div>
                 <label class="font-semibold text-gray-700">রোয়েদাদের ধরন:</label>
-                <p class="text-gray-900">{{ implode(', ', $compensation->award_type) }}</p>
+                <p class="text-gray-900">{{ $compensation->award_type }}</p>
             </div>
             @endif
             @if($compensation->acquisition_record_basis === 'SA')
@@ -134,6 +162,12 @@
                 <p class="text-gray-900">{{ $compensation->rs_khatian_no }}</p>
             </div>
             @endif
+            @if($compensation->objector_details)
+            <div class="md:col-span-2 lg:col-span-3">
+                <label class="font-semibold text-gray-700">রোয়েদাদে কোন আপত্তি অন্তর্ভুক্ত থাকলে আপত্তিকারীর নাম ও ঠিকানা:</label>
+                <p class="text-gray-900">{{ $compensation->objector_details }}</p>
+            </div>
+            @endif
         </div>
     </div>
 
@@ -141,7 +175,7 @@
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
         <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
             <span class="section-icon">৪</span>
-            জমির তফসিল
+            আবেদনকৃত জমির তফসিল
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
@@ -153,8 +187,16 @@
                 <p class="text-gray-900">{{ $compensation->jl_no }}</p>
             </div>
             <div>
+                <label class="font-semibold text-gray-700">এসএ খতিয়ান নং:</label>
+                <p class="text-gray-900">{{ $compensation->sa_khatian_no }}</p>
+            </div>
+            <div>
                 <label class="font-semibold text-gray-700">SA দাগ নং:</label>
                 <p class="text-gray-900">{{ $compensation->land_schedule_sa_plot_no }}</p>
+            </div>
+            <div>
+                <label class="font-semibold text-gray-700">আর এস খতিয়ান নং:</label>
+                <p class="text-gray-900">{{ $compensation->rs_khatian_no }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">RS দাগ নং:</label>

@@ -42,10 +42,16 @@ class DatabaseSeeder extends Seeder
             'plot_no' => 'PLOT-001',
             'sa_plot_no' => 'SA-PLOT-001',
             'rs_plot_no' => null,
-            'award_holder_name' => 'আব্দুল রহমান',
+            'award_holder_names' => [
+                ['name' => 'আব্দুল রহমান'],
+                ['name' => 'ফাতেমা বেগম']
+            ],
+            'objector_details' => 'কোন আপত্তি নেই',
             'is_applicant_in_award' => true,
             'total_acquired_land' => '2.5 acres',
             'total_compensation' => '500000',
+            'source_tax_percentage' => '15%',
+            'tree_compensation' => '75000',
             'applicant_acquired_land' => '1.25 acres',
             'mouza_name' => 'কাশিমপুর',
             'jl_no' => 'JL-001',
@@ -54,7 +60,7 @@ class DatabaseSeeder extends Seeder
             'sa_khatian_no' => 'SA-KH-001',
             'rs_khatian_no' => null,
             'is_applicant_sa_owner' => true,
-            'award_type' => ['জমি', 'জমি/গাছপালা'],
+            'award_type' => 'জমি ও গাছপালা',
             'ownership_details' => [
                 'sa_info' => [
                     'sa_plot_no' => 'SA-PLOT-001',
@@ -160,10 +166,18 @@ class DatabaseSeeder extends Seeder
             'plot_no' => 'PLOT-002',
             'sa_plot_no' => null,
             'rs_plot_no' => 'RS-PLOT-002',
-            'award_holder_name' => 'রহিমা খাতুন',
+            'award_holder_names' => [
+                ['name' => 'রহিমা খাতুন'],
+                ['name' => 'মোহাম্মদ মালেক']
+            ],
+            'objector_details' => 'কোন আপত্তি নেই',
             'is_applicant_in_award' => true,
             'total_acquired_land' => '1.5 acres',
             'total_compensation' => '300000',
+            'source_tax_percentage' => '12%',
+            'tree_compensation' => '45000',
+            'infrastructure_compensation' => '75000',
+            'infrastructure_source_tax_percentage' => '10%',
             'applicant_acquired_land' => '1.5 acres',
             'mouza_name' => 'মোহাম্মদপুর',
             'jl_no' => 'JL-002',
@@ -172,7 +186,7 @@ class DatabaseSeeder extends Seeder
             'sa_khatian_no' => null,
             'rs_khatian_no' => 'RS-KH-002',
             'is_applicant_sa_owner' => false,
-            'award_type' => ['জমি', 'জমি/গাছপালা', 'অবকাঠামো'],
+            'award_type' => 'অবকাঠামো',
             'ownership_details' => [
                 'sa_info' => [
                     'sa_plot_no' => '',
@@ -270,10 +284,18 @@ class DatabaseSeeder extends Seeder
             'plot_no' => 'PLOT-003',
             'sa_plot_no' => 'SA-PLOT-003',
             'rs_plot_no' => null,
-            'award_holder_name' => 'সাবরিনা আক্তার',
+            'award_holder_names' => [
+                ['name' => 'সাবরিনা আক্তার'],
+                ['name' => 'মাহমুদা সুলতানা']
+            ],
+            'objector_details' => 'কোন আপত্তি নেই',
             'is_applicant_in_award' => true,
             'total_acquired_land' => '3.0 acres',
             'total_compensation' => '600000',
+            'source_tax_percentage' => '18%',
+            'tree_compensation' => '90000',
+            'infrastructure_compensation' => '120000',
+            'infrastructure_source_tax_percentage' => '15%',
             'applicant_acquired_land' => '1.5 acres',
             'mouza_name' => 'উত্তরা',
             'jl_no' => 'JL-003',
@@ -282,7 +304,7 @@ class DatabaseSeeder extends Seeder
             'sa_khatian_no' => 'SA-KH-003',
             'rs_khatian_no' => null,
             'is_applicant_sa_owner' => true,
-            'award_type' => ['জমি', 'জমি/গাছপালা', 'অবকাঠামো'],
+            'award_type' => 'জমি',
             'ownership_details' => [
                 'sa_info' => [
                     'sa_plot_no' => 'SA-PLOT-003',
@@ -412,10 +434,16 @@ class DatabaseSeeder extends Seeder
             'plot_no' => 'PLOT-004',
             'sa_plot_no' => 'SA-PLOT-004',
             'rs_plot_no' => null,
-            'award_holder_name' => 'নাসরিন আক্তার',
+            'award_holder_names' => [
+                ['name' => 'নাসরিন আক্তার'],
+                ['name' => 'আব্দুল মতিন']
+            ],
+            'objector_details' => 'কোন আপত্তি নেই',
             'is_applicant_in_award' => true,
             'total_acquired_land' => '2.0 acres',
             'total_compensation' => '400000',
+            'source_tax_percentage' => '14%',
+            'tree_compensation' => '60000',
             'applicant_acquired_land' => '2.0 acres',
             'mouza_name' => 'গুলশান',
             'jl_no' => 'JL-004',
@@ -424,7 +452,7 @@ class DatabaseSeeder extends Seeder
             'sa_khatian_no' => 'SA-KH-004',
             'rs_khatian_no' => null,
             'is_applicant_sa_owner' => true,
-            'award_type' => ['জমি/গাছপালা'],
+            'award_type' => 'জমি ও গাছপালা',
             'ownership_details' => [
                 'sa_info' => [
                     'sa_plot_no' => 'SA-PLOT-004',
