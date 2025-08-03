@@ -30,12 +30,16 @@ class FullCompensationFormTest extends TestCase
             
             // LA Case Information
             'la_case_no' => 'LA-CASE-001',
+            'award_type' => 'জমি',
             'award_serial_no' => 'AWARD-001',
             'plot_no' => 'PLOT-001',
-            'award_holder_name' => 'Award Holder',
+            'award_holder_names' => [
+                ['name' => 'Award Holder']
+            ],
             'is_applicant_in_award' => true,
             'total_acquired_land' => '5 acres',
             'total_compensation' => '500000',
+            'source_tax_percentage' => '5.00',
             'applicant_acquired_land' => '2 acres',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-001',
@@ -176,7 +180,7 @@ class FullCompensationFormTest extends TestCase
         $response = $this->post('/compensation/store', $formData);
 
         // Assert successful redirect
-        $response->assertRedirect('/compensations');
+        $this->assertStringContainsString('/compensation/', $response->headers->get('Location'));
 
         // Get the saved compensation record
         $compensation = Compensation::latest()->first();
@@ -296,12 +300,16 @@ class FullCompensationFormTest extends TestCase
             
             // LA Case Information
             'la_case_no' => 'LA-CASE-002',
+            'award_type' => 'জমি',
             'award_serial_no' => 'AWARD-002',
             'plot_no' => 'PLOT-002',
-            'award_holder_name' => 'RS Award Holder',
+            'award_holder_names' => [
+                ['name' => 'RS Award Holder']
+            ],
             'is_applicant_in_award' => false,
             'total_acquired_land' => '3 acres',
             'total_compensation' => '300000',
+            'source_tax_percentage' => '5.00',
             'applicant_acquired_land' => '1.5 acres',
             'mouza_name' => 'RS Test Mouza',
             'jl_no' => 'JL-002',
@@ -400,7 +408,7 @@ class FullCompensationFormTest extends TestCase
         $response = $this->post('/compensation/store', $formData);
 
         // Assert successful redirect
-        $response->assertRedirect('/compensations');
+        $this->assertStringContainsString('/compensation/', $response->headers->get('Location'));
 
         // Get the saved compensation record
         $compensation = Compensation::latest()->first();
@@ -447,17 +455,13 @@ class FullCompensationFormTest extends TestCase
         $response->assertSessionHasErrors(['case_date']);
         $response->assertSessionHasErrors(['applicants']);
         $response->assertSessionHasErrors(['la_case_no']);
-        $response->assertSessionHasErrors(['award_serial_no']);
         $response->assertSessionHasErrors(['plot_no']);
-        $response->assertSessionHasErrors(['award_holder_name']);
+        $response->assertSessionHasErrors(['award_holder_names']);
         $response->assertSessionHasErrors(['is_applicant_in_award']);
         $response->assertSessionHasErrors(['total_acquired_land']);
         $response->assertSessionHasErrors(['total_compensation']);
-        $response->assertSessionHasErrors(['applicant_acquired_land']);
         $response->assertSessionHasErrors(['mouza_name']);
         $response->assertSessionHasErrors(['jl_no']);
-        $response->assertSessionHasErrors(['land_schedule_sa_plot_no']);
-        $response->assertSessionHasErrors(['land_schedule_rs_plot_no']);
         // ownership_details is now optional, so we don't check for it
         $response->assertSessionHasErrors(['additional_documents_info']);
         // kanungo_opinion is now handled separately, so we don't check for it
@@ -475,12 +479,16 @@ class FullCompensationFormTest extends TestCase
                 ]
             ],
             'la_case_no' => 'LA-CASE-001',
+            'award_type' => 'জমি',
             'award_serial_no' => 'AWARD-001',
             'plot_no' => 'PLOT-001',
-            'award_holder_name' => 'Award Holder',
+            'award_holder_names' => [
+                ['name' => 'Award Holder']
+            ],
             'is_applicant_in_award' => true,
             'total_acquired_land' => '5 acres',
             'total_compensation' => '500000',
+            'source_tax_percentage' => '5.00',
             'applicant_acquired_land' => '2 acres',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-001',

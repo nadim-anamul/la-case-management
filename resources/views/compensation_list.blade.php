@@ -52,12 +52,13 @@
                 <thead>
                     <tr>
                         <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ID</th>
-                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">এলএ কেস নং</th>
                         <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ক্ষতিপূরণ কেস নং</th>
+                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">এলএ কেস নং</th>
+                        
                         <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">আবেদনকারীগণ</th>
-                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">রোয়েদাদভুক্ত মালিক</th>
+
                         <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">জমির পরিমাণ</th>
-                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">মৌজা নং</th>
+                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">মৌজা</th>
                         <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">দাগ নং</th>
                         <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50"></th>
                     </tr>
@@ -69,29 +70,22 @@
                             <p class="text-gray-900 whitespace-no-wrap">{{ $item->id }}</p>
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ $item->la_case_no }}</p>
-                        </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $item->case_number }}</p>
                         </td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <p class="text-gray-900 whitespace-no-wrap">{{ $item->la_case_no }}</p>
+                        </td>
+                        
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                             @if(is_array($item->applicants))
                                 @foreach($item->applicants as $applicant)
                                     <p class="text-gray-900 whitespace-no-wrap">{{ is_array($applicant) ? ($applicant['name'] ?? '') : $applicant }}</p>
                                 @endforeach
                             @else
-                                <p class="text-gray-900 whitespace-no-wrap">{{ $item->applicants }}</p>
+                                <p class="text-gray-900 whitespace-no-wrap">{{ is_string($item->applicants) ? $item->applicants : '' }}</p>
                             @endif
                         </td>
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            @if(is_array($item->award_holder_names))
-                                @foreach($item->award_holder_names as $holder)
-                                    <p class="text-gray-900 whitespace-no-wrap">{{ is_array($holder) ? ($holder['name'] ?? '') : $holder }}</p>
-                                @endforeach
-                            @else
-                                <p class="text-gray-900 whitespace-no-wrap">{{ $item->award_holder_names }}</p>
-                            @endif
-                        </td>
+                        
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                             <p class="text-gray-900 whitespace-no-wrap">{{ $item->applicant_acquired_land }}</p>
                         </td>

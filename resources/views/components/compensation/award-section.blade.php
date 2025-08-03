@@ -12,26 +12,12 @@
         </p>
     </div>
     
-    <div x-data="{ 
-        award_type: '{{ old('award_type', isset($compensation) ? ($compensation->award_type[0] ?? '') : '') }}',
-        acquisition_record_basis: '{{ old('acquisition_record_basis', isset($compensation) ? $compensation->acquisition_record_basis : '') }}'
-    }" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="floating-label">
             <input type="text" name="la_case_no" value="{{ old('la_case_no', isset($compensation) ? $compensation->la_case_no : '') }}" placeholder=" " required>
             <label>এলএ কেস নং<span class="text-red-500">*</span></label>
         </div>
-        <div>
-            <label>রোয়েদাদের ধরন<span class="text-red-500">*</span></label>
-            <div class="radio-group">
-                <label><input type="radio" name="award_type" value="জমি" x-model="award_type" class="mr-2" required><span>জমি</span></label>
-                <label><input type="radio" name="award_type" value="জমি ও গাছপালা" x-model="award_type" class="mr-2" required><span>জমি ও গাছপালা</span></label>
-                <label><input type="radio" name="award_type" value="অবকাঠামো" x-model="award_type" class="mr-2" required><span>অবকাঠামো</span></label>
-            </div>
-        </div>
-        <div class="floating-label">
-            <input type="text" name="award_serial_no" value="{{ old('award_serial_no', isset($compensation) ? $compensation->award_serial_no : '') }}" placeholder=" " required>
-            <label>রোয়েদাদের ক্রমিক নং<span class="text-red-500">*</span></label>
-        </div>
+        
         <div class="floating-label">
             <select name="acquisition_record_basis" id="acquisition_record_basis" x-model="acquisition_record_basis" class="form-input" required aria-required="true">
                 <option value="">-- নির্বাচন করুন --</option>
@@ -50,8 +36,8 @@
         <template x-if="acquisition_record_basis === 'SA'">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2">
                 <div class="floating-label">
-                    <input type="text" name="sa_plot_no" id="sa_plot_no" value="{{ old('sa_plot_no', isset($compensation) ? $compensation->sa_plot_no : '') }}" placeholder=" " required>
-                    <label for="sa_plot_no">SA দাগ নং<span class="text-red-500">*</span></label>
+                    <input type="text" name="sa_plot_no" id="award_sa_plot_no" value="{{ old('sa_plot_no', isset($compensation) ? $compensation->sa_plot_no : '') }}" placeholder=" " required>
+                    <label for="award_sa_plot_no">SA দাগ নং<span class="text-red-500">*</span></label>
                     @if(old('acquisition_record_basis', isset($compensation) ? $compensation->acquisition_record_basis : '') == 'SA')
                         @error('sa_plot_no')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -59,8 +45,8 @@
                     @endif
                 </div>
                 <div class="floating-label">
-                    <input type="text" name="rs_plot_no" id="rs_plot_no_sa" value="{{ old('rs_plot_no', isset($compensation) ? $compensation->rs_plot_no : '') }}" placeholder=" ">
-                    <label for="rs_plot_no_sa">RS দাগ নং</label>
+                    <input type="text" name="rs_plot_no" id="award_rs_plot_no_sa" value="{{ old('rs_plot_no', isset($compensation) ? $compensation->rs_plot_no : '') }}" placeholder=" ">
+                    <label for="award_rs_plot_no_sa">RS দাগ নং</label>
                     @if(old('acquisition_record_basis', isset($compensation) ? $compensation->acquisition_record_basis : '') == 'SA')
                         @error('rs_plot_no')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -72,8 +58,8 @@
         <template x-if="acquisition_record_basis === 'RS'">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2">
                 <div class="floating-label">
-                    <input type="text" name="rs_plot_no" id="rs_plot_no_rs" value="{{ old('rs_plot_no', isset($compensation) ? $compensation->rs_plot_no : '') }}" placeholder=" " required>
-                    <label for="rs_plot_no_rs">RS দাগ নং<span class="text-red-500">*</span></label>
+                    <input type="text" name="rs_plot_no" id="award_rs_plot_no_rs" value="{{ old('rs_plot_no', isset($compensation) ? $compensation->rs_plot_no : '') }}" placeholder=" " required>
+                    <label for="award_rs_plot_no_rs">RS দাগ নং<span class="text-red-500">*</span></label>
                     @if(old('acquisition_record_basis', isset($compensation) ? $compensation->acquisition_record_basis : '') == 'RS')
                         @error('rs_plot_no')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -86,7 +72,7 @@
         <div class="md:col-span-2">
             <div class="sub-section">
                 <h4 class="text-lg font-semibold mb-4">রোয়েদাদভুক্ত মালিকের নাম<span class="text-red-500">*</span></h4>
-                <div x-data="{ award_holder_names: {{ old('award_holder_names', isset($compensation) ? json_encode($compensation->award_holder_names ?? [['name' => '']]) : '[{\"name\": \"\"}]') }} }">
+                <div>
                     <template x-for="(holder, index) in award_holder_names" :key="index">
                         <div class="flex items-center gap-4 mb-4">
                             <div class="flex-1">
@@ -125,41 +111,168 @@
             </div>
         </div>
         <div class="floating-label">
-            <input type="text" name="total_acquired_land" value="{{ old('total_acquired_land', isset($compensation) ? $compensation->total_acquired_land : '') }}" placeholder=" " required>
-            <label>অধিগ্রহণকৃত মোট জমির পরিমাণ<span class="text-red-500">*</span></label>
-        </div>
-        <div class="floating-label">
-            <input type="text" name="total_compensation" value="{{ old('total_compensation', isset($compensation) ? $compensation->total_compensation : '') }}" placeholder=" " required>
-            <label>অধিগ্রহণকৃত জমির মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
-        </div>
-        <div class="floating-label">
             <input type="text" name="source_tax_percentage" value="{{ old('source_tax_percentage', isset($compensation) ? $compensation->source_tax_percentage : '') }}" placeholder=" " required>
             <label>উৎস কর %<span class="text-red-500">*</span></label>
         </div>
+        <div>
+            <label>রোয়েদাদের ধরন<span class="text-red-500">*</span></label>
+            <div class="radio-group">
+                <label><input type="radio" name="award_type" value="জমি" x-model="award_type" class="mr-2" required><span>জমি</span></label>
+                <label><input type="radio" name="award_type" value="জমি ও গাছপালা" x-model="award_type" class="mr-2" required><span>জমি ও গাছপালা</span></label>
+                <label><input type="radio" name="award_type" value="অবকাঠামো" x-model="award_type" class="mr-2" required><span>অবকাঠামো</span></label>
+            </div>
+        </div>
+        
         <!-- Conditional Fields based on Award Type -->
-        <template x-if="award_type === 'জমি ও গাছপালা'">
-            <div class="floating-label">
-                <input type="text" name="tree_compensation" value="{{ old('tree_compensation', isset($compensation) ? $compensation->tree_compensation : '') }}" placeholder=" " required>
-                <label>গাছপালার মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
+        <!-- For জমি (Land) -->
+        <template x-if="award_type === 'জমি'">
+            <div class="md:col-span-2">
+                <div class="floating-label">
+                    <input type="text" name="land_award_serial_no" value="{{ old('land_award_serial_no', isset($compensation) ? $compensation->land_award_serial_no : '') }}" placeholder=" " required>
+                    <label>জমির রোয়েদাদ নং<span class="text-red-500">*</span></label>
+                </div>
+                
+                <!-- Land Category Section -->
+                <div class="sub-section mt-6">
+                    <h4 class="text-lg font-semibold mb-4">জমির রোয়েদাদ<span class="text-red-500">*</span></h4>
+                    <div>
+                        <template x-for="(category, index) in land_category" :key="index">
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                                <div class="floating-label">
+                                    <input type="text" 
+                                           :name="'land_category[' + index + '][category_name]'" 
+                                           x-model="category.category_name" 
+                                           placeholder="জমির শ্রেণী" 
+                                           class="form-input w-full" 
+                                           required>
+                                    <label>জমির শ্রেণী<span class="text-red-500">*</span></label>
+                                </div>
+                                <div class="floating-label">
+                                    <input type="text" 
+                                           :name="'land_category[' + index + '][total_land]'" 
+                                           x-model="category.total_land" 
+                                           placeholder="মোট জমির পরিমাণ" 
+                                           class="form-input w-full" 
+                                           required>
+                                    <label>মোট জমির পরিমাণ (একর)<span class="text-red-500">*</span></label>
+                                </div>
+                                <div class="floating-label">
+                                    <input type="text" 
+                                           :name="'land_category[' + index + '][total_compensation]'" 
+                                           x-model="category.total_compensation" 
+                                           placeholder="মোট ক্ষতিপূরণ" 
+                                           class="form-input w-full" 
+                                           required>
+                                    <label>মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
+                                </div>
+                                <div class="floating-label">
+                                    <input type="text" 
+                                           :name="'land_category[' + index + '][applicant_land]'" 
+                                           x-model="category.applicant_land" 
+                                           placeholder="আবেদনকারীর জমি" 
+                                           class="form-input w-full" 
+                                           required>
+                                    <label>আবেদনকারীর অধিগ্রহণকৃত জমি (একর)<span class="text-red-500">*</span></label>
+                                </div>
+                                <button type="button" 
+                                        @click="removeLandCategory(index)" 
+                                        class="btn-danger"
+                                        x-show="land_category.length > 1">
+                                    ×
+                                </button>
+                            </div>
+                        </template>
+                        <button type="button" 
+                                @click="addLandCategory()" 
+                                class="btn-success">
+                            আরো শ্রেণী যোগ করুন
+                        </button>
+                    </div>
+                </div>
             </div>
         </template>
+        
+        <!-- For জমি ও গাছপালা (Land and Trees) -->
+        <template x-if="award_type === 'জমি ও গাছপালা'">
+            <div class="md:col-span-2">
+                <div class="floating-label">
+                    <input type="text" name="tree_award_serial_no" value="{{ old('tree_award_serial_no', isset($compensation) ? $compensation->tree_award_serial_no : '') }}" placeholder=" " required>
+                    <label>গাছপালার রোয়েদাদ নং<span class="text-red-500">*</span></label>
+                </div>
+                
+                <div class="floating-label">
+                    <input type="text" name="tree_compensation" value="{{ old('tree_compensation', isset($compensation) ? $compensation->tree_compensation : '') }}" placeholder=" " required>
+                    <label>গাছপালার মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
+                </div>
+                
+                <!-- Land Category Section -->
+                <div class="sub-section mt-6">
+                    <h4 class="text-lg font-semibold mb-4">জমির রোয়েদাদ<span class="text-red-500">*</span></h4>
+                    <div>
+                        <template x-for="(category, index) in land_category" :key="index">
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                                <div class="floating-label">
+                                    <input type="text" 
+                                           :name="'land_category[' + index + '][category_name]'" 
+                                           x-model="category.category_name"  
+                                           class="form-input w-full" 
+                                           required>
+                                    <label>জমির শ্রেণী<span class="text-red-500">*</span></label>
+                                </div>
+                                <div class="floating-label">
+                                    <input type="text" 
+                                           :name="'land_category[' + index + '][total_land]'" 
+                                           x-model="category.total_land" 
+                                           class="form-input w-full" 
+                                           required>
+                                    <label>দাগে অধিগ্রহণকৃত মোট জমির পরিমাণ (একর)<span class="text-red-500">*</span></label>
+                                </div>
+                                <div class="floating-label">
+                                    <input type="text" 
+                                           :name="'land_category[' + index + '][total_compensation]'" 
+                                           x-model="category.total_compensation" 
+                                           class="form-input w-full" 
+                                           required>
+                                    <label>মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
+                                </div>
+                                <div class="floating-label">
+                                    <input type="text" 
+                                           :name="'land_category[' + index + '][applicant_land]'" 
+                                           x-model="category.applicant_land" 
+                                           class="form-input w-full" 
+                                           required>
+                                    <label>আবেদনকারীর অধিগ্রহণকৃত জমি (একর)<span class="text-red-500">*</span></label>
+                                </div>
+                                <button type="button" 
+                                        @click="removeLandCategory(index)" 
+                                        class="btn-danger"
+                                        x-show="land_category.length > 1">
+                                    ×
+                                </button>
+                            </div>
+                        </template>
+                        <button type="button" 
+                                @click="addLandCategory()" 
+                                class="btn-success">
+                            আরো শ্রেণী যোগ করুন
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <!-- For অবকাঠামো (Infrastructure) -->
         <template x-if="award_type === 'অবকাঠামো'">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2">
+            <div class="md:col-span-2">
+                <div class="floating-label">
+                    <input type="text" name="infrastructure_award_serial_no" value="{{ old('infrastructure_award_serial_no', isset($compensation) ? $compensation->infrastructure_award_serial_no : '') }}" placeholder=" " required>
+                    <label>অবকাঠামোর রোয়েদাদ নং<span class="text-red-500">*</span></label>
+                </div>
+                
                 <div class="floating-label">
                     <input type="text" name="infrastructure_compensation" value="{{ old('infrastructure_compensation', isset($compensation) ? $compensation->infrastructure_compensation : '') }}" placeholder=" " required>
                     <label>অবকাঠামোর মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
                 </div>
-                <div class="floating-label">
-                    <input type="text" name="infrastructure_source_tax_percentage" value="{{ old('infrastructure_source_tax_percentage', isset($compensation) ? $compensation->infrastructure_source_tax_percentage : '') }}" placeholder=" " required>
-                    <label>উৎস কর %<span class="text-red-500">*</span></label>
-                </div>
-            </div>
-        </template>
-        <!-- Land-related fields - only show if NOT infrastructure -->
-        <template x-if="award_type !== 'অবকাঠামো'">
-            <div class="floating-label">
-                <input type="text" name="applicant_acquired_land" value="{{ old('applicant_acquired_land', isset($compensation) ? $compensation->applicant_acquired_land : '') }}" placeholder=" " required>
-                <label>আবেদনকারীর অধিগ্রহণকৃত জমির পরিমাণ<span class="text-red-500">*</span></label>
             </div>
         </template>
     </div>

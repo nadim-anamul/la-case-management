@@ -34,17 +34,8 @@ class CompensationController extends Controller
                   ->orWhere('rs_khatian_no', 'like', "%{$search}%")
                   ->orWhere('plot_no', 'like', "%{$search}%");
                 
-                // Handle JSON search differently for SQLite vs MySQL
-                $connection = config('database.default');
-                if ($connection === 'sqlite') {
-                    // For SQLite, search the entire JSON field with Unicode escape sequences
-                    $unicodeSearch = json_encode($search);
-                    $unicodeSearch = str_replace('"', '', $unicodeSearch); // Remove quotes
-                    $q->orWhere('applicants', 'like', "%{$unicodeSearch}%");
-                } else {
-                    // For MySQL/MariaDB, use JSON_SEARCH for better performance
-                    $q->orWhereRaw("JSON_SEARCH(applicants, 'one', ?, null, '$[*].name')", ["%{$search}%"]);
-                }
+                // Use MySQL JSON_SEARCH for applicant name search
+                $q->orWhereRaw("JSON_SEARCH(applicants, 'one', ?, null, '$[*].name')", ["%{$search}%"]);
             });
         }
         
@@ -86,7 +77,7 @@ class CompensationController extends Controller
     {
         $validatedData = $request->validate([
             'case_number' => 'required|string|max:255',
-            'case_date' => 'required|date',
+            'case_date' => 'required|string|max:255',
             'sa_plot_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
             'rs_plot_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
             'applicants' => 'required|array|min:1',
@@ -96,11 +87,18 @@ class CompensationController extends Controller
             'applicants.*.nid' => 'required|string|max:20',
             'la_case_no' => 'required|string|max:255',
             'award_type' => 'required|string|in:জমি,জমি ও গাছপালা,অবকাঠামো',
-            'award_serial_no' => 'required|string|max:255',
+            'land_award_serial_no' => 'nullable|string|max:255',
+            'tree_award_serial_no' => 'nullable|string|max:255',
+            'infrastructure_award_serial_no' => 'nullable|string|max:255',
             'acquisition_record_basis' => 'required|string|in:SA,RS',
             'plot_no' => 'required|string|max:255',
             'award_holder_names' => 'required|array|min:1',
             'award_holder_names.*.name' => 'required|string|max:255',
+            'land_category' => 'nullable|array',
+            'land_category.*.category_name' => 'required|string|max:255',
+            'land_category.*.total_land' => 'required|string|max:255',
+            'land_category.*.total_compensation' => 'required|string|max:255',
+            'land_category.*.applicant_land' => 'required|string|max:255',
             'objector_details' => 'nullable|string',
             'is_applicant_in_award' => 'required|boolean',
             'total_acquired_land' => 'required|string|max:255',
@@ -108,14 +106,13 @@ class CompensationController extends Controller
             'source_tax_percentage' => 'required|string|max:255',
             'tree_compensation' => 'nullable|string|max:255',
             'infrastructure_compensation' => 'nullable|string|max:255',
-            'infrastructure_source_tax_percentage' => 'nullable|string|max:255',
             'applicant_acquired_land' => 'nullable|string|max:255',
             'mouza_name' => 'required|string|max:255',
             'jl_no' => 'required|string|max:255',
-            'sa_khatian_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
+            'land_schedule_sa_plot_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
+            'land_schedule_rs_plot_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
+            'sa_khatian_no' => 'nullable|string|max:255',
             'rs_khatian_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
-            'land_schedule_sa_plot_no' => 'required|string|max:255',
-            'land_schedule_rs_plot_no' => 'required|string|max:255',
             'ownership_details' => 'nullable|array',
             'ownership_details.sa_info' => 'nullable|array',
             'ownership_details.sa_info.sa_plot_no' => 'nullable|string|max:255',
@@ -193,6 +190,11 @@ class CompensationController extends Controller
 
         // Process Bengali dates before saving
         $validatedData = $this->processBengaliDates($validatedData);
+
+        // Convert award_type string to array for database storage
+        if (isset($validatedData['award_type'])) {
+            $validatedData['award_type'] = [$validatedData['award_type']];
+        }
 
         // Extract is_applicant_sa_owner from ownership_details and set it as a separate field
         $isApplicantSaOwner = $validatedData['ownership_details']['is_applicant_sa_owner'] ?? null;
@@ -212,7 +214,7 @@ class CompensationController extends Controller
         
         $validatedData = $request->validate([
             'case_number' => 'required|string|max:255',
-            'case_date' => 'required|date',
+            'case_date' => 'required|string|max:255',
             'sa_plot_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
             'rs_plot_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
             'applicants' => 'required|array|min:1',
@@ -222,11 +224,18 @@ class CompensationController extends Controller
             'applicants.*.nid' => 'required|string|max:20',
             'la_case_no' => 'required|string|max:255',
             'award_type' => 'required|string|in:জমি,জমি ও গাছপালা,অবকাঠামো',
-            'award_serial_no' => 'required|string|max:255',
+            'land_award_serial_no' => 'nullable|string|max:255',
+            'tree_award_serial_no' => 'nullable|string|max:255',
+            'infrastructure_award_serial_no' => 'nullable|string|max:255',
             'acquisition_record_basis' => 'required|string|in:SA,RS',
             'plot_no' => 'required|string|max:255',
             'award_holder_names' => 'required|array|min:1',
             'award_holder_names.*.name' => 'required|string|max:255',
+            'land_category' => 'nullable|array',
+            'land_category.*.category_name' => 'required|string|max:255',
+            'land_category.*.total_land' => 'required|string|max:255',
+            'land_category.*.total_compensation' => 'required|string|max:255',
+            'land_category.*.applicant_land' => 'required|string|max:255',
             'objector_details' => 'nullable|string',
             'is_applicant_in_award' => 'required|boolean',
             'total_acquired_land' => 'required|string|max:255',
@@ -234,14 +243,13 @@ class CompensationController extends Controller
             'source_tax_percentage' => 'required|string|max:255',
             'tree_compensation' => 'nullable|string|max:255',
             'infrastructure_compensation' => 'nullable|string|max:255',
-            'infrastructure_source_tax_percentage' => 'nullable|string|max:255',
             'applicant_acquired_land' => 'nullable|string|max:255',
             'mouza_name' => 'required|string|max:255',
             'jl_no' => 'required|string|max:255',
-            'sa_khatian_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
+            'land_schedule_sa_plot_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
+            'land_schedule_rs_plot_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
+            'sa_khatian_no' => 'nullable|string|max:255',
             'rs_khatian_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
-            'land_schedule_sa_plot_no' => 'required|string|max:255',
-            'land_schedule_rs_plot_no' => 'required|string|max:255',
             'ownership_details' => 'nullable|array',
             'ownership_details.sa_info' => 'nullable|array',
             'ownership_details.sa_info.sa_plot_no' => 'nullable|string|max:255',
@@ -319,6 +327,11 @@ class CompensationController extends Controller
 
         // Process Bengali dates before saving
         $validatedData = $this->processBengaliDates($validatedData);
+
+        // Convert award_type string to array for database storage
+        if (isset($validatedData['award_type'])) {
+            $validatedData['award_type'] = [$validatedData['award_type']];
+        }
 
         // Extract is_applicant_sa_owner from ownership_details and set it as a separate field
         $isApplicantSaOwner = $validatedData['ownership_details']['is_applicant_sa_owner'] ?? null;

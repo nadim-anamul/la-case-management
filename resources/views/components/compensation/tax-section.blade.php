@@ -5,14 +5,6 @@
     </h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="floating-label">
-            <input type="text" name="tax_info[english_year]" value="{{ old('tax_info.english_year', isset($compensation) ? $compensation->tax_info['english_year'] ?? '' : '') }}" placeholder=" ">
-            <label>ইংরেজি সাল পর্যন্ত পরিশোধিত</label>
-        </div>
-        <div class="floating-label">
-            <input type="text" name="tax_info[bangla_year]" value="{{ old('tax_info.bangla_year', isset($compensation) ? $compensation->tax_info['bangla_year'] ?? '' : '') }}" placeholder=" ">
-            <label>বাংলা সাল পর্যন্ত পরিশোধিত</label>
-        </div>
-        <div class="floating-label">
             <input type="text" name="tax_info[holding_no]" value="{{ old('tax_info.holding_no', isset(
                 $compensation) ? $compensation->tax_info['holding_no'] ?? '' : '') }}" placeholder=" ">
             <label>হোল্ডিং নম্বর</label>
@@ -22,5 +14,14 @@
                 $compensation) ? $compensation->tax_info['paid_land_amount'] ?? '' : '') }}" placeholder=" ">
             <label>খাজনা প্রদানকৃত জমির পরিমান</label>
         </div>
+        <div class="floating-label">
+            <input type="text" name="tax_info[english_year]" value="{{ old('tax_info.english_year', isset($compensation) ? $compensation->tax_info['english_year'] ?? '' : '') }}" placeholder=" ">
+            <label>ইংরেজি সাল পর্যন্ত পরিশোধিত</label>
+        </div>
+        <div class="floating-label">
+            <input type="text" name="tax_info[bangla_year]" value="{{ old('tax_info.bangla_year', isset($compensation) ? $compensation->tax_info['bangla_year'] ?? '' : '') }}" placeholder=" ">
+            <label>বাংলা সাল পর্যন্ত পরিশোধিত</label>
+        </div>
+        
     </div>
 </div> 

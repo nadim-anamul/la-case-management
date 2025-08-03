@@ -37,17 +37,22 @@ trait BengaliDateTrait
     /**
      * Convert Bengali date format back to English date for database storage
      */
-    public function convertFromBengaliDate($bengaliDate)
+    public function convertFromBengaliDate($date)
     {
-        if (!$bengaliDate) {
+        if (!$date) {
             return null;
+        }
+
+        // If the date is already in Y-m-d format (English), return it as is
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+            return $date;
         }
 
         // Convert Bengali numerals to English numerals
         $bengaliNumerals = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
         $englishNumerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
         
-        $englishDate = str_replace($bengaliNumerals, $englishNumerals, $bengaliDate);
+        $englishDate = str_replace($bengaliNumerals, $englishNumerals, $date);
         
         // Parse the date format (day/month/year)
         $parts = explode('/', $englishDate);

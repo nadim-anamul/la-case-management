@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
                 ]
             ],
             'la_case_no' => 'LA-2024-001',
-            'award_serial_no' => 'AWD-001',
+            'tree_award_serial_no' => 'TREE-AWD-001',
             'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-001',
             'sa_plot_no' => 'SA-PLOT-001',
@@ -59,6 +59,20 @@ class DatabaseSeeder extends Seeder
             'source_tax_percentage' => '15%',
             'tree_compensation' => '75000',
             'applicant_acquired_land' => '1.25 acres',
+            'land_category' => [
+                [
+                    'category_name' => 'আবাদি জমি',
+                    'total_land' => '2.0',
+                    'total_compensation' => '400000',
+                    'applicant_land' => '1.0'
+                ],
+                [
+                    'category_name' => 'অনাবাদি জমি',
+                    'total_land' => '0.5',
+                    'total_compensation' => '100000',
+                    'applicant_land' => '0.25'
+                ]
+            ],
             'mouza_name' => 'কাশিমপুর',
             'jl_no' => 'JL-001',
             'land_schedule_sa_plot_no' => 'SA-OLD-001',
@@ -105,7 +119,27 @@ class DatabaseSeeder extends Seeder
                     ]
                 ],
                 'inheritance_records' => [],
-                'rs_records' => [],
+                'rs_records' => [
+                    [
+                        'plot_no' => 'RS-PLOT-001',
+                        'khatian_no' => 'RS-KH-001',
+                        'land_amount' => '2.5 acres',
+                        'owner_names' => [
+                            ['name' => 'আব্দুল রহমান'],
+                            ['name' => 'ফাতেমা বেগম']
+                        ],
+                        'dp_khatian' => true
+                    ],
+                    [
+                        'plot_no' => 'RS-PLOT-001-B',
+                        'khatian_no' => 'RS-KH-001-B',
+                        'land_amount' => '1.0 acres',
+                        'owner_names' => [
+                            ['name' => 'মোহাম্মদ আলী']
+                        ],
+                        'dp_khatian' => false
+                    ]
+                ],
                 'applicant_info' => [
                     'applicant_name' => 'আব্দুল রহমান',
                     'kharij_case_no' => 'KHARIJ-001',
@@ -167,7 +201,7 @@ class DatabaseSeeder extends Seeder
                 ]
             ],
             'la_case_no' => 'LA-2024-002',
-            'award_serial_no' => 'AWD-002',
+            'infrastructure_award_serial_no' => 'INFRA-AWD-002',
             'acquisition_record_basis' => 'RS',
             'plot_no' => 'PLOT-002',
             'sa_plot_no' => null,
@@ -220,7 +254,18 @@ class DatabaseSeeder extends Seeder
                         'death_date' => '2023-06-15'
                     ]
                 ],
-                'rs_records' => [],
+                'rs_records' => [
+                    [
+                        'plot_no' => 'RS-PLOT-002',
+                        'khatian_no' => 'RS-KH-002',
+                        'land_amount' => '1.5 acres',
+                        'owner_names' => [
+                            ['name' => 'রহিমা খাতুন'],
+                            ['name' => 'মোহাম্মদ মালেক']
+                        ],
+                        'dp_khatian' => true
+                    ]
+                ],
                 'applicant_info' => [
                     'applicant_name' => 'রহিমা খাতুন',
                     'kharij_case_no' => 'KHARIJ-002',
@@ -285,7 +330,7 @@ class DatabaseSeeder extends Seeder
                 ]
             ],
             'la_case_no' => 'LA-2024-003',
-            'award_serial_no' => 'AWD-003',
+            'land_award_serial_no' => 'LAND-AWD-003',
             'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-003',
             'sa_plot_no' => 'SA-PLOT-003',
@@ -303,6 +348,20 @@ class DatabaseSeeder extends Seeder
             'infrastructure_compensation' => '120000',
             'infrastructure_source_tax_percentage' => '15%',
             'applicant_acquired_land' => '1.5 acres',
+            'land_category' => [
+                [
+                    'category_name' => 'আবাদি জমি',
+                    'total_land' => '2.5',
+                    'total_compensation' => '500000',
+                    'applicant_land' => '1.25'
+                ],
+                [
+                    'category_name' => 'অনাবাদি জমি',
+                    'total_land' => '0.5',
+                    'total_compensation' => '100000',
+                    'applicant_land' => '0.25'
+                ]
+            ],
             'mouza_name' => 'উত্তরা',
             'jl_no' => 'JL-003',
             'land_schedule_sa_plot_no' => 'SA-OLD-003',
@@ -371,7 +430,11 @@ class DatabaseSeeder extends Seeder
                         'plot_no' => 'RS-PLOT-003',
                         'khatian_no' => 'RS-KH-003',
                         'land_amount' => '3 acres',
-                        'owner_name' => 'সাবরিনা আক্তার'
+                        'owner_names' => [
+                            ['name' => 'সাবরিনা আক্তার'],
+                            ['name' => 'মাহমুদা সুলতানা']
+                        ],
+                        'dp_khatian' => true
                     ]
                 ],
                 'applicant_info' => [
@@ -435,7 +498,7 @@ class DatabaseSeeder extends Seeder
                 ]
             ],
             'la_case_no' => 'LA-2024-004',
-            'award_serial_no' => 'AWD-004',
+            'tree_award_serial_no' => 'TREE-AWD-004',
             'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-004',
             'sa_plot_no' => 'SA-PLOT-004',
@@ -451,6 +514,20 @@ class DatabaseSeeder extends Seeder
             'source_tax_percentage' => '14%',
             'tree_compensation' => '60000',
             'applicant_acquired_land' => '2.0 acres',
+            'land_category' => [
+                [
+                    'category_name' => 'আবাদি জমি',
+                    'total_land' => '1.5',
+                    'total_compensation' => '300000',
+                    'applicant_land' => '1.5'
+                ],
+                [
+                    'category_name' => 'অনাবাদি জমি',
+                    'total_land' => '0.5',
+                    'total_compensation' => '100000',
+                    'applicant_land' => '0.5'
+                ]
+            ],
             'mouza_name' => 'গুলশান',
             'jl_no' => 'JL-004',
             'land_schedule_sa_plot_no' => 'SA-OLD-004',
@@ -504,7 +581,17 @@ class DatabaseSeeder extends Seeder
                         'death_date' => '2023-12-10'
                     ]
                 ],
-                'rs_records' => [],
+                'rs_records' => [
+                    [
+                        'plot_no' => 'RS-PLOT-004',
+                        'khatian_no' => 'RS-KH-004',
+                        'land_amount' => '2.0 acres',
+                        'owner_names' => [
+                            ['name' => 'নাসরিন আক্তার']
+                        ],
+                        'dp_khatian' => true
+                    ]
+                ],
                 'applicant_info' => [
                     'applicant_name' => 'নাসরিন আক্তার',
                     'kharij_case_no' => 'KHARIJ-004',

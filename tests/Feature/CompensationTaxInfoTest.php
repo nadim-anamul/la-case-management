@@ -24,14 +24,18 @@ class CompensationTaxInfoTest extends TestCase
                 ]
             ],
             'la_case_no' => 'LA-001',
+            'award_type' => 'জমি',
             'award_serial_no' => 'AWD-001',
             'acquisition_record_basis' => 'SA',
             'sa_plot_no' => 'SA-PLOT-001',
             'plot_no' => 'PLOT-001',
-            'award_holder_name' => 'Test Award Holder',
+            'award_holder_names' => [
+                ['name' => 'Test Award Holder']
+            ],
             'is_applicant_in_award' => true,
             'total_acquired_land' => '1.00',
             'total_compensation' => '100000',
+            'source_tax_percentage' => '5.00',
             'applicant_acquired_land' => '1.00',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-001',
@@ -56,10 +60,13 @@ class CompensationTaxInfoTest extends TestCase
                     'rs_total_land_in_plot' => '2.00',
                     'rs_land_in_khatian' => '1.50',
                 ],
-                'transfer_info' => [
-                    'ownership_type' => '',
-                    'deed_transfers' => [],
-                    'inheritance_records' => [],
+                'deed_transfers' => [
+                    [
+                        'donor_names' => [['name' => 'Test Donor']],
+                        'recipient_names' => [['name' => 'Test Recipient']],
+                        'deed_number' => 'DEED-001',
+                        'deed_date' => '2024-01-01'
+                    ]
                 ],
                 'mutation_info' => [
                     'mutation_case_no' => '',
@@ -85,7 +92,7 @@ class CompensationTaxInfoTest extends TestCase
 
         $response = $this->post('/compensation/store', $compensationData);
 
-        $response->assertRedirect('/compensations');
+        $response->assertRedirect('/compensation/1/preview');
         
         $this->assertDatabaseHas('compensations', [
             'case_number' => 'TEST-001'
@@ -111,14 +118,18 @@ class CompensationTaxInfoTest extends TestCase
                 ]
             ],
             'la_case_no' => 'LA-002',
+            'award_type' => 'জমি',
             'award_serial_no' => 'AWD-002',
             'acquisition_record_basis' => 'SA',
             'sa_plot_no' => 'SA-PLOT-002',
             'plot_no' => 'PLOT-002',
-            'award_holder_name' => 'Test Award Holder',
+            'award_holder_names' => [
+                ['name' => 'Test Award Holder']
+            ],
             'is_applicant_in_award' => true,
             'total_acquired_land' => '1.00',
             'total_compensation' => '100000',
+            'source_tax_percentage' => '5.00',
             'applicant_acquired_land' => '1.00',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-002',
@@ -143,10 +154,13 @@ class CompensationTaxInfoTest extends TestCase
                     'rs_total_land_in_plot' => '2.00',
                     'rs_land_in_khatian' => '1.50',
                 ],
-                'transfer_info' => [
-                    'ownership_type' => '',
-                    'deed_transfers' => [],
-                    'inheritance_records' => [],
+                'deed_transfers' => [
+                    [
+                        'donor_names' => [['name' => 'Test Donor']],
+                        'recipient_names' => [['name' => 'Test Recipient']],
+                        'deed_number' => 'DEED-002',
+                        'deed_date' => '2024-01-01'
+                    ]
                 ],
                 'mutation_info' => [
                     'mutation_case_no' => '',

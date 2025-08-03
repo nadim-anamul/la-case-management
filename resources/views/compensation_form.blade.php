@@ -425,6 +425,9 @@
     window.oldFormData = {
         applicants: @json(old('applicants', [])),
         acquisition_record_basis: @json(old('acquisition_record_basis', '')),
+        award_type: @json(old('award_type', '')),
+        award_holder_names: @json(old('award_holder_names', [])),
+        land_category: @json(old('land_category', [])),
         ownership_details: @json(old('ownership_details', [])),
         additional_documents_info: @json(old('additional_documents_info', [])),
         tax_info: @json(old('tax_info', [])),
@@ -477,12 +480,12 @@
             <div class="form-section-title">ক্ষতিপূরণ কেস দায়ের</div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="floating-label">
-                    <input type="text" name="case_number" id="case_number" class="form-input" placeholder=" " value="{{ old('case_number', $compensation->case_number ?? '') }}" required aria-required="true">
-                    <label for="case_number">ক্ষতিপূরণ কেস নং<span class="text-red-500">*</span></label>
+                    <input type="text" name="case_number" id="compensation_case_number" class="form-input" placeholder=" " value="{{ old('case_number', $compensation->case_number ?? '') }}" required aria-required="true">
+                    <label for="compensation_case_number">ক্ষতিপূরণ কেস নং<span class="text-red-500">*</span></label>
                 </div>
                 <div class="floating-label">
-                    <input type="text" name="case_date" id="case_date" class="form-input" placeholder="দিন/মাস/বছর" value="{{ old('case_date', isset($compensation) ? $compensation->case_date_bengali : '') }}" required aria-required="true">
-                    <label for="case_date">তারিখ<span class="text-red-500">*</span></label>
+                    <input type="text" name="case_date" id="compensation_case_date" class="form-input" placeholder="দিন/মাস/বছর" value="{{ old('case_date', isset($compensation) ? $compensation->case_date_bengali : '') }}" required aria-required="true">
+                    <label for="compensation_case_date">তারিখ<span class="text-red-500">*</span></label>
                 </div>
             </div>
         </div>

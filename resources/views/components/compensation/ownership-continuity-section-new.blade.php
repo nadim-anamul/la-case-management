@@ -10,7 +10,7 @@
             <div class="flex items-center space-x-4">
                 <div class="flex items-center cursor-pointer" @click="goToStep('info')">
                     <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold">১</div>
-                    <span class="ml-2 text-sm hover:text-blue-600">SA/RS রেকর্ডের তথ্য</span>
+                    <span class="ml-2 text-sm hover:text-blue-600">রেকর্ডের বর্ণনা</span>
                 </div>
                 <div class="flex-1 h-1 bg-gray-300"></div>
                 <div class="flex items-center cursor-pointer" @click="goToStep('transfers')" x-show="completedSteps.includes('info')">
@@ -28,12 +28,12 @@
 
     <!-- Step 1: SA/RS Information -->
     <div x-show="currentStep === 'info'" class="space-y-6">
-        <h3 class="text-lg font-bold mb-4">ধাপ ১: SA/RS তথ্য</h3>
+        <h3 class="text-lg font-bold mb-4">ধাপ ১: SA/RS রেকর্ডের বর্ণনা</h3>
         
         <!-- SA Flow -->
         <template x-if="acquisition_record_basis === 'SA'">
             <div>
-                <h4 class="font-bold mb-4">SA রেকর্ড তথ্য:</h4>
+                <h4 class="font-bold mb-4">SA রেকর্ডের তথ্য:</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <template x-for="(owner, index) in sa_owners" :key="index">
@@ -46,29 +46,29 @@
                         <button type="button" @click="addSaOwner()" class="btn-success mt-2">+ SA মালিক যোগ করুন</button>
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="sa_plot_no" name="ownership_details[sa_info][sa_plot_no]" x-model="sa_info.sa_plot_no" placeholder=" ">
-                        <label for="sa_plot_no">SA দাগ নম্বর</label>
+                        <input type="text" id="ownership_sa_plot_no" name="ownership_details[sa_info][sa_plot_no]" x-model="sa_info.sa_plot_no" placeholder=" ">
+                        <label for="ownership_sa_plot_no">SA দাগ নম্বর</label>
                         @error('ownership_details.sa_info.sa_plot_no')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="sa_khatian_no" name="ownership_details[sa_info][sa_khatian_no]" x-model="sa_info.sa_khatian_no" placeholder=" ">
-                        <label for="sa_khatian_no">SA খতিয়ান নম্বর</label>
+                        <input type="text" id="ownership_sa_khatian_no" name="ownership_details[sa_info][sa_khatian_no]" x-model="sa_info.sa_khatian_no" placeholder=" ">
+                        <label for="ownership_sa_khatian_no">SA খতিয়ান নম্বর</label>
                         @error('ownership_details.sa_info.sa_khatian_no')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="sa_total_land_in_plot" name="ownership_details[sa_info][sa_total_land_in_plot]" x-model="sa_info.sa_total_land_in_plot" placeholder=" ">
-                        <label for="sa_total_land_in_plot">SA দাগে মোট জমি</label>
+                        <input type="text" id="ownership_sa_total_land_in_plot" name="ownership_details[sa_info][sa_total_land_in_plot]" x-model="sa_info.sa_total_land_in_plot" placeholder=" ">
+                        <label for="ownership_sa_total_land_in_plot">SA দাগে মোট জমি (একর)</label>
                         @error('ownership_details.sa_info.sa_total_land_in_plot')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="sa_land_in_khatian" name="ownership_details[sa_info][sa_land_in_khatian]" x-model="sa_info.sa_land_in_khatian" placeholder=" ">
-                        <label for="sa_land_in_khatian">SA উক্ত খতিয়ানে জমির পরিমাণ</label>
+                        <input type="text" id="ownership_sa_land_in_khatian" name="ownership_details[sa_info][sa_land_in_khatian]" x-model="sa_info.sa_land_in_khatian" placeholder=" ">
+                        <label for="ownership_sa_land_in_khatian">উক্ত SA খতিয়ানে জমির পরিমাণ (একর)</label>
                         @error('ownership_details.sa_info.sa_land_in_khatian')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
@@ -80,7 +80,7 @@
         <!-- RS Flow -->
         <template x-if="acquisition_record_basis === 'RS'">
             <div>
-                <h4 class="font-bold mb-4">RS রেকর্ড তথ্য:</h4>
+                <h4 class="font-bold mb-4">RS রেকর্ডের তথ্য:</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <template x-for="(owner, index) in rs_owners" :key="index">
@@ -93,29 +93,29 @@
                         <button type="button" @click="addRsOwner()" class="btn-success mt-2">+ RS মালিক যোগ করুন</button>
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="rs_plot_no" name="ownership_details[rs_info][rs_plot_no]" x-model="rs_info.rs_plot_no" placeholder=" ">
-                        <label for="rs_plot_no">RS দাগ নম্বর</label>
+                        <input type="text" id="ownership_rs_plot_no" name="ownership_details[rs_info][rs_plot_no]" x-model="rs_info.rs_plot_no" placeholder=" ">
+                        <label for="ownership_rs_plot_no">RS দাগ নম্বর</label>
                         @error('ownership_details.rs_info.rs_plot_no')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="rs_khatian_no" name="ownership_details[rs_info][rs_khatian_no]" x-model="rs_info.rs_khatian_no" placeholder=" ">
-                        <label for="rs_khatian_no">RS খতিয়ান নম্বর</label>
+                        <input type="text" id="ownership_rs_khatian_no" name="ownership_details[rs_info][rs_khatian_no]" x-model="rs_info.rs_khatian_no" placeholder=" ">
+                        <label for="ownership_rs_khatian_no">RS খতিয়ান নম্বর</label>
                         @error('ownership_details.rs_info.rs_khatian_no')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="rs_total_land_in_plot" name="ownership_details[rs_info][rs_total_land_in_plot]" x-model="rs_info.rs_total_land_in_plot" placeholder=" ">
-                        <label for="rs_total_land_in_plot">RS দাগে মোট জমি</label>
+                        <input type="text" id="ownership_rs_total_land_in_plot" name="ownership_details[rs_info][rs_total_land_in_plot]" x-model="rs_info.rs_total_land_in_plot" placeholder=" ">
+                        <label for="ownership_rs_total_land_in_plot">RS দাগে মোট জমি (একর)</label>
                         @error('ownership_details.rs_info.rs_total_land_in_plot')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="rs_land_in_khatian" name="ownership_details[rs_info][rs_land_in_khatian]" x-model="rs_info.rs_land_in_khatian" placeholder=" ">
-                        <label for="rs_land_in_khatian">RS উক্ত খতিয়ানে জমির পরিমাণ</label>
+                        <input type="text" id="ownership_rs_land_in_khatian" name="ownership_details[rs_info][rs_land_in_khatian]" x-model="rs_info.rs_land_in_khatian" placeholder=" ">
+                        <label for="ownership_rs_land_in_khatian">উক্ত দাগে RS খতিয়ানের হিস্যানুজই জমির পরিমাণ (একর)</label>
                         @error('ownership_details.rs_info.rs_land_in_khatian')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
@@ -139,8 +139,8 @@
         <!-- Action Buttons -->
         <div class="flex flex-wrap gap-4 mb-6">
             <button type="button" @click="addDeedTransfer()" class="btn-primary">দলিলমূলে মালিকানা হস্তান্তর যোগ করুন</button>
-            <button type="button" @click="addInheritanceRecord()" class="btn-secondary">ওয়ারিশমূলে হস্তান্তর যোগ করুন</button>
-            <button type="button" @click="addRsRecord()" :disabled="rs_record_disabled" class="btn-secondary" :class="{ 'opacity-50 cursor-not-allowed': rs_record_disabled }" x-show="acquisition_record_basis === 'SA'">আরএস রেকর্ড যোগ করুন</button>
+            <button type="button" @click="addInheritanceRecord()" class="btn-primary">ওয়ারিশমূলে হস্তান্তর যোগ করুন</button>
+            <button type="button" @click="addRsRecord()" :disabled="rs_record_disabled" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200" :class="{ 'opacity-50 cursor-not-allowed': rs_record_disabled }" x-show="acquisition_record_basis === 'SA'">আরএস রেকর্ড যোগ করুন</button>
             <button type="button" @click="nextStep()" class="btn-success">উপরোক্ত মালিকই আবেদনকারী</button>
         </div>
 
@@ -207,7 +207,7 @@
                     </div>
                     <div class="floating-label">
                         <input type="text" :name="'ownership_details[deed_transfers][' + index + '][sold_land_amount]'" x-model="deed.sold_land_amount" placeholder=" ">
-                        <label>বিক্রিত জমির পরিমাণ</label>
+                        <label>বিক্রিত জমির পরিমাণ (একর)</label>
                     </div>
                     <div class="floating-label">
                         <input type="text" :name="'ownership_details[deed_transfers][' + index + '][total_sotangsho]'" x-model="deed.total_sotangsho" placeholder=" ">
@@ -242,7 +242,7 @@
                     </div>
                     <div class="floating-label">
                         <input type="text" :name="'ownership_details[deed_transfers][' + index + '][mutation_land_amount]'" x-model="deed.mutation_land_amount" placeholder=" ">
-                        <label>খারিজকৃত জমির পরিমাণ</label>
+                        <label>খারিজকৃত জমির পরিমাণ (একর)</label>
                     </div>
                 </div>
             </div>
@@ -270,7 +270,7 @@
                     </div>
                     <div class="floating-label md:col-span-2">
                         <textarea :name="'ownership_details[inheritance_records][' + index + '][heirship_certificate_info]'" rows="3" x-model="inheritance.heirship_certificate_info" placeholder=" "></textarea>
-                        <label>ওয়ারিশ সনদের বিবরণ</label>
+                        <label>ওয়ারিশান সনদের বিবরণ</label>
                     </div>
                 </div>
             </div>
@@ -281,6 +281,16 @@
             <div class="record-card mb-4">
                 <h5 x-text="'আরএস রেকর্ড #' + (index + 1)" class="text-lg font-semibold mb-3"></h5>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <template x-for="(owner, ownerIdx) in rs.owner_names" :key="ownerIdx">
+                            <div class="flex items-center mb-2">
+                                <input type="text" :id="'rs_record_owner_name_' + index + '_' + ownerIdx" :name="'ownership_details[rs_records][' + index + '][owner_names][' + ownerIdx + '][name]'" x-model="owner.name" class="form-input flex-1" placeholder="আরএস মালিকের নাম">
+                                <label :for="'rs_record_owner_name_' + index + '_' + ownerIdx" class="ml-2">আরএস মালিকের নাম</label>
+                                <button type="button" @click="removeRsRecordOwner(index, ownerIdx)" x-show="rs.owner_names.length > 1" class="btn-danger ml-2" title="মালিকের নাম মুছুন">×</button>
+                            </div>
+                        </template>
+                        <button type="button" @click="addRsRecordOwner(index)" class="btn-success mt-2">+ আরএস মালিকের নাম যোগ করুন</button>
+                    </div>
                     <div class="floating-label">
                         <input type="text" :id="'rs_record_plot_no_' + index" :name="'ownership_details[rs_records][' + index + '][plot_no]'" x-model="rs.plot_no" placeholder=" ">
                         <label :for="'rs_record_plot_no_' + index">আরএস দাগ নম্বর</label>
@@ -291,12 +301,15 @@
                     </div>
                     <div class="floating-label">
                         <input type="text" :id="'rs_record_land_amount_' + index" :name="'ownership_details[rs_records][' + index + '][land_amount]'" x-model="rs.land_amount" placeholder=" ">
-                        <label :for="'rs_record_land_amount_' + index">আরএস জমির পরিমাণ</label>
+                        <label :for="'rs_record_land_amount_' + index">আরএস দাগে জমির পরিমাণ (একর)</label>
                     </div>
-                    <div class="floating-label">
-                        <input type="text" :id="'rs_record_owner_name_' + index" :name="'ownership_details[rs_records][' + index + '][owner_name]'" x-model="rs.owner_name" placeholder=" ">
-                        <label :for="'rs_record_owner_name_' + index">আরএস মালিকের নাম</label>
+                    <div class="flex items-center space-x-2">
+                        <label for="">
+                            <input type="checkbox" :id="'rs_record_dp_khatian_' + index" :name="'ownership_details[rs_records][' + index + '][dp_khatian]'" x-model="rs.dp_khatian" class="form-checkbox mr-2">
+                            ডিপি খতিয়ান
+                        </label>
                     </div>
+                    
                 </div>
             </div>
         </template>
@@ -304,8 +317,8 @@
         <!-- Action Buttons at Bottom -->
         <div class="flex flex-wrap gap-4 mt-6">
             <button type="button" @click="addDeedTransfer()" class="btn-primary">মালিকানা হস্তান্তর যোগ করুন</button>
-            <button type="button" @click="addInheritanceRecord()" class="btn-secondary">ওয়ারিশ রেকর্ড যোগ করুন</button>
-            <button type="button" @click="addRsRecord()" :disabled="rs_record_disabled" class="btn-secondary" :class="{ 'opacity-50 cursor-not-allowed': rs_record_disabled }" x-show="acquisition_record_basis === 'SA'">আরএস রেকর্ড যোগ করুন</button>
+            <button type="button" @click="addInheritanceRecord()" class="btn-primary">ওয়ারিশ রেকর্ড যোগ করুন</button>
+            <button type="button" @click="addRsRecord()" :disabled="rs_record_disabled" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200" :class="{ 'opacity-50 cursor-not-allowed': rs_record_disabled }" x-show="acquisition_record_basis === 'SA'">আরএস রেকর্ড যোগ করুন</button>
             <button type="button" @click="nextStep()" class="btn-success">উপরোক্ত মালিকই আবেদনকারী</button>
         </div>
     </div>
@@ -332,7 +345,7 @@
                         <span class="font-medium">SA দাগে মোট জমি:</span> <span x-text="sa_info.sa_total_land_in_plot"></span>
                     </div>
                     <div x-show="sa_info.sa_land_in_khatian">
-                        <span class="font-medium">SA খতিয়ানে জমির পরিমাণ:</span> <span x-text="sa_info.sa_land_in_khatian"></span>
+                        <span class="font-medium">SA খতিয়ানে জমির পরিমাণ (একর):</span> <span x-text="sa_info.sa_land_in_khatian"></span>
                     </div>
                     <div x-show="rs_info.rs_plot_no">
                         <span class="font-medium">RS দাগ নম্বর:</span> <span x-text="rs_info.rs_plot_no"></span>
@@ -344,7 +357,7 @@
                         <span class="font-medium">RS দাগে মোট জমি:</span> <span x-text="rs_info.rs_total_land_in_plot"></span>
                     </div>
                     <div x-show="rs_info.rs_land_in_khatian">
-                        <span class="font-medium">RS খতিয়ানে জমির পরিমাণ:</span> <span x-text="rs_info.rs_land_in_khatian"></span>
+                        <span class="font-medium">RS খতিয়ানে জমির পরিমাণ (একর):</span> <span x-text="rs_info.rs_land_in_khatian"></span>
                     </div>
                 </div>
             </div>
@@ -375,7 +388,7 @@
                         <span class="font-medium">খারিজ দাগ নম্বর:</span> <span x-text="applicant_info.kharij_plot_no"></span>
                     </div>
                     <div x-show="applicant_info.kharij_land_amount">
-                        <span class="font-medium">খারিজকৃত জমির পরিমাণ:</span> <span x-text="applicant_info.kharij_land_amount"></span>
+                        <span class="font-medium">খারিজকৃত জমির পরিমাণ (একর):</span> <span x-text="applicant_info.kharij_land_amount"></span>
                     </div>
                     <div x-show="applicant_info.kharij_date">
                         <span class="font-medium">খারিজের তারিখ:</span> <span x-text="applicant_info.kharij_date"></span>
@@ -407,7 +420,7 @@
                 </div>
                 <div class="floating-label">
                     <input type="text" name="ownership_details[applicant_info][kharij_land_amount]" x-model="applicant_info.kharij_land_amount" placeholder=" ">
-                    <label>খারিজকৃত জমির পরিমাণ</label>
+                    <label>উক্ত দাগে খারিজকৃত জমির পরিমাণ (একর)</label>
                 </div>
                                     <div class="floating-label">
                         <input type="text" name="ownership_details[applicant_info][kharij_date]" x-model="applicant_info.kharij_date" placeholder="দিন/মাস/বছর">
@@ -421,7 +434,7 @@
         </div>
 
         <div class="mt-6">
-            <button type="button" @click="prevStep()" class="btn-secondary mr-4">পূর্ববর্তী ধাপ</button>
+            <button type="button" @click="prevStep()" class="btn-secondary mr-4"> <- পূর্ববর্তী ধাপ</button>
             <button type="button" @click="saveAllData()" class="btn-success">সব তথ্য সংরক্ষণ করুন</button>
         </div>
     </div>
@@ -460,7 +473,7 @@
 
     <!-- Navigation -->
     <div x-show="currentStep !== 'applicant'" class="mt-6">
-        <button type="button" @click="prevStep()" x-show="currentStep !== 'info'" class="btn-secondary mr-4">পূর্ববর্তী ধাপ</button>
+        <button type="button" @click="prevStep()" x-show="currentStep !== 'info'" class="btn-secondary mr-4"> <- পূর্ববর্তী ধাপ</button>
         <button type="button" @click="saveStepData()" class="btn-primary">বর্তমান ধাপ সংরক্ষণ করুন</button>
     </div>
 </div>
@@ -553,7 +566,18 @@ function ownershipContinuity() {
                         this.rs_owners = data.ownership_details.rs_owners || [{'name': ''}];
                         this.deed_transfers = data.ownership_details.deed_transfers || [];
                         this.inheritance_records = data.ownership_details.inheritance_records || [];
+                        // Handle RS records with new structure
                         this.rs_records = data.ownership_details.rs_records || [];
+                        // Convert old structure to new structure if needed
+                        this.rs_records.forEach(rs => {
+                            if (rs.owner_name && !rs.owner_names) {
+                                rs.owner_names = [{name: rs.owner_name}];
+                                delete rs.owner_name;
+                            }
+                            if (rs.dp_khatian === undefined) {
+                                rs.dp_khatian = true;
+                            }
+                        });
                         this.transferItems = data.ownership_details.transferItems || [];
                         this.currentStep = data.ownership_details.currentStep || 'info';
                         this.completedSteps = data.ownership_details.completedSteps || [];
@@ -692,10 +716,11 @@ function ownershipContinuity() {
         
         addRsRecord() {
             const newRs = {
+                owner_names: [{name: ''}],
                 plot_no: '',
                 khatian_no: '',
                 land_amount: '',
-                owner_name: ''
+                dp_khatian: true
             };
             // Insert at the beginning of the array to show at top
             this.rs_records.unshift(newRs);
@@ -786,6 +811,16 @@ function ownershipContinuity() {
             
             // Show comprehensive summary alert
             this.showAlert('সব তথ্য সফলভাবে সংরক্ষিত হয়েছে! মালিকানার ধারাবাহিকতা সম্পূর্ণ হয়েছে।', 'success');
+        },
+
+        addRsRecordOwner(index) {
+            this.rs_records[index].owner_names.push({ name: '' });
+        },
+
+        removeRsRecordOwner(index, ownerIdx) {
+            if (this.rs_records[index].owner_names.length > 1) {
+                this.rs_records[index].owner_names.splice(ownerIdx, 1);
+            }
         }
     }
 }

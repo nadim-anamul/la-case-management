@@ -35,10 +35,24 @@
                 <label class="font-semibold text-gray-700">এলএ কেস নং:</label>
                 <p class="text-gray-900">{{ $compensation->la_case_no }}</p>
             </div>
+            @if($compensation->land_award_serial_no)
             <div>
-                <label class="font-semibold text-gray-700">রোয়েদাদের ক্রমিক নং:</label>
-                <p class="text-gray-900">{{ $compensation->award_serial_no }}</p>
+                <label class="font-semibold text-gray-700">জমির রোয়েদাদ নং:</label>
+                <p class="text-gray-900">{{ $compensation->land_award_serial_no }}</p>
             </div>
+            @endif
+            @if($compensation->tree_award_serial_no)
+            <div>
+                <label class="font-semibold text-gray-700">গাছপালার রোয়েদাদ নং:</label>
+                <p class="text-gray-900">{{ $compensation->tree_award_serial_no }}</p>
+            </div>
+            @endif
+            @if($compensation->infrastructure_award_serial_no)
+            <div>
+                <label class="font-semibold text-gray-700">অবকাঠামোর রোয়েদাদ নং:</label>
+                <p class="text-gray-900">{{ $compensation->infrastructure_award_serial_no }}</p>
+            </div>
+            @endif
             <div>
                 <label class="font-semibold text-gray-700">যে রেকর্ড মূলে অধিগ্রহণ:</label>
                 <p class="text-gray-900">{{ $compensation->acquisition_record_basis }}</p>
@@ -125,10 +139,6 @@
                 <label class="font-semibold text-gray-700">অবকাঠামোর মোট ক্ষতিপূরণ:</label>
                 <p class="text-gray-900">{{ $compensation->infrastructure_compensation }}</p>
             </div>
-            <div>
-                <label class="font-semibold text-gray-700">উৎস কর %:</label>
-                <p class="text-gray-900">{{ $compensation->infrastructure_source_tax_percentage }}</p>
-            </div>
             @endif
             @if($compensation->applicant_acquired_land)
             <div>
@@ -136,10 +146,39 @@
                 <p class="text-gray-900">{{ $compensation->applicant_acquired_land }}</p>
             </div>
             @endif
+            @if($compensation->land_category && count($compensation->land_category) > 0)
+            <div class="md:col-span-2 lg:col-span-3">
+                <label class="font-semibold text-gray-700">অধিগ্রহণকৃত জমির শ্রেণী:</label>
+                <div class="mt-2 space-y-2">
+                    @foreach($compensation->land_category as $index => $category)
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <span class="font-medium text-gray-600">জমির শ্রেণী:</span>
+                                <span class="text-gray-900">{{ $category['category_name'] ?? '' }}</span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-600">মোট জমির পরিমাণ:</span>
+                                <span class="text-gray-900">{{ $category['total_land'] ?? '' }} একর</span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-600">মোট ক্ষতিপূরণ:</span>
+                                <span class="text-gray-900">{{ $category['total_compensation'] ?? '' }}</span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-600">আবেদনকারীর অধিগ্রহণকৃত জমি:</span>
+                                <span class="text-gray-900">{{ $category['applicant_land'] ?? '' }} একর</span>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
             @if($compensation->award_type)
             <div>
                 <label class="font-semibold text-gray-700">রোয়েদাদের ধরন:</label>
-                <p class="text-gray-900">{{ $compensation->award_type }}</p>
+                <p class="text-gray-900">{{ is_array($compensation->award_type) ? implode(', ', $compensation->award_type) : $compensation->award_type }}</p>
             </div>
             @endif
             @if($compensation->acquisition_record_basis === 'SA')
@@ -413,9 +452,19 @@
                         <label class="font-semibold text-gray-700">আরএস জমির পরিমাণ:</label>
                         <p class="text-gray-900">{{ $rs['land_amount'] ?? '' }}</p>
                     </div>
-                    <div>
+                    <div class="md:col-span-2">
                         <label class="font-semibold text-gray-700">আরএস মালিকের নাম:</label>
-                        <p class="text-gray-900">{{ $rs['owner_name'] ?? '' }}</p>
+                        @if(isset($rs['owner_names']))
+                            @foreach($rs['owner_names'] as $owner)
+                                <p class="text-gray-900">• {{ $owner['name'] ?? '' }}</p>
+                            @endforeach
+                        @elseif(isset($rs['owner_name']))
+                            <p class="text-gray-900">• {{ $rs['owner_name'] }}</p>
+                        @endif
+                    </div>
+                    <div>
+                        <label class="font-semibold text-gray-700">ডিপি খতিয়ান:</label>
+                        <p class="text-gray-900">{{ isset($rs['dp_khatian']) && $rs['dp_khatian'] ? 'হ্যাঁ' : 'না' }}</p>
                     </div>
                 </div>
             </div>

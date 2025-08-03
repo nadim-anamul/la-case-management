@@ -24,8 +24,8 @@
                         <small class="text-gray-500">একাধিক মালিক থাকলে যোগ করুন।</small>
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="sa_plot_no" name="ownership_details[sa_plot_no]" value="{{ old('ownership_details.sa_plot_no', isset($compensation) ? $compensation->ownership_details['sa_plot_no'] ?? '' : '') }}" placeholder=" ">
-                        <label for="sa_plot_no">SA দাগ নম্বর</label>
+                        <input type="text" id="old_sa_plot_no" name="ownership_details[sa_plot_no]" value="{{ old('ownership_details.sa_plot_no', isset($compensation) ? $compensation->ownership_details['sa_plot_no'] ?? '' : '') }}" placeholder=" ">
+                        <label for="old_sa_plot_no">SA দাগ নম্বর</label>
                         <small class="text-gray-500">যে দাগ নম্বরের মালিকানা যাচাই হচ্ছে</small>
                     </div>
                     <div class="floating-label">
@@ -33,16 +33,16 @@
                         <label for="previous_owner_name">যে মালিকের থেকে আগত তার নাম</label>
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="sa_khatian_no" name="ownership_details[sa_khatian_no]" value="{{ old('ownership_details.sa_khatian_no', isset($compensation) ? $compensation->ownership_details['sa_khatian_no'] ?? '' : '') }}" placeholder=" ">
-                        <label for="sa_khatian_no">SA খতিয়ান নম্বর</label>
+                        <input type="text" id="old_sa_khatian_no" name="ownership_details[sa_khatian_no]" value="{{ old('ownership_details.sa_khatian_no', isset($compensation) ? $compensation->ownership_details['sa_khatian_no'] ?? '' : '') }}" placeholder=" ">
+                        <label for="old_sa_khatian_no">SA খতিয়ান নম্বর</label>
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="sa_total_land_in_plot" name="ownership_details[sa_total_land_in_plot]" value="{{ old('ownership_details.sa_total_land_in_plot', isset($compensation) ? $compensation->ownership_details['sa_total_land_in_plot'] ?? '' : '') }}" placeholder=" ">
-                        <label for="sa_total_land_in_plot">SA দাগে মোট জমি</label>
+                        <input type="text" id="old_sa_total_land_in_plot" name="ownership_details[sa_total_land_in_plot]" value="{{ old('ownership_details.sa_total_land_in_plot', isset($compensation) ? $compensation->ownership_details['sa_total_land_in_plot'] ?? '' : '') }}" placeholder=" ">
+                        <label for="old_sa_total_land_in_plot">SA দাগে মোট জমি</label>
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="sa_land_in_khatian" name="ownership_details[sa_land_in_khatian]" value="{{ old('ownership_details.sa_land_in_khatian', isset($compensation) ? $compensation->ownership_details['sa_land_in_khatian'] ?? '' : '') }}" placeholder=" ">
-                        <label for="sa_land_in_khatian">SA উক্ত খতিয়ানে জমির পরিমাণ</label>
+                        <input type="text" id="old_sa_land_in_khatian" name="ownership_details[sa_land_in_khatian]" value="{{ old('ownership_details.sa_land_in_khatian', isset($compensation) ? $compensation->ownership_details['sa_land_in_khatian'] ?? '' : '') }}" placeholder=" ">
+                        <label for="old_sa_land_in_khatian">SA উক্ত খতিয়ানে জমির পরিমাণ</label>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
@@ -59,24 +59,24 @@
                     </div>
                     <div>
                         <div class="floating-label">
-                            <input type="text" id="rs_plot_no" name="ownership_details[rs_plot_no]" value="{{ old('ownership_details.rs_plot_no', isset($compensation) ? $compensation->ownership_details['rs_plot_no'] ?? '' : '') }}" placeholder=" ">
-                            <label for="rs_plot_no">RS দাগ নম্বর</label>
+                            <input type="text" id="old_rs_plot_no" name="ownership_details[rs_plot_no]" value="{{ old('ownership_details.rs_plot_no', isset($compensation) ? $compensation->ownership_details['rs_plot_no'] ?? '' : '') }}" placeholder=" ">
+                            <label for="old_rs_plot_no">RS দাগ নম্বর</label>
                         </div>
                         <div class="floating-label">
                             <input type="text" id="rs_previous_owner_name" name="ownership_details[rs_previous_owner_name]" value="{{ old('ownership_details.rs_previous_owner_name', isset($compensation) ? $compensation->ownership_details['rs_previous_owner_name'] ?? '' : '') }}" placeholder=" ">
                             <label for="rs_previous_owner_name">RS যে মালিকের থেকে আগত তার নাম</label>
                         </div>
                         <div class="floating-label">
-                            <input type="text" id="rs_khatian_no" name="ownership_details[rs_khatian_no]" value="{{ old('ownership_details.rs_khatian_no', isset($compensation) ? $compensation->ownership_details['rs_khatian_no'] ?? '' : '') }}" placeholder=" ">
-                            <label for="rs_khatian_no">RS খতিয়ান নম্বর</label>
+                            <input type="text" id="old_rs_khatian_no" name="ownership_details[rs_khatian_no]" value="{{ old('ownership_details.rs_khatian_no', isset($compensation) ? $compensation->ownership_details['rs_khatian_no'] ?? '' : '') }}" placeholder=" ">
+                            <label for="old_rs_khatian_no">RS খতিয়ান নম্বর</label>
                         </div>
                         <div class="floating-label">
-                            <input type="text" id="rs_total_land_in_plot" name="ownership_details[rs_total_land_in_plot]" value="{{ old('ownership_details.rs_total_land_in_plot', isset($compensation) ? $compensation->ownership_details['rs_total_land_in_plot'] ?? '' : '') }}" placeholder=" ">
-                            <label for="rs_total_land_in_plot">RS দাগে মোট জমি</label>
+                            <input type="text" id="old_rs_total_land_in_plot" name="ownership_details[rs_total_land_in_plot]" value="{{ old('ownership_details.rs_total_land_in_plot', isset($compensation) ? $compensation->ownership_details['rs_total_land_in_plot'] ?? '' : '') }}" placeholder=" ">
+                            <label for="old_rs_total_land_in_plot">RS দাগে মোট জমি</label>
                         </div>
                         <div class="floating-label">
-                            <input type="text" id="rs_land_in_khatian" name="ownership_details[rs_land_in_khatian]" value="{{ old('ownership_details.rs_land_in_khatian', isset($compensation) ? $compensation->ownership_details['rs_land_in_khatian'] ?? '' : '') }}" placeholder=" ">
-                            <label for="rs_land_in_khatian">RS খতিয়ানে মোট জমির পরিমাণ</label>
+                            <input type="text" id="old_rs_land_in_khatian" name="ownership_details[rs_land_in_khatian]" value="{{ old('ownership_details.rs_land_in_khatian', isset($compensation) ? $compensation->ownership_details['rs_land_in_khatian'] ?? '' : '') }}" placeholder=" ">
+                            <label for="old_rs_land_in_khatian">RS খতিয়ানে মোট জমির পরিমাণ</label>
                         </div>
                     </div>
                 </div>
@@ -279,16 +279,16 @@
                         <small class="text-gray-500">একাধিক মালিক থাকলে যোগ করুন।</small>
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="rs_plot_no" name="ownership_details[rs_plot_no]" value="{{ old('ownership_details.rs_plot_no', isset($compensation) ? $compensation->ownership_details['rs_plot_no'] ?? '' : '') }}" placeholder=" ">
-                        <label for="rs_plot_no">RS দাগ নম্বর</label>
+                        <input type="text" id="old_rs_plot_no_2" name="ownership_details[rs_plot_no]" value="{{ old('ownership_details.rs_plot_no', isset($compensation) ? $compensation->ownership_details['rs_plot_no'] ?? '' : '') }}" placeholder=" ">
+                        <label for="old_rs_plot_no_2">RS দাগ নম্বর</label>
                     </div>
                     <div class="floating-label">
                         <input type="text" id="rs_previous_owner_name" name="ownership_details[rs_previous_owner_name]" value="{{ old('ownership_details.rs_previous_owner_name', isset($compensation) ? $compensation->ownership_details['rs_previous_owner_name'] ?? '' : '') }}" placeholder=" ">
                         <label for="rs_previous_owner_name">RS যে মালিকের থেকে আগত তার নাম</label>
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="rs_khatian_no" name="ownership_details[rs_khatian_no]" value="{{ old('ownership_details.rs_khatian_no', isset($compensation) ? $compensation->ownership_details['rs_khatian_no'] ?? '' : '') }}" placeholder=" ">
-                        <label for="rs_khatian_no">RS খতিয়ান নম্বর</label>
+                        <input type="text" id="old_rs_khatian_no_2" name="ownership_details[rs_khatian_no]" value="{{ old('ownership_details.rs_khatian_no', isset($compensation) ? $compensation->ownership_details['rs_khatian_no'] ?? '' : '') }}" placeholder=" ">
+                        <label for="old_rs_khatian_no_2">RS খতিয়ান নম্বর</label>
                     </div>
                     <div class="floating-label">
                         <input type="text" id="rs_total_land_in_plot" name="ownership_details[rs_total_land_in_plot]" value="{{ old('ownership_details.rs_total_land_in_plot', isset($compensation) ? $compensation->ownership_details['rs_total_land_in_plot'] ?? '' : '') }}" placeholder=" ">

@@ -21,15 +21,18 @@ class OwnershipDetailsStructureTest extends TestCase
                 ['name' => 'Test Applicant', 'father_name' => 'Test Father', 'address' => 'Test Address', 'nid' => '1234567890']
             ],
             'la_case_no' => 'LA-001',
-            'award_type' => ['type1', 'type2'],
+            'award_type' => 'জমি',
             'award_serial_no' => 'AWD-001',
             'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-001',
-            'award_holder_name' => 'Test Holder',
+            'award_holder_names' => [
+                ['name' => 'Test Holder']
+            ],
             'objector_details' => 'Test objections',
             'is_applicant_in_award' => true,
             'total_acquired_land' => '10 acres',
             'total_compensation' => '100000',
+            'source_tax_percentage' => '5.00',
             'applicant_acquired_land' => '5 acres',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-001',
@@ -60,8 +63,8 @@ class OwnershipDetailsStructureTest extends TestCase
                 ],
                 'deed_transfers' => [
                     [
-                        'donor_name' => 'Donor 1',
-                        'recipient_name' => 'Recipient 1',
+                        'donor_names' => [['name' => 'Donor 1']],
+                        'recipient_names' => [['name' => 'Recipient 1']],
                         'deed_number' => 'DEED-001',
                         'deed_date' => '2024-01-01',
                         'sale_type' => 'Specific Plot',
@@ -119,7 +122,7 @@ class OwnershipDetailsStructureTest extends TestCase
 
         $response = $this->post('/compensation/store', $data);
 
-        $response->assertRedirect('/compensations');
+        $this->assertStringContainsString('/compensation/', $response->headers->get('Location'));
         
         $this->assertDatabaseHas('compensations', [
             'case_number' => 'TEST-001',
@@ -154,15 +157,18 @@ class OwnershipDetailsStructureTest extends TestCase
                 ['name' => 'Test Applicant', 'father_name' => 'Test Father', 'address' => 'Test Address', 'nid' => '1234567890']
             ],
             'la_case_no' => 'LA-001',
-            'award_type' => ['type1'],
+            'award_type' => 'জমি',
             'award_serial_no' => 'AWD-001',
             'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-001',
-            'award_holder_name' => 'Test Holder',
+            'award_holder_names' => [
+                ['name' => 'Test Holder']
+            ],
             'objector_details' => 'Test objections',
             'is_applicant_in_award' => true,
             'total_acquired_land' => '10 acres',
             'total_compensation' => '100000',
+            'source_tax_percentage' => '5.00',
             'applicant_acquired_land' => '5 acres',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-001',
@@ -214,7 +220,7 @@ class OwnershipDetailsStructureTest extends TestCase
 
         $response = $this->post('/compensation/store', $data);
 
-        $response->assertRedirect('/compensations');
+        $this->assertStringContainsString('/compensation/', $response->headers->get('Location'));
         
         $this->assertDatabaseHas('compensations', [
             'case_number' => 'TEST-002'

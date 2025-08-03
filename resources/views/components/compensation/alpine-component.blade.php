@@ -17,7 +17,14 @@
             acquisition_record_basis: '',
             selected_doc_types: [],
             additional_documents_details: {},
-            award_types: [],
+            award_type: '',
+            award_holder_names: [{ name: '' }],
+            land_category: [{ 
+                category_name: '', 
+                total_land: '', 
+                total_compensation: '', 
+                applicant_land: '' 
+            }],
             sa_owners: [{ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' }],
             rs_owners: [{ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' }],
             
@@ -61,7 +68,14 @@
                     this.acquisition_record_basis = old.acquisition_record_basis || '';
                     this.selected_doc_types = old.additional_documents_info?.selected_types || [];
                     this.additional_documents_details = old.additional_documents_info?.details || {};
-                    this.award_types = old.award_type || [];
+                    this.award_type = old.award_type || '';
+                    this.award_holder_names = old.award_holder_names || [{ name: '' }];
+                    this.land_category = old.land_category || [{ 
+                        category_name: '', 
+                        total_land: '', 
+                        total_compensation: '', 
+                        applicant_land: '' 
+                    }];
                 } else if (hasCompensationData) {
                     // Handle edit mode - use compensation data
                     const data = JSON.parse(compensationData);
@@ -94,7 +108,14 @@
                     this.acquisition_record_basis = data.acquisition_record_basis || '';
                     this.selected_doc_types = (data.additional_documents_info?.selected_types) || [];
                     this.additional_documents_details = (data.additional_documents_info?.details) || {};
-                    this.award_types = data.award_type || [];
+                    this.award_type = data.award_type || '';
+                    this.award_holder_names = data.award_holder_names || [{ name: '' }];
+                    this.land_category = data.land_category || [{ 
+                        category_name: '', 
+                        total_land: '', 
+                        total_compensation: '', 
+                        applicant_land: '' 
+                    }];
                 } else {
                     // Handle new form - use default values
                     this.applicants = [{ name: '', father_name: '', address: '', nid: '' }];
@@ -134,7 +155,14 @@
                     this.rs_owners = [{ name: '', plot_no: '', previous_owner_name: '', khatian_no: '', total_land_in_plot: '', land_in_khatian: '' }];
                     this.is_sa_owner = (document.querySelector('[name="ownership_details[is_applicant_sa_owner]"]:checked')?.value) || 'yes';
                     this.is_rs_owner = (document.querySelector('[name="ownership_details[is_applicant_rs_owner]"]:checked')?.value) || 'yes';
-                    this.award_types = [];
+                    this.award_type = '';
+                    this.award_holder_names = [{ name: '' }];
+                    this.land_category = [{ 
+                        category_name: '', 
+                        total_land: '', 
+                        total_compensation: '', 
+                        applicant_land: '' 
+                    }];
                 }
             },
             
@@ -186,6 +214,17 @@
             },
             removeRsOwner(index) {
                 this.rs_owners.splice(index, 1);
+            },
+            addLandCategory() {
+                this.land_category.push({ 
+                    category_name: '', 
+                    total_land: '', 
+                    total_compensation: '', 
+                    applicant_land: '' 
+                });
+            },
+            removeLandCategory(index) {
+                this.land_category.splice(index, 1);
             }
         });
     });

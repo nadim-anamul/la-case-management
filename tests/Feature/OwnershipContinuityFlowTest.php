@@ -24,14 +24,18 @@ class OwnershipContinuityFlowTest extends TestCase
                 ]
             ],
             'la_case_no' => 'LA-001',
+            'award_type' => 'জমি',
             'award_serial_no' => 'AWD-001',
             'acquisition_record_basis' => 'SA',
             'sa_plot_no' => 'SA-PLOT-001',
             'plot_no' => 'PLOT-001',
-            'award_holder_name' => 'Test Award Holder',
+            'award_holder_names' => [
+                ['name' => 'Test Award Holder']
+            ],
             'is_applicant_in_award' => true,
             'total_acquired_land' => '1.00',
             'total_compensation' => '100000',
+            'source_tax_percentage' => '5.00',
             'applicant_acquired_land' => '1.00',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-001',
@@ -56,8 +60,8 @@ class OwnershipContinuityFlowTest extends TestCase
                 'rs_owners' => [['name' => 'RS Owner 1']],
                 'deed_transfers' => [
                     [
-                        'donor_name' => 'Deed Donor',
-                        'recipient_name' => 'Deed Recipient',
+                        'donor_names' => [['name' => 'Deed Donor']],
+                        'recipient_names' => [['name' => 'Deed Recipient']],
                         'deed_number' => 'DEED-001',
                         'deed_date' => '2024-01-01',
                         'sale_type' => 'Specific Plot',
@@ -101,7 +105,7 @@ class OwnershipContinuityFlowTest extends TestCase
 
         $response = $this->post('/compensation/store', $compensationData);
 
-        $response->assertRedirect('/compensations');
+        $this->assertStringContainsString('/compensation/', $response->headers->get('Location'));
         
         $this->assertDatabaseHas('compensations', [
             'case_number' => 'TEST-SA-001'
@@ -122,7 +126,8 @@ class OwnershipContinuityFlowTest extends TestCase
         
         // Check specific data
         $this->assertEquals('SA Owner 1', $compensation->ownership_details['sa_owners'][0]['name']);
-        $this->assertEquals('Deed Donor', $compensation->ownership_details['deed_transfers'][0]['donor_name']);
+        $this->assertEquals('Deed Donor', $compensation->ownership_details['deed_transfers'][0]['donor_names'][0]['name']);
+        $this->assertEquals('Deed Recipient', $compensation->ownership_details['deed_transfers'][0]['recipient_names'][0]['name']);
     }
 
     public function test_rs_flow_with_applicant_owner_option()
@@ -139,14 +144,18 @@ class OwnershipContinuityFlowTest extends TestCase
                 ]
             ],
             'la_case_no' => 'LA-002',
+            'award_type' => 'জমি',
             'award_serial_no' => 'AWD-002',
             'acquisition_record_basis' => 'RS',
             'rs_plot_no' => 'RS-PLOT-002',
             'plot_no' => 'PLOT-002',
-            'award_holder_name' => 'Test Award Holder',
+            'award_holder_names' => [
+                ['name' => 'Test Award Holder']
+            ],
             'is_applicant_in_award' => true,
             'total_acquired_land' => '1.00',
             'total_compensation' => '100000',
+            'source_tax_percentage' => '5.00',
             'applicant_acquired_land' => '1.00',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-002',
@@ -171,8 +180,8 @@ class OwnershipContinuityFlowTest extends TestCase
                 'rs_owners' => [['name' => 'RS Owner 1']],
                 'deed_transfers' => [
                     [
-                        'donor_name' => 'Deed Donor',
-                        'recipient_name' => 'Deed Recipient',
+                        'donor_names' => [['name' => 'Deed Donor']],
+                        'recipient_names' => [['name' => 'Deed Recipient']],
                         'deed_number' => 'DEED-001',
                         'deed_date' => '2024-01-01',
                         'sale_type' => 'Specific Plot',
@@ -216,7 +225,7 @@ class OwnershipContinuityFlowTest extends TestCase
 
         $response = $this->post('/compensation/store', $compensationData);
 
-        $response->assertRedirect('/compensations');
+        $this->assertStringContainsString('/compensation/', $response->headers->get('Location'));
         
         $this->assertDatabaseHas('compensations', [
             'case_number' => 'TEST-RS-001'

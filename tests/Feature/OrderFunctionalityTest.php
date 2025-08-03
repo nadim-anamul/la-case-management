@@ -55,13 +55,17 @@ class OrderFunctionalityTest extends TestCase
             'case_date' => '2024-01-15',
             'applicants' => [['name' => 'Test Applicant', 'father_name' => 'Test Father', 'address' => 'Test Address', 'nid' => '1234567890']],
             'la_case_no' => 'LA-002',
+            'award_type' => 'জমি',
             'award_serial_no' => 'AWD-002',
             'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-002',
-            'award_holder_name' => 'Test Holder',
+            'award_holder_names' => [
+                ['name' => 'Test Holder']
+            ],
             'is_applicant_in_award' => true,
             'total_acquired_land' => '5 acres',
             'total_compensation' => '500000',
+            'source_tax_percentage' => '5.00',
             'applicant_acquired_land' => '2 acres',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-002',
@@ -87,7 +91,7 @@ class OrderFunctionalityTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson([
             'success' => true,
-            'message' => 'আদেশ সফলভাবে সম্পন্ন করা হয়েছে।'
+            'message' => 'আদেশ সফলভাবে নিষ্পত্তিকৃত হয়েছে।'
         ]);
 
         // Check if compensation status is updated
@@ -104,13 +108,17 @@ class OrderFunctionalityTest extends TestCase
             'case_date' => '2024-01-15',
             'applicants' => [['name' => 'Test Applicant', 'father_name' => 'Test Father', 'address' => 'Test Address', 'nid' => '1234567890']],
             'la_case_no' => 'LA-003',
+            'award_type' => 'জমি',
             'award_serial_no' => 'AWD-003',
             'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-003',
-            'award_holder_name' => 'Test Holder',
+            'award_holder_names' => [
+                ['name' => 'Test Holder']
+            ],
             'is_applicant_in_award' => true,
             'total_acquired_land' => '5 acres',
             'total_compensation' => '500000',
+            'source_tax_percentage' => '5.00',
             'applicant_acquired_land' => '2 acres',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-003',
@@ -146,13 +154,17 @@ class OrderFunctionalityTest extends TestCase
             'case_date' => '2024-01-15',
             'applicants' => [['name' => 'Pending Applicant', 'father_name' => 'Test Father', 'address' => 'Test Address', 'nid' => '1234567890']],
             'la_case_no' => 'LA-PENDING',
+            'award_type' => 'জমি',
             'award_serial_no' => 'AWD-PENDING',
             'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-PENDING',
-            'award_holder_name' => 'Test Holder',
+            'award_holder_names' => [
+                ['name' => 'Test Holder']
+            ],
             'is_applicant_in_award' => true,
             'total_acquired_land' => '5 acres',
             'total_compensation' => '500000',
+            'source_tax_percentage' => '5.00',
             'applicant_acquired_land' => '2 acres',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-PENDING',
@@ -174,13 +186,17 @@ class OrderFunctionalityTest extends TestCase
             'case_date' => '2024-01-15',
             'applicants' => [['name' => 'Done Applicant', 'father_name' => 'Test Father', 'address' => 'Test Address', 'nid' => '1234567890']],
             'la_case_no' => 'LA-DONE',
+            'award_type' => 'জমি',
             'award_serial_no' => 'AWD-DONE',
             'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-DONE',
-            'award_holder_name' => 'Test Holder',
+            'award_holder_names' => [
+                ['name' => 'Test Holder']
+            ],
             'is_applicant_in_award' => true,
             'total_acquired_land' => '5 acres',
             'total_compensation' => '500000',
+            'source_tax_percentage' => '5.00',
             'applicant_acquired_land' => '2 acres',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-DONE',
@@ -216,13 +232,17 @@ class OrderFunctionalityTest extends TestCase
             'case_date' => '2024-01-15',
             'applicants' => [['name' => 'Search Applicant', 'father_name' => 'Test Father', 'address' => 'Test Address', 'nid' => '1234567890']],
             'la_case_no' => 'LA-SEARCH-123',
+            'award_type' => 'জমি',
             'award_serial_no' => 'AWD-SEARCH',
             'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-SEARCH',
-            'award_holder_name' => 'Test Holder',
+            'award_holder_names' => [
+                ['name' => 'Test Holder']
+            ],
             'is_applicant_in_award' => true,
             'total_acquired_land' => '5 acres',
             'total_compensation' => '500000',
+            'source_tax_percentage' => '5.00',
             'applicant_acquired_land' => '2 acres',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-SEARCH',
