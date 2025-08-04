@@ -527,7 +527,6 @@
     @endif
 
     <!-- Tax Information -->
-    @if($compensation->tax_info)
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
         <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
             <span class="section-icon">৬</span>
@@ -535,33 +534,48 @@
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
+                <label class="font-semibold text-gray-700">হোল্ডিং নম্বর:</label>
+                @if(!empty($compensation->tax_info['holding_no'] ?? ''))
+                    <p class="text-gray-900">{{ $compensation->tax_info['holding_no'] }}</p>
+                @else
+                    <p class="text-red-500 italic">অনুপলব্ধ</p>
+                @endif
+            </div>
+            <div>
+                <label class="font-semibold text-gray-700">আবেদনকৃত দাগে খাজনা প্রদানকৃত জমির পরিমান (একরে)</label>
+                @if(!empty($compensation->tax_info['paid_land_amount'] ?? ''))
+                    <p class="text-gray-900">{{ $compensation->tax_info['paid_land_amount'] }}</p>
+                @else
+                    <p class="text-red-500 italic">অনুপলব্ধ</p>
+                @endif
+            </div>
+            <div>
                 <label class="font-semibold text-gray-700">ইংরেজি বছর:</label>
-                <p class="text-gray-900">{{ $compensation->tax_info['english_year'] ?? '' }}</p>
+                @if(!empty($compensation->tax_info['english_year'] ?? ''))
+                    <p class="text-gray-900">{{ $compensation->tax_info['english_year'] }}</p>
+                @else
+                    <p class="text-red-500 italic">অনুপলব্ধ</p>
+                @endif
             </div>
             <div>
                 <label class="font-semibold text-gray-700">বাংলা বছর:</label>
-                <p class="text-gray-900">{{ $compensation->tax_info['bangla_year'] ?? '' }}</p>
+                @if(!empty($compensation->tax_info['bangla_year'] ?? ''))
+                    <p class="text-gray-900">{{ $compensation->tax_info['bangla_year'] }}</p>
+                @else
+                    <p class="text-red-500 italic">অনুপলব্ধ</p>
+                @endif
             </div>
-            <div>
-                <label class="font-semibold text-gray-700">হোল্ডিং নম্বর:</label>
-                <p class="text-gray-900">{{ $compensation->tax_info['holding_no'] ?? '' }}</p>
-            </div>
-            <div>
-                <label class="font-semibold text-gray-700">খাজনা প্রদানকৃত জমির পরিমান:</label>
-                <p class="text-gray-900">{{ $compensation->tax_info['paid_land_amount'] ?? '' }}</p>
-            </div>
+            
         </div>
     </div>
-    @endif
 
     <!-- Additional Documents -->
-    @if($compensation->additional_documents_info)
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
         <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
             <span class="section-icon">৭</span>
             বণ্টন / না-দাবি / আপসনামা / এফিডেভিটের তথ্য
         </h2>
-        @if(isset($compensation->additional_documents_info['selected_types']))
+        @if(isset($compensation->additional_documents_info['selected_types']) && !empty($compensation->additional_documents_info['selected_types']))
         <div class="mb-4">
             <label class="font-semibold text-gray-700">দাখিলকৃত ডকুমেন্টের ধরন:</label>
             <div class="mt-2">
@@ -570,9 +584,14 @@
                 @endforeach
             </div>
         </div>
+        @else
+        <div class="mb-4">
+            <label class="font-semibold text-gray-700">দাখিলকৃত ডকুমেন্টের ধরন:</label>
+            <p class="text-red-500 italic">অনুপলব্ধ</p>
+        </div>
         @endif
         
-        @if(isset($compensation->additional_documents_info['details']))
+        @if(isset($compensation->additional_documents_info['details']) && !empty($compensation->additional_documents_info['details']))
         <div>
             <label class="font-semibold text-gray-700">ডকুমেন্টের বিবরণ:</label>
             @foreach($compensation->additional_documents_info['details'] as $type => $details)
@@ -582,9 +601,13 @@
             </div>
             @endforeach
         </div>
+        @else
+        <div>
+            <label class="font-semibold text-gray-700">ডকুমেন্টের বিবরণ:</label>
+            <p class="text-red-500 italic">অনুপলব্ধ</p>
+        </div>
         @endif
     </div>
-    @endif
 
     <!-- Kanungo Opinion -->
     @if($compensation->kanungo_opinion)

@@ -32,7 +32,9 @@ class CompensationController extends Controller
                   ->orWhere('jl_no', 'like', "%{$search}%")
                   ->orWhere('sa_khatian_no', 'like', "%{$search}%")
                   ->orWhere('rs_khatian_no', 'like', "%{$search}%")
-                  ->orWhere('plot_no', 'like', "%{$search}%");
+                  ->orWhere('plot_no', 'like', "%{$search}%")
+                  ->orWhere('land_schedule_sa_plot_no', 'like', "%{$search}%")
+                  ->orWhere('land_schedule_rs_plot_no', 'like', "%{$search}%");
                 
                 // Use MySQL JSON_SEARCH for applicant name search
                 $q->orWhereRaw("JSON_SEARCH(applicants, 'one', ?, null, '$[*].name')", ["%{$search}%"]);
@@ -169,14 +171,14 @@ class CompensationController extends Controller
             'tax_info.bangla_year' => 'nullable|string|max:255',
             'tax_info.holding_no' => 'nullable|string|max:255',
             'tax_info.paid_land_amount' => 'nullable|string|max:255',
-            'additional_documents_info' => 'required|array',
-            'additional_documents_info.selected_types' => 'required|array|min:1',
-            'additional_documents_info.details' => 'required|array',
+            'additional_documents_info' => 'nullable|array',
+            'additional_documents_info.selected_types' => 'nullable|array',
+            'additional_documents_info.details' => 'nullable|array',
             'additional_documents_info.details.*' => 'nullable|string',
         ]);
 
         // Custom validation for additional_documents_info.details
-        if (isset($validatedData['additional_documents_info']['selected_types'])) {
+        if (isset($validatedData['additional_documents_info']['selected_types']) && !empty($validatedData['additional_documents_info']['selected_types'])) {
             foreach ($validatedData['additional_documents_info']['selected_types'] as $type) {
                 if (empty($validatedData['additional_documents_info']['details'][$type] ?? null)) {
                     Validator::make([], [])->after(function ($validator) use ($type) {
@@ -304,14 +306,14 @@ class CompensationController extends Controller
             'tax_info.bangla_year' => 'nullable|string|max:255',
             'tax_info.holding_no' => 'nullable|string|max:255',
             'tax_info.paid_land_amount' => 'nullable|string|max:255',
-            'additional_documents_info' => 'required|array',
-            'additional_documents_info.selected_types' => 'required|array|min:1',
-            'additional_documents_info.details' => 'required|array',
+            'additional_documents_info' => 'nullable|array',
+            'additional_documents_info.selected_types' => 'nullable|array',
+            'additional_documents_info.details' => 'nullable|array',
             'additional_documents_info.details.*' => 'nullable|string',
         ]);
 
         // Custom validation for additional_documents_info.details
-        if (isset($validatedData['additional_documents_info']['selected_types'])) {
+        if (isset($validatedData['additional_documents_info']['selected_types']) && !empty($validatedData['additional_documents_info']['selected_types'])) {
             foreach ($validatedData['additional_documents_info']['selected_types'] as $type) {
                 if (empty($validatedData['additional_documents_info']['details'][$type] ?? null)) {
                     Validator::make([], [])->after(function ($validator) use ($type) {
