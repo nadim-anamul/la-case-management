@@ -628,5 +628,257 @@ class DatabaseSeeder extends Seeder
             'order_signature_date' => null,
             'signing_officer_name' => null
         ]);
+
+        // Demo Record 5: Missing tax and document information (to demonstrate blue asterisk behavior)
+        Compensation::create([
+            'case_number' => 'CASE-2024-005',
+            'case_date' => '2024-05-10',
+            'applicants' => [
+                [
+                    'name' => 'আহমেদ হোসেন',
+                    'father_name' => 'মোহাম্মদ ইব্রাহিম',
+                    'address' => 'গ্রাম: মিরপুর, পোস্ট: মিরপুর, জেলা: ঢাকা',
+                    'nid' => '1234567890129'
+                ]
+            ],
+            'la_case_no' => 'LA-2024-005',
+            'land_award_serial_no' => 'LAND-AWD-005',
+            'acquisition_record_basis' => 'SA',
+            'plot_no' => 'PLOT-005',
+            'sa_plot_no' => 'SA-PLOT-005',
+            'rs_plot_no' => null,
+            'award_holder_names' => [
+                ['name' => 'আহমেদ হোসেন']
+            ],
+            'objector_details' => 'কোন আপত্তি নেই',
+            'is_applicant_in_award' => true,
+            'source_tax_percentage' => '8%',
+            'applicant_acquired_land' => '1.0 acres',
+            'land_category' => [
+                [
+                    'category_name' => 'আবাদি জমি',
+                    'total_land' => '1.0',
+                    'total_compensation' => '200000',
+                    'applicant_land' => '1.0'
+                ]
+            ],
+            'mouza_name' => 'মিরপুর',
+            'jl_no' => 'JL-005',
+            'land_schedule_sa_plot_no' => 'SA-OLD-005',
+            'land_schedule_rs_plot_no' => 'RS-NEW-005',
+            'sa_khatian_no' => 'SA-KH-005',
+            'rs_khatian_no' => null,
+            'is_applicant_sa_owner' => true,
+            'award_type' => 'জমি',
+            'ownership_details' => [
+                'sa_info' => [
+                    'sa_plot_no' => 'SA-PLOT-005',
+                    'sa_khatian_no' => 'SA-KH-005',
+                    'sa_total_land_in_plot' => '2 acres',
+                    'sa_land_in_khatian' => '1 acre'
+                ],
+                'rs_info' => [
+                    'rs_plot_no' => '',
+                    'rs_khatian_no' => '',
+                    'rs_total_land_in_plot' => '',
+                    'rs_land_in_khatian' => ''
+                ],
+                'sa_owners' => [
+                    ['name' => 'আহমেদ হোসেন']
+                ],
+                'rs_owners' => [],
+                'deed_transfers' => [
+                    [
+                        'donor_names' => [ ['name' => 'মোহাম্মদ ইব্রাহিম'] ],
+                        'recipient_names' => [ ['name' => 'আহমেদ হোসেন'] ],
+                        'deed_number' => 'DEED-005',
+                        'deed_date' => '2021-10-20',
+                        'sale_type' => 'বিক্রয়',
+                        'plot_no' => 'PLOT-005',
+                        'sold_land_amount' => '1 acre',
+                        'total_sotangsho' => '2',
+                        'total_shotok' => '4',
+                        'possession_mentioned' => 'yes',
+                        'possession_plot_no' => 'PLOT-005',
+                        'possession_description' => 'দখলে আছে',
+                        'mutation_case_no' => 'MUT-005',
+                        'mutation_plot_no' => 'PLOT-005',
+                        'mutation_land_amount' => '1 acre'
+                    ]
+                ],
+                'inheritance_records' => [],
+                'rs_records' => [
+                    [
+                        'plot_no' => 'RS-PLOT-005',
+                        'khatian_no' => 'RS-KH-005',
+                        'land_amount' => '1 acre',
+                        'owner_names' => [
+                            ['name' => 'আহমেদ হোসেন']
+                        ],
+                        'dp_khatian' => true
+                    ]
+                ],
+                'applicant_info' => [
+                    'applicant_name' => 'আহমেদ হোসেন',
+                    'kharij_case_no' => 'KHARIJ-005',
+                    'kharij_plot_no' => 'PLOT-005',
+                    'kharij_land_amount' => '1 acre',
+                    'kharij_date' => '2024-05-10',
+                    'kharij_details' => 'খারিজ সম্পন্ন হয়েছে'
+                ],
+                'transferItems' => [
+                    ['type' => 'দলিল', 'index' => 1],
+                    ['type' => 'আবেদনকারী', 'index' => 1]
+                ],
+                'currentStep' => 'applicant',
+                'completedSteps' => ['info', 'transfers', 'applicant'],
+                'rs_record_disabled' => false
+            ],
+            'mutation_info' => [
+                'mutation_case_no' => 'KHARIJ-005',
+                'mutation_plot_no' => 'PLOT-005',
+                'mutation_land_amount' => '1 acre',
+                'mutation_date' => '2024-05-10',
+                'mutation_details' => 'খারিজ সম্পন্ন হয়েছে'
+            ],
+            'tax_info' => [
+                'english_year' => '',
+                'bangla_year' => '',
+                'holding_no' => '',
+                'paid_land_amount' => ''
+            ],
+            'additional_documents_info' => [
+                'selected_types' => [],
+                'details' => []
+            ],
+            'kanungo_opinion' => [
+                'has_ownership_continuity' => 'yes',
+                'opinion_details' => 'মালিকানার ধারাবাহিকতা আছে'
+            ],
+            'status' => 'pending',
+            'order_signature_date' => null,
+            'signing_officer_name' => null
+        ]);
+
+        // Demo Record 6: Partial tax information but no document information
+        Compensation::create([
+            'case_number' => 'CASE-2024-006',
+            'case_date' => '2024-06-15',
+            'applicants' => [
+                [
+                    'name' => 'সাবরিনা সুলতানা',
+                    'father_name' => 'আব্দুল কাদের',
+                    'address' => 'গ্রাম: উত্তরা, পোস্ট: উত্তরা, জেলা: ঢাকা',
+                    'nid' => '1234567890130'
+                ]
+            ],
+            'la_case_no' => 'LA-2024-006',
+            'land_award_serial_no' => 'LAND-AWD-006',
+            'acquisition_record_basis' => 'RS',
+            'plot_no' => 'PLOT-006',
+            'sa_plot_no' => null,
+            'rs_plot_no' => 'RS-PLOT-006',
+            'award_holder_names' => [
+                ['name' => 'সাবরিনা সুলতানা']
+            ],
+            'objector_details' => 'কোন আপত্তি নেই',
+            'is_applicant_in_award' => true,
+            'source_tax_percentage' => '10%',
+            'applicant_acquired_land' => '0.75 acres',
+            'land_category' => [
+                [
+                    'category_name' => 'আবাদি জমি',
+                    'total_land' => '0.75',
+                    'total_compensation' => '150000',
+                    'applicant_land' => '0.75'
+                ]
+            ],
+            'mouza_name' => 'উত্তরা',
+            'jl_no' => 'JL-006',
+            'land_schedule_sa_plot_no' => 'SA-OLD-006',
+            'land_schedule_rs_plot_no' => 'RS-NEW-006',
+            'sa_khatian_no' => null,
+            'rs_khatian_no' => 'RS-KH-006',
+            'is_applicant_sa_owner' => false,
+            'award_type' => 'জমি',
+            'ownership_details' => [
+                'sa_info' => [
+                    'sa_plot_no' => '',
+                    'sa_khatian_no' => '',
+                    'sa_total_land_in_plot' => '',
+                    'sa_land_in_khatian' => ''
+                ],
+                'rs_info' => [
+                    'rs_plot_no' => 'RS-PLOT-006',
+                    'rs_khatian_no' => 'RS-KH-006',
+                    'rs_total_land_in_plot' => '1.5 acres',
+                    'rs_land_in_khatian' => '0.75 acres'
+                ],
+                'sa_owners' => [],
+                'rs_owners' => [
+                    ['name' => 'সাবরিনা সুলতানা']
+                ],
+                'deed_transfers' => [],
+                'inheritance_records' => [
+                    [
+                        'is_heir_applicant' => 'yes',
+                        'has_death_cert' => 'yes',
+                        'heirship_certificate_info' => 'ওয়ারিশ সনদ আছে',
+                        'previous_owner_name' => 'আব্দুল কাদের',
+                        'death_date' => '2023-08-20'
+                    ]
+                ],
+                'rs_records' => [
+                    [
+                        'plot_no' => 'RS-PLOT-006',
+                        'khatian_no' => 'RS-KH-006',
+                        'land_amount' => '0.75 acres',
+                        'owner_names' => [
+                            ['name' => 'সাবরিনা সুলতানা']
+                        ],
+                        'dp_khatian' => true
+                    ]
+                ],
+                'applicant_info' => [
+                    'applicant_name' => 'সাবরিনা সুলতানা',
+                    'kharij_case_no' => 'KHARIJ-006',
+                    'kharij_plot_no' => 'PLOT-006',
+                    'kharij_land_amount' => '0.75 acres',
+                    'kharij_date' => '2024-06-15',
+                    'kharij_details' => 'খারিজ সম্পন্ন হয়েছে'
+                ],
+                'transferItems' => [
+                    ['type' => 'ওয়ারিশ', 'index' => 1],
+                    ['type' => 'আবেদনকারী', 'index' => 1]
+                ],
+                'currentStep' => 'applicant',
+                'completedSteps' => ['info', 'transfers', 'applicant'],
+                'rs_record_disabled' => false
+            ],
+            'mutation_info' => [
+                'mutation_case_no' => 'KHARIJ-006',
+                'mutation_plot_no' => 'PLOT-006',
+                'mutation_land_amount' => '0.75 acres',
+                'mutation_date' => '2024-06-15',
+                'mutation_details' => 'খারিজ সম্পন্ন হয়েছে'
+            ],
+            'tax_info' => [
+                'english_year' => '2024',
+                'bangla_year' => '১৪৩১',
+                'holding_no' => 'HLD-006',
+                'paid_land_amount' => ''
+            ],
+            'additional_documents_info' => [
+                'selected_types' => [],
+                'details' => []
+            ],
+            'kanungo_opinion' => [
+                'has_ownership_continuity' => 'yes',
+                'opinion_details' => 'মালিকানার ধারাবাহিকতা আছে'
+            ],
+            'status' => 'pending',
+            'order_signature_date' => null,
+            'signing_officer_name' => null
+        ]);
     }
 }

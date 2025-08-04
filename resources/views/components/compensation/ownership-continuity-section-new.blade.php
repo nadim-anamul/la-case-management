@@ -115,7 +115,7 @@
                     </div>
                     <div class="floating-label">
                         <input type="text" id="ownership_rs_land_in_khatian" name="ownership_details[rs_info][rs_land_in_khatian]" x-model="rs_info.rs_land_in_khatian" placeholder=" ">
-                        <label for="ownership_rs_land_in_khatian">উক্ত দাগে RS খতিয়ানের হিস্যানুজই জমির পরিমাণ (একর)</label>
+                        <label for="ownership_rs_land_in_khatian">উক্ত দাগে RS খতিয়ানের হিস্যানুযায়ী জমির পরিমাণ (একর)</label>
                         @error('ownership_details.rs_info.rs_land_in_khatian')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
