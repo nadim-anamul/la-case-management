@@ -86,10 +86,11 @@ class DatabaseSeeder extends Seeder
                     'sa_land_in_khatian' => '2.5 acres'
                 ],
                 'rs_info' => [
-                    'rs_plot_no' => '',
-                    'rs_khatian_no' => '',
-                    'rs_total_land_in_plot' => '',
-                    'rs_land_in_khatian' => ''
+                    'rs_plot_no' => 'RS-PLOT-001',
+                    'rs_khatian_no' => 'RS-KH-001',
+                    'rs_total_land_in_plot' => '4 acres',
+                    'rs_land_in_khatian' => '2 acres',
+                    'dp_khatian' => true
                 ],
                 'sa_owners' => [
                     ['name' => 'আব্দুল রহমান'],
@@ -235,7 +236,8 @@ class DatabaseSeeder extends Seeder
                     'rs_plot_no' => 'RS-PLOT-002',
                     'rs_khatian_no' => 'RS-KH-002',
                     'rs_total_land_in_plot' => '3 acres',
-                    'rs_land_in_khatian' => '1.5 acres'
+                    'rs_land_in_khatian' => '1.5 acres',
+                    'dp_khatian' => true
                 ],
                 'sa_owners' => [],
                 'rs_owners' => [
@@ -250,18 +252,7 @@ class DatabaseSeeder extends Seeder
                         'heirship_certificate_info' => 'ওয়ারিশ সনদ আছে'
                     ]
                 ],
-                'rs_records' => [
-                    [
-                        'plot_no' => 'RS-PLOT-002',
-                        'khatian_no' => 'RS-KH-002',
-                        'land_amount' => '1.5 acres',
-                        'owner_names' => [
-                            ['name' => 'রহিমা খাতুন'],
-                            ['name' => 'মোহাম্মদ মালেক']
-                        ],
-                        'dp_khatian' => true
-                    ]
-                ],
+                'rs_records' => [],
                 'applicant_info' => [
                     'applicant_name' => 'রহিমা খাতুন',
                     'kharij_case_no' => 'KHARIJ-002',
@@ -372,7 +363,8 @@ class DatabaseSeeder extends Seeder
                     'rs_plot_no' => '',
                     'rs_khatian_no' => '',
                     'rs_total_land_in_plot' => '',
-                    'rs_land_in_khatian' => ''
+                    'rs_land_in_khatian' => '',
+                    'dp_khatian' => false
                 ],
                 'sa_owners' => [
                     ['name' => 'সাবরিনা আক্তার'],
@@ -535,7 +527,8 @@ class DatabaseSeeder extends Seeder
                     'rs_plot_no' => '',
                     'rs_khatian_no' => '',
                     'rs_total_land_in_plot' => '',
-                    'rs_land_in_khatian' => ''
+                    'rs_land_in_khatian' => '',
+                    'dp_khatian' => false
                 ],
                 'sa_owners' => [
                     ['name' => 'নাসরিন আক্তার']
@@ -674,7 +667,8 @@ class DatabaseSeeder extends Seeder
                     'rs_plot_no' => '',
                     'rs_khatian_no' => '',
                     'rs_total_land_in_plot' => '',
-                    'rs_land_in_khatian' => ''
+                    'rs_land_in_khatian' => '',
+                    'dp_khatian' => false
                 ],
                 'sa_owners' => [
                     ['name' => 'আহমেদ হোসেন']
@@ -803,7 +797,8 @@ class DatabaseSeeder extends Seeder
                     'rs_plot_no' => 'RS-PLOT-006',
                     'rs_khatian_no' => 'RS-KH-006',
                     'rs_total_land_in_plot' => '1.5 acres',
-                    'rs_land_in_khatian' => '0.75 acres'
+                    'rs_land_in_khatian' => '0.75 acres',
+                    'dp_khatian' => true
                 ],
                 'sa_owners' => [],
                 'rs_owners' => [
@@ -818,17 +813,7 @@ class DatabaseSeeder extends Seeder
                         'heirship_certificate_info' => 'ওয়ারিশ সনদ আছে'
                     ]
                 ],
-                'rs_records' => [
-                    [
-                        'plot_no' => 'RS-PLOT-006',
-                        'khatian_no' => 'RS-KH-006',
-                        'land_amount' => '0.75 acres',
-                        'owner_names' => [
-                            ['name' => 'সাবরিনা সুলতানা']
-                        ],
-                        'dp_khatian' => true
-                    ]
-                ],
+                'rs_records' => [],
                 'applicant_info' => [
                     'applicant_name' => 'সাবরিনা সুলতানা',
                     'kharij_case_no' => 'KHARIJ-006',

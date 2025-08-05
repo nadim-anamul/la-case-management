@@ -123,6 +123,7 @@ class CompensationController extends Controller
             'ownership_details.rs_info.rs_khatian_no' => 'nullable|string|max:255',
             'ownership_details.rs_info.rs_total_land_in_plot' => 'nullable|string|max:255',
             'ownership_details.rs_info.rs_land_in_khatian' => 'nullable|string|max:255',
+            'ownership_details.rs_info.dp_khatian' => 'nullable|in:on,1,true,false,0',
             'ownership_details.sa_owners' => 'nullable|array',
             'ownership_details.sa_owners.*.name' => 'nullable|string|max:255',
             'ownership_details.rs_owners' => 'nullable|array',
@@ -153,7 +154,7 @@ class CompensationController extends Controller
             'ownership_details.rs_records.*.land_amount' => 'nullable|string|max:255',
             'ownership_details.rs_records.*.owner_names' => 'nullable|array',
             'ownership_details.rs_records.*.owner_names.*.name' => 'nullable|string|max:255',
-            'ownership_details.rs_records.*.dp_khatian' => 'nullable|boolean',
+            'ownership_details.rs_records.*.dp_khatian' => 'nullable|in:on,1,true,false,0',
             'ownership_details.transferItems' => 'nullable|array',
             'ownership_details.transferItems.*.type' => 'nullable|string|max:255',
             'ownership_details.transferItems.*.index' => 'nullable|integer',
@@ -189,8 +190,22 @@ class CompensationController extends Controller
             }
         }
 
-        // Process Bengali dates before saving
+        // Process Bengali dates
         $validatedData = $this->processBengaliDates($validatedData);
+
+        // Convert checkbox values to boolean
+        if (isset($validatedData['ownership_details']['rs_records'])) {
+            foreach ($validatedData['ownership_details']['rs_records'] as &$rsRecord) {
+                if (isset($rsRecord['dp_khatian'])) {
+                    $rsRecord['dp_khatian'] = in_array($rsRecord['dp_khatian'], ['on', '1', 'true'], true);
+                }
+            }
+        }
+        
+        // Convert rs_info dp_khatian checkbox value to boolean
+        if (isset($validatedData['ownership_details']['rs_info']['dp_khatian'])) {
+            $validatedData['ownership_details']['rs_info']['dp_khatian'] = in_array($validatedData['ownership_details']['rs_info']['dp_khatian'], ['on', '1', 'true'], true);
+        }
 
         // Convert award_type string to array for database storage
         if (isset($validatedData['award_type'])) {
@@ -255,6 +270,7 @@ class CompensationController extends Controller
             'ownership_details.rs_info.rs_khatian_no' => 'nullable|string|max:255',
             'ownership_details.rs_info.rs_total_land_in_plot' => 'nullable|string|max:255',
             'ownership_details.rs_info.rs_land_in_khatian' => 'nullable|string|max:255',
+            'ownership_details.rs_info.dp_khatian' => 'nullable|in:on,1,true,false,0',
             'ownership_details.sa_owners' => 'nullable|array',
             'ownership_details.sa_owners.*.name' => 'nullable|string|max:255',
             'ownership_details.rs_owners' => 'nullable|array',
@@ -285,7 +301,7 @@ class CompensationController extends Controller
             'ownership_details.rs_records.*.land_amount' => 'nullable|string|max:255',
             'ownership_details.rs_records.*.owner_names' => 'nullable|array',
             'ownership_details.rs_records.*.owner_names.*.name' => 'nullable|string|max:255',
-            'ownership_details.rs_records.*.dp_khatian' => 'nullable|boolean',
+            'ownership_details.rs_records.*.dp_khatian' => 'nullable|in:on,1,true,false,0',
             'ownership_details.transferItems' => 'nullable|array',
             'ownership_details.transferItems.*.type' => 'nullable|string|max:255',
             'ownership_details.transferItems.*.index' => 'nullable|integer',
@@ -321,8 +337,22 @@ class CompensationController extends Controller
             }
         }
 
-        // Process Bengali dates before saving
+        // Process Bengali dates
         $validatedData = $this->processBengaliDates($validatedData);
+
+        // Convert checkbox values to boolean
+        if (isset($validatedData['ownership_details']['rs_records'])) {
+            foreach ($validatedData['ownership_details']['rs_records'] as &$rsRecord) {
+                if (isset($rsRecord['dp_khatian'])) {
+                    $rsRecord['dp_khatian'] = in_array($rsRecord['dp_khatian'], ['on', '1', 'true'], true);
+                }
+            }
+        }
+        
+        // Convert rs_info dp_khatian checkbox value to boolean
+        if (isset($validatedData['ownership_details']['rs_info']['dp_khatian'])) {
+            $validatedData['ownership_details']['rs_info']['dp_khatian'] = in_array($validatedData['ownership_details']['rs_info']['dp_khatian'], ['on', '1', 'true'], true);
+        }
 
         // Convert award_type string to array for database storage
         if (isset($validatedData['award_type'])) {

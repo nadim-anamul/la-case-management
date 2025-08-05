@@ -126,7 +126,7 @@ class FormSubmissionTest extends TestCase
                         'owner_names' => [
                             ['name' => 'RS Owner']
                         ],
-                        'dp_khatian' => true
+                        'dp_khatian' => 'on'
                     ]
                 ],
                 'applicant_info' => [
@@ -330,7 +330,7 @@ class FormSubmissionTest extends TestCase
                         'owner_names' => [
                             ['name' => 'RS Owner 2']
                         ],
-                        'dp_khatian' => false
+                        'dp_khatian' => 'on'
                     ]
                 ],
                 'applicant_info' => [
@@ -378,6 +378,10 @@ class FormSubmissionTest extends TestCase
                     if ($errors) {
                         $this->fail('Form submission failed with validation errors: ' . json_encode($errors->getBag('default')->toArray(), JSON_PRETTY_PRINT));
                     }
+                }
+                // If redirecting to localhost, it's likely a validation error
+                if (str_contains($redirectUrl, 'localhost')) {
+                    $this->fail('Form submission redirected to localhost, indicating validation errors. Redirect URL: ' . $redirectUrl);
                 }
             }
         }

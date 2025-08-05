@@ -325,6 +325,10 @@
                     <label class="font-semibold text-gray-700">RS খতিয়ানে মোট জমির পরিমাণ:</label>
                     <p class="text-gray-900">{{ $compensation->ownership_details['rs_info']['rs_land_in_khatian'] ?? '' }}</p>
                 </div>
+                <div>
+                    <label class="font-semibold text-gray-700">ডিপি খতিয়ান:</label>
+                    <p class="text-gray-900">{{ isset($compensation->ownership_details['rs_info']['dp_khatian']) && $compensation->ownership_details['rs_info']['dp_khatian'] ? 'হ্যাঁ' : 'না' }}</p>
+                </div>
             </div>
             
             @if(isset($compensation->ownership_details['rs_owners']))

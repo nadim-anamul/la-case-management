@@ -120,6 +120,12 @@
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div class="flex items-center space-x-2">
+                        <label for="ownership_rs_dp_khatian">
+                            <input type="checkbox" id="ownership_rs_dp_khatian" name="ownership_details[rs_info][dp_khatian]" x-model="rs_info.dp_khatian" class="form-checkbox mr-2">
+                            ডিপি খতিয়ান
+                        </label>
+                    </div>
                 </div>
             </div>
         </template>
@@ -502,7 +508,8 @@ function ownershipContinuity() {
             rs_plot_no: @json(old('ownership_details.rs_info.rs_plot_no', '')),
             rs_khatian_no: @json(old('ownership_details.rs_info.rs_khatian_no', '')),
             rs_total_land_in_plot: @json(old('ownership_details.rs_info.rs_total_land_in_plot', '')),
-            rs_land_in_khatian: @json(old('ownership_details.rs_info.rs_land_in_khatian', ''))
+            rs_land_in_khatian: @json(old('ownership_details.rs_info.rs_land_in_khatian', '')),
+            dp_khatian: @json(old('ownership_details.rs_info.dp_khatian', false))
         },
         applicant_info: {
             applicant_name: @json(old('ownership_details.applicant_info.applicant_name', '')),
@@ -545,7 +552,8 @@ function ownershipContinuity() {
                                 rs_plot_no: data.ownership_details.rs_info.rs_plot_no || '',
                                 rs_khatian_no: data.ownership_details.rs_info.rs_khatian_no || '',
                                 rs_total_land_in_plot: data.ownership_details.rs_info.rs_total_land_in_plot || '',
-                                rs_land_in_khatian: data.ownership_details.rs_info.rs_land_in_khatian || ''
+                                rs_land_in_khatian: data.ownership_details.rs_info.rs_land_in_khatian || '',
+                                dp_khatian: data.ownership_details.rs_info.dp_khatian || false
                             };
                         }
                         
