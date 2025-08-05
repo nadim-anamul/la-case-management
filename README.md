@@ -1,92 +1,89 @@
 # Laravel PDF Generator
 
-A Laravel application for managing land acquisition compensation data and generating PDF reports.
+A Laravel application for generating compensation forms and PDF documents.
 
 ## Features
 
-- Compensation data management
-- PDF generation
-- Kanungo/Surveyor opinion management
-- Responsive design with Tailwind CSS
+### Compensation Form
+- Complete compensation form with multiple sections
+- Dynamic form validation
+- PDF generation capabilities
+- Multi-step form process
+
+### Ownership Continuity Section
+The ownership continuity section includes a new feature for application area selection:
+
+#### Application Area Types
+Users can now select between two types of application areas:
+
+1. **সুনির্দিষ্ট দাগ (Specific Plot)**
+   - For single plot applications
+   - Format: "আবেদনকৃত [PLOT-NUMBER] দাগের সুনির্দিষ্টভাবে [AREA] একর বিক্রয়"
+   - Example: "আবেদনকৃত PLOT-005 দাগের সুনির্দিষ্টভাবে 2 একর বিক্রয়"
+
+2. **বিভিন্ন দাগ (Multiple Plots)**
+   - For multiple plots applications
+   - Format: "আবেদনকৃত [PLOT-NUMBERS] দাগসহ বিভিন্ন দাগ উল্লেখ করে মোট [TOTAL-AREA] একরের কাতে [SELL-AREA] একর বিক্রয়"
+   - Example: "আবেদনকৃত PLOT-005, PLOT-006 দাগসহ বিভিন্ন দাগ উল্লেখ করে মোট 5 একরের কাতে 2 একর বিক্রয়"
+
+#### Data Storage
+- Individual field values are stored in the database for better data integrity
+- String formatting is handled in the preview using a helper method
+- Backward compatibility is maintained for existing data
+
+#### Benefits
+- **Efficient Storage**: Only stores individual values, not complete strings
+- **Flexible**: Easy to modify individual parts or change formatting
+- **Searchable**: Can search/filter by individual plot numbers or areas
+- **Maintainable**: Centralized formatting logic in the model
 
 ## Installation
 
 1. Clone the repository
-2. Install dependencies:
-   ```bash
-   composer install
-   npm install
-   ```
+2. Run `composer install`
 3. Copy `.env.example` to `.env` and configure your database
-4. Run migrations:
-   ```bash
-   php artisan migrate
-   ```
-5. Build assets:
-   ```bash
-   npm run build
-   ```
-
-## Development
-
-### Tailwind CSS Setup
-
-This project uses Tailwind CSS v4 with Vite for asset compilation. The setup includes:
-
-- **Tailwind CSS v4**: Latest version with improved performance
-- **PostCSS**: For processing CSS
-- **Vite**: For fast asset building
-- **Alpine.js**: For interactive components
-
-#### Development Commands
-
-```bash
-# Start development server with hot reload
-npm run dev
-
-# Build for production
-npm run build
-
-# Watch for changes and rebuild
-npm run watch
-```
-
-#### Asset Structure
-
-- **CSS**: `resources/css/app.css` - Main stylesheet with Tailwind directives
-- **JS**: `resources/js/app.js` - Main JavaScript with Alpine.js
-- **Config**: `tailwind.config.js` - Tailwind configuration
-- **PostCSS**: `postcss.config.js` - PostCSS configuration
-
-### Laravel Development
-
-```bash
-# Start Laravel development server
-php artisan serve
-
-# Run migrations
-php artisan migrate
-
-# Clear cache
-php artisan cache:clear
-```
+4. Run `php artisan migrate`
+5. Run `php artisan serve`
 
 ## Usage
 
-1. Access the application at `http://localhost:8000`
-2. Navigate to compensations to manage compensation data
-3. Use the Kanungo opinion feature to add surveyor opinions
-4. Generate PDF reports as needed
+1. Navigate to the compensation form
+2. Fill in the required information
+3. In the ownership continuity section, select the appropriate application area type
+4. Fill in the relevant fields based on your selection
+5. Preview the form to see the formatted output
 
-## Production Deployment
+## Database Structure
 
-For production deployment:
+The application area data is stored in the `ownership_details` JSON field with the following structure:
 
-1. Set `APP_ENV=production` in `.env`
-2. Run `npm run build` to compile assets
-3. Ensure all assets are properly served
-4. Configure your web server to serve the application
+```json
+{
+  "deed_transfers": [
+    {
+      "application_type": "specific|multiple",
+      "application_specific_area": "PLOT-005",
+      "application_sell_area": "2",
+      "application_other_areas": "PLOT-005, PLOT-006",
+      "application_total_area": "5",
+      "application_sell_area_other": "2"
+    }
+  ]
+}
+```
 
-## License
+## Recent Changes
 
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Field Cleanup (August 2025)
+- Removed unnecessary fields from deed transfer section:
+  - `plot_no` (দাগ নম্বর)
+  - `sold_land_amount` (বিক্রিত জমির পরিমাণ)
+  - `total_sotangsho` (মোট কত শতাংশ)
+  - `total_shotok` (মোট কত শতক)
+- Created migration `2025_08_05_163145_remove_old_deed_transfer_fields_from_compensations.php` to clean up existing data
+- Updated all form components, controllers, tests, and seeders
+- Streamlined the deed transfer form for better user experience
+
+## Contributing
+
+Please read the contributing guidelines before submitting pull requests.

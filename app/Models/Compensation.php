@@ -60,4 +60,108 @@ class Compensation extends Model
     {
         return $this->convertToBengaliDate($this->order_signature_date);
     }
+
+    /**
+     * Format application area string based on type
+     */
+    public function formatApplicationAreaString($deed)
+    {
+        // Handle backward compatibility for old data without application_type
+        if (!isset($deed['application_type']) || !$deed['application_type']) {
+            // Check if old format data exists
+            if (isset($deed['application_specific_area']) && $deed['application_specific_area']) {
+                $specificArea = $deed['application_specific_area'] ?? '';
+                $sellArea = $deed['application_sell_area'] ?? '';
+                return "আবেদনকৃত {$specificArea} দাগের সুনির্দিষ্টভাবে {$sellArea} একর বিক্রয়";
+            } elseif (isset($deed['application_other_areas']) && $deed['application_other_areas']) {
+                $otherAreas = $deed['application_other_areas'] ?? '';
+                $totalArea = $deed['application_total_area'] ?? '';
+                $sellAreaOther = $deed['application_sell_area_other'] ?? '';
+                return "আবেদনকৃত {$otherAreas} দাগসহ বিভিন্ন দাগ উল্লেখ করে মোট {$totalArea} একরের কাতে {$sellAreaOther} একর বিক্রয়";
+            }
+            return '';
+        }
+
+        if ($deed['application_type'] === 'specific') {
+            $specificArea = $deed['application_specific_area'] ?? '';
+            $sellArea = $deed['application_sell_area'] ?? '';
+            return "আবেদনকৃত {$specificArea} দাগের সুনির্দিষ্টভাবে {$sellArea} একর বিক্রয়";
+        } elseif ($deed['application_type'] === 'multiple') {
+            $otherAreas = $deed['application_other_areas'] ?? '';
+            $totalArea = $deed['application_total_area'] ?? '';
+            $sellAreaOther = $deed['application_sell_area_other'] ?? '';
+            return "আবেদনকৃত {$otherAreas} দাগসহ বিভিন্ন দাগ উল্লেখ করে মোট {$totalArea} একরের কাতে {$sellAreaOther} একর বিক্রয়";
+        }
+
+        return '';
+    }
+
+    /**
+     * Get the total land amount from land category
+     */
+    public function getTotalLandAmountAttribute()
+    {
+        if (!$this->land_category || !is_array($this->land_category)) {
+            return 0;
+        }
+
+        $total = 0;
+        foreach ($this->land_category as $category) {
+            $total += floatval($category['total_land'] ?? 0);
+        }
+        return $total;
+    }
+
+    /**
+     * Get the total compensation amount from land category
+     */
+    public function getTotalCompensationAmountAttribute()
+    {
+        if (!$this->land_category || !is_array($this->land_category)) {
+            return 0;
+        }
+
+        $total = 0;
+        foreach ($this->land_category as $category) {
+            $total += floatval($category['total_compensation'] ?? 0);
+        }
+        return $total;
+    }
+
+    /**
+     * Get the applicant's acquired land amount
+     */
+    public function getApplicantAcquiredLandAttribute()
+    {
+        if (!$this->land_category || !is_array($this->land_category)) {
+            return 0;
+        }
+
+        $total = 0;
+        foreach ($this->land_category as $category) {
+            $total += floatval($category['applicant_land'] ?? 0);
+        }
+        return $total;
+    }
+
+    /**
+     * Check if applicant is in award
+     */
+    public function getIsApplicantInAwardAttribute($value)
+    {
+        return (bool) $value;
+    }
+
+    /**
+     * Get the plot number based on acquisition record basis
+     */
+    public function getPlotNoAttribute()
+    {
+        if ($this->acquisition_record_basis === 'SA') {
+            return $this->land_schedule_sa_plot_no;
+        } elseif ($this->acquisition_record_basis === 'RS') {
+            return $this->land_schedule_rs_plot_no;
+        }
+        return $this->jl_no;
+    }
 }

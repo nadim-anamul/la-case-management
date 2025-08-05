@@ -204,52 +204,100 @@
                         <label :for="'deed_date_' + index">দলিলের তারিখ<span class="text-red-500">*</span></label>
                     </div>
                     <div class="floating-label">
-                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][sale_type]'" placeholder="সুনির্দিষ্ট দাগে অথবা সম্মিলিত দাগের হতে" x-model="deed.sale_type">
-                        <label>বিক্রয়ের ধরন</label>
+                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][sale_type]'" x-model="deed.sale_type">
+                        <label>দলিলের ধরন</label>
                     </div>
-                    <div class="floating-label">
-                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][plot_no]'" x-model="deed.plot_no" placeholder=" ">
-                        <label>দাগ নম্বর</label>
+
+                    
+                    <!-- Application Area Section -->
+                    <div class="form-section md:col-span-2">
+                        <label class="font-semibold text-gray-700 mb-2"> আবেদনকৃত দাগের সুনির্দিষ্টভাবে বিক্রয়:</label>
+                        <div class="space-y-4">
+                            <!-- Radio button selection -->
+                            <div class="mb-4">
+                                <div class="radio-group">
+                                    <label class="flex items-center mb-2 p-2 rounded" :class="deed.application_type === 'specific' ? 'bg-blue-100 border border-blue-300' : 'bg-gray-50 border border-gray-200'">
+                                        <input type="radio" :name="'ownership_details[deed_transfers][' + index + '][application_type]'" value="specific" x-model="deed.application_type" @change="handleApplicationTypeChange(deed)" class="mr-2">
+                                        <span class="font-medium">সুনির্দিষ্ট দাগ</span>
+                                    </label>
+                                    <label class="flex items-center p-2 rounded" :class="deed.application_type === 'multiple' ? 'bg-green-100 border border-green-300' : 'bg-gray-50 border border-gray-200'">
+                                        <input type="radio" :name="'ownership_details[deed_transfers][' + index + '][application_type]'" value="multiple" x-model="deed.application_type" @change="handleApplicationTypeChange(deed)" class="mr-2">
+                                        <span class="font-medium">বিভিন্ন দাগ</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Specific Plot Option -->
+                            <div x-show="deed.application_type === 'specific'" class="p-4 border border-blue-200 rounded-lg bg-blue-50">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    আবেদনকৃত 
+                                    <input type="text" :name="'ownership_details[deed_transfers][' + index + '][application_specific_area]'" x-model="deed.application_specific_area" class="form-input mx-2" style="width: 100px; display: inline;" placeholder=" " :disabled="deed.application_type !== 'specific'">
+                                    দাগের সুনির্দিষ্টভাবে 
+                                    <input type="text" :name="'ownership_details[deed_transfers][' + index + '][application_sell_area]'" x-model="deed.application_sell_area" class="form-input mx-2" style="width: 100px; display: inline;" placeholder=" " :disabled="deed.application_type !== 'specific'">
+                                    একর বিক্রয়
+                                </label>
+                            </div>
+                            
+                            <!-- Multiple Plots Option -->
+                            <div x-show="deed.application_type === 'multiple'" class="p-4 border border-green-200 rounded-lg bg-green-50">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    আবেদনকৃত 
+                                    <input type="text" :name="'ownership_details[deed_transfers][' + index + '][application_other_areas]'" x-model="deed.application_other_areas" class="form-input mx-2" style="width: 100px; display: inline;" placeholder=" " :disabled="deed.application_type !== 'multiple'">
+                                    দাগসহ বিভিন্ন দাগ উল্লেখ করে মোট 
+                                    <input type="text" :name="'ownership_details[deed_transfers][' + index + '][application_total_area]'" x-model="deed.application_total_area" class="form-input mx-2" style="width: 100px; display: inline;" placeholder=" " :disabled="deed.application_type !== 'multiple'">
+                                    একরের কাতে 
+                                    <input type="text" :name="'ownership_details[deed_transfers][' + index + '][application_sell_area_other]'" x-model="deed.application_sell_area_other" class="form-input mx-2" style="width: 100px; display: inline;" placeholder=" " :disabled="deed.application_type !== 'multiple'">
+                                    একর বিক্রয়
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="floating-label">
-                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][sold_land_amount]'" x-model="deed.sold_land_amount" placeholder=" ">
-                        <label>বিক্রিত জমির পরিমাণ (একর)</label>
+                    
+                    <!-- New Possession Section -->
+                    <div class="form-section md:col-span-2">
+                        <label class="font-semibold text-gray-700 mb-2"> দখলের বর্ণনা:</label>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">i) দলিলের বিবরণ ও হস্তান্তরের সময় দখল উল্লেখ রয়েছে কিনা?</label>
+                                <div class="radio-group">
+                                    <label class="flex items-center">
+                                        <input type="radio" :name="'ownership_details[deed_transfers][' + index + '][possession_deed]'" value="yes" x-model="deed.possession_deed" class="mr-2">
+                                        <span>হ্যাঁ</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" :name="'ownership_details[deed_transfers][' + index + '][possession_deed]'" value="no" x-model="deed.possession_deed" class="mr-2">
+                                        <span>না</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">ii) আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা?</label>
+                                <div class="radio-group">
+                                    <label class="flex items-center">
+                                        <input type="radio" :name="'ownership_details[deed_transfers][' + index + '][possession_application]'" value="yes" x-model="deed.possession_application" class="mr-2">
+                                        <span>হ্যাঁ</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" :name="'ownership_details[deed_transfers][' + index + '][possession_application]'" value="no" x-model="deed.possession_application" class="mr-2">
+                                        <span>না</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    iii) যে সকল দাগে দখল উল্লেখ করা 
+                                    <input type="text" :name="'ownership_details[deed_transfers][' + index + '][mentioned_areas]'" x-model="deed.mentioned_areas" class="form-input ml-2" style="width: 250px; display: inline;" placeholder=" ">
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="floating-label">
-                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][total_sotangsho]'" x-model="deed.total_sotangsho" placeholder=" ">
-                        <label>মোট কত শতাংশ</label>
+                    
+                    <!-- Special Details Section -->
+                    <div class="form-section md:col-span-2">
+                        <label class="font-semibold text-gray-700 mb-2">প্রযোজ্যক্ষেত্রে দলিলের বিশেষ বিবরণ:</label>
+                        <textarea :name="'ownership_details[deed_transfers][' + index + '][special_details]'" x-model="deed.special_details" rows="4" class="form-input w-full" placeholder=" "></textarea>
                     </div>
-                    <div class="floating-label">
-                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][total_shotok]'" x-model="deed.total_shotok" placeholder=" ">
-                        <label>মোট কত শতক</label>
-                    </div>
-                    <div class="floating-label">
-                        <select :name="'ownership_details[deed_transfers][' + index + '][possession_mentioned]'" x-model="deed.possession_mentioned">
-                            <option value="yes">হ্যাঁ</option>
-                            <option value="no">না</option>
-                        </select>
-                        <label>দখল উল্লেখ করা আছে কিনা?</label>
-                    </div>
-                    <div class="floating-label">
-                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][possession_plot_no]'" x-model="deed.possession_plot_no" placeholder=" ">
-                        <label>দখলের দাগ নম্বর</label>
-                    </div>
-                    <div class="floating-label md:col-span-2">
-                        <textarea :name="'ownership_details[deed_transfers][' + index + '][possession_description]'" rows="3" x-model="deed.possession_description" placeholder=" "></textarea>
-                        <label>দখল এর বর্ণনা</label>
-                    </div>
-                    <div class="floating-label">
-                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][mutation_case_no]'" x-model="deed.mutation_case_no" placeholder=" ">
-                        <label>খারিজ কেস নম্বর</label>
-                    </div>
-                    <div class="floating-label">
-                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][mutation_plot_no]'" x-model="deed.mutation_plot_no" placeholder=" ">
-                        <label>খারিজ দাগ নম্বর</label>
-                    </div>
-                    <div class="floating-label">
-                        <input type="text" :name="'ownership_details[deed_transfers][' + index + '][mutation_land_amount]'" x-model="deed.mutation_land_amount" placeholder=" ">
-                        <label>খারিজকৃত জমির পরিমাণ (একর)</label>
-                    </div>
+
                 </div>
             </div>
         </template>
@@ -674,16 +722,19 @@ function ownershipContinuity() {
                 deed_number: '',
                 deed_date: '',
                 sale_type: '',
-                plot_no: '',
-                sold_land_amount: '',
-                total_sotangsho: '',
-                total_shotok: '',
+                application_type: '',
+                application_specific_area: '',
+                application_sell_area: '',
+                application_other_areas: '',
+                application_total_area: '',
+                application_sell_area_other: '',
                 possession_mentioned: 'no',
                 possession_plot_no: '',
                 possession_description: '',
-                mutation_case_no: '',
-                mutation_plot_no: '',
-                mutation_land_amount: ''
+                possession_deed: 'no',
+                possession_application: 'no',
+                mentioned_areas: '',
+                special_details: ''
             };
             // Insert at the beginning of the array to show at top
             this.deed_transfers.unshift(newDeed);
@@ -747,6 +798,37 @@ function ownershipContinuity() {
                 this.rs_record_disabled = false;
             }
             this.transferItems.splice(index, 1);
+        },
+        
+        handleApplicationTypeChange(deed) {
+            if (deed.application_type === 'specific') {
+                // Clear multiple plots fields
+                deed.application_other_areas = '';
+                deed.application_total_area = '';
+                deed.application_sell_area_other = '';
+            } else if (deed.application_type === 'multiple') {
+                // Clear specific plot fields
+                deed.application_specific_area = '';
+                deed.application_sell_area = '';
+            }
+        },
+        
+        validateApplicationArea(deed) {
+            if (!deed.application_type) {
+                return { valid: false, message: 'অনুগ্রহ করে একটি বিকল্প নির্বাচন করুন' };
+            }
+            
+            if (deed.application_type === 'specific') {
+                if (!deed.application_specific_area || !deed.application_sell_area) {
+                    return { valid: false, message: 'সুনির্দিষ্ট দাগের জন্য সকল তথ্য পূরণ করুন' };
+                }
+            } else if (deed.application_type === 'multiple') {
+                if (!deed.application_other_areas || !deed.application_total_area || !deed.application_sell_area_other) {
+                    return { valid: false, message: 'বিভিন্ন দাগের জন্য সকল তথ্য পূরণ করুন' };
+                }
+            }
+            
+            return { valid: true };
         },
         
         scrollToForm(item) {

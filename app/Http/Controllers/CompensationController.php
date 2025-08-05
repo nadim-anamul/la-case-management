@@ -136,13 +136,19 @@ class CompensationController extends Controller
             'ownership_details.deed_transfers.*.deed_number' => 'nullable|string|max:255',
             'ownership_details.deed_transfers.*.deed_date' => 'nullable|string|max:255',
             'ownership_details.deed_transfers.*.sale_type' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.plot_no' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.sold_land_amount' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.total_sotangsho' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.total_shotok' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.application_type' => 'nullable|string|in:specific,multiple',
+            'ownership_details.deed_transfers.*.application_specific_area' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.application_sell_area' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.application_other_areas' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.application_total_area' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.application_sell_area_other' => 'nullable|string|max:255',
             'ownership_details.deed_transfers.*.possession_mentioned' => 'nullable|in:yes,no',
             'ownership_details.deed_transfers.*.possession_plot_no' => 'nullable|string|max:255',
             'ownership_details.deed_transfers.*.possession_description' => 'nullable|string',
+            'ownership_details.deed_transfers.*.possession_deed' => 'nullable|in:yes,no',
+            'ownership_details.deed_transfers.*.possession_application' => 'nullable|in:yes,no',
+            'ownership_details.deed_transfers.*.mentioned_areas' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.special_details' => 'nullable|string',
             'ownership_details.inheritance_records' => 'nullable|array',
             'ownership_details.inheritance_records.*.previous_owner_name' => 'nullable|string|max:255',
             'ownership_details.inheritance_records.*.death_date' => 'nullable|string|max:255',
@@ -283,13 +289,19 @@ class CompensationController extends Controller
             'ownership_details.deed_transfers.*.deed_number' => 'nullable|string|max:255',
             'ownership_details.deed_transfers.*.deed_date' => 'nullable|string|max:255',
             'ownership_details.deed_transfers.*.sale_type' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.plot_no' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.sold_land_amount' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.total_sotangsho' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.total_shotok' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.application_type' => 'nullable|string|in:specific,multiple',
+            'ownership_details.deed_transfers.*.application_specific_area' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.application_sell_area' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.application_other_areas' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.application_total_area' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.application_sell_area_other' => 'nullable|string|max:255',
             'ownership_details.deed_transfers.*.possession_mentioned' => 'nullable|in:yes,no',
             'ownership_details.deed_transfers.*.possession_plot_no' => 'nullable|string|max:255',
             'ownership_details.deed_transfers.*.possession_description' => 'nullable|string',
+            'ownership_details.deed_transfers.*.possession_deed' => 'nullable|in:yes,no',
+            'ownership_details.deed_transfers.*.possession_application' => 'nullable|in:yes,no',
+            'ownership_details.deed_transfers.*.mentioned_areas' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.special_details' => 'nullable|string',
             'ownership_details.inheritance_records' => 'nullable|array',
             'ownership_details.inheritance_records.*.previous_owner_name' => 'nullable|string|max:255',
             'ownership_details.inheritance_records.*.death_date' => 'nullable|string|max:255',
@@ -414,7 +426,7 @@ class CompensationController extends Controller
     {
         $compensation = Compensation::findOrFail($id);
         return response()->json([
-            'order_signature_date' => $compensation->order_signature_date,
+            'order_signature_date' => $compensation->order_signature_date_bengali,
             'signing_officer_name' => $compensation->signing_officer_name
         ]);
     }
@@ -427,12 +439,29 @@ class CompensationController extends Controller
         try {
             $compensation = Compensation::findOrFail($id);
             $validatedData = $request->validate([
-                'order_signature_date' => 'required|date',
+                'order_signature_date' => 'required|string',
                 'signing_officer_name' => 'required|string|max:255',
             ]);
             
             // Process Bengali dates before saving
             $validatedData = $this->processBengaliDates($validatedData);
+            
+            // Validate the converted date
+            if (!$validatedData['order_signature_date']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'কিছু সমস্যা হয়েছে: The order signature date field must be a valid date.'
+                ], 422);
+            }
+            
+            try {
+                \Carbon\Carbon::parse($validatedData['order_signature_date']);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'কিছু সমস্যা হয়েছে: The order signature date field must be a valid date.'
+                ], 422);
+            }
             
             // Update only the order fields
             $compensation->update([

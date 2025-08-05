@@ -65,11 +65,8 @@ class OwnershipDetailsStructureTest extends TestCase
                         'recipient_names' => [['name' => 'Recipient 1']],
                         'deed_number' => 'DEED-001',
                         'deed_date' => '2024-01-01',
-                        'sale_type' => 'Specific Plot',
-                        'plot_no' => 'PLOT-001',
-                        'sold_land_amount' => '2 acres',
-                        'total_sotangsho' => '50%',
-                        'total_shotok' => '25%',
+                        'sale_type' => 'দলিল',
+
                         'possession_mentioned' => 'yes',
                         'possession_plot_no' => 'PP-001',
                         'possession_description' => 'Test possession'

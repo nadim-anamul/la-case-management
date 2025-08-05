@@ -119,11 +119,8 @@ class FullCompensationFormTest extends TestCase
                         'recipient_names' => [ ['name' => 'Abdul Rahman'] ],
                         'deed_number' => 'DEED-001',
                         'deed_date' => '2024-01-15',
-                        'sale_type' => 'Specific Plot',
-                        'plot_no' => 'PLOT-001',
-                        'sold_land_amount' => '2 acres',
-                        'total_sotangsho' => '50%',
-                        'total_shotok' => '25%',
+                        'sale_type' => 'দলিল',
+
                         'possession_mentioned' => 'yes',
                         'possession_plot_no' => 'POSS-001',
                         'possession_description' => 'Full possession transferred'
@@ -238,11 +235,9 @@ class FullCompensationFormTest extends TestCase
         $this->assertEquals('Abdul Rahman', $ownershipDetails['deed_transfers'][0]['recipient_names'][0]['name']);
         $this->assertEquals('DEED-001', $ownershipDetails['deed_transfers'][0]['deed_number']);
         $this->assertEquals('2024-01-15', $ownershipDetails['deed_transfers'][0]['deed_date']);
-        $this->assertEquals('Specific Plot', $ownershipDetails['deed_transfers'][0]['sale_type']);
-        $this->assertEquals('PLOT-001', $ownershipDetails['deed_transfers'][0]['plot_no']);
-        $this->assertEquals('2 acres', $ownershipDetails['deed_transfers'][0]['sold_land_amount']);
-        $this->assertEquals('50%', $ownershipDetails['deed_transfers'][0]['total_sotangsho']);
-        $this->assertEquals('25%', $ownershipDetails['deed_transfers'][0]['total_shotok']);
+        $this->assertEquals('দলিল', $ownershipDetails['deed_transfers'][0]['sale_type']);
+
+
         $this->assertEquals('yes', $ownershipDetails['deed_transfers'][0]['possession_mentioned']);
         $this->assertEquals('POSS-001', $ownershipDetails['deed_transfers'][0]['possession_plot_no']);
         $this->assertEquals('Full possession transferred', $ownershipDetails['deed_transfers'][0]['possession_description']);
@@ -374,11 +369,8 @@ class FullCompensationFormTest extends TestCase
                         'recipient_names' => [ ['name' => 'RS New Owner'] ],
                         'deed_number' => 'RS-DEED-001',
                         'deed_date' => '2024-02-15',
-                        'sale_type' => 'RS Specific Plot',
-                        'plot_no' => 'RS-PLOT-002',
-                        'sold_land_amount' => '1.5 acres',
-                        'total_sotangsho' => '30%',
-                        'total_shotok' => '15%',
+                        'sale_type' => 'দলিল',
+
                         'possession_mentioned' => 'no',
                         'possession_plot_no' => '',
                         'possession_description' => ''
@@ -514,11 +506,8 @@ class FullCompensationFormTest extends TestCase
                         'recipient_names' => [ ['name' => 'Abdul Rahman'] ],
                         'deed_number' => 'DEED-001',
                         'deed_date' => '2024-01-15',
-                        'sale_type' => 'Specific Plot',
-                        'plot_no' => 'PLOT-001',
-                        'sold_land_amount' => '2 acres',
-                        'total_sotangsho' => '50%',
-                        'total_shotok' => '25%',
+                        'sale_type' => 'দলিল',
+
                         'possession_mentioned' => 'yes',
                         'possession_plot_no' => 'POSS-001',
                         'possession_description' => 'Full possession transferred'

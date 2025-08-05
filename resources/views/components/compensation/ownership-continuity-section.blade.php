@@ -124,7 +124,7 @@
                                 </div>
                                 <div class="floating-label">
                                     <input type="text" :name="'ownership_details[deed_transfers][' + index + '][sale_type]'" placeholder="সুনির্দিষ্ট দাগে অথবা সম্মিলিত দাগের হতে" x-model="deed.sale_type">
-                                    <label>বিক্রয়ের ধরন</label>
+                                    <label>দলিলের ধরন</label>
                                 </div>
                                 <div class="floating-label">
                                     <input type="text" :name="'ownership_details[deed_transfers][' + index + '][plot_no]'" x-model="deed.plot_no" placeholder=" ">
@@ -331,7 +331,7 @@
                                 </div>
                                 <div class="floating-label">
                                     <input type="text" :name="'ownership_details[deed_transfers][' + index + '][sale_type]'" placeholder="সুনির্দিষ্ট দাগে অথবা সম্মিলিত দাগের হতে" x-model="deed.sale_type">
-                                    <label>বিক্রয়ের ধরন</label>
+                                    <label>দলিলের ধরন</label>
                                 </div>
                                 <div class="floating-label">
                                     <input type="text" :name="'ownership_details[deed_transfers][' + index + '][plot_no]'" x-model="deed.plot_no" placeholder=" ">

@@ -97,17 +97,12 @@ class FormSubmissionTest extends TestCase
                         'recipient_names' => [['name' => 'Abdul Rahman']],
                         'deed_number' => 'DEED-001',
                         'deed_date' => '১৫/০১/২০২৪', // Bengali date
-                        'sale_type' => 'Specific Plot',
-                        'plot_no' => 'PLOT-001',
-                        'sold_land_amount' => '2 acres',
-                        'total_sotangsho' => '50%',
-                        'total_shotok' => '25%',
+                        'sale_type' => 'দলিল',
+
                         'possession_mentioned' => 'yes',
                         'possession_plot_no' => 'POSS-001',
                         'possession_description' => 'Full possession transferred',
-                        'mutation_case_no' => 'MUT-001',
-                        'mutation_plot_no' => 'MUT-PLOT-001',
-                        'mutation_land_amount' => '2 acres'
+
                     ]
                 ],
                 'inheritance_records' => [
@@ -301,17 +296,12 @@ class FormSubmissionTest extends TestCase
                         'recipient_names' => [['name' => 'Abdul Rahman 2']],
                         'deed_number' => 'DEED-002',
                         'deed_date' => '2024-02-15', // English date
-                        'sale_type' => 'Specific Plot',
-                        'plot_no' => 'PLOT-002',
-                        'sold_land_amount' => '3 acres',
-                        'total_sotangsho' => '60%',
-                        'total_shotok' => '30%',
+                        'sale_type' => 'দলিল',
+
                         'possession_mentioned' => 'no',
                         'possession_plot_no' => '',
                         'possession_description' => '',
-                        'mutation_case_no' => 'MUT-002',
-                        'mutation_plot_no' => 'MUT-PLOT-002',
-                        'mutation_land_amount' => '3 acres'
+
                     ]
                 ],
                 'inheritance_records' => [

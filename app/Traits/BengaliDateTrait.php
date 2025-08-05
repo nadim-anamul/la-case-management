@@ -15,9 +15,9 @@ trait BengaliDateTrait
 
         $date = \Carbon\Carbon::parse($englishDate);
         
-        // Convert day, month, year to Bengali numerals
-        $day = $this->convertToBengaliNumerals($date->day);
-        $month = $this->convertToBengaliNumerals($date->month);
+        // Convert day, month, year to Bengali numerals with proper padding
+        $day = $this->convertToBengaliNumerals(str_pad($date->day, 2, '0', STR_PAD_LEFT));
+        $month = $this->convertToBengaliNumerals(str_pad($date->month, 2, '0', STR_PAD_LEFT));
         $year = $this->convertToBengaliNumerals($date->year);
         
         return $day . '/' . $month . '/' . $year;

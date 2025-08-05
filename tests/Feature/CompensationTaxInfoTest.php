@@ -66,13 +66,7 @@ class CompensationTaxInfoTest extends TestCase
                         'deed_date' => '2024-01-01'
                     ]
                 ],
-                'mutation_info' => [
-                    'mutation_case_no' => '',
-                    'mutation_plot_no' => '',
-                    'mutation_land_amount' => '',
-                    'mutation_date' => '',
-                    'mutation_details' => '',
-                ],
+
                 'flow_state' => 'initial',
                 'rs_record_disabled' => false,
             ],
@@ -158,13 +152,7 @@ class CompensationTaxInfoTest extends TestCase
                         'deed_date' => '2024-01-01'
                     ]
                 ],
-                'mutation_info' => [
-                    'mutation_case_no' => '',
-                    'mutation_plot_no' => '',
-                    'mutation_land_amount' => '',
-                    'mutation_date' => '',
-                    'mutation_details' => '',
-                ],
+
                 'flow_state' => 'initial',
                 'rs_record_disabled' => false,
             ],
