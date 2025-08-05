@@ -137,12 +137,12 @@
         <h3 class="text-lg font-bold mb-4">ধাপ ২: হস্তান্তর ও রেকর্ড</h3>
         
         <!-- Action Buttons -->
-        <div class="flex flex-wrap gap-4 mb-6">
+        {{-- <div class="flex flex-wrap gap-4 mb-6">
             <button type="button" @click="addDeedTransfer()" class="btn-primary">দলিলমূলে মালিকানা হস্তান্তর যোগ করুন</button>
             <button type="button" @click="addInheritanceRecord()" class="btn-primary">ওয়ারিশমূলে হস্তান্তর যোগ করুন</button>
             <button type="button" @click="addRsRecord()" :disabled="rs_record_disabled" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200" :class="{ 'opacity-50 cursor-not-allowed': rs_record_disabled }" x-show="acquisition_record_basis === 'SA'">আরএস রেকর্ড যোগ করুন</button>
             <button type="button" @click="nextStep()" class="btn-success">উপরোক্ত মালিকই আবেদনকারী</button>
-        </div>
+        </div> --}}
 
         <!-- Summary of Added Items -->
         <div class="bg-gray-50 p-4 rounded-lg mb-6">

@@ -85,17 +85,36 @@ trait BengaliDateTrait
 
         foreach ($dateFields as $field) {
             if (str_contains($field, '*')) {
-                // Handle array fields
+                // Handle array fields with wildcards
                 $this->processArrayDateFields($data, $field);
             } else {
-                // Handle single date fields
-                if (isset($data[$field]) && $data[$field]) {
-                    $data[$field] = $this->convertFromBengaliDate($data[$field]);
-                }
+                // Handle single date fields or nested fields
+                $this->processSingleDateField($data, $field);
             }
         }
 
         return $data;
+    }
+
+    /**
+     * Process a single date field (including nested fields)
+     */
+    private function processSingleDateField(&$data, $fieldPath)
+    {
+        $parts = explode('.', $fieldPath);
+        $fieldName = array_pop($parts);
+        
+        $current = &$data;
+        foreach ($parts as $part) {
+            if (!isset($current[$part])) {
+                return;
+            }
+            $current = &$current[$part];
+        }
+        
+        if (isset($current[$fieldName]) && $current[$fieldName]) {
+            $current[$fieldName] = $this->convertFromBengaliDate($current[$fieldName]);
+        }
     }
 
     /**

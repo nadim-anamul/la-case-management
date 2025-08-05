@@ -14,16 +14,16 @@ class Compensation extends Model
 
     protected $fillable = [
         'case_number', 'case_date', 'sa_plot_no', 'rs_plot_no',
-        'applicants', 'la_case_no', 'award_type', 'award_serial_no',
+        'applicants', 'la_case_no', 'award_type',
         'land_award_serial_no', 'tree_award_serial_no', 'infrastructure_award_serial_no',
         'acquisition_record_basis', 'plot_no', 'award_holder_names',
         'objector_details', 'is_applicant_in_award', 
         'source_tax_percentage', 'tree_compensation',
-        'infrastructure_compensation', 'infrastructure_source_tax_percentage',
-        'applicant_acquired_land', 'land_category', 'mouza_name', 'jl_no', 'sa_khatian_no', 
+        'infrastructure_compensation',
+        'land_category', 'mouza_name', 'jl_no', 'sa_khatian_no', 
         'land_schedule_sa_plot_no', 'rs_khatian_no', 'land_schedule_rs_plot_no', 
-        'is_applicant_sa_owner', 'ownership_details', 'mutation_info', 'tax_info', 
-        'additional_documents_info', 'kanungo_opinion', 'sa_owners', 'rs_owners', 
+        'ownership_details', 'mutation_info', 'tax_info', 
+        'additional_documents_info', 'kanungo_opinion',
         'order_signature_date', 'signing_officer_name', 'status'
     ];
 
@@ -43,8 +43,6 @@ class Compensation extends Model
         'tax_info' => 'array',
         'additional_documents_info' => 'array',
         'kanungo_opinion' => 'array',
-        'sa_owners' => 'array',
-        'rs_owners' => 'array',
     ];
 
     /**

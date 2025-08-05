@@ -106,7 +106,6 @@ class CompensationController extends Controller
             'source_tax_percentage' => 'required|string|max:255',
             'tree_compensation' => 'nullable|string|max:255',
             'infrastructure_compensation' => 'nullable|string|max:255',
-            'applicant_acquired_land' => 'nullable|string|max:255',
             'mouza_name' => 'required|string|max:255',
             'jl_no' => 'required|string|max:255',
             'land_schedule_sa_plot_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
@@ -134,7 +133,7 @@ class CompensationController extends Controller
             'ownership_details.deed_transfers.*.recipient_names' => 'required|array|min:1',
             'ownership_details.deed_transfers.*.recipient_names.*.name' => 'required|string|max:255',
             'ownership_details.deed_transfers.*.deed_number' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.deed_date' => 'nullable|date',
+            'ownership_details.deed_transfers.*.deed_date' => 'nullable|string|max:255',
             'ownership_details.deed_transfers.*.sale_type' => 'nullable|string|max:255',
             'ownership_details.deed_transfers.*.plot_no' => 'nullable|string|max:255',
             'ownership_details.deed_transfers.*.sold_land_amount' => 'nullable|string|max:255',
@@ -145,14 +144,16 @@ class CompensationController extends Controller
             'ownership_details.deed_transfers.*.possession_description' => 'nullable|string',
             'ownership_details.inheritance_records' => 'nullable|array',
             'ownership_details.inheritance_records.*.previous_owner_name' => 'nullable|string|max:255',
-            'ownership_details.inheritance_records.*.death_date' => 'nullable|date',
+            'ownership_details.inheritance_records.*.death_date' => 'nullable|string|max:255',
             'ownership_details.inheritance_records.*.has_death_cert' => 'nullable|in:yes,no',
             'ownership_details.inheritance_records.*.heirship_certificate_info' => 'nullable|string',
             'ownership_details.rs_records' => 'nullable|array',
             'ownership_details.rs_records.*.plot_no' => 'nullable|string|max:255',
             'ownership_details.rs_records.*.khatian_no' => 'nullable|string|max:255',
             'ownership_details.rs_records.*.land_amount' => 'nullable|string|max:255',
-            'ownership_details.rs_records.*.owner_name' => 'nullable|string|max:255',
+            'ownership_details.rs_records.*.owner_names' => 'nullable|array',
+            'ownership_details.rs_records.*.owner_names.*.name' => 'nullable|string|max:255',
+            'ownership_details.rs_records.*.dp_khatian' => 'nullable|boolean',
             'ownership_details.transferItems' => 'nullable|array',
             'ownership_details.transferItems.*.type' => 'nullable|string|max:255',
             'ownership_details.transferItems.*.index' => 'nullable|integer',
@@ -164,7 +165,7 @@ class CompensationController extends Controller
             'ownership_details.applicant_info.kharij_case_no' => 'nullable|string|max:255',
             'ownership_details.applicant_info.kharij_plot_no' => 'nullable|string|max:255',
             'ownership_details.applicant_info.kharij_land_amount' => 'nullable|string|max:255',
-            'ownership_details.applicant_info.kharij_date' => 'nullable|date',
+            'ownership_details.applicant_info.kharij_date' => 'nullable|string|max:255',
             'ownership_details.applicant_info.kharij_details' => 'nullable|string',
             'tax_info' => 'nullable|array',
             'tax_info.english_year' => 'nullable|string|max:255',
@@ -195,10 +196,6 @@ class CompensationController extends Controller
         if (isset($validatedData['award_type'])) {
             $validatedData['award_type'] = [$validatedData['award_type']];
         }
-
-        // Extract is_applicant_sa_owner from ownership_details and set it as a separate field
-        $isApplicantSaOwner = $validatedData['ownership_details']['is_applicant_sa_owner'] ?? null;
-        $validatedData['is_applicant_sa_owner'] = $isApplicantSaOwner === 'yes' ? true : false;
 
         $compensation = Compensation::create($validatedData);
 
@@ -241,7 +238,6 @@ class CompensationController extends Controller
             'source_tax_percentage' => 'required|string|max:255',
             'tree_compensation' => 'nullable|string|max:255',
             'infrastructure_compensation' => 'nullable|string|max:255',
-            'applicant_acquired_land' => 'nullable|string|max:255',
             'mouza_name' => 'required|string|max:255',
             'jl_no' => 'required|string|max:255',
             'land_schedule_sa_plot_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
@@ -269,7 +265,7 @@ class CompensationController extends Controller
             'ownership_details.deed_transfers.*.recipient_names' => 'required|array|min:1',
             'ownership_details.deed_transfers.*.recipient_names.*.name' => 'required|string|max:255',
             'ownership_details.deed_transfers.*.deed_number' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.deed_date' => 'nullable|date',
+            'ownership_details.deed_transfers.*.deed_date' => 'nullable|string|max:255',
             'ownership_details.deed_transfers.*.sale_type' => 'nullable|string|max:255',
             'ownership_details.deed_transfers.*.plot_no' => 'nullable|string|max:255',
             'ownership_details.deed_transfers.*.sold_land_amount' => 'nullable|string|max:255',
@@ -280,14 +276,16 @@ class CompensationController extends Controller
             'ownership_details.deed_transfers.*.possession_description' => 'nullable|string',
             'ownership_details.inheritance_records' => 'nullable|array',
             'ownership_details.inheritance_records.*.previous_owner_name' => 'nullable|string|max:255',
-            'ownership_details.inheritance_records.*.death_date' => 'nullable|date',
+            'ownership_details.inheritance_records.*.death_date' => 'nullable|string|max:255',
             'ownership_details.inheritance_records.*.has_death_cert' => 'nullable|in:yes,no',
             'ownership_details.inheritance_records.*.heirship_certificate_info' => 'nullable|string',
             'ownership_details.rs_records' => 'nullable|array',
             'ownership_details.rs_records.*.plot_no' => 'nullable|string|max:255',
             'ownership_details.rs_records.*.khatian_no' => 'nullable|string|max:255',
             'ownership_details.rs_records.*.land_amount' => 'nullable|string|max:255',
-            'ownership_details.rs_records.*.owner_name' => 'nullable|string|max:255',
+            'ownership_details.rs_records.*.owner_names' => 'nullable|array',
+            'ownership_details.rs_records.*.owner_names.*.name' => 'nullable|string|max:255',
+            'ownership_details.rs_records.*.dp_khatian' => 'nullable|boolean',
             'ownership_details.transferItems' => 'nullable|array',
             'ownership_details.transferItems.*.type' => 'nullable|string|max:255',
             'ownership_details.transferItems.*.index' => 'nullable|integer',
@@ -299,7 +297,7 @@ class CompensationController extends Controller
             'ownership_details.applicant_info.kharij_case_no' => 'nullable|string|max:255',
             'ownership_details.applicant_info.kharij_plot_no' => 'nullable|string|max:255',
             'ownership_details.applicant_info.kharij_land_amount' => 'nullable|string|max:255',
-            'ownership_details.applicant_info.kharij_date' => 'nullable|date',
+            'ownership_details.applicant_info.kharij_date' => 'nullable|string|max:255',
             'ownership_details.applicant_info.kharij_details' => 'nullable|string',
             'tax_info' => 'nullable|array',
             'tax_info.english_year' => 'nullable|string|max:255',
@@ -330,10 +328,6 @@ class CompensationController extends Controller
         if (isset($validatedData['award_type'])) {
             $validatedData['award_type'] = [$validatedData['award_type']];
         }
-
-        // Extract is_applicant_sa_owner from ownership_details and set it as a separate field
-        $isApplicantSaOwner = $validatedData['ownership_details']['is_applicant_sa_owner'] ?? null;
-        $validatedData['is_applicant_sa_owner'] = $isApplicantSaOwner === 'yes' ? true : false;
 
         $compensation->update($validatedData);
 

@@ -43,6 +43,7 @@ class DatabaseSeeder extends Seeder
                 ]
             ],
             'la_case_no' => 'LA-2024-001',
+            'land_award_serial_no' => 'LAND-AWD-001',
             'tree_award_serial_no' => 'TREE-AWD-001',
             'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-001',
@@ -56,7 +57,6 @@ class DatabaseSeeder extends Seeder
             'is_applicant_in_award' => true,
             'source_tax_percentage' => '3%',
             'tree_compensation' => '75000',
-            'applicant_acquired_land' => '1.25 acres',
             'land_category' => [
                 [
                     'category_name' => 'আবাদি জমি',
@@ -77,7 +77,6 @@ class DatabaseSeeder extends Seeder
             'land_schedule_rs_plot_no' => 'RS-NEW-001',
             'sa_khatian_no' => 'SA-KH-001',
             'rs_khatian_no' => null,
-            'is_applicant_sa_owner' => true,
             'award_type' => 'জমি ও গাছপালা',
             'ownership_details' => [
                 'sa_info' => [
@@ -152,10 +151,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'currentStep' => 'applicant',
                 'completedSteps' => ['info', 'transfers', 'applicant'],
-                'rs_record_disabled' => false,
-                'status' => 'pending',
-                'order_signature_date' => null,
-                'signing_officer_name' => null
+                'rs_record_disabled' => false
             ],
             'mutation_info' => [
                 'mutation_case_no' => 'MUT-001',
@@ -213,15 +209,20 @@ class DatabaseSeeder extends Seeder
             'source_tax_percentage' => '12%',
             'tree_compensation' => '45000',
             'infrastructure_compensation' => '75000',
-            'infrastructure_source_tax_percentage' => '10%',
-            'applicant_acquired_land' => '1.5 acres',
+            'land_category' => [
+                [
+                    'category_name' => 'অবকাঠামো',
+                    'total_land' => '0',
+                    'total_compensation' => '75000',
+                    'applicant_land' => '0'
+                ]
+            ],
             'mouza_name' => 'মোহাম্মদপুর',
             'jl_no' => 'JL-002',
             'land_schedule_sa_plot_no' => 'SA-OLD-002',
             'land_schedule_rs_plot_no' => 'RS-NEW-002',
             'sa_khatian_no' => null,
             'rs_khatian_no' => 'RS-KH-002',
-            'is_applicant_sa_owner' => false,
             'award_type' => 'অবকাঠামো',
             'ownership_details' => [
                 'sa_info' => [
@@ -243,11 +244,10 @@ class DatabaseSeeder extends Seeder
                 'deed_transfers' => [],
                 'inheritance_records' => [
                     [
-                        'is_heir_applicant' => 'yes',
-                        'has_death_cert' => 'yes',
-                        'heirship_certificate_info' => 'ওয়ারিশ সনদ আছে',
                         'previous_owner_name' => 'আব্দুল মালেক',
-                        'death_date' => '2023-06-15'
+                        'death_date' => '2023-06-15',
+                        'has_death_cert' => 'yes',
+                        'heirship_certificate_info' => 'ওয়ারিশ সনদ আছে'
                     ]
                 ],
                 'rs_records' => [
@@ -340,8 +340,6 @@ class DatabaseSeeder extends Seeder
             'source_tax_percentage' => '18%',
             'tree_compensation' => '90000',
             'infrastructure_compensation' => '120000',
-            'infrastructure_source_tax_percentage' => '15%',
-            'applicant_acquired_land' => '1.5 acres',
             'land_category' => [
                 [
                     'category_name' => 'আবাদি জমি',
@@ -362,7 +360,6 @@ class DatabaseSeeder extends Seeder
             'land_schedule_rs_plot_no' => 'RS-NEW-003',
             'sa_khatian_no' => 'SA-KH-003',
             'rs_khatian_no' => null,
-            'is_applicant_sa_owner' => true,
             'award_type' => 'জমি',
             'ownership_details' => [
                 'sa_info' => [
@@ -492,6 +489,7 @@ class DatabaseSeeder extends Seeder
                 ]
             ],
             'la_case_no' => 'LA-2024-004',
+            'land_award_serial_no' => 'LAND-AWD-004',
             'tree_award_serial_no' => 'TREE-AWD-004',
             'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-004',
@@ -505,7 +503,6 @@ class DatabaseSeeder extends Seeder
             'is_applicant_in_award' => true,
             'source_tax_percentage' => '14%',
             'tree_compensation' => '60000',
-            'applicant_acquired_land' => '2.0 acres',
             'land_category' => [
                 [
                     'category_name' => 'আবাদি জমি',
@@ -526,7 +523,6 @@ class DatabaseSeeder extends Seeder
             'land_schedule_rs_plot_no' => 'RS-NEW-004',
             'sa_khatian_no' => 'SA-KH-004',
             'rs_khatian_no' => null,
-            'is_applicant_sa_owner' => true,
             'award_type' => 'জমি ও গাছপালা',
             'ownership_details' => [
                 'sa_info' => [
@@ -566,11 +562,10 @@ class DatabaseSeeder extends Seeder
                 ],
                 'inheritance_records' => [
                     [
-                        'is_heir_applicant' => 'yes',
-                        'has_death_cert' => 'yes',
-                        'heirship_certificate_info' => 'ওয়ারিশ সনদ আছে',
                         'previous_owner_name' => 'আব্দুল মতিন',
-                        'death_date' => '2023-12-10'
+                        'death_date' => '2023-12-10',
+                        'has_death_cert' => 'yes',
+                        'heirship_certificate_info' => 'ওয়ারিশ সনদ আছে'
                     ]
                 ],
                 'rs_records' => [
@@ -653,7 +648,6 @@ class DatabaseSeeder extends Seeder
             'objector_details' => 'কোন আপত্তি নেই',
             'is_applicant_in_award' => true,
             'source_tax_percentage' => '8%',
-            'applicant_acquired_land' => '1.0 acres',
             'land_category' => [
                 [
                     'category_name' => 'আবাদি জমি',
@@ -668,7 +662,6 @@ class DatabaseSeeder extends Seeder
             'land_schedule_rs_plot_no' => 'RS-NEW-005',
             'sa_khatian_no' => 'SA-KH-005',
             'rs_khatian_no' => null,
-            'is_applicant_sa_owner' => true,
             'award_type' => 'জমি',
             'ownership_details' => [
                 'sa_info' => [
@@ -784,7 +777,6 @@ class DatabaseSeeder extends Seeder
             'objector_details' => 'কোন আপত্তি নেই',
             'is_applicant_in_award' => true,
             'source_tax_percentage' => '10%',
-            'applicant_acquired_land' => '0.75 acres',
             'land_category' => [
                 [
                     'category_name' => 'আবাদি জমি',
@@ -799,7 +791,6 @@ class DatabaseSeeder extends Seeder
             'land_schedule_rs_plot_no' => 'RS-NEW-006',
             'sa_khatian_no' => null,
             'rs_khatian_no' => 'RS-KH-006',
-            'is_applicant_sa_owner' => false,
             'award_type' => 'জমি',
             'ownership_details' => [
                 'sa_info' => [
@@ -821,11 +812,10 @@ class DatabaseSeeder extends Seeder
                 'deed_transfers' => [],
                 'inheritance_records' => [
                     [
-                        'is_heir_applicant' => 'yes',
-                        'has_death_cert' => 'yes',
-                        'heirship_certificate_info' => 'ওয়ারিশ সনদ আছে',
                         'previous_owner_name' => 'আব্দুল কাদের',
-                        'death_date' => '2023-08-20'
+                        'death_date' => '2023-08-20',
+                        'has_death_cert' => 'yes',
+                        'heirship_certificate_info' => 'ওয়ারিশ সনদ আছে'
                     ]
                 ],
                 'rs_records' => [

@@ -146,7 +146,10 @@ class FullCompensationFormTest extends TestCase
                         'plot_no' => 'RS-PLOT-002',
                         'khatian_no' => 'RS-KHATIAN-002',
                         'land_amount' => '1.5 acres',
-                        'owner_name' => 'RS Owner'
+                        'owner_names' => [
+                            ['name' => 'RS Owner']
+                        ],
+                        'dp_khatian' => true
                     ]
                 ],
                 
@@ -254,7 +257,7 @@ class FullCompensationFormTest extends TestCase
         $this->assertEquals('RS-PLOT-002', $ownershipDetails['rs_records'][0]['plot_no']);
         $this->assertEquals('RS-KHATIAN-002', $ownershipDetails['rs_records'][0]['khatian_no']);
         $this->assertEquals('1.5 acres', $ownershipDetails['rs_records'][0]['land_amount']);
-        $this->assertEquals('RS Owner', $ownershipDetails['rs_records'][0]['owner_name']);
+        $this->assertEquals('RS Owner', $ownershipDetails['rs_records'][0]['owner_names'][0]['name']);
 
         // Verify Applicant Info (Kharij Information)
         $this->assertEquals('Test Applicant', $ownershipDetails['applicant_info']['applicant_name']);
@@ -454,8 +457,7 @@ class FullCompensationFormTest extends TestCase
         $response->assertSessionHasErrors(['plot_no']);
         $response->assertSessionHasErrors(['award_holder_names']);
         $response->assertSessionHasErrors(['is_applicant_in_award']);
-        // ownership_details is now optional, so we don't check for it
-        $response->assertSessionHasErrors(['additional_documents_info']);
+        // ownership_details and additional_documents_info are now optional, so we don't check for them
         // kanungo_opinion is now handled separately, so we don't check for it
 
         // Test with invalid acquisition_record_basis
