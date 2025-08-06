@@ -6,30 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
             <title>@yield('title', 'LA ক্ষতিপূরণ ম্যানেজমেন্ট')</title>
     
-    <!-- Production: Use CDN assets by default -->
-    @if(app()->environment('production'))
-        <!-- Tailwind CSS from CDN -->
-        <script src="https://cdn.tailwindcss.com"></script>
-        
-        <!-- Alpine.js from CDN -->
-        <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-        
-        <!-- Custom Tailwind config -->
-        <script>
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        fontFamily: {
-                            'bangla': ['Tiro Bangla', 'serif']
-                        }
-                    }
-                }
-            }
-        </script>
-    @else
-        <!-- Development: Use Vite assets -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @endif
+    <!-- Use Vite assets for both development and production -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap" rel="stylesheet">
 

@@ -864,10 +864,20 @@ function ownershipContinuity() {
                 this.currentStep = 'transfers';
                 this.completedSteps.push('info');
             } else if (this.currentStep === 'transfers') {
-                // Validate all deed transfers before proceeding to applicant step
-                const validationErrors = this.validateAllDeedTransfers();
-                if (validationErrors.length > 0) {
-                    this.showAlert('কিছু দলিলে আবেদনকৃত দাগের তথ্য অসম্পূর্ণ। অনুগ্রহ করে পূরণ করুন।', 'error');
+                // Check if there are any deed transfers that need validation
+                const incompleteDeeds = this.deed_transfers.filter(deed => 
+                    deed.application_type && 
+                    ((deed.application_type === 'specific' && (!deed.application_specific_area || !deed.application_sell_area)) ||
+                     (deed.application_type === 'multiple' && (!deed.application_other_areas || !deed.application_total_area || !deed.application_sell_area_other)))
+                );
+                
+                if (incompleteDeeds.length > 0) {
+                    // Show warning but allow to proceed
+                    if (confirm('কিছু দলিলে আবেদনকৃত দাগের তথ্য অসম্পূর্ণ। আপনি কি এখনও পরবর্তী ধাপে যেতে চান?')) {
+                        this.currentStep = 'applicant';
+                        this.completedSteps.push('transfers');
+                        this.completedSteps.push('applicant');
+                    }
                     return;
                 }
                 
@@ -926,9 +936,9 @@ function ownershipContinuity() {
                 mentioned_areas: '',
                 special_details: ''
             };
-            // Insert at the beginning of the array to show at top
-            this.deed_transfers.unshift(newDeed);
-            this.transferItems.push({ type: 'দলিল', index: 0 });
+            // Add at the end of the array to show at bottom
+            this.deed_transfers.push(newDeed);
+            this.transferItems.push({ type: 'দলিল', index: this.deed_transfers.length - 1 });
         },
         
         addDeedDonor(index) {
@@ -958,9 +968,9 @@ function ownershipContinuity() {
                 has_death_cert: 'no',
                 heirship_certificate_info: ''
             };
-            // Insert at the beginning of the array to show at top
-            this.inheritance_records.unshift(newInheritance);
-            this.transferItems.push({ type: 'ওয়ারিশ', index: 0 });
+            // Add at the end of the array to show at bottom
+            this.inheritance_records.push(newInheritance);
+            this.transferItems.push({ type: 'ওয়ারিশ', index: this.inheritance_records.length - 1 });
         },
         
         addRsRecord() {
@@ -971,9 +981,9 @@ function ownershipContinuity() {
                 land_amount: '',
                 dp_khatian: true
             };
-            // Insert at the beginning of the array to show at top
-            this.rs_records.unshift(newRs);
-            this.transferItems.push({ type: 'আরএস রেকর্ড', index: 0 });
+            // Add at the end of the array to show at bottom
+            this.rs_records.push(newRs);
+            this.transferItems.push({ type: 'আরএস রেকর্ড', index: this.rs_records.length - 1 });
             this.rs_record_disabled = true;
         },
         
@@ -981,10 +991,28 @@ function ownershipContinuity() {
             const item = this.transferItems[index];
             if (item.type === 'দলিল') {
                 this.deed_transfers.splice(item.index, 1);
+                // Update indices for remaining transfer items of the same type
+                this.transferItems.forEach((transferItem, idx) => {
+                    if (transferItem.type === 'দলিল' && idx !== index && transferItem.index > item.index) {
+                        transferItem.index--;
+                    }
+                });
             } else if (item.type === 'ওয়ারিশ') {
                 this.inheritance_records.splice(item.index, 1);
+                // Update indices for remaining transfer items of the same type
+                this.transferItems.forEach((transferItem, idx) => {
+                    if (transferItem.type === 'ওয়ারিশ' && idx !== index && transferItem.index > item.index) {
+                        transferItem.index--;
+                    }
+                });
             } else if (item.type === 'আরএস রেকর্ড') {
                 this.rs_records.splice(item.index, 1);
+                // Update indices for remaining transfer items of the same type
+                this.transferItems.forEach((transferItem, idx) => {
+                    if (transferItem.type === 'আরএস রেকর্ড' && idx !== index && transferItem.index > item.index) {
+                        transferItem.index--;
+                    }
+                });
                 this.rs_record_disabled = false;
             }
             this.transferItems.splice(index, 1);
