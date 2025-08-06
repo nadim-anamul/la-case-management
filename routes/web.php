@@ -38,3 +38,8 @@ Route::put('/compensation/{id}/kanungo-opinion', [CompensationController::class,
 // Order Routes
 Route::get('/compensation/{id}/order', [CompensationController::class, 'getOrder'])->name('compensation.order.get');
 Route::put('/compensation/{id}/order', [CompensationController::class, 'updateOrder'])->name('compensation.order.update');
+
+// Test route for CSS
+Route::get('/test-css', function () {
+    return view('test-css');
+})->name('test.css');

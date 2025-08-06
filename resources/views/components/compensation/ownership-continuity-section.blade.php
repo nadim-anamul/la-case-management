@@ -1,26 +1,117 @@
+
+
 <div class="form-section" x-data="ownershipContinuity()">
     <h2 class="form-section-title">
         <span class="section-icon">৪</span>
         মালিকানার ধারাবাহিকতার বর্ণনাঃ
     </h2>
 
-    <!-- Step Progress Indicator -->
-    <div class="mb-6">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-                <div class="flex items-center cursor-pointer" @click="goToStep('info')">
-                    <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold">১</div>
-                    <span class="ml-2 text-sm hover:text-blue-600">রেকর্ডের বর্ণনা</span>
+    <!-- Enhanced Step Progress Indicator -->
+    <div class="mb-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Progress Bar Container -->
+            <div class="relative">
+                <!-- Background Progress Bar -->
+                <div class="absolute top-4.5 left-0 right-0 h-1.5 bg-gray-200 rounded-full"></div>
+                
+                <!-- Active Progress Bar -->
+                <div class="absolute top-4.5 left-0 h-1.5 bg-gradient-to-r from-blue-500 to-green-500 rounded-full transition-all duration-500 ease-in-out shadow-sm"
+                     :style="`width: ${getProgressWidth()}%`"></div>
+                
+                <!-- Step Indicators -->
+                <div class="relative flex justify-between items-center">
+                    <!-- Step 1 -->
+                    <div class="flex flex-col items-center">
+                        <div class="relative">
+                            <!-- Step Circle -->
+                            <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 hover:scale-110 relative"
+                                 :class="getStepClasses('info')"
+                                 @click="goToStep('info')"
+                                 :style="getStepClasses('info').includes('cursor-not-allowed') ? 'cursor: not-allowed;' : 'cursor: pointer;'">
+                                <span x-text="'১'"></span>
+                                
+                                <!-- Small Check Icon for Completed Steps -->
+                                <svg x-show="completedSteps.includes('info')" class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 text-white rounded-full p-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            
+                            <!-- Connection Line -->
+                            <div class="absolute top-4.5 left-9 w-full h-0.5 bg-gray-300 transform -translate-y-px"
+                                 x-show="completedSteps.includes('info')"></div>
+                        </div>
+                        
+                        <!-- Step Label -->
+                        <div class="mt-3 text-center transition-all duration-200 hover:-translate-y-0.5">
+                            <div class="text-sm font-semibold transition-colors duration-200"
+                                 :class="currentStep === 'info' ? 'text-blue-500' : completedSteps.includes('info') ? 'text-green-500' : 'text-gray-500'">
+                                রেকর্ডের বর্ণনা
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="flex flex-col items-center">
+                        <div class="relative">
+                            <!-- Step Circle -->
+                            <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 hover:scale-110 relative"
+                                 :class="getStepClasses('transfers')"
+                                 @click="goToStep('transfers')"
+                                 :style="getStepClasses('transfers').includes('cursor-not-allowed') ? 'cursor: not-allowed;' : 'cursor: pointer;'">
+                                <span x-text="'২'"></span>
+                                
+                                <!-- Small Check Icon for Completed Steps -->
+                                <svg x-show="completedSteps.includes('transfers')" class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 text-white rounded-full p-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            
+                            <!-- Connection Line -->
+                            <div class="absolute top-4.5 left-9 w-full h-0.5 bg-gray-300 transform -translate-y-px"
+                                 x-show="completedSteps.includes('transfers')"></div>
+                        </div>
+                        
+                        <!-- Step Label -->
+                        <div class="mt-3 text-center transition-all duration-200 hover:-translate-y-0.5">
+                            <div class="text-sm font-semibold transition-colors duration-200"
+                                 :class="currentStep === 'transfers' ? 'text-green-500' : completedSteps.includes('transfers') ? 'text-green-500' : 'text-gray-500'">
+                                হস্তান্তর/রেকর্ড
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3 -->
+                    <div class="flex flex-col items-center">
+                        <div class="relative">
+                            <!-- Step Circle -->
+                            <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 hover:scale-110 relative"
+                                 :class="getStepClasses('applicant')"
+                                 @click="goToStep('applicant')"
+                                 :style="getStepClasses('applicant').includes('cursor-not-allowed') ? 'cursor: not-allowed;' : 'cursor: pointer;'">
+                                <span x-text="'৩'"></span>
+                                
+                                <!-- Small Check Icon for Completed Steps -->
+                                <svg x-show="completedSteps.includes('applicant')" class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 text-white rounded-full p-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <!-- Step Label -->
+                        <div class="mt-3 text-center transition-all duration-200 hover:-translate-y-0.5">
+                            <div class="text-sm font-semibold transition-colors duration-200"
+                                 :class="currentStep === 'applicant' ? 'text-blue-500' : completedSteps.includes('applicant') ? 'text-green-500' : 'text-gray-500'">
+                                আবেদনকারী তথ্য
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex-1 h-1 bg-gray-300"></div>
-                <div class="flex items-center cursor-pointer" @click="goToStep('transfers')" x-show="completedSteps.includes('info')">
-                    <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" :class="completedSteps.includes('transfers') ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'">২</div>
-                    <span class="ml-2 text-sm hover:text-blue-600">হস্তান্তর/রেকর্ড</span>
-                </div>
-                <div class="flex-1 h-1 bg-gray-300" x-show="completedSteps.includes('info')"></div>
-                <div class="flex items-center cursor-pointer" @click="goToStep('applicant')" x-show="completedSteps.includes('transfers') || currentStep === 'applicant'">
-                    <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold" :class="completedSteps.includes('applicant') ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'">৩</div>
-                    <span class="ml-2 text-sm hover:text-blue-600">আবেদনকারী তথ্য</span>
+            </div>
+            
+            <!-- Progress Status -->
+            <div class="mt-4 text-center">
+                <div class="text-sm font-medium text-gray-700">
+                    <span x-text="getCurrentStepText()"></span>
                 </div>
             </div>
         </div>
@@ -211,7 +302,7 @@
                     
                     <!-- Application Area Section -->
                     <div class="form-section md:col-span-2">
-                        <label class="font-semibold text-gray-700 mb-2"> আবেদনকৃত দাগের সুনির্দিষ্টভাবে বিক্রয়: <span class="text-red-500">*</span></label>
+                        <label class="font-semibold text-gray-700 mb-2"> আবেদনকৃত দাগে বিক্রয়ের ধরন: <span class="text-red-500">*</span></label>
                         <div class="space-y-4">
                             <!-- Radio button selection -->
                             <div class="mb-4">
@@ -268,7 +359,7 @@
                         <label class="font-semibold text-gray-700 mb-2"> দখলের বর্ণনা:</label>
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">i) দলিলের বিবরণ ও হস্তান্তরের সময় দখল উল্লেখ রয়েছে কিনা?</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">i) দলিলের বিবরণ ও হাতনকশায় দখল উল্লেখ রয়েছে কিনা?</label>
                                 <div class="radio-group">
                                     <label class="flex items-center">
                                         <input type="radio" :name="'ownership_details[deed_transfers][' + index + '][possession_deed]'" value="yes" x-model="deed.possession_deed" class="mr-2">
@@ -380,8 +471,8 @@
         
         <!-- Action Buttons at Bottom -->
         <div class="flex flex-wrap gap-4 mt-6">
-            <button type="button" @click="addDeedTransfer()" class="btn-primary">মালিকানা হস্তান্তর যোগ করুন</button>
-            <button type="button" @click="addInheritanceRecord()" class="btn-primary">ওয়ারিশ রেকর্ড যোগ করুন</button>
+            <button type="button" @click="addDeedTransfer()" class="btn-primary">দলিলমূলে হস্তান্তর যোগ করুন</button>
+            <button type="button" @click="addInheritanceRecord()" class="btn-primary">ওয়ারিশমূলে হস্তান্তর যোগ করুন</button>
             <button type="button" @click="addRsRecord()" :disabled="rs_record_disabled" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200" :class="{ 'opacity-50 cursor-not-allowed': rs_record_disabled }" x-show="acquisition_record_basis === 'SA'">আরএস রেকর্ড যোগ করুন</button>
             <button type="button" @click="nextStep()" class="btn-success">উপরোক্ত মালিকই আবেদনকারী</button>
         </div>
@@ -669,9 +760,50 @@ function ownershipContinuity() {
                         this.currentStep = data.ownership_details.currentStep || 'info';
                         this.completedSteps = data.ownership_details.completedSteps || [];
                         this.rs_record_disabled = data.ownership_details.rs_record_disabled || false;
+                        
+                        // Auto-detect completed steps based on existing data
+                        this.detectCompletedSteps();
                     }
                 }
             }
+        },
+        
+        detectCompletedSteps() {
+            // Reset completed steps
+            this.completedSteps = [];
+            
+            // Check if Step 1 (info) has data
+            if (this.isStep1Valid()) {
+                this.completedSteps.push('info');
+            }
+            
+            // Check if Step 2 (transfers) has data
+            const hasTransfers = this.deed_transfers.length > 0 || 
+                                this.inheritance_records.length > 0 || 
+                                this.rs_records.length > 0;
+            if (hasTransfers) {
+                this.completedSteps.push('transfers');
+            }
+            
+            // Check if Step 3 (applicant) has data
+            const hasApplicantInfo = this.applicant_info.applicant_name || 
+                                    this.applicant_info.kharij_case_no || 
+                                    this.applicant_info.kharij_plot_no || 
+                                    this.applicant_info.kharij_land_amount || 
+                                    this.applicant_info.kharij_date || 
+                                    this.applicant_info.kharij_details;
+            if (hasApplicantInfo) {
+                this.completedSteps.push('applicant');
+            }
+        },
+        
+        isEditMode() {
+            // Check if we have existing data (edit mode)
+            return this.completedSteps.length > 0 || 
+                   this.sa_info.sa_plot_no || this.sa_info.sa_khatian_no ||
+                   this.rs_info.rs_plot_no || this.rs_info.rs_khatian_no ||
+                   this.deed_transfers.length > 0 || this.inheritance_records.length > 0 ||
+                   this.applicant_info.applicant_name || this.applicant_info.kharij_case_no;
         },
         
         showAlert(message, type = 'success') {
@@ -701,9 +833,29 @@ function ownershipContinuity() {
         },
         
         goToStep(step) {
-            // Allow navigation to completed steps, current step, or applicant step if transfers are completed
-            if (this.completedSteps.includes(step) || step === this.currentStep || (step === 'applicant' && this.completedSteps.includes('transfers'))) {
-                this.currentStep = step;
+            if (this.isEditMode()) {
+                // Edit mode: Allow navigation to any step
+                if (this.completedSteps.includes(step) || 
+                    step === this.currentStep || 
+                    (step === 'applicant' && this.completedSteps.includes('transfers')) ||
+                    this.completedSteps.length > 0) {
+                    this.currentStep = step;
+                }
+            } else {
+                // Create mode: Sequential navigation only
+                const stepOrder = ['info', 'transfers', 'applicant'];
+                const currentIndex = stepOrder.indexOf(this.currentStep);
+                const targetIndex = stepOrder.indexOf(step);
+                
+                // Allow navigation to current step, next step if current is completed, or previous completed steps
+                if (step === this.currentStep || 
+                    (targetIndex === currentIndex + 1 && this.completedSteps.includes(this.currentStep)) ||
+                    (targetIndex < currentIndex && this.completedSteps.includes(step))) {
+                    this.currentStep = step;
+                } else if (targetIndex > currentIndex) {
+                    // Show alert for trying to skip steps
+                    this.showAlert('অনুগ্রহ করে বর্তমান ধাপ সম্পূর্ণ করুন আগে পরবর্তী ধাপে যাওয়ার জন্য।', 'error');
+                }
             }
         },
         
@@ -1006,6 +1158,56 @@ function ownershipContinuity() {
             if (this.rs_records[index].owner_names.length > 1) {
                 this.rs_records[index].owner_names.splice(ownerIdx, 1);
             }
+        },
+
+        // Enhanced Progress Indicator Functions
+        getStepClasses(step) {
+            const stepOrder = ['info', 'transfers', 'applicant'];
+            const currentIndex = stepOrder.indexOf(this.currentStep);
+            const stepIndex = stepOrder.indexOf(step);
+            
+            if (this.currentStep === step) {
+                return 'bg-blue-500 text-white shadow-lg ring-2 ring-blue-300';
+            } else if (this.completedSteps.includes(step)) {
+                return 'bg-green-500 text-white shadow-md';
+            } else if (stepIndex <= currentIndex) {
+                // Available steps (current and previous)
+                return 'bg-gray-300 text-gray-600 hover:bg-gray-400 cursor-pointer';
+            } else {
+                // Future steps (locked)
+                return 'bg-gray-200 text-gray-400 cursor-not-allowed';
+            }
+        },
+
+        getProgressWidth() {
+            const totalSteps = 3;
+            const completedCount = this.completedSteps.length;
+            
+            if (completedCount === totalSteps) {
+                return 100;
+            } else if (completedCount === 0) {
+                return 0; // No progress at the beginning
+            } else if (completedCount === 1) {
+                return 33; // First step completed
+            } else if (completedCount === 2) {
+                return 66; // Second step completed
+            } else {
+                return 100; // All steps
+            }
+        },
+
+        getStepIndex(step) {
+            const steps = ['info', 'transfers', 'applicant'];
+            return steps.indexOf(step) + 1;
+        },
+
+        getCurrentStepText() {
+            const stepTexts = {
+                'info': 'রেকর্ডের বর্ণনা',
+                'transfers': 'হস্তান্তর/রেকর্ড',
+                'applicant': 'আবেদনকারী তথ্য'
+            };
+            return stepTexts[this.currentStep] || '';
         }
     }
 }

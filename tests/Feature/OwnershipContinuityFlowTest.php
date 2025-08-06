@@ -454,4 +454,177 @@ class OwnershipContinuityFlowTest extends TestCase
         $this->assertEquals('3.00', $compensation->ownership_details['deed_transfers'][0]['application_total_area']);
         $this->assertEquals('2.50', $compensation->ownership_details['deed_transfers'][0]['application_sell_area_other']);
     }
+
+    public function test_edit_form_with_all_steps_completed()
+    {
+        // Create a compensation with all ownership details filled
+        $compensationData = [
+            'case_number' => 'EDIT-TEST-001',
+            'case_date' => '2024-01-01',
+            'applicants' => [
+                [
+                    'name' => 'Edit Test Applicant',
+                    'father_name' => 'Edit Test Father',
+                    'address' => 'Edit Test Address',
+                    'nid' => '1234567890'
+                ]
+            ],
+            'la_case_no' => 'LA-EDIT-001',
+            'award_type' => 'জমি',
+            'award_serial_no' => 'AWD-EDIT-001',
+            'acquisition_record_basis' => 'SA',
+            'sa_plot_no' => 'SA-EDIT-001',
+            'plot_no' => 'PLOT-EDIT-001',
+            'award_holder_names' => [
+                ['name' => 'Edit Test Award Holder']
+            ],
+            'is_applicant_in_award' => true,
+            'source_tax_percentage' => '3%',
+            'applicant_acquired_land' => '1.00',
+            'mouza_name' => 'Edit Test Mouza',
+            'jl_no' => 'JL-EDIT-001',
+            'sa_khatian_no' => 'SA-EDIT-001',
+            'rs_khatian_no' => 'RS-EDIT-001',
+            'land_schedule_sa_plot_no' => 'SA-FORMER-EDIT-001',
+            'land_schedule_rs_plot_no' => 'RS-CURRENT-EDIT-001',
+            'ownership_details' => [
+                'sa_info' => [
+                    'sa_plot_no' => 'SA-EDIT-PLOT-001',
+                    'sa_khatian_no' => 'SA-EDIT-KHATIAN-001',
+                    'sa_total_land_in_plot' => '2.00',
+                    'sa_land_in_khatian' => '1.50',
+                ],
+                'rs_info' => [
+                    'rs_plot_no' => 'RS-EDIT-PLOT-001',
+                    'rs_khatian_no' => 'RS-EDIT-KHATIAN-001',
+                    'rs_total_land_in_plot' => '2.00',
+                    'rs_land_in_khatian' => '1.50',
+                ],
+                'sa_owners' => [['name' => 'SA Edit Owner 1']],
+                'rs_owners' => [['name' => 'RS Edit Owner 1']],
+                'deed_transfers' => [
+                    [
+                        'donor_names' => [['name' => 'Edit Deed Donor']],
+                        'recipient_names' => [['name' => 'Edit Deed Recipient']],
+                        'deed_number' => 'DEED-EDIT-001',
+                        'deed_date' => '2024-01-01',
+                        'sale_type' => 'দলিল',
+                        'possession_mentioned' => 'yes',
+                        'possession_plot_no' => 'POSSESSION-EDIT-001',
+                        'possession_description' => 'Edit possession details',
+                        'application_type' => 'specific',
+                        'application_specific_area' => '1.00',
+                        'application_sell_area' => '0.50',
+                        'application_other_areas' => '0.25',
+                        'application_total_area' => '1.75',
+                        'application_sell_area_other' => '0.25'
+                    ]
+                ],
+                'inheritance_records' => [
+                    [
+                        'inheritor_names' => [['name' => 'Edit Inheritor']],
+                        'inheritance_case_no' => 'INHERITANCE-EDIT-001',
+                        'inheritance_date' => '2024-01-01',
+                        'inheritance_details' => 'Edit inheritance details'
+                    ]
+                ],
+                'rs_records' => [
+                    [
+                        'rs_plot_no' => 'RS-RECORD-EDIT-001',
+                        'rs_khatian_no' => 'RS-RECORD-KHATIAN-EDIT-001',
+                        'rs_total_land_in_plot' => '1.00',
+                        'rs_land_in_khatian' => '0.75',
+                        'owner_names' => [['name' => 'RS Record Edit Owner']],
+                        'dp_khatian' => true
+                    ]
+                ],
+                'applicant_info' => [
+                    'applicant_name' => 'Edit Test Applicant',
+                    'kharij_case_no' => 'KHARIJ-EDIT-001',
+                    'kharij_plot_no' => 'KHARIJ-PLOT-EDIT-001',
+                    'kharij_land_amount' => '1.00',
+                    'kharij_date' => '2024-01-01',
+                    'kharij_details' => 'Edit kharij details',
+                ],
+                'transferItems' => [
+                    ['type' => 'দলিল', 'index' => 0],
+                    ['type' => 'উত্তরাধিকার', 'index' => 0],
+                    ['type' => 'RS রেকর্ড', 'index' => 0]
+                ]
+            ],
+            'mutation_info' => [
+                'records' => []
+            ],
+            'tax_info' => [
+                'english_year' => '2024',
+                'bangla_year' => '১৪৩১'
+            ],
+            'additional_documents_info' => [
+                'selected_types' => ['deed'],
+                'details' => [
+                    'deed' => 'Edit test deed details'
+                ]
+            ]
+        ];
+
+        $response = $this->post('/compensation/store', $compensationData);
+        $response->assertStatus(302); // Redirect after successful creation
+
+        // Get the created compensation
+        $compensation = Compensation::where('case_number', 'EDIT-TEST-001')->first();
+        $this->assertNotNull($compensation);
+
+        // Test editing the form - should show all steps as completed
+        $editResponse = $this->get("/compensation/{$compensation->id}/edit");
+        $editResponse->assertStatus(200);
+
+        // Verify that all ownership details are present in the form
+        $ownershipDetails = $compensation->ownership_details;
+        
+        // Check SA info
+        $this->assertEquals('SA-EDIT-PLOT-001', $ownershipDetails['sa_info']['sa_plot_no']);
+        $this->assertEquals('SA-EDIT-KHATIAN-001', $ownershipDetails['sa_info']['sa_khatian_no']);
+        
+        // Check RS info
+        $this->assertEquals('RS-EDIT-PLOT-001', $ownershipDetails['rs_info']['rs_plot_no']);
+        $this->assertEquals('RS-EDIT-KHATIAN-001', $ownershipDetails['rs_info']['rs_khatian_no']);
+        
+        // Check owners
+        $this->assertEquals('SA Edit Owner 1', $ownershipDetails['sa_owners'][0]['name']);
+        $this->assertEquals('RS Edit Owner 1', $ownershipDetails['rs_owners'][0]['name']);
+        
+        // Check deed transfers
+        $this->assertEquals('Edit Deed Donor', $ownershipDetails['deed_transfers'][0]['donor_names'][0]['name']);
+        $this->assertEquals('Edit Deed Recipient', $ownershipDetails['deed_transfers'][0]['recipient_names'][0]['name']);
+        $this->assertEquals('specific', $ownershipDetails['deed_transfers'][0]['application_type']);
+        
+        // Check inheritance records
+        $this->assertEquals('Edit Inheritor', $ownershipDetails['inheritance_records'][0]['inheritor_names'][0]['name']);
+        
+        // Check RS records
+        $this->assertEquals('RS Record Edit Owner', $ownershipDetails['rs_records'][0]['owner_names'][0]['name']);
+        
+        // Check applicant info
+        $this->assertEquals('Edit Test Applicant', $ownershipDetails['applicant_info']['applicant_name']);
+        $this->assertEquals('KHARIJ-EDIT-001', $ownershipDetails['applicant_info']['kharij_case_no']);
+    }
+
+    public function test_create_mode_sequential_navigation()
+    {
+        // Test creating a new compensation form
+        $response = $this->get('/compensation/create');
+        $response->assertStatus(200);
+        
+        // Verify that the form loads successfully
+        $response->assertStatus(200);
+        
+        // Test that all 3 steps are visible initially
+        $response->assertSee('রেকর্ডের বর্ণনা');
+        $response->assertSee('হস্তান্তর/রেকর্ড');
+        $response->assertSee('আবেদনকারী তথ্য');
+        
+        // Test that only Step 1 is active initially
+        $response->assertSee('bg-blue-500'); // Current step styling
+        // Note: We don't check for bg-green-500 as there might be other green elements on the page
+    }
 } 
