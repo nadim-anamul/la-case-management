@@ -388,9 +388,9 @@
                     @endif
                     <div>
                         <label class="font-semibold text-gray-700">দখল উল্লেখ করা আছে কিনা:</label>
-                        <p class="text-gray-900">{{ $deed['possession_mentioned'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
+                        <p class="text-gray-900">{{ isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
                     </div>
-                    @if($deed['possession_mentioned'] === 'yes')
+                    @if(isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes')
                     <div>
                         <label class="font-semibold text-gray-700">দখলের দাগ নম্বর:</label>
                         <p class="text-gray-900">{{ $deed['possession_plot_no'] ?? '' }}</p>
@@ -449,7 +449,7 @@
                     </div>
                     <div>
                         <label class="font-semibold text-gray-700">মৃত্যু সনদ আছে কিনা:</label>
-                        <p class="text-gray-900">{{ $inheritance['has_death_cert'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
+                        <p class="text-gray-900">{{ isset($inheritance['has_death_cert']) && $inheritance['has_death_cert'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
                     </div>
                     <div class="md:col-span-2">
                         <label class="font-semibold text-gray-700">ওয়ারিশ সনদের তথ্য:</label>
@@ -627,7 +627,7 @@
         <div class="grid grid-cols-1 gap-4">
             <div>
                 <label class="font-semibold text-gray-700">মালিকানার ধারাবাহিকতা আছে কিনা:</label>
-                <p class="text-gray-900">{{ $compensation->kanungo_opinion['has_ownership_continuity'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
+                                        <p class="text-gray-900">{{ isset($compensation->kanungo_opinion['has_ownership_continuity']) && $compensation->kanungo_opinion['has_ownership_continuity'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">মতামতের বিবরণ:</label>

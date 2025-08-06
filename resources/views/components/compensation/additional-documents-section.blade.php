@@ -7,9 +7,9 @@
         <h3 class="font-bold mb-4">দাখিলকৃত ডকুমেন্টের ধরন:<span class="text-blue-500">*</span></h3>
         <div class="checkbox-group">
             <label><input type="checkbox" name="additional_documents_info[selected_types][]" value="আপস- বন্টননামা" x-model="selected_doc_types" class="mr-2"><span>আপস- বন্টননামা</span></label>
-            <label><input type="checkbox" name="additional_documents_info[selected_types][]" value="না-দাবী নামা" x-model="selected_doc_types" class="mr-2"><span>না-দাবী নামা</span></label>
+            <label><input type="checkbox" name="additional_documents_info[selected_types][]" value="না-দাবি" x-model="selected_doc_types" class="mr-2"><span>না-দাবি</span></label>
             <label><input type="checkbox" name="additional_documents_info[selected_types][]" value="সরেজমিন তদন্ত" x-model="selected_doc_types" class="mr-2"><span>সরেজমিন তদন্ত</span></label>
-            <label><input type="checkbox" name="additional_documents_info[selected_types][]" value="এফিডেভিটের তথ্য" x-model="selected_doc_types" class="mr-2"><span>এফিডেভিটের তথ্য</span></label>
+            <label><input type="checkbox" name="additional_documents_info[selected_types][]" value="এফিডেভিট" x-model="selected_doc_types" class="mr-2"><span>এফিডেভিট</span></label>
         </div>
         <template x-for="type in selected_doc_types" :key="type">
             <div class="floating-label mt-4">

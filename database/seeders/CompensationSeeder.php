@@ -13,7 +13,7 @@ class CompensationSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create sample compensation records
+        // Create sample compensation records with different types
         Compensation::factory()->count(10)->create();
         
         // Create some completed compensations
@@ -25,7 +25,7 @@ class CompensationSeeder extends Seeder
         // Create some with kanungo opinion
         Compensation::factory()->count(3)->withKanungoOpinion()->create();
         
-        // Create a specific sample record
+        // Create a specific sample record for demonstration
         Compensation::create([
             'case_number' => 'COMP-SAMPLE-001',
             'case_date' => '2024-08-15',
@@ -91,6 +91,9 @@ class CompensationSeeder extends Seeder
                         'application_other_areas' => null,
                         'application_total_area' => null,
                         'application_sell_area_other' => null,
+                        'possession_mentioned' => 'yes',
+                        'possession_plot_no' => 'PLOT-123',
+                        'possession_description' => 'দখলে আছে',
                         'possession_deed' => 'yes',
                         'possession_application' => 'yes',
                         'mentioned_areas' => 'SA-123',
@@ -114,9 +117,9 @@ class CompensationSeeder extends Seeder
                 'paid_land_amount' => '1.25'
             ],
             'additional_documents_info' => [
-                'selected_types' => ['বণ্টননামা'],
+                'selected_types' => ['আপস- বন্টননামা'],
                 'details' => [
-                    'বণ্টননামা' => 'বণ্টননামার বিবরণ: আবেদনকারী পরিবারের মধ্যে জমি বণ্টন করা হয়েছে।'
+                    'আপস- বন্টননামা' => 'আপসনামার বিবরণ: আবেদনকারী পরিবারের মধ্যে জমি বণ্টন করা হয়েছে।'
                 ]
             ],
             'kanungo_opinion' => [
@@ -129,5 +132,11 @@ class CompensationSeeder extends Seeder
         ]);
 
         $this->command->info('Compensation records seeded successfully!');
+        $this->command->info('Created:');
+        $this->command->info('- 10 basic compensation records');
+        $this->command->info('- 5 completed compensations');
+        $this->command->info('- 3 RS record compensations');
+        $this->command->info('- 3 compensations with kanungo opinion');
+        $this->command->info('- 1 sample demonstration record');
     }
 } 

@@ -66,9 +66,8 @@ class Compensation extends Model
      */
     public function formatApplicationAreaString($deed)
     {
-        // Handle backward compatibility for old data without application_type
         if (!isset($deed['application_type']) || !$deed['application_type']) {
-            // Check if old format data exists
+            // Handle backward compatibility for old data
             if (isset($deed['application_specific_area']) && $deed['application_specific_area']) {
                 $specificArea = $deed['application_specific_area'] ?? '';
                 $sellArea = $deed['application_sell_area'] ?? '';
@@ -105,11 +104,9 @@ class Compensation extends Model
             return 0;
         }
 
-        $total = 0;
-        foreach ($this->land_category as $category) {
-            $total += floatval($category['total_land'] ?? 0);
-        }
-        return $total;
+        return collect($this->land_category)->sum(function ($category) {
+            return floatval($category['total_land'] ?? 0);
+        });
     }
 
     /**
@@ -121,11 +118,9 @@ class Compensation extends Model
             return 0;
         }
 
-        $total = 0;
-        foreach ($this->land_category as $category) {
-            $total += floatval($category['total_compensation'] ?? 0);
-        }
-        return $total;
+        return collect($this->land_category)->sum(function ($category) {
+            return floatval($category['total_compensation'] ?? 0);
+        });
     }
 
     /**
@@ -137,19 +132,9 @@ class Compensation extends Model
             return 0;
         }
 
-        $total = 0;
-        foreach ($this->land_category as $category) {
-            $total += floatval($category['applicant_land'] ?? 0);
-        }
-        return $total;
-    }
-
-    /**
-     * Check if applicant is in award
-     */
-    public function getIsApplicantInAwardAttribute($value)
-    {
-        return (bool) $value;
+        return collect($this->land_category)->sum(function ($category) {
+            return floatval($category['applicant_land'] ?? 0);
+        });
     }
 
     /**
@@ -163,5 +148,32 @@ class Compensation extends Model
             return $this->land_schedule_rs_plot_no;
         }
         return $this->jl_no;
+    }
+
+    /**
+     * Scope to filter by status
+     */
+    public function scopeByStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
+    /**
+     * Scope to search in compensation records
+     */
+    public function scopeSearch($query, $search)
+    {
+        return $query->where(function($q) use ($search) {
+            $q->where('la_case_no', 'like', "%{$search}%")
+              ->orWhere('case_number', 'like', "%{$search}%")
+              ->orWhere('mouza_name', 'like', "%{$search}%")
+              ->orWhere('jl_no', 'like', "%{$search}%")
+              ->orWhere('sa_khatian_no', 'like', "%{$search}%")
+              ->orWhere('rs_khatian_no', 'like', "%{$search}%")
+              ->orWhere('plot_no', 'like', "%{$search}%")
+              ->orWhere('land_schedule_sa_plot_no', 'like', "%{$search}%")
+              ->orWhere('land_schedule_rs_plot_no', 'like', "%{$search}%")
+              ->orWhereRaw("JSON_SEARCH(applicants, 'one', ?, null, '$[*].name')", ["%{$search}%"]);
+        });
     }
 }
