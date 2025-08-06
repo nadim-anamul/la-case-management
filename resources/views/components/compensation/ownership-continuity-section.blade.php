@@ -1,5 +1,3 @@
-
-
 <div class="form-section" x-data="ownershipContinuity()">
     <h2 class="form-section-title">
         <span class="section-icon">৪</span>
@@ -12,10 +10,10 @@
             <!-- Progress Bar Container -->
             <div class="relative">
                 <!-- Background Progress Bar -->
-                <div class="absolute top-4.5 left-0 right-0 h-1.5 bg-gray-200 rounded-full"></div>
+                <div class="absolute top-5 left-0 right-0 h-1.5 bg-gray-200 rounded-full"></div>
                 
                 <!-- Active Progress Bar -->
-                <div class="absolute top-4.5 left-0 h-1.5 bg-gradient-to-r from-blue-500 to-green-500 rounded-full transition-all duration-500 ease-in-out shadow-sm"
+                <div class="absolute top-5 left-0 h-1.5 bg-gradient-to-r from-blue-500 to-green-500 rounded-full transition-all duration-500 ease-in-out shadow-sm"
                      :style="`width: ${getProgressWidth()}%`"></div>
                 
                 <!-- Step Indicators -->
@@ -36,9 +34,7 @@
                                 </svg>
                             </div>
                             
-                            <!-- Connection Line -->
-                            <div class="absolute top-4.5 left-9 w-full h-0.5 bg-gray-300 transform -translate-y-px"
-                                 x-show="completedSteps.includes('info')"></div>
+
                         </div>
                         
                         <!-- Step Label -->
@@ -66,9 +62,7 @@
                                 </svg>
                             </div>
                             
-                            <!-- Connection Line -->
-                            <div class="absolute top-4.5 left-9 w-full h-0.5 bg-gray-300 transform -translate-y-px"
-                                 x-show="completedSteps.includes('transfers')"></div>
+
                         </div>
                         
                         <!-- Step Label -->

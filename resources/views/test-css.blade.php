@@ -23,11 +23,11 @@
             <!-- Progress Bar Container -->
             <div class="relative">
                 <!-- Background Progress Bar -->
-                <div class="absolute top-4.5 left-0 right-0 h-1.5 bg-gray-200 rounded-full"></div>
+                <div class="absolute top-5 left-0 right-0 h-1.5 bg-gray-200 rounded-full"></div>
                 
                 <!-- Active Progress Bar -->
-                <div class="absolute top-4.5 left-0 h-1.5 bg-gradient-to-r from-blue-500 to-green-500 rounded-full transition-all duration-500 ease-in-out shadow-sm"
-                     style="width: 66%"></div>
+                <div class="absolute top-5 left-0 h-1.5 bg-gradient-to-r from-blue-500 to-green-500 rounded-full transition-all duration-500 ease-in-out shadow-sm"
+                     :style="`width: ${getProgressWidth()}%`"></div>
                 
                 <!-- Step Indicators -->
                 <div class="relative flex justify-between items-center">

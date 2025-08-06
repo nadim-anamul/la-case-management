@@ -54,7 +54,7 @@ export default {
         "w-4",
         "h-4",
         "p-0.5",
-        "top-4.5",
+        "top-5",
         "left-9",
         "w-full",
         "h-0.5",

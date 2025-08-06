@@ -28,7 +28,7 @@
                     'w-9', 'h-9', 'flex', 'items-center', 'justify-center', 'text-sm',
                     'font-bold', 'duration-300', 'hover:scale-110', 'relative',
                     'absolute', '-top-1', '-right-1', 'w-4', 'h-4', 'p-0.5',
-                    'top-4.5', 'left-9', 'w-full', 'h-0.5', 'transform', '-translate-y-px',
+                    'top-5', 'left-9', 'w-full', 'h-0.5', 'transform', '-translate-y-px',
                     'mt-3', 'text-center', 'duration-200', 'hover:-translate-y-0.5',
                     'font-semibold', 'transition-colors', 'text-blue-500', 'text-green-500',
                     'text-gray-500', 'mb-8', 'max-w-4xl', 'mx-auto', 'left-0', 'right-0',
