@@ -374,6 +374,19 @@ main() {
     if docker compose -f docker-compose.server.yml exec -T app npm run build 2>&1; then
         print_success "✅ Vite assets built successfully"
         echo "   - CSS and JS assets compiled for production"
+        
+        # Fix Vite manifest location issue
+        print_status "🔧 Fixing Vite manifest location..."
+        if docker compose -f docker-compose.server.yml exec -T app test -f /var/www/public/build/.vite/manifest.json; then
+            if ! docker compose -f docker-compose.server.yml exec -T app test -f /var/www/public/build/manifest.json; then
+                docker compose -f docker-compose.server.yml exec -T app cp /var/www/public/build/.vite/manifest.json /var/www/public/build/manifest.json
+                print_success "✅ Manifest file copied to correct location"
+            else
+                print_warning "⚠️ Manifest file already in correct location"
+            fi
+        else
+            print_warning "⚠️ No manifest file found in .vite directory"
+        fi
     else
         print_warning "⚠️ Vite build failed, but continuing deployment..."
         echo "   - Assets will be built during container startup"
