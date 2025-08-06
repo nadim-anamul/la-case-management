@@ -29,8 +29,6 @@ class Compensation extends Model
 
     /**
      * The attributes that should be cast.
-     *
-     * @var array
      */
     protected $casts = [
         'applicants' => 'array',
@@ -43,6 +41,8 @@ class Compensation extends Model
         'tax_info' => 'array',
         'additional_documents_info' => 'array',
         'kanungo_opinion' => 'array',
+        'case_date' => 'date',
+        'order_signature_date' => 'date',
     ];
 
     /**
@@ -63,6 +63,9 @@ class Compensation extends Model
 
     /**
      * Format application area string based on type
+     * 
+     * @param array $deed The deed transfer data
+     * @return string Formatted application area string
      */
     public function formatApplicationAreaString($deed)
     {
@@ -98,6 +101,8 @@ class Compensation extends Model
 
     /**
      * Get the total land amount from land category
+     * 
+     * @return float Total land amount
      */
     public function getTotalLandAmountAttribute()
     {
@@ -114,6 +119,8 @@ class Compensation extends Model
 
     /**
      * Get the total compensation amount from land category
+     * 
+     * @return float Total compensation amount
      */
     public function getTotalCompensationAmountAttribute()
     {
@@ -125,11 +132,23 @@ class Compensation extends Model
         foreach ($this->land_category as $category) {
             $total += floatval($category['total_compensation'] ?? 0);
         }
+        
+        // Add tree and infrastructure compensation if available
+        if ($this->tree_compensation) {
+            $total += floatval($this->tree_compensation);
+        }
+        
+        if ($this->infrastructure_compensation) {
+            $total += floatval($this->infrastructure_compensation);
+        }
+        
         return $total;
     }
 
     /**
      * Get the applicant's acquired land amount
+     * 
+     * @return float Total applicant land amount
      */
     public function getApplicantAcquiredLandAttribute()
     {
@@ -146,6 +165,9 @@ class Compensation extends Model
 
     /**
      * Check if applicant is in award
+     * 
+     * @param mixed $value
+     * @return bool
      */
     public function getIsApplicantInAwardAttribute($value)
     {
@@ -153,15 +175,78 @@ class Compensation extends Model
     }
 
     /**
-     * Get the plot number based on acquisition record basis
+     * Get the appropriate plot number based on acquisition record basis
+     * 
+     * @return string|null The plot number
      */
-    public function getPlotNoAttribute()
+    public function getEffectivePlotNoAttribute()
     {
         if ($this->acquisition_record_basis === 'SA') {
-            return $this->land_schedule_sa_plot_no;
+            return $this->land_schedule_sa_plot_no ?: $this->sa_plot_no;
         } elseif ($this->acquisition_record_basis === 'RS') {
-            return $this->land_schedule_rs_plot_no;
+            return $this->land_schedule_rs_plot_no ?: $this->rs_plot_no;
         }
-        return $this->jl_no;
+        return $this->plot_no ?: $this->jl_no;
+    }
+
+    /**
+     * Get formatted applicant names
+     * 
+     * @return string Comma-separated applicant names
+     */
+    public function getApplicantNamesAttribute()
+    {
+        if (!$this->applicants || !is_array($this->applicants)) {
+            return '';
+        }
+
+        return collect($this->applicants)
+            ->pluck('name')
+            ->filter()
+            ->implode(', ');
+    }
+
+    /**
+     * Get formatted award holder names
+     * 
+     * @return string Comma-separated award holder names
+     */
+    public function getAwardHolderNamesStringAttribute()
+    {
+        if (!$this->award_holder_names || !is_array($this->award_holder_names)) {
+            return '';
+        }
+
+        return collect($this->award_holder_names)
+            ->pluck('name')
+            ->filter()
+            ->implode(', ');
+    }
+
+    /**
+     * Scope to filter by status
+     */
+    public function scopeByStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
+    /**
+     * Scope to search compensations
+     */
+    public function scopeSearch($query, $search)
+    {
+        return $query->where(function($q) use ($search) {
+            $q->where('la_case_no', 'like', "%{$search}%")
+              ->orWhere('case_number', 'like', "%{$search}%")
+              ->orWhere('mouza_name', 'like', "%{$search}%")
+              ->orWhere('jl_no', 'like', "%{$search}%")
+              ->orWhere('sa_khatian_no', 'like', "%{$search}%")
+              ->orWhere('rs_khatian_no', 'like', "%{$search}%")
+              ->orWhere('plot_no', 'like', "%{$search}%")
+              ->orWhere('land_schedule_sa_plot_no', 'like', "%{$search}%")
+              ->orWhere('land_schedule_rs_plot_no', 'like', "%{$search}%")
+              ->orWhereRaw("JSON_SEARCH(applicants, 'one', ?, null, '$[*].name')", ["%{$search}%"]);
+        });
     }
 }

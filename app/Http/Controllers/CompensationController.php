@@ -11,34 +11,19 @@ use App\Traits\BengaliDateTrait;
 class CompensationController extends Controller
 {
     use BengaliDateTrait;
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $query = Compensation::query();
-        
-        // Filter by status
         $status = $request->get('status', 'pending');
-        $query->where('status', $status);
-        
-        // Search functionality
         $search = $request->get('search');
+        
+        $query = Compensation::byStatus($status);
+        
         if ($search) {
-            $query->where(function($q) use ($search) {
-                $q->where('la_case_no', 'like', "%{$search}%")
-                  ->orWhere('case_number', 'like', "%{$search}%")
-                  ->orWhere('mouza_name', 'like', "%{$search}%")
-                  ->orWhere('jl_no', 'like', "%{$search}%")
-                  ->orWhere('sa_khatian_no', 'like', "%{$search}%")
-                  ->orWhere('rs_khatian_no', 'like', "%{$search}%")
-                  ->orWhere('plot_no', 'like', "%{$search}%")
-                  ->orWhere('land_schedule_sa_plot_no', 'like', "%{$search}%")
-                  ->orWhere('land_schedule_rs_plot_no', 'like', "%{$search}%");
-                
-                // Use MySQL JSON_SEARCH for applicant name search
-                $q->orWhereRaw("JSON_SEARCH(applicants, 'one', ?, null, '$[*].name')", ["%{$search}%"]);
-            });
+            $query->search($search);
         }
         
         $compensations = $query->orderBy('id', 'desc')->paginate(10);
@@ -59,8 +44,14 @@ class CompensationController extends Controller
      */
     public function preview($id)
     {
-        $compensation = Compensation::findOrFail($id);
-        return view('compensation_preview', compact('compensation'));
+        try {
+            $compensation = Compensation::findOrFail($id);
+            return view('compensation_preview', compact('compensation'));
+        } catch (\Exception $e) {
+            Log::error('Error loading compensation preview: ' . $e->getMessage());
+            return redirect()->route('compensation.index')
+                ->with('error', 'ক্ষতিপূরণ তথ্য লোড করতে সমস্যা হয়েছে।');
+        }
     }
 
     /**
@@ -68,8 +59,14 @@ class CompensationController extends Controller
      */
     public function edit($id)
     {
-        $compensation = Compensation::findOrFail($id);
-        return view('compensation_form', compact('compensation'));
+        try {
+            $compensation = Compensation::findOrFail($id);
+            return view('compensation_form', compact('compensation'));
+        } catch (\Exception $e) {
+            Log::error('Error loading compensation for edit: ' . $e->getMessage());
+            return redirect()->route('compensation.index')
+                ->with('error', 'ক্ষতিপূরণ তথ্য সম্পাদনার জন্য লোড করতে সমস্যা হয়েছে।');
+        }
     }
 
     /**
@@ -77,150 +74,21 @@ class CompensationController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'case_number' => 'required|string|max:255',
-            'case_date' => 'required|string|max:255',
-            'sa_plot_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
-            'rs_plot_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
-            'applicants' => 'required|array|min:1',
-            'applicants.*.name' => 'required|string|max:255',
-            'applicants.*.father_name' => 'required|string|max:255',
-            'applicants.*.address' => 'required|string|max:255',
-            'applicants.*.nid' => 'required|string|max:20',
-            'la_case_no' => 'required|string|max:255',
-            'award_type' => 'required|string|in:জমি,জমি ও গাছপালা,অবকাঠামো',
-            'land_award_serial_no' => 'nullable|string|max:255',
-            'tree_award_serial_no' => 'nullable|string|max:255',
-            'infrastructure_award_serial_no' => 'nullable|string|max:255',
-            'acquisition_record_basis' => 'required|string|in:SA,RS',
-            'plot_no' => 'required|string|max:255',
-            'award_holder_names' => 'required|array|min:1',
-            'award_holder_names.*.name' => 'required|string|max:255',
-            'land_category' => 'nullable|array',
-            'land_category.*.category_name' => 'required|string|max:255',
-            'land_category.*.total_land' => 'required|string|max:255',
-            'land_category.*.total_compensation' => 'required|string|max:255',
-            'land_category.*.applicant_land' => 'required|string|max:255',
-            'objector_details' => 'nullable|string',
-            'is_applicant_in_award' => 'required|boolean',
-            'source_tax_percentage' => 'required|string|max:255',
-            'tree_compensation' => 'nullable|string|max:255',
-            'infrastructure_compensation' => 'nullable|string|max:255',
-            'mouza_name' => 'required|string|max:255',
-            'jl_no' => 'required|string|max:255',
-            'land_schedule_sa_plot_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
-            'land_schedule_rs_plot_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
-            'sa_khatian_no' => 'nullable|string|max:255',
-            'rs_khatian_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
-            'ownership_details' => 'nullable|array',
-            'ownership_details.sa_info' => 'nullable|array',
-            'ownership_details.sa_info.sa_plot_no' => 'nullable|string|max:255',
-            'ownership_details.sa_info.sa_khatian_no' => 'nullable|string|max:255',
-            'ownership_details.sa_info.sa_total_land_in_plot' => 'nullable|string|max:255',
-            'ownership_details.sa_info.sa_land_in_khatian' => 'nullable|string|max:255',
-            'ownership_details.rs_info' => 'nullable|array',
-            'ownership_details.rs_info.rs_plot_no' => 'nullable|string|max:255',
-            'ownership_details.rs_info.rs_khatian_no' => 'nullable|string|max:255',
-            'ownership_details.rs_info.rs_total_land_in_plot' => 'nullable|string|max:255',
-            'ownership_details.rs_info.rs_land_in_khatian' => 'nullable|string|max:255',
-            'ownership_details.rs_info.dp_khatian' => 'nullable|in:on,1,true,false,0',
-            'ownership_details.sa_owners' => 'nullable|array',
-            'ownership_details.sa_owners.*.name' => 'nullable|string|max:255',
-            'ownership_details.rs_owners' => 'nullable|array',
-            'ownership_details.rs_owners.*.name' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers' => 'nullable|array',
-            'ownership_details.deed_transfers.*.donor_names' => 'required|array|min:1',
-            'ownership_details.deed_transfers.*.donor_names.*.name' => 'required|string|max:255',
-            'ownership_details.deed_transfers.*.recipient_names' => 'required|array|min:1',
-            'ownership_details.deed_transfers.*.recipient_names.*.name' => 'required|string|max:255',
-            'ownership_details.deed_transfers.*.deed_number' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.deed_date' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.sale_type' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.application_type' => 'nullable|string|in:specific,multiple',
-            'ownership_details.deed_transfers.*.application_specific_area' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.application_sell_area' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.application_other_areas' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.application_total_area' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.application_sell_area_other' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.possession_mentioned' => 'nullable|in:yes,no',
-            'ownership_details.deed_transfers.*.possession_plot_no' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.possession_description' => 'nullable|string',
-            'ownership_details.deed_transfers.*.possession_deed' => 'nullable|in:yes,no',
-            'ownership_details.deed_transfers.*.possession_application' => 'nullable|in:yes,no',
-            'ownership_details.deed_transfers.*.mentioned_areas' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.special_details' => 'nullable|string',
-            'ownership_details.inheritance_records' => 'nullable|array',
-            'ownership_details.inheritance_records.*.previous_owner_name' => 'nullable|string|max:255',
-            'ownership_details.inheritance_records.*.death_date' => 'nullable|string|max:255',
-            'ownership_details.inheritance_records.*.has_death_cert' => 'nullable|in:yes,no',
-            'ownership_details.inheritance_records.*.heirship_certificate_info' => 'nullable|string',
-            'ownership_details.rs_records' => 'nullable|array',
-            'ownership_details.rs_records.*.plot_no' => 'nullable|string|max:255',
-            'ownership_details.rs_records.*.khatian_no' => 'nullable|string|max:255',
-            'ownership_details.rs_records.*.land_amount' => 'nullable|string|max:255',
-            'ownership_details.rs_records.*.owner_names' => 'nullable|array',
-            'ownership_details.rs_records.*.owner_names.*.name' => 'nullable|string|max:255',
-            'ownership_details.rs_records.*.dp_khatian' => 'nullable|in:on,1,true,false,0',
-            'ownership_details.transferItems' => 'nullable|array',
-            'ownership_details.transferItems.*.type' => 'nullable|string|max:255',
-            'ownership_details.transferItems.*.index' => 'nullable|integer',
-            'ownership_details.currentStep' => 'nullable|string|max:255',
-            'ownership_details.completedSteps' => 'nullable|array',
-            'ownership_details.rs_record_disabled' => 'nullable|boolean',
-            'ownership_details.applicant_info' => 'nullable|array',
-            'ownership_details.applicant_info.applicant_name' => 'nullable|string|max:255',
-            'ownership_details.applicant_info.kharij_case_no' => 'nullable|string|max:255',
-            'ownership_details.applicant_info.kharij_plot_no' => 'nullable|string|max:255',
-            'ownership_details.applicant_info.kharij_land_amount' => 'nullable|string|max:255',
-            'ownership_details.applicant_info.kharij_date' => 'nullable|string|max:255',
-            'ownership_details.applicant_info.kharij_details' => 'nullable|string',
-            'tax_info' => 'nullable|array',
-            'tax_info.english_year' => 'nullable|string|max:255',
-            'tax_info.bangla_year' => 'nullable|string|max:255',
-            'tax_info.holding_no' => 'nullable|string|max:255',
-            'tax_info.paid_land_amount' => 'nullable|string|max:255',
-            'additional_documents_info' => 'nullable|array',
-            'additional_documents_info.selected_types' => 'nullable|array',
-            'additional_documents_info.details' => 'nullable|array',
-            'additional_documents_info.details.*' => 'nullable|string',
-        ]);
+        try {
+            $validatedData = $this->validateCompensationData($request);
+            $processedData = $this->processCompensationData($validatedData);
+            
+            $compensation = Compensation::create($processedData);
 
-        // Custom validation for additional_documents_info.details
-        if (isset($validatedData['additional_documents_info']['selected_types']) && !empty($validatedData['additional_documents_info']['selected_types'])) {
-            foreach ($validatedData['additional_documents_info']['selected_types'] as $type) {
-                if (empty($validatedData['additional_documents_info']['details'][$type] ?? null)) {
-                    Validator::make([], [])->after(function ($validator) use ($type) {
-                        $validator->errors()->add('additional_documents_info.details.' . $type, __('The :type details field is required.', ['type' => $type]));
-                    })->validate();
-                }
-            }
+            return redirect()->route('compensation.preview', $compensation->id)
+                ->with('success', 'ক্ষতিপূরণ তথ্য সফলভাবে জমা দেওয়া হয়েছে।');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error('Error creating compensation: ' . $e->getMessage());
+            return back()->with('error', 'ক্ষতিপূরণ তথ্য জমা দিতে সমস্যা হয়েছে। আবার চেষ্টা করুন।')
+                ->withInput();
         }
-
-        // Process Bengali dates
-        $validatedData = $this->processBengaliDates($validatedData);
-
-        // Convert checkbox values to boolean
-        if (isset($validatedData['ownership_details']['rs_records'])) {
-            foreach ($validatedData['ownership_details']['rs_records'] as &$rsRecord) {
-                if (isset($rsRecord['dp_khatian'])) {
-                    $rsRecord['dp_khatian'] = in_array($rsRecord['dp_khatian'], ['on', '1', 'true'], true);
-                }
-            }
-        }
-        
-        // Convert rs_info dp_khatian checkbox value to boolean
-        if (isset($validatedData['ownership_details']['rs_info']['dp_khatian'])) {
-            $validatedData['ownership_details']['rs_info']['dp_khatian'] = in_array($validatedData['ownership_details']['rs_info']['dp_khatian'], ['on', '1', 'true'], true);
-        }
-
-        // Convert award_type string to array for database storage
-        if (isset($validatedData['award_type'])) {
-            $validatedData['award_type'] = [$validatedData['award_type']];
-        }
-
-        $compensation = Compensation::create($validatedData);
-
-        return redirect()->route('compensation.preview', $compensation->id)->with('success', 'ক্ষতিপূরণ তথ্য সফলভাবে জমা দেওয়া হয়েছে।');
     }
 
     /**
@@ -228,152 +96,23 @@ class CompensationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $compensation = Compensation::findOrFail($id);
-        
-        $validatedData = $request->validate([
-            'case_number' => 'required|string|max:255',
-            'case_date' => 'required|string|max:255',
-            'sa_plot_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
-            'rs_plot_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
-            'applicants' => 'required|array|min:1',
-            'applicants.*.name' => 'required|string|max:255',
-            'applicants.*.father_name' => 'required|string|max:255',
-            'applicants.*.address' => 'required|string|max:255',
-            'applicants.*.nid' => 'required|string|max:20',
-            'la_case_no' => 'required|string|max:255',
-            'award_type' => 'required|string|in:জমি,জমি ও গাছপালা,অবকাঠামো',
-            'land_award_serial_no' => 'nullable|string|max:255',
-            'tree_award_serial_no' => 'nullable|string|max:255',
-            'infrastructure_award_serial_no' => 'nullable|string|max:255',
-            'acquisition_record_basis' => 'required|string|in:SA,RS',
-            'plot_no' => 'required|string|max:255',
-            'award_holder_names' => 'required|array|min:1',
-            'award_holder_names.*.name' => 'required|string|max:255',
-            'land_category' => 'nullable|array',
-            'land_category.*.category_name' => 'required|string|max:255',
-            'land_category.*.total_land' => 'required|string|max:255',
-            'land_category.*.total_compensation' => 'required|string|max:255',
-            'land_category.*.applicant_land' => 'required|string|max:255',
-            'objector_details' => 'nullable|string',
-            'is_applicant_in_award' => 'required|boolean',
-            'source_tax_percentage' => 'required|string|max:255',
-            'tree_compensation' => 'nullable|string|max:255',
-            'infrastructure_compensation' => 'nullable|string|max:255',
-            'mouza_name' => 'required|string|max:255',
-            'jl_no' => 'required|string|max:255',
-            'land_schedule_sa_plot_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
-            'land_schedule_rs_plot_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
-            'sa_khatian_no' => 'nullable|string|max:255',
-            'rs_khatian_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
-            'ownership_details' => 'nullable|array',
-            'ownership_details.sa_info' => 'nullable|array',
-            'ownership_details.sa_info.sa_plot_no' => 'nullable|string|max:255',
-            'ownership_details.sa_info.sa_khatian_no' => 'nullable|string|max:255',
-            'ownership_details.sa_info.sa_total_land_in_plot' => 'nullable|string|max:255',
-            'ownership_details.sa_info.sa_land_in_khatian' => 'nullable|string|max:255',
-            'ownership_details.rs_info' => 'nullable|array',
-            'ownership_details.rs_info.rs_plot_no' => 'nullable|string|max:255',
-            'ownership_details.rs_info.rs_khatian_no' => 'nullable|string|max:255',
-            'ownership_details.rs_info.rs_total_land_in_plot' => 'nullable|string|max:255',
-            'ownership_details.rs_info.rs_land_in_khatian' => 'nullable|string|max:255',
-            'ownership_details.rs_info.dp_khatian' => 'nullable|in:on,1,true,false,0',
-            'ownership_details.sa_owners' => 'nullable|array',
-            'ownership_details.sa_owners.*.name' => 'nullable|string|max:255',
-            'ownership_details.rs_owners' => 'nullable|array',
-            'ownership_details.rs_owners.*.name' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers' => 'nullable|array',
-            'ownership_details.deed_transfers.*.donor_names' => 'required|array|min:1',
-            'ownership_details.deed_transfers.*.donor_names.*.name' => 'required|string|max:255',
-            'ownership_details.deed_transfers.*.recipient_names' => 'required|array|min:1',
-            'ownership_details.deed_transfers.*.recipient_names.*.name' => 'required|string|max:255',
-            'ownership_details.deed_transfers.*.deed_number' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.deed_date' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.sale_type' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.application_type' => 'nullable|string|in:specific,multiple',
-            'ownership_details.deed_transfers.*.application_specific_area' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.application_sell_area' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.application_other_areas' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.application_total_area' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.application_sell_area_other' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.possession_mentioned' => 'nullable|in:yes,no',
-            'ownership_details.deed_transfers.*.possession_plot_no' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.possession_description' => 'nullable|string',
-            'ownership_details.deed_transfers.*.possession_deed' => 'nullable|in:yes,no',
-            'ownership_details.deed_transfers.*.possession_application' => 'nullable|in:yes,no',
-            'ownership_details.deed_transfers.*.mentioned_areas' => 'nullable|string|max:255',
-            'ownership_details.deed_transfers.*.special_details' => 'nullable|string',
-            'ownership_details.inheritance_records' => 'nullable|array',
-            'ownership_details.inheritance_records.*.previous_owner_name' => 'nullable|string|max:255',
-            'ownership_details.inheritance_records.*.death_date' => 'nullable|string|max:255',
-            'ownership_details.inheritance_records.*.has_death_cert' => 'nullable|in:yes,no',
-            'ownership_details.inheritance_records.*.heirship_certificate_info' => 'nullable|string',
-            'ownership_details.rs_records' => 'nullable|array',
-            'ownership_details.rs_records.*.plot_no' => 'nullable|string|max:255',
-            'ownership_details.rs_records.*.khatian_no' => 'nullable|string|max:255',
-            'ownership_details.rs_records.*.land_amount' => 'nullable|string|max:255',
-            'ownership_details.rs_records.*.owner_names' => 'nullable|array',
-            'ownership_details.rs_records.*.owner_names.*.name' => 'nullable|string|max:255',
-            'ownership_details.rs_records.*.dp_khatian' => 'nullable|in:on,1,true,false,0',
-            'ownership_details.transferItems' => 'nullable|array',
-            'ownership_details.transferItems.*.type' => 'nullable|string|max:255',
-            'ownership_details.transferItems.*.index' => 'nullable|integer',
-            'ownership_details.currentStep' => 'nullable|string|max:255',
-            'ownership_details.completedSteps' => 'nullable|array',
-            'ownership_details.rs_record_disabled' => 'nullable|boolean',
-            'ownership_details.applicant_info' => 'nullable|array',
-            'ownership_details.applicant_info.applicant_name' => 'nullable|string|max:255',
-            'ownership_details.applicant_info.kharij_case_no' => 'nullable|string|max:255',
-            'ownership_details.applicant_info.kharij_plot_no' => 'nullable|string|max:255',
-            'ownership_details.applicant_info.kharij_land_amount' => 'nullable|string|max:255',
-            'ownership_details.applicant_info.kharij_date' => 'nullable|string|max:255',
-            'ownership_details.applicant_info.kharij_details' => 'nullable|string',
-            'tax_info' => 'nullable|array',
-            'tax_info.english_year' => 'nullable|string|max:255',
-            'tax_info.bangla_year' => 'nullable|string|max:255',
-            'tax_info.holding_no' => 'nullable|string|max:255',
-            'tax_info.paid_land_amount' => 'nullable|string|max:255',
-            'additional_documents_info' => 'nullable|array',
-            'additional_documents_info.selected_types' => 'nullable|array',
-            'additional_documents_info.details' => 'nullable|array',
-            'additional_documents_info.details.*' => 'nullable|string',
-        ]);
+        try {
+            $compensation = Compensation::findOrFail($id);
+            
+            $validatedData = $this->validateCompensationData($request);
+            $processedData = $this->processCompensationData($validatedData);
 
-        // Custom validation for additional_documents_info.details
-        if (isset($validatedData['additional_documents_info']['selected_types']) && !empty($validatedData['additional_documents_info']['selected_types'])) {
-            foreach ($validatedData['additional_documents_info']['selected_types'] as $type) {
-                if (empty($validatedData['additional_documents_info']['details'][$type] ?? null)) {
-                    Validator::make([], [])->after(function ($validator) use ($type) {
-                        $validator->errors()->add('additional_documents_info.details.' . $type, __('The :type details field is required.', ['type' => $type]));
-                    })->validate();
-                }
-            }
+            $compensation->update($processedData);
+
+            return redirect()->route('compensation.preview', $compensation->id)
+                ->with('success', 'ক্ষতিপূরণ তথ্য সফলভাবে আপডেট করা হয়েছে।');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error('Error updating compensation: ' . $e->getMessage());
+            return back()->with('error', 'ক্ষতিপূরণ তথ্য আপডেট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।')
+                ->withInput();
         }
-
-        // Process Bengali dates
-        $validatedData = $this->processBengaliDates($validatedData);
-
-        // Convert checkbox values to boolean
-        if (isset($validatedData['ownership_details']['rs_records'])) {
-            foreach ($validatedData['ownership_details']['rs_records'] as &$rsRecord) {
-                if (isset($rsRecord['dp_khatian'])) {
-                    $rsRecord['dp_khatian'] = in_array($rsRecord['dp_khatian'], ['on', '1', 'true'], true);
-                }
-            }
-        }
-        
-        // Convert rs_info dp_khatian checkbox value to boolean
-        if (isset($validatedData['ownership_details']['rs_info']['dp_khatian'])) {
-            $validatedData['ownership_details']['rs_info']['dp_khatian'] = in_array($validatedData['ownership_details']['rs_info']['dp_khatian'], ['on', '1', 'true'], true);
-        }
-
-        // Convert award_type string to array for database storage
-        if (isset($validatedData['award_type'])) {
-            $validatedData['award_type'] = [$validatedData['award_type']];
-        }
-
-        $compensation->update($validatedData);
-
-        return redirect()->route('compensation.preview', $compensation->id)->with('success', 'ক্ষতিপূরণ তথ্য সফলভাবে আপডেট করা হয়েছে।');
     }
 
     /**
@@ -401,7 +140,6 @@ class CompensationController extends Controller
                 'kanungo_opinion.opinion_details' => 'nullable|string',
             ]);
             
-            // Update only the kanungo_opinion field
             $compensation->update([
                 'kanungo_opinion' => $validatedData['kanungo_opinion']
             ]);
@@ -411,7 +149,7 @@ class CompensationController extends Controller
                 'message' => 'কানুনগো/সার্ভেয়ারের মতামত সফলভাবে আপডেট করা হয়েছে।'
             ]);
         } catch (\Exception $e) {
-            \Log::error('Kanungo opinion update error: ' . $e->getMessage());
+            Log::error('Kanungo opinion update error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'কিছু সমস্যা হয়েছে: ' . $e->getMessage()
@@ -463,7 +201,6 @@ class CompensationController extends Controller
                 ], 422);
             }
             
-            // Update only the order fields
             $compensation->update([
                 'order_signature_date' => $validatedData['order_signature_date'],
                 'signing_officer_name' => $validatedData['signing_officer_name'],
@@ -475,11 +212,179 @@ class CompensationController extends Controller
                 'message' => 'আদেশ সফলভাবে নিষ্পত্তিকৃত হয়েছে।'
             ]);
         } catch (\Exception $e) {
-            \Log::error('Order update error: ' . $e->getMessage());
+            Log::error('Order update error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'কিছু সমস্যা হয়েছে: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Validate compensation data
+     */
+    private function validateCompensationData(Request $request)
+    {
+        $validatedData = $request->validate($this->getValidationRules());
+
+        // Custom validation for additional_documents_info.details
+        if (isset($validatedData['additional_documents_info']['selected_types']) && 
+            !empty($validatedData['additional_documents_info']['selected_types'])) {
+            foreach ($validatedData['additional_documents_info']['selected_types'] as $type) {
+                if (empty($validatedData['additional_documents_info']['details'][$type] ?? null)) {
+                    Validator::make([], [])->after(function ($validator) use ($type) {
+                        $validator->errors()->add('additional_documents_info.details.' . $type, 
+                            __('The :type details field is required.', ['type' => $type]));
+                    })->validate();
+                }
+            }
+        }
+
+        return $validatedData;
+    }
+
+    /**
+     * Process compensation data before saving
+     */
+    private function processCompensationData(array $validatedData)
+    {
+        // Process Bengali dates
+        $validatedData = $this->processBengaliDates($validatedData);
+
+        // Convert checkbox values to boolean
+        if (isset($validatedData['ownership_details']['rs_records'])) {
+            foreach ($validatedData['ownership_details']['rs_records'] as &$rsRecord) {
+                if (isset($rsRecord['dp_khatian'])) {
+                    $rsRecord['dp_khatian'] = in_array($rsRecord['dp_khatian'], ['on', '1', 'true'], true);
+                }
+            }
+        }
+        
+        // Convert rs_info dp_khatian checkbox value to boolean
+        if (isset($validatedData['ownership_details']['rs_info']['dp_khatian'])) {
+            $validatedData['ownership_details']['rs_info']['dp_khatian'] = 
+                in_array($validatedData['ownership_details']['rs_info']['dp_khatian'], ['on', '1', 'true'], true);
+        }
+
+        // Convert award_type string to array for database storage
+        if (isset($validatedData['award_type'])) {
+            $validatedData['award_type'] = [$validatedData['award_type']];
+        }
+
+        return $validatedData;
+    }
+
+    /**
+     * Get validation rules for compensation data
+     */
+    private function getValidationRules()
+    {
+        return [
+            'case_number' => 'required|string|max:255',
+            'case_date' => 'required|string|max:255',
+            'sa_plot_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
+            'rs_plot_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
+            'applicants' => 'required|array|min:1',
+            'applicants.*.name' => 'required|string|max:255',
+            'applicants.*.father_name' => 'required|string|max:255',
+            'applicants.*.address' => 'required|string|max:255',
+            'applicants.*.nid' => 'required|string|max:20',
+            'la_case_no' => 'required|string|max:255',
+            'award_type' => 'required|string|in:জমি,জমি ও গাছপালা,অবকাঠামো',
+            'land_award_serial_no' => 'nullable|string|max:255',
+            'tree_award_serial_no' => 'nullable|string|max:255',
+            'infrastructure_award_serial_no' => 'nullable|string|max:255',
+            'acquisition_record_basis' => 'required|string|in:SA,RS',
+            'plot_no' => 'required|string|max:255',
+            'award_holder_names' => 'required|array|min:1',
+            'award_holder_names.*.name' => 'required|string|max:255',
+            'land_category' => 'nullable|array',
+            'land_category.*.category_name' => 'required|string|max:255',
+            'land_category.*.total_land' => 'required|string|max:255',
+            'land_category.*.total_compensation' => 'required|string|max:255',
+            'land_category.*.applicant_land' => 'required|string|max:255',
+            'objector_details' => 'nullable|string',
+            'is_applicant_in_award' => 'required|boolean',
+            'source_tax_percentage' => 'required|string|max:255',
+            'tree_compensation' => 'nullable|string|max:255',
+            'infrastructure_compensation' => 'nullable|string|max:255',
+            'mouza_name' => 'required|string|max:255',
+            'jl_no' => 'required|string|max:255',
+            'land_schedule_sa_plot_no' => 'required_if:acquisition_record_basis,SA|nullable|string|max:255',
+            'land_schedule_rs_plot_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
+            'sa_khatian_no' => 'nullable|string|max:255',
+            'rs_khatian_no' => 'required_if:acquisition_record_basis,RS|nullable|string|max:255',
+            'ownership_details' => 'nullable|array',
+            'ownership_details.sa_info' => 'nullable|array',
+            'ownership_details.sa_info.sa_plot_no' => 'nullable|string|max:255',
+            'ownership_details.sa_info.sa_khatian_no' => 'nullable|string|max:255',
+            'ownership_details.sa_info.sa_total_land_in_plot' => 'nullable|string|max:255',
+            'ownership_details.sa_info.sa_land_in_khatian' => 'nullable|string|max:255',
+            'ownership_details.rs_info' => 'nullable|array',
+            'ownership_details.rs_info.rs_plot_no' => 'nullable|string|max:255',
+            'ownership_details.rs_info.rs_khatian_no' => 'nullable|string|max:255',
+            'ownership_details.rs_info.rs_total_land_in_plot' => 'nullable|string|max:255',
+            'ownership_details.rs_info.rs_land_in_khatian' => 'nullable|string|max:255',
+            'ownership_details.rs_info.dp_khatian' => 'nullable|in:on,1,true,false,0',
+            'ownership_details.sa_owners' => 'nullable|array',
+            'ownership_details.sa_owners.*.name' => 'nullable|string|max:255',
+            'ownership_details.rs_owners' => 'nullable|array',
+            'ownership_details.rs_owners.*.name' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers' => 'nullable|array',
+            'ownership_details.deed_transfers.*.donor_names' => 'required|array|min:1',
+            'ownership_details.deed_transfers.*.donor_names.*.name' => 'required|string|max:255',
+            'ownership_details.deed_transfers.*.recipient_names' => 'required|array|min:1',
+            'ownership_details.deed_transfers.*.recipient_names.*.name' => 'required|string|max:255',
+            'ownership_details.deed_transfers.*.deed_number' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.deed_date' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.sale_type' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.application_type' => 'nullable|string|in:specific,multiple',
+            'ownership_details.deed_transfers.*.application_specific_area' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.application_sell_area' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.application_other_areas' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.application_total_area' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.application_sell_area_other' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.possession_mentioned' => 'nullable|in:yes,no',
+            'ownership_details.deed_transfers.*.possession_plot_no' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.possession_description' => 'nullable|string',
+            'ownership_details.deed_transfers.*.possession_deed' => 'nullable|in:yes,no',
+            'ownership_details.deed_transfers.*.possession_application' => 'nullable|in:yes,no',
+            'ownership_details.deed_transfers.*.mentioned_areas' => 'nullable|string|max:255',
+            'ownership_details.deed_transfers.*.special_details' => 'nullable|string',
+            'ownership_details.inheritance_records' => 'nullable|array',
+            'ownership_details.inheritance_records.*.previous_owner_name' => 'nullable|string|max:255',
+            'ownership_details.inheritance_records.*.death_date' => 'nullable|string|max:255',
+            'ownership_details.inheritance_records.*.has_death_cert' => 'nullable|in:yes,no',
+            'ownership_details.inheritance_records.*.heirship_certificate_info' => 'nullable|string',
+            'ownership_details.rs_records' => 'nullable|array',
+            'ownership_details.rs_records.*.plot_no' => 'nullable|string|max:255',
+            'ownership_details.rs_records.*.khatian_no' => 'nullable|string|max:255',
+            'ownership_details.rs_records.*.land_amount' => 'nullable|string|max:255',
+            'ownership_details.rs_records.*.owner_names' => 'nullable|array',
+            'ownership_details.rs_records.*.owner_names.*.name' => 'nullable|string|max:255',
+            'ownership_details.rs_records.*.dp_khatian' => 'nullable|in:on,1,true,false,0',
+            'ownership_details.transferItems' => 'nullable|array',
+            'ownership_details.transferItems.*.type' => 'nullable|string|max:255',
+            'ownership_details.transferItems.*.index' => 'nullable|integer',
+            'ownership_details.currentStep' => 'nullable|string|max:255',
+            'ownership_details.completedSteps' => 'nullable|array',
+            'ownership_details.rs_record_disabled' => 'nullable|boolean',
+            'ownership_details.applicant_info' => 'nullable|array',
+            'ownership_details.applicant_info.applicant_name' => 'nullable|string|max:255',
+            'ownership_details.applicant_info.kharij_case_no' => 'nullable|string|max:255',
+            'ownership_details.applicant_info.kharij_plot_no' => 'nullable|string|max:255',
+            'ownership_details.applicant_info.kharij_land_amount' => 'nullable|string|max:255',
+            'ownership_details.applicant_info.kharij_date' => 'nullable|string|max:255',
+            'ownership_details.applicant_info.kharij_details' => 'nullable|string',
+            'tax_info' => 'nullable|array',
+            'tax_info.english_year' => 'nullable|string|max:255',
+            'tax_info.bangla_year' => 'nullable|string|max:255',
+            'tax_info.holding_no' => 'nullable|string|max:255',
+            'tax_info.paid_land_amount' => 'nullable|string|max:255',
+            'additional_documents_info' => 'nullable|array',
+            'additional_documents_info.selected_types' => 'nullable|array',
+            'additional_documents_info.details' => 'nullable|array',
+            'additional_documents_info.details.*' => 'nullable|string',
+        ];
     }
 }
