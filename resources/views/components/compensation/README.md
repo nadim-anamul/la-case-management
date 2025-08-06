@@ -1,88 +1,99 @@
-# Compensation Form Components
+# Ownership Continuity Section - Application Area Validation
 
-This directory contains the modular components for the compensation form, making it easier to maintain and update.
+## Overview
 
-## Component Structure
+The Application Area Section in the Ownership Continuity component now includes comprehensive validation to ensure that when either "সুনির্দিষ্ট দাগ" (Specific Plot) or "বিভিন্ন দাগ" (Multiple Plots) is selected, the corresponding data entry fields become mandatory.
 
-### Main Form
-- `compensation_form.blade.php` - Main form file that includes all components
+## Features
 
-### Form Sections (Components)
-1. **applicant-section.blade.php** - Applicant information section
-2. **award-section.blade.php** - Award information section  
-3. **land-schedule-section.blade.php** - Land schedule section
-4. **ownership-continuity-section.blade.php** - Ownership continuity section (includes deed transfers and inheritance)
-5. **mutation-section.blade.php** - Mutation information section
-6. **tax-section.blade.php** - Tax information section
-7. **additional-documents-section.blade.php** - Additional documents section
-8. **kanungo-opinion-section.blade.php** - Kanungo opinion section
+### 1. Visual Indicators
+- **Required Field Markers**: Red asterisks (*) indicate mandatory fields
+- **Real-time Validation**: Input fields show red borders when validation fails
+- **Error Messages**: Clear Bengali error messages appear below the form section
 
-### JavaScript Component
-- **alpine-component.blade.php** - Alpine.js functionality separated from the main form
+### 2. Validation Rules
 
-## Benefits of This Structure
+#### For "সুনির্দিষ্ট দাগ" (Specific Plot):
+- `application_specific_area` - আবেদনকৃত দাগ (Required)
+- `application_sell_area` - বিক্রয়কৃত একর (Required)
 
-### ✅ **Maintainability**
-- Each section is in its own file
-- Easy to find and modify specific sections
-- Reduced file size and complexity
+#### For "বিভিন্ন দাগ" (Multiple Plots):
+- `application_other_areas` - বিভিন্ন দাগ (Required)
+- `application_total_area` - মোট একর (Required)
+- `application_sell_area_other` - বিক্রয়কৃত একর (Required)
 
-### ✅ **Reusability**
-- Components can be reused in other forms
-- Easy to test individual sections
-- Modular development approach
+### 3. Form Edit Support
+- Existing data is properly loaded when editing forms
+- Application type selection is preserved
+- All corresponding fields are populated correctly
+- Validation state is maintained
 
-### ✅ **Team Collaboration**
-- Multiple developers can work on different sections
-- Reduced merge conflicts
-- Clear separation of concerns
+### 4. Validation Functions
 
-### ✅ **Performance**
-- Smaller individual files load faster
-- Better caching potential
-- Easier debugging
+#### `getApplicationAreaValidation(deed)`
+Returns validation status with error messages in Bengali.
 
-## How to Modify
+#### `validateApplicationAreaFields(deed)`
+Provides real-time validation feedback during user input.
 
-### Adding a New Section
-1. Create a new component file in this directory
-2. Include it in the main form using `@include('components.compensation.your-section')`
-3. Add any necessary Alpine.js functionality to `alpine-component.blade.php`
+#### `validateAllDeedTransfers()`
+Validates all deed transfers before form submission.
 
-### Modifying an Existing Section
-1. Edit the specific component file
-2. Changes are automatically reflected in the main form
-3. No need to modify the main form file
+### 5. Integration Points
 
-### Adding New Fields
-1. Update the component file
-2. Update the controller validation rules
-3. Update the Alpine.js component if needed
+#### Before Step Navigation:
+- Validates all deed transfers before proceeding to the applicant step
+- Shows error alert if validation fails
 
-## File Organization
+#### Before Data Saving:
+- Validates all deed transfers before saving step data
+- Validates all deed transfers before saving all data
+- Prevents form submission if validation fails
 
-```
-resources/views/components/compensation/
-├── README.md                           # This documentation
-├── alpine-component.blade.php          # Alpine.js functionality
-├── applicant-section.blade.php         # Section 1: Applicant info
-├── award-section.blade.php             # Section 2: Award info
-├── land-schedule-section.blade.php     # Section 3: Land schedule
-├── ownership-continuity-section.blade.php # Section 4: Ownership continuity
-├── mutation-section.blade.php          # Section 5: Mutation info
-├── tax-section.blade.php               # Section 6: Tax info
-├── additional-documents-section.blade.php # Section 7: Additional docs
-└── kanungo-opinion-section.blade.php  # Section 8: Kanungo opinion
+## Usage
+
+### Frontend Validation
+```javascript
+// Real-time validation on input
+@input="validateApplicationAreaFields(deed)"
+
+// Visual feedback with CSS classes
+:class="{'border-red-500': deed.application_type === 'specific' && !deed.application_specific_area}"
 ```
 
-## Best Practices
+### Backend Integration
+The validation data is properly structured for backend processing:
 
-1. **Keep components focused** - Each component should handle one specific section
-2. **Use consistent naming** - Follow the `section-name.blade.php` pattern
-3. **Maintain Alpine.js separation** - Keep JavaScript logic in the alpine component
-4. **Document changes** - Update this README when adding new components
-5. **Test individually** - Test each component separately when possible
+```php
+'ownership_details' => [
+    'deed_transfers' => [
+        [
+            'application_type' => 'specific', // or 'multiple'
+            'application_specific_area' => 'PLOT-123',
+            'application_sell_area' => '1.50',
+            // ... other fields
+        ]
+    ]
+]
+```
 
-## Migration Notes
+## Testing
 
-The form was refactored from a single large file (973 lines) to multiple smaller, focused components. This makes the codebase much more maintainable and easier to work with for teams. 
+Two new test methods have been added to `OwnershipContinuityFlowTest`:
+
+1. `test_application_area_validation_with_specific_plot()` - Tests specific plot validation
+2. `test_application_area_validation_with_multiple_plots()` - Tests multiple plots validation
+
+These tests verify that:
+- Application area data is properly saved
+- Validation rules are enforced
+- Form edit functionality works correctly
+
+## Error Messages
+
+All error messages are in Bengali:
+
+- **No selection**: "অনুগ্রহ করে একটি বিকল্প নির্বাচন করুন"
+- **Specific plot incomplete**: "সুনির্দিষ্ট দাগের জন্য সকল তথ্য পূরণ করুন"
+- **Multiple plots incomplete**: "বিভিন্ন দাগের জন্য সকল তথ্য পূরণ করুন"
+- **Form submission blocked**: "কিছু দলিলে আবেদনকৃত দাগের তথ্য অসম্পূর্ণ। অনুগ্রহ করে পূরণ করুন।" 

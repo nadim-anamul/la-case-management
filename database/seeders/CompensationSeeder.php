@@ -131,12 +131,119 @@ class CompensationSeeder extends Seeder
             'status' => 'done'
         ]);
 
+        // Create a sample record with multiple plots application type
+        Compensation::create([
+            'case_number' => 'COMP-MULTIPLE-001',
+            'case_date' => '2024-08-20',
+            'sa_plot_no' => 'SA-456',
+            'rs_plot_no' => null,
+            'applicants' => [
+                [
+                    'name' => 'ফাতেমা বেগম',
+                    'father_name' => 'আব্দুল মালেক',
+                    'address' => 'গ্রাম: মোহাম্মদপুর, থানা: সাভার, জেলা: ঢাকা',
+                    'nid' => '9876543210987'
+                ]
+            ],
+            'la_case_no' => 'LA-MULTIPLE-001',
+            'award_type' => ['জমি'],
+            'land_award_serial_no' => 'LAS-002',
+            'tree_award_serial_no' => null,
+            'infrastructure_award_serial_no' => null,
+            'acquisition_record_basis' => 'SA',
+            'plot_no' => 'PLOT-456',
+            'award_holder_names' => [
+                ['name' => 'ফাতেমা বেগম']
+            ],
+            'land_category' => [
+                [
+                    'category_name' => 'আবাদি জমি',
+                    'total_land' => '3.75',
+                    'total_compensation' => '750000',
+                    'applicant_land' => '2.25'
+                ]
+            ],
+            'objector_details' => null,
+            'is_applicant_in_award' => true,
+            'source_tax_percentage' => '4',
+            'tree_compensation' => null,
+            'infrastructure_compensation' => null,
+            'mouza_name' => 'মোহাম্মদপুর',
+            'jl_no' => 'JL-456',
+            'land_schedule_sa_plot_no' => 'SA-PLOT-456',
+            'land_schedule_rs_plot_no' => null,
+            'sa_khatian_no' => 'SA-KH-456',
+            'rs_khatian_no' => null,
+            'ownership_details' => [
+                'sa_info' => [
+                    'sa_plot_no' => 'SA-456',
+                    'sa_khatian_no' => 'SA-KH-456',
+                    'sa_total_land_in_plot' => '6.00',
+                    'sa_land_in_khatian' => '3.75'
+                ],
+                'sa_owners' => [
+                    ['name' => 'ফাতেমা বেগম']
+                ],
+                'deed_transfers' => [
+                    [
+                        'donor_names' => [['name' => 'আব্দুল মালেক']],
+                        'recipient_names' => [['name' => 'ফাতেমা বেগম']],
+                        'deed_number' => 'DEED-002',
+                        'deed_date' => '2020-03-15',
+                        'sale_type' => 'বিক্রয় দলিল',
+                        'application_type' => 'multiple',
+                        'application_specific_area' => null,
+                        'application_sell_area' => null,
+                        'application_other_areas' => 'SA-456, SA-789, SA-101',
+                        'application_total_area' => '4.50',
+                        'application_sell_area_other' => '2.25',
+                        'possession_mentioned' => 'yes',
+                        'possession_plot_no' => 'PLOT-456',
+                        'possession_description' => 'দখলে আছে',
+                        'possession_deed' => 'yes',
+                        'possession_application' => 'yes',
+                        'mentioned_areas' => 'SA-456, SA-789, SA-101',
+                        'special_details' => 'বিভিন্ন দাগ থেকে জমি ক্রয় করা হয়েছে'
+                    ]
+                ],
+                'applicant_info' => [
+                    'applicant_name' => 'ফাতেমা বেগম',
+                    'kharij_case_no' => 'KH-002',
+                    'kharij_plot_no' => 'KH-PLOT-456',
+                    'kharij_land_amount' => '2.25',
+                    'kharij_date' => '2021-05-20',
+                    'kharij_details' => 'খারিজের বিবরণ: আবেদনকারী বিভিন্ন দাগ থেকে জমি ক্রয় করেছেন।'
+                ]
+            ],
+            'mutation_info' => null,
+            'tax_info' => [
+                'english_year' => '2024-25',
+                'bangla_year' => '১৪৩১-৩২',
+                'holding_no' => 'HOLD-456',
+                'paid_land_amount' => '2.25'
+            ],
+            'additional_documents_info' => [
+                'selected_types' => ['আপস- বন্টননামা'],
+                'details' => [
+                    'আপস- বন্টননামা' => 'আপসনামার বিবরণ: পরিবারের মধ্যে জমি বণ্টন করা হয়েছে।'
+                ]
+            ],
+            'kanungo_opinion' => [
+                'has_ownership_continuity' => 'yes',
+                'opinion_details' => 'মালিকানার ধারাবাহিকতা আছে। বিভিন্ন দাগ থেকে জমি ক্রয় সঠিকভাবে সম্পন্ন হয়েছে।'
+            ],
+            'order_signature_date' => '2024-08-30',
+            'signing_officer_name' => 'আব্দুল মালেক',
+            'status' => 'done'
+        ]);
+
         $this->command->info('Compensation records seeded successfully!');
         $this->command->info('Created:');
         $this->command->info('- 10 basic compensation records');
         $this->command->info('- 5 completed compensations');
         $this->command->info('- 3 RS record compensations');
         $this->command->info('- 3 compensations with kanungo opinion');
-        $this->command->info('- 1 sample demonstration record');
+        $this->command->info('- 1 sample demonstration record (specific plot)');
+        $this->command->info('- 1 sample demonstration record (multiple plots)');
     }
 } 

@@ -496,7 +496,7 @@
         <!-- Land Schedule Section (required fields) -->
         @include('components.compensation.land-schedule-section')
         <!-- Ownership Continuity Section -->
-        @include('components.compensation.ownership-continuity-section-new')
+        @include('components.compensation.ownership-continuity-section')
 
         <!-- Tax Section -->
         @include('components.compensation.tax-section')
