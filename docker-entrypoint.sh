@@ -6,28 +6,47 @@ echo "Starting Laravel application..."
 echo "Installing Composer dependencies..."
 composer install --no-interaction --no-dev --optimize-autoloader
 
-echo "Installing npm dependencies..."
-npm install
+# Only build assets in development environment
+if [ "$APP_ENV" != "production" ]; then
+    echo "Installing npm dependencies..."
+    npm install
 
-echo "Building assets for production..."
-npm run build
+    echo "Building assets for development..."
+    npm run build
 
-# Check if build was successful
-if [ ! -d "public/build" ]; then
-    echo "❌ Asset build failed - public/build directory not found"
-    echo "📋 Checking npm and node versions:"
-    node --version
-    npm --version
-    echo "📋 Checking if package.json exists:"
-    ls -la package.json
-    echo "📋 Checking if node_modules exists:"
-    ls -la node_modules
-    exit 1
+    # Check if build was successful
+    if [ ! -d "public/build" ]; then
+        echo "❌ Asset build failed - public/build directory not found"
+        echo "📋 Checking npm and node versions:"
+        node --version
+        npm --version
+        echo "📋 Checking if package.json exists:"
+        ls -la package.json
+        echo "📋 Checking if node_modules exists:"
+        ls -la node_modules
+        exit 1
+    fi
+
+    echo "✅ Assets built successfully"
+    echo "📋 Build directory contents:"
+    ls -la public/build/
+
+    # Fix Vite manifest location issue
+    echo "🔧 Fixing Vite manifest location..."
+    if [ -f "public/build/.vite/manifest.json" ] && [ ! -f "public/build/manifest.json" ]; then
+        cp public/build/.vite/manifest.json public/build/manifest.json
+        echo "✅ Manifest file copied to correct location"
+    elif [ -f "public/build/manifest.json" ]; then
+        echo "✅ Manifest file already in correct location"
+    else
+        echo "⚠️ No manifest file found"
+    fi
+else
+    echo "🌐 Production environment detected - using CDN for assets"
+    echo "   - Tailwind CSS: CDN"
+    echo "   - Alpine.js: CDN"
+    echo "   - No local asset building required"
 fi
-
-echo "✅ Assets built successfully"
-echo "📋 Build directory contents:"
-ls -la public/build/
 
 echo "Generating application key..."
 php artisan key:generate
