@@ -287,7 +287,7 @@ class CompensationTest extends TestCase
                 [
                     'name' => 'আব্দুল রহমান',
                     'father_name' => 'মোহাম্মদ আলী',
-                    'address' => 'গ্রাম: কাশিমপুর',
+                    'address' => 'গ্রাম: কাশিমপুর, থানা: সাভার',
                     'nid' => '1234567890123'
                 ]
             ],
@@ -298,27 +298,317 @@ class CompensationTest extends TestCase
             'award_holder_names' => [
                 ['name' => 'আব্দুল রহমান']
             ],
+            'land_category' => [
+                [
+                    'category_name' => 'আবাদি জমি',
+                    'total_land' => '2.50',
+                    'total_compensation' => '500000',
+                    'applicant_land' => '1.25'
+                ]
+            ],
             'is_applicant_in_award' => true,
             'source_tax_percentage' => '5',
             'mouza_name' => 'কাশিমপুর',
             'jl_no' => 'JL-123',
-            'sa_plot_no' => 'SA-123',
-            'land_schedule_sa_plot_no' => 'LSA-123',
+            'land_schedule_sa_plot_no' => 'SA-PLOT-123',
+            'sa_khatian_no' => 'SA-KH-123',
             'ownership_details' => [
+                'sa_info' => [
+                    'sa_plot_no' => 'SA-123',
+                    'sa_khatian_no' => 'SA-KH-123',
+                    'sa_total_land_in_plot' => '5.00',
+                    'sa_land_in_khatian' => '2.50'
+                ],
+                'sa_owners' => [
+                    ['name' => 'আব্দুল রহমান']
+                ],
+                'storySequence' => [
+                    [
+                        'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
+                        'description' => 'দলিল নম্বর: DEED-001',
+                        'itemType' => 'deed',
+                        'itemIndex' => 0,
+                        'sequenceIndex' => 0
+                    ]
+                ],
                 'deed_transfers' => [
                     [
-                        'donor_names' => [],
-                        'recipient_names' => []
+                        'donor_names' => [['name' => 'মোহাম্মদ আলী']],
+                        'recipient_names' => [['name' => 'আব্দুল রহমান']],
+                        'deed_number' => 'DEED-001',
+                        'deed_date' => '১০/০১/২০২০',
+                        'sale_type' => 'বিক্রয় দলিল',
+                        'application_type' => 'specific',
+                        'application_specific_area' => 'SA-123',
+                        'application_sell_area' => '2.50',
+                        'possession_deed' => 'yes',
+                        'possession_application' => 'yes',
+                        'mentioned_areas' => 'SA-123',
+                        'special_details' => null
                     ]
+                ],
+                'applicant_info' => [
+                    'applicant_name' => 'আব্দুল রহমান',
+                    'kharij_case_no' => 'KH-001',
+                    'kharij_plot_no' => 'KH-PLOT-123',
+                    'kharij_land_amount' => '1.25',
+                    'kharij_date' => '১৫/০২/২০২১',
+                    'kharij_details' => 'খারিজের বিবরণ'
+                ]
+            ],
+            'tax_info' => [
+                'english_year' => '2024-25',
+                'bangla_year' => '১৪৩১-৩২',
+                'holding_no' => 'HOLD-123',
+                'paid_land_amount' => '1.25'
+            ],
+            'additional_documents_info' => [
+                'selected_types' => ['বণ্টননামা'],
+                'details' => [
+                    'বণ্টননামা' => 'বণ্টননামার বিবরণ'
                 ]
             ]
         ];
 
         $response = $this->post(route('compensation.store'), $data);
 
-        // The current validation only requires ownership_details to be an array
-        // No specific validation for donor_names and recipient_names
-        $response->assertStatus(302); // Redirect after successful creation
+        $response->assertRedirect();
+        $this->assertDatabaseHas('compensations', [
+            'case_number' => 'COMP-001'
+        ]);
+
+        // Verify that the story sequence was saved
+        $compensation = Compensation::where('case_number', 'COMP-001')->first();
+        $this->assertNotNull($compensation);
+        $this->assertArrayHasKey('storySequence', $compensation->ownership_details);
+        $this->assertCount(1, $compensation->ownership_details['storySequence']);
+        $this->assertEquals('দলিলমূলে মালিকানা হস্তান্তর', $compensation->ownership_details['storySequence'][0]['type']);
+    }
+
+    public function test_story_sequence_is_preserved_on_edit()
+    {
+        // Create a compensation with story sequence
+        $compensation = Compensation::create([
+            'case_number' => 'COMP-002',
+            'case_date' => '১৫/০৮/২০২৪',
+            'applicants' => [
+                [
+                    'name' => 'আব্দুল রহমান',
+                    'father_name' => 'মোহাম্মদ আলী',
+                    'address' => 'গ্রাম: কাশিমপুর, থানা: সাভার',
+                    'nid' => '1234567890123'
+                ]
+            ],
+            'la_case_no' => 'LA-002',
+            'award_type' => ['জমি'],
+            'acquisition_record_basis' => 'SA',
+            'plot_no' => 'PLOT-123',
+            'award_holder_names' => [
+                ['name' => 'আব্দুল রহমান']
+            ],
+            'land_category' => [
+                [
+                    'category_name' => 'আবাদি জমি',
+                    'total_land' => '2.50',
+                    'total_compensation' => '500000',
+                    'applicant_land' => '1.25'
+                ]
+            ],
+            'is_applicant_in_award' => true,
+            'source_tax_percentage' => '5',
+            'mouza_name' => 'কাশিমপুর',
+            'jl_no' => 'JL-123',
+            'land_schedule_sa_plot_no' => 'SA-PLOT-123',
+            'sa_khatian_no' => 'SA-KH-123',
+            'ownership_details' => [
+                'sa_info' => [
+                    'sa_plot_no' => 'SA-123',
+                    'sa_khatian_no' => 'SA-KH-123',
+                    'sa_total_land_in_plot' => '5.00',
+                    'sa_land_in_khatian' => '2.50'
+                ],
+                'sa_owners' => [
+                    ['name' => 'আব্দুল রহমান']
+                ],
+                'storySequence' => [
+                    [
+                        'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
+                        'description' => 'দলিল নম্বর: DEED-001',
+                        'itemType' => 'deed',
+                        'itemIndex' => 0,
+                        'sequenceIndex' => 0
+                    ],
+                    [
+                        'type' => 'ওয়ারিশমূলে হস্তান্তর',
+                        'description' => 'পূর্ববর্তী মালিক: মোহাম্মদ আলী',
+                        'itemType' => 'inheritance',
+                        'itemIndex' => 0,
+                        'sequenceIndex' => 1
+                    ]
+                ],
+                'deed_transfers' => [
+                    [
+                        'donor_names' => [['name' => 'মোহাম্মদ আলী']],
+                        'recipient_names' => [['name' => 'আব্দুল রহমান']],
+                        'deed_number' => 'DEED-001',
+                        'deed_date' => '১০/০১/২০২০',
+                        'sale_type' => 'বিক্রয় দলিল',
+                        'application_type' => 'specific',
+                        'application_specific_area' => 'SA-123',
+                        'application_sell_area' => '2.50',
+                        'possession_deed' => 'yes',
+                        'possession_application' => 'yes',
+                        'mentioned_areas' => 'SA-123',
+                        'special_details' => null
+                    ]
+                ],
+                'inheritance_records' => [
+                    [
+                        'previous_owner_name' => 'মোহাম্মদ আলী',
+                        'death_date' => '১৫/০১/২০২০',
+                        'has_death_cert' => 'yes',
+                        'heirship_certificate_info' => 'ওয়ারিশান সনদের বিবরণ'
+                    ]
+                ],
+                'applicant_info' => [
+                    'applicant_name' => 'আব্দুল রহমান',
+                    'kharij_case_no' => 'KH-001',
+                    'kharij_plot_no' => 'KH-PLOT-123',
+                    'kharij_land_amount' => '1.25',
+                    'kharij_date' => '১৫/০২/২০২১',
+                    'kharij_details' => 'খারিজের বিবরণ'
+                ]
+            ],
+            'tax_info' => [
+                'english_year' => '2024-25',
+                'bangla_year' => '১৪৩১-৩২',
+                'holding_no' => 'HOLD-123',
+                'paid_land_amount' => '1.25'
+            ],
+            'additional_documents_info' => [
+                'selected_types' => ['বণ্টননামা'],
+                'details' => [
+                    'বণ্টননামা' => 'বণ্টননামার বিবরণ'
+                ]
+            ]
+        ]);
+
+        // Update the compensation
+        $updateData = [
+            'case_number' => 'COMP-002-UPDATED',
+            'case_date' => '১৫/০৮/২০২৪',
+            'applicants' => [
+                [
+                    'name' => 'আব্দুল রহমান',
+                    'father_name' => 'মোহাম্মদ আলী',
+                    'address' => 'গ্রাম: কাশিমপুর, থানা: সাভার',
+                    'nid' => '1234567890123'
+                ]
+            ],
+            'la_case_no' => 'LA-002',
+            'award_type' => 'জমি',
+            'acquisition_record_basis' => 'SA',
+            'plot_no' => 'PLOT-123',
+            'award_holder_names' => [
+                ['name' => 'আব্দুল রহমান']
+            ],
+            'land_category' => [
+                [
+                    'category_name' => 'আবাদি জমি',
+                    'total_land' => '2.50',
+                    'total_compensation' => '500000',
+                    'applicant_land' => '1.25'
+                ]
+            ],
+            'is_applicant_in_award' => true,
+            'source_tax_percentage' => '5',
+            'mouza_name' => 'কাশিমপুর',
+            'jl_no' => 'JL-123',
+            'land_schedule_sa_plot_no' => 'SA-PLOT-123',
+            'sa_khatian_no' => 'SA-KH-123',
+            'ownership_details' => [
+                'sa_info' => [
+                    'sa_plot_no' => 'SA-123',
+                    'sa_khatian_no' => 'SA-KH-123',
+                    'sa_total_land_in_plot' => '5.00',
+                    'sa_land_in_khatian' => '2.50'
+                ],
+                'sa_owners' => [
+                    ['name' => 'আব্দুল রহমান']
+                ],
+                'storySequence' => [
+                    [
+                        'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
+                        'description' => 'দলিল নম্বর: DEED-001-UPDATED',
+                        'itemType' => 'deed',
+                        'itemIndex' => 0,
+                        'sequenceIndex' => 0
+                    ],
+                    [
+                        'type' => 'ওয়ারিশমূলে হস্তান্তর',
+                        'description' => 'পূর্ববর্তী মালিক: মোহাম্মদ আলী',
+                        'itemType' => 'inheritance',
+                        'itemIndex' => 0,
+                        'sequenceIndex' => 1
+                    ]
+                ],
+                'deed_transfers' => [
+                    [
+                        'donor_names' => [['name' => 'মোহাম্মদ আলী']],
+                        'recipient_names' => [['name' => 'আব্দুল রহমান']],
+                        'deed_number' => 'DEED-001-UPDATED',
+                        'deed_date' => '১০/০১/২০২০',
+                        'sale_type' => 'বিক্রয় দলিল',
+                        'application_type' => 'specific',
+                        'application_specific_area' => 'SA-123',
+                        'application_sell_area' => '2.50',
+                        'possession_deed' => 'yes',
+                        'possession_application' => 'yes',
+                        'mentioned_areas' => 'SA-123',
+                        'special_details' => null
+                    ]
+                ],
+                'inheritance_records' => [
+                    [
+                        'previous_owner_name' => 'মোহাম্মদ আলী',
+                        'death_date' => '১৫/০১/২০২০',
+                        'has_death_cert' => 'yes',
+                        'heirship_certificate_info' => 'ওয়ারিশান সনদের বিবরণ'
+                    ]
+                ],
+                'applicant_info' => [
+                    'applicant_name' => 'আব্দুল রহমান',
+                    'kharij_case_no' => 'KH-001',
+                    'kharij_plot_no' => 'KH-PLOT-123',
+                    'kharij_land_amount' => '1.25',
+                    'kharij_date' => '১৫/০২/২০২১',
+                    'kharij_details' => 'খারিজের বিবরণ'
+                ]
+            ],
+            'tax_info' => [
+                'english_year' => '2024-25',
+                'bangla_year' => '১৪৩১-৩২',
+                'holding_no' => 'HOLD-123',
+                'paid_land_amount' => '1.25'
+            ],
+            'additional_documents_info' => [
+                'selected_types' => ['বণ্টননামা'],
+                'details' => [
+                    'বণ্টননামা' => 'বণ্টননামার বিবরণ'
+                ]
+            ]
+        ];
+
+        $response = $this->put(route('compensation.update', $compensation->id), $updateData);
+
+        $response->assertRedirect();
+        
+        // Verify that the story sequence was preserved and updated
+        $updatedCompensation = Compensation::find($compensation->id);
+        $this->assertNotNull($updatedCompensation);
+        $this->assertArrayHasKey('storySequence', $updatedCompensation->ownership_details);
+        $this->assertCount(2, $updatedCompensation->ownership_details['storySequence']);
+        $this->assertEquals('দলিল নম্বর: DEED-001-UPDATED', $updatedCompensation->ownership_details['storySequence'][0]['description']);
     }
 
     public function test_can_update_kanungo_opinion()

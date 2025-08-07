@@ -4,6 +4,12 @@
         মালিকানার ধারাবাহিকতার বর্ণনাঃ
     </h2>
 
+    <!-- Hidden form fields for story sequence -->
+    <input type="hidden" name="ownership_details[storySequence]" :value="JSON.stringify(storySequence)">
+    <input type="hidden" name="ownership_details[currentStep]" :value="currentStep">
+    <input type="hidden" name="ownership_details[completedSteps]" :value="JSON.stringify(completedSteps)">
+    <input type="hidden" name="ownership_details[rs_record_disabled]" :value="rs_record_disabled">
+
     <!-- Enhanced Step Progress Indicator -->
     <div class="mb-8">
         <div class="max-w-4xl mx-auto">
@@ -797,6 +803,11 @@ function ownershipContinuity() {
                         
                         // Auto-detect completed steps based on existing data
                         this.detectCompletedSteps();
+                        
+                        // Update hidden fields after loading existing data
+                        this.$nextTick(() => {
+                            this.updateHiddenFields();
+                        });
                     }
                 }
             }
@@ -813,6 +824,19 @@ function ownershipContinuity() {
             this.$watch('rs_records', () => {
                 this.updateStoryItemDescriptions();
             }, { deep: true });
+            
+            // Set up watcher for story sequence changes
+            this.$watch('storySequence', () => {
+                this.updateHiddenFields();
+            }, { deep: true });
+            
+            // Set up form submission handler
+            const parentForm = this.$el.closest('form');
+            if (parentForm) {
+                parentForm.addEventListener('submit', () => {
+                    this.prepareFormData();
+                });
+            }
         },
         
         detectCompletedSteps() {
@@ -996,6 +1020,9 @@ function ownershipContinuity() {
                 itemIndex: deedIndex,
                 sequenceIndex: this.storySequence.length
             });
+            
+            // Update story item descriptions
+            this.updateStoryItemDescriptions();
         },
         
         addDeedDonor(index) {
@@ -1037,6 +1064,9 @@ function ownershipContinuity() {
                 itemIndex: inheritanceIndex,
                 sequenceIndex: this.storySequence.length
             });
+            
+            // Update story item descriptions
+            this.updateStoryItemDescriptions();
         },
         
         addRsRecord() {
@@ -1060,6 +1090,9 @@ function ownershipContinuity() {
                 sequenceIndex: this.storySequence.length
             });
             this.rs_record_disabled = true;
+            
+            // Update story item descriptions
+            this.updateStoryItemDescriptions();
         },
         
         removeStoryItem(index) {
@@ -1096,6 +1129,9 @@ function ownershipContinuity() {
             this.storySequence.forEach((storyItem, idx) => {
                 storyItem.sequenceIndex = idx;
             });
+            
+            // Update story item descriptions
+            this.updateStoryItemDescriptions();
         },
         
         handleApplicationTypeChange(deed) {
@@ -1192,13 +1228,13 @@ function ownershipContinuity() {
                     const inheritanceForms = document.querySelectorAll('.record-card');
                     let inheritanceIndex = 0;
                     for (let i = 0; i < inheritanceForms.length; i++) {
-                        const form = inheritanceForms[i];
-                        if (form.querySelector('[x-text*="ওয়ারিশ"]')) {
+                        const inheritanceForm = inheritanceForms[i];
+                        if (inheritanceForm.querySelector('[x-text*="ওয়ারিশ"]')) {
                             if (inheritanceIndex === item.itemIndex) {
-                                form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                form.classList.add('ring-2', 'ring-blue-500');
+                                inheritanceForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                inheritanceForm.classList.add('ring-2', 'ring-blue-500');
                                 setTimeout(() => {
-                                    form.classList.remove('ring-2', 'ring-blue-500');
+                                    inheritanceForm.classList.remove('ring-2', 'ring-blue-500');
                                 }, 2000);
                                 break;
                             }
@@ -1210,13 +1246,13 @@ function ownershipContinuity() {
                     const rsForms = document.querySelectorAll('.record-card');
                     let rsIndex = 0;
                     for (let i = 0; i < rsForms.length; i++) {
-                        const form = rsForms[i];
-                        if (form.querySelector('[x-text*="আরএস রেকর্ড"]')) {
+                        const rsForm = rsForms[i];
+                        if (rsForm.querySelector('[x-text*="আরএস রেকর্ড"]')) {
                             if (rsIndex === item.itemIndex) {
-                                form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                form.classList.add('ring-2', 'ring-blue-500');
+                                rsForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                rsForm.classList.add('ring-2', 'ring-blue-500');
                                 setTimeout(() => {
-                                    form.classList.remove('ring-2', 'ring-blue-500');
+                                    rsForm.classList.remove('ring-2', 'ring-blue-500');
                                 }, 2000);
                                 break;
                             }
@@ -1295,6 +1331,41 @@ function ownershipContinuity() {
             
             // Show comprehensive summary alert
             this.showAlert('সব তথ্য সফলভাবে সংরক্ষিত হয়েছে! মালিকানার ধারাবাহিকতা সম্পূর্ণ হয়েছে।', 'success');
+        },
+        
+        // Method to update hidden form fields
+        updateHiddenFields() {
+            const storySequenceField = this.$el.querySelector('input[name="ownership_details[storySequence]"]');
+            const currentStepField = this.$el.querySelector('input[name="ownership_details[currentStep]"]');
+            const completedStepsField = this.$el.querySelector('input[name="ownership_details[completedSteps]"]');
+            const rsRecordDisabledField = this.$el.querySelector('input[name="ownership_details[rs_record_disabled]"]');
+            
+            if (storySequenceField) {
+                storySequenceField.value = JSON.stringify(this.storySequence);
+            }
+            if (currentStepField) {
+                currentStepField.value = this.currentStep;
+            }
+            if (completedStepsField) {
+                completedStepsField.value = JSON.stringify(this.completedSteps);
+            }
+            if (rsRecordDisabledField) {
+                rsRecordDisabledField.value = this.rs_record_disabled;
+            }
+        },
+        
+        // Method to prepare form data before submission
+        prepareFormData() {
+            // Update story item descriptions
+            this.updateStoryItemDescriptions();
+            
+            // Ensure story sequence is properly formatted for submission
+            this.storySequence.forEach((item, index) => {
+                item.sequenceIndex = index;
+            });
+            
+            // Update hidden form fields
+            this.updateHiddenFields();
         },
 
         addRsRecordOwner(index) {
@@ -1378,6 +1449,8 @@ function ownershipContinuity() {
         },
         
         generateStorySequenceFromExistingData() {
+            // Clear existing story sequence
+            this.storySequence = [];
             let sequenceIndex = 0;
             
             // Add deed transfers to story sequence
@@ -1413,6 +1486,6 @@ function ownershipContinuity() {
                 });
             });
         }
-    }
+    };
 }
 </script> 

@@ -309,6 +309,31 @@ class CompensationController extends Controller
         if (isset($ownershipDetails['rs_info']['dp_khatian'])) {
             $ownershipDetails['rs_info']['dp_khatian'] = in_array($ownershipDetails['rs_info']['dp_khatian'], ['on', '1', 'true'], true);
         }
+        
+        // Process story sequence if it's a JSON string
+        if (isset($ownershipDetails['storySequence']) && is_string($ownershipDetails['storySequence'])) {
+            $storySequence = json_decode($ownershipDetails['storySequence'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $ownershipDetails['storySequence'] = $storySequence;
+            } else {
+                $ownershipDetails['storySequence'] = [];
+            }
+        }
+        
+        // Process completed steps if it's a JSON string
+        if (isset($ownershipDetails['completedSteps']) && is_string($ownershipDetails['completedSteps'])) {
+            $completedSteps = json_decode($ownershipDetails['completedSteps'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $ownershipDetails['completedSteps'] = $completedSteps;
+            } else {
+                $ownershipDetails['completedSteps'] = [];
+            }
+        }
+        
+        // Convert rs_record_disabled to boolean
+        if (isset($ownershipDetails['rs_record_disabled'])) {
+            $ownershipDetails['rs_record_disabled'] = in_array($ownershipDetails['rs_record_disabled'], ['on', '1', 'true'], true);
+        }
 
         return $ownershipDetails;
     }
