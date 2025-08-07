@@ -235,21 +235,35 @@
             <button type="button" @click="nextStep()" class="btn-success">উপরোক্ত মালিকই আবেদনকারী</button>
         </div> --}}
 
-        <!-- Summary of Added Items -->
-        <div class="bg-gray-50 p-4 rounded-lg mb-6">
-            <h4 class="font-bold mb-2">যোগ করা আইটেম:</h4>
-            <div class="space-y-2">
-                <template x-for="(item, index) in transferItems" :key="index">
-                    <div class="flex items-center justify-between bg-white p-2 rounded hover:bg-gray-50 cursor-pointer" @click="scrollToForm(item)">
-                        <span x-text="item.type + ' #' + (index + 1)" class="flex-1"></span>
-                        <button type="button" @click.stop="removeTransferItem(index)" class="text-red-500 hover:text-red-700 p-1" title="মুছুন">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <!-- Story Sequence Summary -->
+        <div class="bg-blue-50 p-6 rounded-lg mb-6">
+            <h4 class="font-bold text-lg mb-4 text-blue-800">মালিকানার ধারাবাহিকতার কাহিনী</h4>
+            <div class="space-y-3">
+                <template x-for="(item, index) in storySequence" :key="index">
+                    <div class="flex items-center justify-between bg-white p-3 rounded-lg border-l-4 border-blue-500 hover:bg-blue-50 cursor-pointer transition-all duration-200" @click="scrollToStoryItem(item)">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                                <span x-text="index + 1"></span>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-800" x-text="item.type"></div>
+                                <div class="text-sm text-gray-600" x-text="item.description"></div>
+                            </div>
+                        </div>
+                        <button type="button" @click.stop="removeStoryItem(index)" class="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors duration-200" title="মুছুন">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                             </svg>
                         </button>
                     </div>
                 </template>
-                <div x-show="transferItems.length === 0" class="text-gray-500">কোন আইটেম যোগ করা হয়নি</div>
+                <div x-show="storySequence.length === 0" class="text-center text-gray-500 py-8">
+                    <svg class="w-12 h-12 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <p>কোন কাহিনী যোগ করা হয়নি</p>
+                    <p class="text-sm">নিচের বোতামগুলি ব্যবহার করে মালিকানার ধারাবাহিকতার কাহিনী তৈরি করুন</p>
+                </div>
             </div>
         </div>
 
@@ -511,13 +525,21 @@
                 </div>
             </div>
             
-            <!-- Transfer Items Summary -->
-            <div class="mb-4" x-show="transferItems.length > 0">
-                <h5 class="font-semibold text-blue-700 mb-2">২। হস্তান্তর/রেকর্ড:</h5>
+            <!-- Story Sequence Summary -->
+            <div class="mb-4" x-show="storySequence.length > 0">
+                <h5 class="font-semibold text-blue-700 mb-2">২। মালিকানার ধারাবাহিকতার কাহিনী:</h5>
                 <div class="space-y-2">
-                    <template x-for="(item, index) in transferItems" :key="index">
-                        <div class="bg-white p-2 rounded border-l-4 border-blue-500">
-                            <span class="font-medium" x-text="item.type + ' #' + (index + 1)"></span>
+                    <template x-for="(item, index) in storySequence" :key="index">
+                        <div class="bg-white p-3 rounded-lg border-l-4 border-blue-500">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                                    <span x-text="index + 1"></span>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-800" x-text="item.type"></div>
+                                    <div class="text-sm text-gray-600" x-text="item.description"></div>
+                                </div>
+                            </div>
                         </div>
                     </template>
                 </div>
@@ -632,7 +654,7 @@ function ownershipContinuity() {
     return {
         currentStep: 'info',
         completedSteps: [],
-        transferItems: [],
+        storySequence: [],
         rs_record_disabled: false,
         alert: {
             show: false,
@@ -750,7 +772,25 @@ function ownershipContinuity() {
                                 rs.dp_khatian = true;
                             }
                         });
-                        this.transferItems = data.ownership_details.transferItems || [];
+                        
+                        // Initialize story sequence from existing data
+                        this.storySequence = data.ownership_details.storySequence || [];
+                        if (this.storySequence.length === 0) {
+                            // Convert old transferItems to story sequence if available
+                            if (data.ownership_details.transferItems) {
+                                this.storySequence = data.ownership_details.transferItems.map((item, index) => ({
+                                    type: item.type,
+                                    description: this.getStoryItemDescription(item),
+                                    itemType: item.type,
+                                    itemIndex: item.index,
+                                    sequenceIndex: index
+                                }));
+                            } else {
+                                // Generate story sequence from existing data arrays
+                                this.generateStorySequenceFromExistingData();
+                            }
+                        }
+                        
                         this.currentStep = data.ownership_details.currentStep || 'info';
                         this.completedSteps = data.ownership_details.completedSteps || [];
                         this.rs_record_disabled = data.ownership_details.rs_record_disabled || false;
@@ -760,6 +800,19 @@ function ownershipContinuity() {
                     }
                 }
             }
+            
+            // Set up watchers for form field changes to update story descriptions
+            this.$watch('deed_transfers', () => {
+                this.updateStoryItemDescriptions();
+            }, { deep: true });
+            
+            this.$watch('inheritance_records', () => {
+                this.updateStoryItemDescriptions();
+            }, { deep: true });
+            
+            this.$watch('rs_records', () => {
+                this.updateStoryItemDescriptions();
+            }, { deep: true });
         },
         
         detectCompletedSteps() {
@@ -772,7 +825,8 @@ function ownershipContinuity() {
             }
             
             // Check if Step 2 (transfers) has data
-            const hasTransfers = this.deed_transfers.length > 0 || 
+            const hasTransfers = this.storySequence.length > 0 || 
+                                this.deed_transfers.length > 0 || 
                                 this.inheritance_records.length > 0 || 
                                 this.rs_records.length > 0;
             if (hasTransfers) {
@@ -932,7 +986,16 @@ function ownershipContinuity() {
             };
             // Add at the end of the array to show at bottom
             this.deed_transfers.push(newDeed);
-            this.transferItems.push({ type: 'দলিল', index: this.deed_transfers.length - 1 });
+            const deedIndex = this.deed_transfers.length - 1;
+            
+            // Add to story sequence
+            this.storySequence.push({
+                type: 'দলিলমূলে মালিকানা হস্তান্তর',
+                description: `দলিল নম্বর: ${newDeed.deed_number || 'অনির্ধারিত'}`,
+                itemType: 'deed',
+                itemIndex: deedIndex,
+                sequenceIndex: this.storySequence.length
+            });
         },
         
         addDeedDonor(index) {
@@ -964,7 +1027,16 @@ function ownershipContinuity() {
             };
             // Add at the end of the array to show at bottom
             this.inheritance_records.push(newInheritance);
-            this.transferItems.push({ type: 'ওয়ারিশ', index: this.inheritance_records.length - 1 });
+            const inheritanceIndex = this.inheritance_records.length - 1;
+            
+            // Add to story sequence
+            this.storySequence.push({
+                type: 'ওয়ারিশমূলে হস্তান্তর',
+                description: `পূর্ববর্তী মালিক: ${newInheritance.previous_owner_name || 'অনির্ধারিত'}`,
+                itemType: 'inheritance',
+                itemIndex: inheritanceIndex,
+                sequenceIndex: this.storySequence.length
+            });
         },
         
         addRsRecord() {
@@ -977,39 +1049,53 @@ function ownershipContinuity() {
             };
             // Add at the end of the array to show at bottom
             this.rs_records.push(newRs);
-            this.transferItems.push({ type: 'আরএস রেকর্ড', index: this.rs_records.length - 1 });
+            const rsIndex = this.rs_records.length - 1;
+            
+            // Add to story sequence
+            this.storySequence.push({
+                type: 'আরএস রেকর্ড যোগ',
+                description: `দাগ নম্বর: ${newRs.plot_no || 'অনির্ধারিত'}`,
+                itemType: 'rs',
+                itemIndex: rsIndex,
+                sequenceIndex: this.storySequence.length
+            });
             this.rs_record_disabled = true;
         },
         
-        removeTransferItem(index) {
-            const item = this.transferItems[index];
-            if (item.type === 'দলিল') {
-                this.deed_transfers.splice(item.index, 1);
-                // Update indices for remaining transfer items of the same type
-                this.transferItems.forEach((transferItem, idx) => {
-                    if (transferItem.type === 'দলিল' && idx !== index && transferItem.index > item.index) {
-                        transferItem.index--;
+        removeStoryItem(index) {
+            const item = this.storySequence[index];
+            if (item.itemType === 'deed') {
+                this.deed_transfers.splice(item.itemIndex, 1);
+                // Update indices for remaining story items of the same type
+                this.storySequence.forEach((storyItem, idx) => {
+                    if (storyItem.itemType === 'deed' && idx !== index && storyItem.itemIndex > item.itemIndex) {
+                        storyItem.itemIndex--;
                     }
                 });
-            } else if (item.type === 'ওয়ারিশ') {
-                this.inheritance_records.splice(item.index, 1);
-                // Update indices for remaining transfer items of the same type
-                this.transferItems.forEach((transferItem, idx) => {
-                    if (transferItem.type === 'ওয়ারিশ' && idx !== index && transferItem.index > item.index) {
-                        transferItem.index--;
+            } else if (item.itemType === 'inheritance') {
+                this.inheritance_records.splice(item.itemIndex, 1);
+                // Update indices for remaining story items of the same type
+                this.storySequence.forEach((storyItem, idx) => {
+                    if (storyItem.itemType === 'inheritance' && idx !== index && storyItem.itemIndex > item.itemIndex) {
+                        storyItem.itemIndex--;
                     }
                 });
-            } else if (item.type === 'আরএস রেকর্ড') {
-                this.rs_records.splice(item.index, 1);
-                // Update indices for remaining transfer items of the same type
-                this.transferItems.forEach((transferItem, idx) => {
-                    if (transferItem.type === 'আরএস রেকর্ড' && idx !== index && transferItem.index > item.index) {
-                        transferItem.index--;
+            } else if (item.itemType === 'rs') {
+                this.rs_records.splice(item.itemIndex, 1);
+                // Update indices for remaining story items of the same type
+                this.storySequence.forEach((storyItem, idx) => {
+                    if (storyItem.itemType === 'rs' && idx !== index && storyItem.itemIndex > item.itemIndex) {
+                        storyItem.itemIndex--;
                     }
                 });
                 this.rs_record_disabled = false;
             }
-            this.transferItems.splice(index, 1);
+            this.storySequence.splice(index, 1);
+            
+            // Update sequence indices
+            this.storySequence.forEach((storyItem, idx) => {
+                storyItem.sequenceIndex = idx;
+            });
         },
         
         handleApplicationTypeChange(deed) {
@@ -1086,25 +1172,57 @@ function ownershipContinuity() {
             return errors;
         },
         
-        scrollToForm(item) {
+        scrollToStoryItem(item) {
             // Scroll to the specific form based on item type and index
             setTimeout(() => {
                 let selector = '';
-                if (item.type === 'দলিল') {
-                    selector = `[x-text="'দলিল #' + ${item.index + 1}"]`;
-                } else if (item.type === 'ওয়ারিশ') {
-                    selector = `[x-text="'ওয়ারিশ #' + ${item.index + 1}"]`;
-                } else if (item.type === 'আরএস রেকর্ড') {
-                    selector = `[x-text="'আরএস রেকর্ড #' + ${item.index + 1}"]`;
-                }
-                
-                const element = document.querySelector(selector);
-                if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    element.closest('.record-card').classList.add('ring-2', 'ring-blue-500');
-                    setTimeout(() => {
-                        element.closest('.record-card').classList.remove('ring-2', 'ring-blue-500');
-                    }, 2000);
+                if (item.itemType === 'deed') {
+                    // Find the deed form by its index
+                    const deedForms = document.querySelectorAll('.record-card');
+                    const targetForm = deedForms[item.itemIndex];
+                    if (targetForm) {
+                        targetForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        targetForm.classList.add('ring-2', 'ring-blue-500');
+                        setTimeout(() => {
+                            targetForm.classList.remove('ring-2', 'ring-blue-500');
+                        }, 2000);
+                    }
+                } else if (item.itemType === 'inheritance') {
+                    // Find inheritance forms by looking for inheritance records
+                    const inheritanceForms = document.querySelectorAll('.record-card');
+                    let inheritanceIndex = 0;
+                    for (let i = 0; i < inheritanceForms.length; i++) {
+                        const form = inheritanceForms[i];
+                        if (form.querySelector('[x-text*="ওয়ারিশ"]')) {
+                            if (inheritanceIndex === item.itemIndex) {
+                                form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                form.classList.add('ring-2', 'ring-blue-500');
+                                setTimeout(() => {
+                                    form.classList.remove('ring-2', 'ring-blue-500');
+                                }, 2000);
+                                break;
+                            }
+                            inheritanceIndex++;
+                        }
+                    }
+                } else if (item.itemType === 'rs') {
+                    // Find RS forms by looking for RS records
+                    const rsForms = document.querySelectorAll('.record-card');
+                    let rsIndex = 0;
+                    for (let i = 0; i < rsForms.length; i++) {
+                        const form = rsForms[i];
+                        if (form.querySelector('[x-text*="আরএস রেকর্ড"]')) {
+                            if (rsIndex === item.itemIndex) {
+                                form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                form.classList.add('ring-2', 'ring-blue-500');
+                                setTimeout(() => {
+                                    form.classList.remove('ring-2', 'ring-blue-500');
+                                }, 2000);
+                                break;
+                            }
+                            rsIndex++;
+                        }
+                    }
                 }
             }, 100);
         },
@@ -1117,6 +1235,9 @@ function ownershipContinuity() {
                 return;
             }
             
+            // Update story item descriptions before saving
+            this.updateStoryItemDescriptions();
+            
             // Save current step data to localStorage or send to server
             const stepData = {
                 step: this.currentStep,
@@ -1128,7 +1249,8 @@ function ownershipContinuity() {
                     deed_transfers: this.deed_transfers,
                     inheritance_records: this.inheritance_records,
                     rs_records: this.rs_records,
-                    applicant_info: this.applicant_info
+                    applicant_info: this.applicant_info,
+                    storySequence: this.storySequence
                 }
             };
             
@@ -1153,6 +1275,9 @@ function ownershipContinuity() {
                 return;
             }
             
+            // Update story item descriptions before saving
+            this.updateStoryItemDescriptions();
+            
             // Save all data and complete the form
             const allData = {
                 sa_info: this.sa_info,
@@ -1163,7 +1288,7 @@ function ownershipContinuity() {
                 inheritance_records: this.inheritance_records,
                 rs_records: this.rs_records,
                 applicant_info: this.applicant_info,
-                transferItems: this.transferItems
+                storySequence: this.storySequence
             };
             
             // You can implement AJAX call here to save to server
@@ -1230,6 +1355,63 @@ function ownershipContinuity() {
                 'applicant': 'আবেদনকারী তথ্য'
             };
             return stepTexts[this.currentStep] || '';
+        },
+        
+        getStoryItemDescription(item) {
+            if (item.itemType === 'deed') {
+                const deed = this.deed_transfers[item.itemIndex];
+                return deed.deed_number ? `দলিল নম্বর: ${deed.deed_number}` : 'দলিল নম্বর: অনির্ধারিত';
+            } else if (item.itemType === 'inheritance') {
+                const inheritance = this.inheritance_records[item.itemIndex];
+                return inheritance.previous_owner_name ? `পূর্ববর্তী মালিক: ${inheritance.previous_owner_name}` : 'পূর্ববর্তী মালিক: অনির্ধারিত';
+            } else if (item.itemType === 'rs') {
+                const rs = this.rs_records[item.itemIndex];
+                return rs.plot_no ? `দাগ নম্বর: ${rs.plot_no}` : 'দাগ নম্বর: অনির্ধারিত';
+            }
+            return '';
+        },
+        
+        updateStoryItemDescriptions() {
+            this.storySequence.forEach((item, index) => {
+                item.description = this.getStoryItemDescription(item);
+            });
+        },
+        
+        generateStorySequenceFromExistingData() {
+            let sequenceIndex = 0;
+            
+            // Add deed transfers to story sequence
+            this.deed_transfers.forEach((deed, index) => {
+                this.storySequence.push({
+                    type: 'দলিলমূলে মালিকানা হস্তান্তর',
+                    description: deed.deed_number ? `দলিল নম্বর: ${deed.deed_number}` : 'দলিল নম্বর: অনির্ধারিত',
+                    itemType: 'deed',
+                    itemIndex: index,
+                    sequenceIndex: sequenceIndex++
+                });
+            });
+            
+            // Add inheritance records to story sequence
+            this.inheritance_records.forEach((inheritance, index) => {
+                this.storySequence.push({
+                    type: 'ওয়ারিশমূলে হস্তান্তর',
+                    description: inheritance.previous_owner_name ? `পূর্ববর্তী মালিক: ${inheritance.previous_owner_name}` : 'পূর্ববর্তী মালিক: অনির্ধারিত',
+                    itemType: 'inheritance',
+                    itemIndex: index,
+                    sequenceIndex: sequenceIndex++
+                });
+            });
+            
+            // Add RS records to story sequence
+            this.rs_records.forEach((rs, index) => {
+                this.storySequence.push({
+                    type: 'আরএস রেকর্ড যোগ',
+                    description: rs.plot_no ? `দাগ নম্বর: ${rs.plot_no}` : 'দাগ নম্বর: অনির্ধারিত',
+                    itemType: 'rs',
+                    itemIndex: index,
+                    sequenceIndex: sequenceIndex++
+                });
+            });
         }
     }
 }
