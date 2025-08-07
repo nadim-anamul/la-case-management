@@ -415,6 +415,75 @@
     .text-blue-800 {
         color: #1e40af;
     }
+
+    @media (max-width: 1024px) {
+        .container {
+            padding: 2rem 0.5rem !important;
+        }
+        .form-container {
+            padding: 1.5rem !important;
+        }
+        .form-section {
+            padding: 1.25rem !important;
+        }
+        .form-footer {
+            padding: 1.25rem !important;
+        }
+    }
+    @media (max-width: 768px) {
+        .container {
+            padding: 1rem 0.25rem !important;
+        }
+        .form-container {
+            padding: 1rem !important;
+        }
+        .form-section {
+            padding: 1rem !important;
+        }
+        .form-section-title {
+            font-size: 1.1rem;
+        }
+        .form-footer {
+            padding: 1rem !important;
+        }
+        .page-header {
+            padding: 1rem !important;
+        }
+        .page-header h1 {
+            font-size: 1.25rem !important;
+        }
+        .grid {
+            grid-template-columns: 1fr !important;
+        }
+        .btn-primary, .btn-secondary, .btn-success {
+            padding: 0.5rem 1rem !important;
+            font-size: 0.95rem !important;
+        }
+        .record-card {
+            padding: 1rem !important;
+        }
+    }
+    @media (max-width: 480px) {
+        .container {
+            padding: 0.5rem 0 !important;
+        }
+        .form-container {
+            padding: 0.5rem !important;
+        }
+        .form-section {
+            padding: 0.5rem !important;
+        }
+        .form-footer {
+            padding: 0.5rem !important;
+        }
+        .form-section-title {
+            font-size: 1rem;
+        }
+        .btn-primary, .btn-secondary, .btn-success {
+            padding: 0.4rem 0.75rem !important;
+            font-size: 0.9rem !important;
+        }
+    }
 </style>
 @endsection
 
@@ -436,7 +505,7 @@
 @endsection
 
 @section('content')
-<div class="container mx-auto p-8">
+<div class="container mx-auto p-8 sm:p-4 xs:p-2">
     <div class="page-header">
         <div class="flex justify-between items-center">
             <div>

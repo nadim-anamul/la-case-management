@@ -12,7 +12,7 @@
         </p>
     </div>
     
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-4 xs:gap-2">
         <div class="floating-label">
             <input type="text" name="la_case_no" value="{{ old('la_case_no', isset($compensation) ? $compensation->la_case_no : '') }}" placeholder=" " required>
             <label>এলএ কেস নং<span class="text-red-500">*</span></label>
@@ -34,7 +34,7 @@
                                     <label>খতিয়ান নং<span class="text-red-500">*</span></label>
         </div>
         <template x-if="acquisition_record_basis === 'SA'">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2 sm:gap-4 xs:gap-2">
                 <div class="floating-label">
                     <input type="text" name="sa_plot_no" id="award_sa_plot_no" value="{{ old('sa_plot_no', isset($compensation) ? $compensation->sa_plot_no : '') }}" placeholder=" " required>
                     <label for="award_sa_plot_no">SA দাগ নং<span class="text-red-500">*</span></label>
@@ -56,7 +56,7 @@
             </div>
         </template>
         <template x-if="acquisition_record_basis === 'RS'">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2 sm:gap-4 xs:gap-2">
                 <div class="floating-label">
                     <input type="text" name="rs_plot_no" id="award_rs_plot_no_rs" value="{{ old('rs_plot_no', isset($compensation) ? $compensation->rs_plot_no : '') }}" placeholder=" " required>
                     <label for="award_rs_plot_no_rs">RS দাগ নং<span class="text-red-500">*</span></label>
@@ -74,7 +74,7 @@
                 <h4 class="text-lg font-semibold mb-4">রোয়েদাদভুক্ত মালিকের নাম<span class="text-red-500">*</span></h4>
                 <div>
                     <template x-for="(holder, index) in award_holder_names" :key="index">
-                        <div class="flex items-center gap-4 mb-4">
+                        <div class="flex items-center gap-4 mb-4 sm:gap-2 xs:gap-1">
                             <div class="flex-1">
                                 <input type="text" 
                                        :name="'award_holder_names[' + index + '][name]'" 
@@ -86,14 +86,15 @@
                             <button type="button" 
                                     @click="award_holder_names.splice(index, 1)" 
                                     class="btn-danger"
-                                    x-show="award_holder_names.length > 1">
+                                    x-show="award_holder_names.length > 1"
+                                    style="min-width: 40px; min-height: 40px;">
                                 ×
                             </button>
                         </div>
                     </template>
                     <button type="button" 
                             @click="award_holder_names.push({name: ''})" 
-                            class="btn-success">
+                            class="btn-success w-full sm:w-auto">
                         + মালিকের নাম যোগ করুন
                     </button>
                 </div>
@@ -137,7 +138,7 @@
                     <h4 class="text-lg font-semibold mb-4">জমির রোয়েদাদ<span class="text-red-500">*</span></h4>
                     <div>
                         <template x-for="(category, index) in land_category" :key="index">
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 sm:gap-2 xs:gap-1">
                                 <div class="floating-label">
                                     <input type="text" 
                                            :name="'land_category[' + index + '][category_name]'" 
@@ -177,14 +178,15 @@
                                 <button type="button" 
                                         @click="removeLandCategory(index)" 
                                         class="btn-danger"
-                                        x-show="land_category.length > 1">
+                                        x-show="land_category.length > 1"
+                                        style="min-width: 40px; min-height: 40px;">
                                     ×
                                 </button>
                             </div>
                         </template>
                         <button type="button" 
                                 @click="addLandCategory()" 
-                                class="btn-success">
+                                class="btn-success w-full sm:w-auto">
                             আরো শ্রেণী যোগ করুন
                         </button>
                     </div>
@@ -210,7 +212,7 @@
                     <h4 class="text-lg font-semibold mb-4">জমির রোয়েদাদ<span class="text-red-500">*</span></h4>
                     <div>
                         <template x-for="(category, index) in land_category" :key="index">
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 sm:gap-2 xs:gap-1">
                                 <div class="floating-label">
                                     <input type="text" 
                                            :name="'land_category[' + index + '][category_name]'" 
@@ -246,14 +248,15 @@
                                 <button type="button" 
                                         @click="removeLandCategory(index)" 
                                         class="btn-danger"
-                                        x-show="land_category.length > 1">
+                                        x-show="land_category.length > 1"
+                                        style="min-width: 40px; min-height: 40px;">
                                     ×
                                 </button>
                             </div>
                         </template>
                         <button type="button" 
                                 @click="addLandCategory()" 
-                                class="btn-success">
+                                class="btn-success w-full sm:w-auto">
                             আরো শ্রেণী যোগ করুন
                         </button>
                     </div>
@@ -276,4 +279,18 @@
             </div>
         </template>
     </div>
+    <style>
+    @media (max-width: 768px) {
+        .form-section { padding: 0.75rem !important; }
+        .form-section-title { font-size: 1.1rem; }
+        .sub-section { padding: 0.75rem !important; }
+        .btn-success, .btn-danger { min-width: 40px; min-height: 40px; font-size: 1rem; }
+    }
+    @media (max-width: 480px) {
+        .form-section { padding: 0.5rem !important; }
+        .form-section-title { font-size: 1rem; }
+        .sub-section { padding: 0.5rem !important; }
+        .btn-success, .btn-danger { min-width: 36px; min-height: 36px; font-size: 0.95rem; }
+    }
+    </style>
 </div> 
