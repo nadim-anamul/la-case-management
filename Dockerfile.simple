@@ -67,13 +67,7 @@ RUN npm install -g puppeteer \
     && npx puppeteer browsers install chrome-headless-shell \
     && echo 'export PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome' >> /etc/environment
 
-# Download additional Bengali fonts
-RUN mkdir -p /usr/share/fonts/truetype/bengali \
-    && cd /usr/share/fonts/truetype/bengali \
-    && wget -q https://fonts.google.com/download?family=Noto%20Sans%20Bengali -O noto-sans-bengali.zip || true \
-    && if [ -f noto-sans-bengali.zip ]; then unzip -q noto-sans-bengali.zip && rm noto-sans-bengali.zip; fi
-
-# Refresh font cache
+# Refresh font cache for system fonts
 RUN fc-cache -f -v
 
 # Copy the entrypoint script and make it executable

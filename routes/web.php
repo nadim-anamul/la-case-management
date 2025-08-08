@@ -63,20 +63,29 @@ Route::get('/test-pdf-download', function () {
     try {
         $html = '
         <!DOCTYPE html>
-        <html>
+        <html lang="bn">
         <head>
             <title>PDF Test</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
             <style>
-                body { font-family: Arial, sans-serif; margin: 20px; }
+                body { 
+                    font-family: "Noto Sans Bengali", "Lohit Bengali", "DejaVu Sans", "Liberation Sans", Arial, sans-serif; 
+                    margin: 20px; 
+                }
                 .header { text-align: center; color: #333; }
                 .content { margin: 20px 0; }
                 .footer { text-align: center; margin-top: 50px; color: #666; }
+                .bengali { font-size: 18px; line-height: 1.6; }
             </style>
         </head>
         <body>
             <div class="header">
                 <h1>PDF Generation Test</h1>
+                <h2 class="bengali">পিডিএফ জেনারেশন টেস্ট</h2>
                 <p>This is a test PDF generated at: ' . now() . '</p>
+                <p class="bengali">এটি একটি বাংলা ফন্ট পরীক্ষা। সংখ্যা: ১২৩৪৫৬৭৮৯০</p>
             </div>
             <div class="content">
                 <h2>System Information</h2>
