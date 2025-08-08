@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>নোটিশ প্রিভিউ</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans Bengali', 'Lohit Bengali', 'Kalpurush', 'SolaimanLipi', 'Rupali', Arial, sans-serif;
+        }
+    </style>
 </head>
 <body class="bg-gray-300">
     <!-- Back Button -->

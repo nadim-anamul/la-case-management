@@ -1,6 +1,6 @@
 FROM php:8.2-cli
 
-# Install system dependencies
+# Install system dependencies including Bengali fonts
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -13,6 +13,14 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     ca-certificates \
     fonts-liberation \
+    fonts-dejavu-core \
+    fonts-noto \
+    fonts-noto-color-emoji \
+    fonts-bengali \
+    fonts-lohit-beng-bengali \
+    fonts-lohit-beng-assamese \
+    fonts-kacst \
+    fontconfig \
     libasound2 \
     libatk-bridge2.0-0 \
     libatk1.0-0 \
@@ -58,6 +66,9 @@ COPY . /var/www
 RUN npm install -g puppeteer \
     && npx puppeteer browsers install chrome-headless-shell \
     && echo 'export PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome' >> /etc/environment
+
+# Refresh font cache
+RUN fc-cache -f -v
 
 # Copy the entrypoint script and make it executable
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

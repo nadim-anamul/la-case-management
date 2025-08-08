@@ -15,7 +15,17 @@ class PdfGeneratorService
         $browsershot = Browsershot::html($html)
             ->noSandbox()
             ->timeout($options['timeout'] ?? 120)
-            ->format($options['format'] ?? 'A4');
+            ->format($options['format'] ?? 'A4')
+            ->addChromiumArguments([
+                '--font-render-hinting=none',
+                '--disable-font-subpixel-positioning',
+                '--disable-gpu-sandbox',
+                '--disable-software-rasterizer',
+                '--disable-background-timer-throttling',
+                '--disable-renderer-backgrounding',
+                '--disable-backgrounding-occluded-windows',
+                '--disable-features=TranslateUI,VizDisplayCompositor'
+            ]);
 
         // Set Chrome path if available
         if (self::getChromePath()) {
@@ -97,19 +107,32 @@ class PdfGeneratorService
         try {
             $html = '
             <!DOCTYPE html>
-            <html>
+            <html lang="bn">
             <head>
+                <meta charset="UTF-8">
                 <title>PDF Test</title>
                 <style>
-                    body { font-family: Arial, sans-serif; margin: 20px; }
+                    body { 
+                        font-family: "Noto Sans Bengali", "Lohit Bengali", "Kalpurush", "SolaimanLipi", "Rupali", Arial, sans-serif; 
+                        margin: 20px; 
+                    }
                     .header { text-align: center; color: #333; }
+                    .bengali { font-size: 18px; line-height: 1.6; }
                 </style>
             </head>
             <body>
                 <div class="header">
                     <h1>PDF Generation Test</h1>
+                    <h2 class="bengali">পিডিএফ জেনারেশন টেস্ট</h2>
                     <p>Generated at: ' . now() . '</p>
+                    <p class="bengali">তৈরি করা হয়েছে: ' . now()->format('Y-m-d H:i:s') . '</p>
                     <p>Chrome path: ' . (self::getChromePath() ?: 'Not found') . '</p>
+                    <div class="bengali">
+                        <h3>বাংলা ফন্ট টেস্ট:</h3>
+                        <p>এটি একটি বাংলা ফন্ট পরীক্ষা। যদি আপনি এই টেক্সট সঠিকভাবে দেখতে পান, তাহলে বাংলা ফন্ট কাজ করছে।</p>
+                        <p>সংখ্যা: ১২ৃ৪৫৬৭৮৯০</p>
+                        <p>বিশেষ চিহ্ন: ৳ ০ ১ ২ ৩ ৪ ৫ ৬ ৭ ৮ ৯</p>
+                    </div>
                 </div>
             </body>
             </html>';
