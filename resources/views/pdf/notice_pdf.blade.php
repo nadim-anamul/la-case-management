@@ -9,7 +9,7 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Noto Sans Bengali', 'Lohit Bengali', 'Kalpurush', 'SolaimanLipi', 'Rupali', Arial, sans-serif;
+            font-family: 'Noto Sans Bengali', 'Lohit Bengali', 'DejaVu Sans', 'Liberation Sans', Arial, sans-serif;
         }
         .notice-page {
             width: 21cm;

@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            font-family: 'Noto Sans Bengali', 'Lohit Bengali', 'Kalpurush', 'SolaimanLipi', 'Rupali', Arial, sans-serif;
+            font-family: 'Noto Sans Bengali', 'Lohit Bengali', 'DejaVu Sans', 'Liberation Sans', Arial, sans-serif;
         }
     </style>
 </head>

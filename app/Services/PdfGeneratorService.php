@@ -113,7 +113,7 @@ class PdfGeneratorService
                 <title>PDF Test</title>
                 <style>
                     body { 
-                        font-family: "Noto Sans Bengali", "Lohit Bengali", "Kalpurush", "SolaimanLipi", "Rupali", Arial, sans-serif; 
+                        font-family: "Noto Sans Bengali", "Lohit Bengali", "DejaVu Sans", "Liberation Sans", Arial, sans-serif; 
                         margin: 20px; 
                     }
                     .header { text-align: center; color: #333; }
