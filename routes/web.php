@@ -55,8 +55,12 @@ Route::get('/test-css', function () {
 
 // Test route for PDF generation
 Route::get('/test-pdf', function () {
+    return response()->json(\App\Services\PdfGeneratorService::test());
+})->name('test.pdf');
+
+// Test route for actual PDF download
+Route::get('/test-pdf-download', function () {
     try {
-        // Test PDF generation with a simple HTML
         $html = '
         <!DOCTYPE html>
         <html>
@@ -88,11 +92,7 @@ Route::get('/test-pdf', function () {
         </body>
         </html>';
         
-        $pdf = \Spatie\Browsershot\Browsershot::html($html)
-            ->noSandbox()
-            ->timeout(60)
-            ->format('A4')
-            ->pdf();
+        $pdf = \App\Services\PdfGeneratorService::generateFromHtml($html, ['timeout' => 30]);
             
         return response($pdf, 200, [
             'Content-Type' => 'application/pdf',
@@ -105,4 +105,4 @@ Route::get('/test-pdf', function () {
             'trace' => $e->getTraceAsString()
         ], 500);
     }
-})->name('test.pdf');
+})->name('test.pdf.download');

@@ -2,6 +2,11 @@
 
 echo "Starting Laravel application..."
 
+# Set Chrome path for Puppeteer
+export PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
+export CHROME_PATH=/usr/bin/google-chrome
+export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
 # Run setup tasks
 echo "Installing Composer dependencies..."
 composer install --no-interaction --no-dev --optimize-autoloader

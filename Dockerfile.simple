@@ -34,9 +34,9 @@ RUN apt-get update && apt-get install -y \
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
 
-# Install Google Chrome
-RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
+# Install Google Chrome with updated signing key method
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg \
+    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
     && apt-get update \
     && apt-get install -y google-chrome-stable \
     && apt-get clean \
@@ -54,8 +54,10 @@ WORKDIR /var/www
 # Copy the entire application
 COPY . /var/www
 
-# Install Puppeteer globally
-RUN npm install -g puppeteer
+# Install Puppeteer globally and configure Chrome path
+RUN npm install -g puppeteer \
+    && npx puppeteer browsers install chrome-headless-shell \
+    && echo 'export PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome' >> /etc/environment
 
 # Copy the entrypoint script and make it executable
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

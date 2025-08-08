@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\OrderSheet;
 use Spatie\Browsershot\Browsershot; // <-- UPDATED: Using Browsershot
+use App\Services\PdfGeneratorService;
 
 class OrderSheetController extends Controller
 {
@@ -73,21 +74,17 @@ class OrderSheetController extends Controller
         $url = str_replace('127.0.0.1', 'localhost', $url);
 
         try {
-            // Use Browsershot to convert the URL to a PDF
-            $pdf = Browsershot::url($url)
-                ->noSandbox() // Added to fix Puppeteer sandbox error
-                ->timeout(60) // Increased timeout to 60 seconds
-                ->format('A4')
-                ->pdf();
+            // Use PdfGeneratorService to convert the URL to a PDF
+            $pdf = PdfGeneratorService::generateFromUrl($url, [
+                'timeout' => 60
+            ]);
         } catch (\Exception $e) {
             // Fallback: Generate PDF from HTML content directly
             $html = view('pdf.pdf_preview', compact('order'))->render();
             
-            $pdf = Browsershot::html($html)
-                ->noSandbox()
-                ->timeout(60)
-                ->format('A4')
-                ->pdf();
+            $pdf = PdfGeneratorService::generateFromHtml($html, [
+                'timeout' => 60
+            ]);
         }
 
         return response($pdf, 200, [

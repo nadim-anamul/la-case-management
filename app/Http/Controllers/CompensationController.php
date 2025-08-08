@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use App\Traits\BengaliDateTrait;
 use Spatie\Browsershot\Browsershot;
+use App\Services\PdfGeneratorService;
 
 class CompensationController extends Controller
 {
@@ -389,14 +390,12 @@ class CompensationController extends Controller
             // Generate PDF directly from HTML content for better performance
             $html = view('pdf.notice_pdf', compact('compensation'))->render();
             
-            $pdf = Browsershot::html($html)
-                ->noSandbox()
-                ->timeout(120) // Increased timeout to 120 seconds
-                ->format('A4')
-                ->margins(10, 10, 10, 10) // Add margins
-                ->showBackground() // Show background for better rendering
-                ->waitUntilNetworkIdle() // Wait for network to be idle
-                ->pdf();
+            $pdf = PdfGeneratorService::generateFromHtml($html, [
+                'timeout' => 120,
+                'margins' => [10, 10, 10, 10],
+                'showBackground' => true,
+                'waitUntilNetworkIdle' => true
+            ]);
                 
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Notice PDF generation error: ' . $e->getMessage());

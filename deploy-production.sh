@@ -173,11 +173,24 @@ setup_pdf_generation() {
     # Check if Puppeteer is installed
     if docker compose -f docker-compose.server.yml exec -T app npm list -g puppeteer > /dev/null 2>&1; then
         print_success "✅ Puppeteer is installed"
+        
+        # Install Chrome headless shell for Puppeteer
+        print_status "🔧 Installing Chrome headless shell for Puppeteer..."
+        docker compose -f docker-compose.server.yml exec -T app npx puppeteer browsers install chrome-headless-shell || true
+        
+        # Set Chrome path environment variable
+        print_status "🔧 Setting Chrome path environment variable..."
+        docker compose -f docker-compose.server.yml exec -T app bash -c 'echo "export PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome" >> ~/.bashrc' || true
+        
     else
         print_warning "⚠️ Installing Puppeteer..."
         docker compose -f docker-compose.server.yml exec -T app npm install -g puppeteer
         if [ $? -eq 0 ]; then
             print_success "✅ Puppeteer installed successfully"
+            
+            # Install Chrome headless shell for Puppeteer
+            print_status "🔧 Installing Chrome headless shell for Puppeteer..."
+            docker compose -f docker-compose.server.yml exec -T app npx puppeteer browsers install chrome-headless-shell || true
         else
             print_error "❌ Failed to install Puppeteer"
             return 1
@@ -211,22 +224,32 @@ test_pdf_generation() {
     if test_result=$(docker compose -f docker-compose.server.yml exec -T app php artisan route:list | grep test-pdf 2>/dev/null); then
         print_success "✅ PDF test route is available"
         
-        # Test actual PDF generation
-        print_status "🔄 Testing PDF generation endpoint..."
-        local http_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/test-pdf)
+        # Test PDF generation service
+        print_status "🔄 Testing PDF generation service..."
+        local test_result=$(curl -s http://localhost:8000/test-pdf)
         
-        if [ "$http_code" = "200" ]; then
-            print_success "✅ PDF generation test passed (HTTP $http_code)"
+        if echo "$test_result" | grep -q '"success":true'; then
+            print_success "✅ PDF generation service test passed"
             
-            # Test if PDF content is actually generated
-            local pdf_content=$(curl -s http://localhost:8000/test-pdf | head -c 100)
-            if [[ "$pdf_content" == "%PDF"* ]]; then
-                print_success "✅ PDF content verified - valid PDF generated"
+            # Test actual PDF download
+            print_status "🔄 Testing PDF download..."
+            local http_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/test-pdf-download)
+            
+            if [ "$http_code" = "200" ]; then
+                # Test if PDF content is actually generated
+                local pdf_content=$(curl -s http://localhost:8000/test-pdf-download | head -c 4)
+                if [[ "$pdf_content" == "%PDF" ]]; then
+                    print_success "✅ PDF download verified - valid PDF generated"
+                else
+                    print_warning "⚠️ PDF content verification failed"
+                    echo "Content preview: $pdf_content"
+                fi
             else
-                print_warning "⚠️ PDF content verification failed - may not be valid PDF"
+                print_warning "⚠️ PDF download test failed (HTTP $http_code)"
             fi
         else
-            print_warning "⚠️ PDF generation test failed (HTTP $http_code) - check logs for details"
+            print_warning "⚠️ PDF generation service test failed"
+            echo "Test result: $test_result"
             print_status "📋 Recent PDF generation logs:"
             docker compose -f docker-compose.server.yml logs --tail=20 app | grep -i "pdf\|browsershot\|chrome" || true
         fi
