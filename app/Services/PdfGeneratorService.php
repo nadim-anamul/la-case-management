@@ -63,6 +63,13 @@ class PdfGeneratorService
      */
     private static function getChromePath(): ?string
     {
+        // First try Puppeteer's default Chrome
+        $puppeteerChrome = '/root/.cache/puppeteer/chrome/linux-138.0.7204.94/chrome-linux64/chrome';
+        if (file_exists($puppeteerChrome)) {
+            return $puppeteerChrome;
+        }
+
+        // Fallback to system Chrome paths
         $paths = [
             '/usr/bin/google-chrome',
             '/usr/bin/google-chrome-stable',
