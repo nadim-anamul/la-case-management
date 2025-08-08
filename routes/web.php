@@ -52,3 +52,57 @@ Route::get('/compensation/{id}/analysis/excel', [CompensationController::class, 
 Route::get('/test-css', function () {
     return view('test-css');
 })->name('test.css');
+
+// Test route for PDF generation
+Route::get('/test-pdf', function () {
+    try {
+        // Test PDF generation with a simple HTML
+        $html = '
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>PDF Test</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                .header { text-align: center; color: #333; }
+                .content { margin: 20px 0; }
+                .footer { text-align: center; margin-top: 50px; color: #666; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>PDF Generation Test</h1>
+                <p>This is a test PDF generated at: ' . now() . '</p>
+            </div>
+            <div class="content">
+                <h2>System Information</h2>
+                <ul>
+                    <li>PHP Version: ' . PHP_VERSION . '</li>
+                    <li>Laravel Version: ' . app()->version() . '</li>
+                    <li>Generated: ' . now()->format('Y-m-d H:i:s') . '</li>
+                </ul>
+            </div>
+            <div class="footer">
+                <p>PDF generation test successful!</p>
+            </div>
+        </body>
+        </html>';
+        
+        $pdf = \Spatie\Browsershot\Browsershot::html($html)
+            ->noSandbox()
+            ->timeout(60)
+            ->format('A4')
+            ->pdf();
+            
+        return response($pdf, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="test.pdf"',
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'PDF generation failed',
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ], 500);
+    }
+})->name('test.pdf');

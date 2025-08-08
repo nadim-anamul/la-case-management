@@ -157,6 +157,85 @@ cleanup_old_backups() {
     print_success "✅ Old backups cleaned up"
 }
 
+# Function to setup PDF generation
+setup_pdf_generation() {
+    print_status "📄 Setting up PDF generation..."
+    
+    # Check if Node.js is installed
+    if docker compose -f docker-compose.server.yml exec -T app node --version > /dev/null 2>&1; then
+        local node_version=$(docker compose -f docker-compose.server.yml exec -T app node --version)
+        print_success "✅ Node.js is installed: $node_version"
+    else
+        print_error "❌ Node.js is not installed"
+        return 1
+    fi
+    
+    # Check if Puppeteer is installed
+    if docker compose -f docker-compose.server.yml exec -T app npm list -g puppeteer > /dev/null 2>&1; then
+        print_success "✅ Puppeteer is installed"
+    else
+        print_warning "⚠️ Installing Puppeteer..."
+        docker compose -f docker-compose.server.yml exec -T app npm install -g puppeteer
+        if [ $? -eq 0 ]; then
+            print_success "✅ Puppeteer installed successfully"
+        else
+            print_error "❌ Failed to install Puppeteer"
+            return 1
+        fi
+    fi
+    
+    # Check if Chrome is available
+    if docker compose -f docker-compose.server.yml exec -T app which google-chrome > /dev/null 2>&1; then
+        local chrome_version=$(docker compose -f docker-compose.server.yml exec -T app google-chrome --version)
+        print_success "✅ Chrome is installed: $chrome_version"
+    else
+        print_warning "⚠️ Chrome not found, checking for chromium..."
+        if docker compose -f docker-compose.server.yml exec -T app which chromium-browser > /dev/null 2>&1; then
+            print_success "✅ Chromium is available"
+        else
+            print_error "❌ Neither Chrome nor Chromium is available"
+            return 1
+        fi
+    fi
+    
+    print_success "✅ PDF generation setup completed"
+    return 0
+}
+
+# Function to test PDF generation
+test_pdf_generation() {
+    print_status "🧪 Testing PDF generation..."
+    
+    # Test basic PDF generation
+    local test_result
+    if test_result=$(docker compose -f docker-compose.server.yml exec -T app php artisan route:list | grep test-pdf 2>/dev/null); then
+        print_success "✅ PDF test route is available"
+        
+        # Test actual PDF generation
+        print_status "🔄 Testing PDF generation endpoint..."
+        local http_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/test-pdf)
+        
+        if [ "$http_code" = "200" ]; then
+            print_success "✅ PDF generation test passed (HTTP $http_code)"
+            
+            # Test if PDF content is actually generated
+            local pdf_content=$(curl -s http://localhost:8000/test-pdf | head -c 100)
+            if [[ "$pdf_content" == "%PDF"* ]]; then
+                print_success "✅ PDF content verified - valid PDF generated"
+            else
+                print_warning "⚠️ PDF content verification failed - may not be valid PDF"
+            fi
+        else
+            print_warning "⚠️ PDF generation test failed (HTTP $http_code) - check logs for details"
+            print_status "📋 Recent PDF generation logs:"
+            docker compose -f docker-compose.server.yml logs --tail=20 app | grep -i "pdf\|browsershot\|chrome" || true
+        fi
+    else
+        print_warning "⚠️ PDF test route not found - checking if routes are loaded"
+        docker compose -f docker-compose.server.yml exec -T app php artisan route:list | grep -i "pdf" || true
+    fi
+}
+
 # Function to detect new migrations
 detect_new_migrations() {
     print_status "🔍 Detecting new migrations..."
@@ -253,6 +332,9 @@ generate_deployment_summary() {
     echo "   - Production environment"
     echo "   - Updated database seeder"
     echo "   - All new fields (status, order_signature_date, etc.)"
+    echo "   - PDF generation with Browsershot"
+    echo "   - Chrome/Chromium support for PDF generation"
+    echo "   - Node.js and Puppeteer for PDF rendering"
     
     # Add dynamic features
     if grep -r "land_category" app/Models/ database/migrations/ 2>/dev/null | grep -q .; then
@@ -281,8 +363,8 @@ generate_deployment_summary() {
 # Main deployment process
 main() {
     echo ""
-    print_status "🚀 Starting Production Deployment with Enhanced Database Handling"
-    echo "================================================================"
+    print_status "🚀 Starting Production Deployment with Enhanced Database Handling and PDF Generation"
+    echo "========================================================================================="
     
     # Cleanup old backups
     cleanup_old_backups
@@ -385,6 +467,17 @@ main() {
         exit 1
     fi
     
+    # Setup PDF generation
+    print_status "📄 Setting up PDF generation..."
+    if ! setup_pdf_generation; then
+        print_warning "⚠️ PDF generation setup failed - PDF features may not work"
+        print_status "📋 PDF setup logs:"
+        docker compose -f docker-compose.server.yml logs --tail=20 app | grep -i "node\|npm\|chrome\|puppeteer" || true
+    else
+        # Test PDF generation
+        test_pdf_generation
+    fi
+    
     echo ""
     print_success "🎉 Production deployment completed successfully!"
     echo ""
@@ -396,6 +489,7 @@ main() {
     echo "   - Check logs: docker compose -f docker-compose.server.yml logs -f"
     echo "   - View backups: ls -la backup_*.sql"
     echo "   - Restore from backup: ./restore-from-backup.sh <backup_file>"
+    echo "   - Test PDF: curl -o test.pdf http://localhost:8000/test-pdf"
     echo ""
 }
 
@@ -403,4 +497,4 @@ main() {
 trap 'print_error "❌ Deployment interrupted"; exit 1' INT TERM
 
 # Run main deployment
-main "$@" 
+main "$@"
