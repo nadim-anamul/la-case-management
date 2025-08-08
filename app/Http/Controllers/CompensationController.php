@@ -256,6 +256,9 @@ class CompensationController extends Controller
             'tax_info.holding_no' => 'nullable|string|max:255',
             'tax_info.paid_land_amount' => 'nullable|string|max:255',
             
+            // Ownership Details Tax Info
+            'ownership_details.deed_transfers.*.tax_info' => 'nullable|string',
+            
             // Additional Documents
             'additional_documents_info' => 'nullable|array',
             'additional_documents_info.selected_types' => 'nullable|array',

@@ -120,7 +120,8 @@ class CompensationFactory extends Factory
                         'possession_deed' => $this->faker->randomElement(['yes', 'no']),
                         'possession_application' => $this->faker->randomElement(['yes', 'no']),
                         'mentioned_areas' => 'SA-' . $this->faker->numberBetween(100, 999),
-                        'special_details' => null
+                        'special_details' => null,
+                        'tax_info' => $this->faker->optional(0.7)->paragraph()
                     ]
                 ],
                 'applicant_info' => [
@@ -130,7 +131,19 @@ class CompensationFactory extends Factory
                     'kharij_land_amount' => $this->faker->randomFloat(2, 0.5, 5),
                     'kharij_date' => $this->faker->date('Y-m-d'),
                     'kharij_details' => $this->faker->sentence()
-                ]
+                ],
+                'storySequence' => [
+                    [
+                        'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
+                        'description' => 'দলিল নম্বর: DEED-' . $this->faker->numberBetween(100, 999),
+                        'itemType' => 'deed',
+                        'itemIndex' => 0,
+                        'sequenceIndex' => 0
+                    ]
+                ],
+                'currentStep' => 'applicant',
+                'completedSteps' => ['info', 'transfers', 'applicant'],
+                'rs_record_disabled' => false
             ];
         } else {
             return [
@@ -163,7 +176,8 @@ class CompensationFactory extends Factory
                         'possession_deed' => $this->faker->randomElement(['yes', 'no']),
                         'possession_application' => $this->faker->randomElement(['yes', 'no']),
                         'mentioned_areas' => 'RS-' . $this->faker->numberBetween(100, 999),
-                        'special_details' => null
+                        'special_details' => null,
+                        'tax_info' => $this->faker->optional(0.7)->paragraph()
                     ]
                 ],
                 'applicant_info' => [
@@ -173,7 +187,19 @@ class CompensationFactory extends Factory
                     'kharij_land_amount' => $this->faker->randomFloat(2, 0.5, 5),
                     'kharij_date' => $this->faker->date('Y-m-d'),
                     'kharij_details' => $this->faker->sentence()
-                ]
+                ],
+                'storySequence' => [
+                    [
+                        'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
+                        'description' => 'দলিল নম্বর: DEED-' . $this->faker->numberBetween(100, 999),
+                        'itemType' => 'deed',
+                        'itemIndex' => 0,
+                        'sequenceIndex' => 0
+                    ]
+                ],
+                'currentStep' => 'applicant',
+                'completedSteps' => ['info', 'transfers', 'applicant'],
+                'rs_record_disabled' => false
             ];
         }
     }

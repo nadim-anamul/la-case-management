@@ -232,18 +232,11 @@
     <!-- Step 2: Transfers and Records -->
     <div x-show="currentStep === 'transfers'" class="space-y-6">
         <h3 class="text-lg font-bold mb-4">ধাপ ২: হস্তান্তর ও রেকর্ড</h3>
-        
-        <!-- Action Buttons -->
-        {{-- <div class="flex flex-wrap gap-4 mb-6">
-            <button type="button" @click="addDeedTransfer()" class="btn-primary">দলিলমূলে মালিকানা হস্তান্তর যোগ করুন</button>
-            <button type="button" @click="addInheritanceRecord()" class="btn-primary">ওয়ারিশমূলে হস্তান্তর যোগ করুন</button>
-            <button type="button" @click="addRsRecord()" :disabled="rs_record_disabled" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200" :class="{ 'opacity-50 cursor-not-allowed': rs_record_disabled }" x-show="acquisition_record_basis === 'SA'">আরএস রেকর্ড যোগ করুন</button>
-            <button type="button" @click="nextStep()" class="btn-success">উপরোক্ত মালিকই আবেদনকারী</button>
-        </div> --}}
+
 
         <!-- Story Sequence Summary -->
         <div class="bg-blue-50 p-6 rounded-lg mb-6">
-            <h4 class="font-bold text-lg mb-4 text-blue-800">মালিকানার ধারাবাহিকতার কাহিনী</h4>
+            <h4 class="font-bold text-lg mb-4 text-blue-800">মালিকানার ধারাবাহিকতার ক্রম</h4>
             <div class="space-y-3">
                 <template x-for="(item, index) in storySequence" :key="index">
                     <div class="flex items-center justify-between bg-white p-3 rounded-lg border-l-4 border-blue-500 hover:bg-blue-50 cursor-pointer transition-all duration-200" @click="scrollToStoryItem(item)">
@@ -411,6 +404,12 @@
                     <div class="form-section md:col-span-2">
                         <label class="font-semibold text-gray-700 mb-2">প্রযোজ্যক্ষেত্রে দলিলের বিশেষ বিবরণ:</label>
                         <textarea :name="'ownership_details[deed_transfers][' + index + '][special_details]'" x-model="deed.special_details" rows="4" class="form-input w-full" placeholder=" "></textarea>
+                    </div>
+                    
+                    <!-- Tax Information Section -->
+                    <div class="form-section md:col-span-2">
+                        <label class="font-semibold text-gray-700 mb-2">খাজনার তথ্য:</label>
+                        <textarea :name="'ownership_details[deed_transfers][' + index + '][tax_info]'" x-model="deed.tax_info" rows="4" class="form-input w-full" placeholder="খাজনার বিবরণ, পরিশোধের ইতিহাস, বকেয়া খাজনা ইত্যাদি লিখুন"></textarea>
                     </div>
 
                 </div>
@@ -764,6 +763,9 @@ function ownershipContinuity() {
                             if (!deed.application_sell_area_other) {
                                 deed.application_sell_area_other = '';
                             }
+                            if (!deed.tax_info) {
+                                deed.tax_info = '';
+                            }
                         });
                         this.inheritance_records = data.ownership_details.inheritance_records || [];
                         // Handle RS records with new structure
@@ -1006,7 +1008,8 @@ function ownershipContinuity() {
                 possession_deed: 'no',
                 possession_application: 'no',
                 mentioned_areas: '',
-                special_details: ''
+                special_details: '',
+                tax_info: ''
             };
             // Add at the end of the array to show at bottom
             this.deed_transfers.push(newDeed);

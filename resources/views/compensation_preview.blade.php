@@ -275,7 +275,7 @@
         <!-- Story Sequence Display - Show First -->
         @if(isset($compensation->ownership_details['storySequence']) && count($compensation->ownership_details['storySequence']) > 0)
         <div class="mb-6">
-            <h3 class="font-semibold text-lg mb-3 text-green-600">মালিকানার ধারাবাহিকতার কাহিনী</h3>
+            <h3 class="font-semibold text-lg mb-3 text-green-600">মালিকানার ধারাবাহিকতার ক্রম</h3>
             <div class="space-y-3">
                 @foreach($compensation->ownership_details['storySequence'] as $index => $item)
                 <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
@@ -456,6 +456,12 @@
                                 <div class="md:col-span-2">
                                     <label class="font-semibold text-gray-700">প্রযোজ্যক্ষেত্রে দলিলের বিশেষ বিবরণ:</label>
                                     <p class="text-gray-900">{{ $deed['special_details'] }}</p>
+                                </div>
+                                @endif
+                                @if(isset($deed['tax_info']) && $deed['tax_info'])
+                                <div class="md:col-span-2">
+                                    <label class="font-semibold text-gray-700">খাজনার তথ্য:</label>
+                                    <p class="text-gray-900">{{ $deed['tax_info'] }}</p>
                                 </div>
                                 @endif
                             </div>
