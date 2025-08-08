@@ -977,6 +977,42 @@
         </div>
     </div>
     @endif
+
+    <!-- Action Buttons -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
+            <span class="section-icon">৯</span>
+            পরবর্তী কার্যক্রম
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <a href="{{ route('compensation.present', $compensation->id) }}" class="action-card bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700">
+                <div class="flex items-center justify-center space-x-3">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="text-white font-bold text-lg">ক্ষতিপূরণ কেসে উপস্থাপন</span>
+                </div>
+            </a>
+            
+            <a href="{{ route('compensation.notice.preview', $compensation->id) }}" class="action-card bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700">
+                <div class="flex items-center justify-center space-x-3">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    <span class="text-white font-bold text-lg">সকল পক্ষকে নোটিশ করুণ</span>
+                </div>
+            </a>
+            
+            <a href="{{ route('compensation.analysis', $compensation->id) }}" class="action-card bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700">
+                <div class="flex items-center justify-center space-x-3">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="text-white font-bold text-lg">আবেদন বিশ্লেষণ</span>
+                </div>
+            </a>
+        </div>
+    </div>
 </div>
 
 <style>
@@ -1000,6 +1036,30 @@
 
 .btn-secondary {
     @apply bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded;
+}
+
+.btn-action {
+    @apply text-white font-bold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl;
+}
+
+.action-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    border-radius: 8px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    transform: scale(1);
+}
+
+.action-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.action-icon {
+    @apply w-16 h-16 mb-2 text-white;
 }
 </style>
 @endsection 

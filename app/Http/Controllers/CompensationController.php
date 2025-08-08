@@ -7,6 +7,7 @@ use App\Models\Compensation;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use App\Traits\BengaliDateTrait;
+use Spatie\Browsershot\Browsershot;
 
 class CompensationController extends Controller
 {
@@ -121,7 +122,7 @@ class CompensationController extends Controller
                 'message' => 'কানুনগো/সার্ভেয়ারের মতামত সফলভাবে আপডেট করা হয়েছে।'
             ]);
         } catch (\Exception $e) {
-            \Log::error('Kanungo opinion update error: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Kanungo opinion update error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'কিছু সমস্যা হয়েছে: ' . $e->getMessage()
@@ -186,7 +187,7 @@ class CompensationController extends Controller
                 'message' => 'আদেশ সফলভাবে নিষ্পত্তিকৃত হয়েছে।'
             ]);
         } catch (\Exception $e) {
-            \Log::error('Order update error: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Order update error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'কিছু সমস্যা হয়েছে: ' . $e->getMessage()
@@ -353,5 +354,120 @@ class CompensationController extends Controller
                 })->validate();
             }
         }
+    }
+
+    /**
+     * Present compensation case
+     */
+    public function present($id)
+    {
+        $compensation = Compensation::findOrFail($id);
+        return view('compensation.present', compact('compensation'));
+    }
+
+    /**
+     * Preview notice with actual data
+     */
+    public function noticePreview($id)
+    {
+        $compensation = Compensation::findOrFail($id);
+        return view('compensation.notice_preview', compact('compensation'));
+    }
+
+    /**
+     * Generate PDF for notice using Browsershot
+     */
+    public function generateNoticePdf($id)
+    {
+        // Increase execution time limit for PDF generation
+        set_time_limit(120); // 2 minutes
+        ini_set('memory_limit', '256M'); // Increase memory limit
+        
+        $compensation = Compensation::findOrFail($id);
+        
+        try {
+            // Generate PDF directly from HTML content for better performance
+            $html = view('pdf.notice_pdf', compact('compensation'))->render();
+            
+            $pdf = Browsershot::html($html)
+                ->noSandbox()
+                ->timeout(120) // Increased timeout to 120 seconds
+                ->format('A4')
+                ->margins(10, 10, 10, 10) // Add margins
+                ->showBackground() // Show background for better rendering
+                ->waitUntilNetworkIdle() // Wait for network to be idle
+                ->pdf();
+                
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Notice PDF generation error: ' . $e->getMessage());
+            
+            // Fallback: Return HTML view instead of PDF
+            return view('compensation.notice_preview', compact('compensation'))
+                ->with('error', 'PDF তৈরি করতে সমস্যা হয়েছে। HTML ভার্সন দেখানো হচ্ছে।');
+        }
+
+        return response($pdf, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="notice_'.$compensation->id.'.pdf"',
+        ]);
+    }
+
+    /**
+     * Print application and document analysis
+     */
+    public function analysis($id)
+    {
+        $compensation = Compensation::findOrFail($id);
+        return view('compensation.analysis', compact('compensation'));
+    }
+
+    /**
+     * Store presentation data
+     */
+    public function storePresent(Request $request, $id)
+    {
+        try {
+            $compensation = Compensation::findOrFail($id);
+            
+            $validatedData = $request->validate([
+                'presentation_date' => 'required|string|max:255',
+                'presentation_time' => 'required|string|max:255',
+                'presentation_venue' => 'required|string|max:255',
+                'presenting_officer' => 'required|string|max:255',
+                'presentation_details' => 'nullable|string',
+                'special_notes' => 'nullable|string',
+            ]);
+            
+            // Store presentation data (you can add a presentations table later)
+            // For now, we'll just redirect with success message
+            return redirect()->route('compensation.present', $id)
+                ->with('success', 'উপস্থাপনার তথ্য সফলভাবে সংরক্ষিত হয়েছে।');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'কিছু সমস্যা হয়েছে: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Generate PDF for analysis
+     */
+    public function analysisPdf($id)
+    {
+        $compensation = Compensation::findOrFail($id);
+        // For now, redirect to analysis page
+        // You can implement PDF generation later
+        return redirect()->route('compensation.analysis', $id)
+            ->with('info', 'PDF ডাউনলোড ফিচার শীঘ্রই যোগ করা হবে।');
+    }
+
+    /**
+     * Generate Excel for analysis
+     */
+    public function analysisExcel($id)
+    {
+        $compensation = Compensation::findOrFail($id);
+        // For now, redirect to analysis page
+        // You can implement Excel generation later
+        return redirect()->route('compensation.analysis', $id)
+            ->with('info', 'এক্সেল ডাউনলোড ফিচার শীঘ্রই যোগ করা হবে।');
     }
 }

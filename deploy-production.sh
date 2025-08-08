@@ -367,6 +367,9 @@ main() {
     if grep -r "award_serial_no" database/seeders/ 2>/dev/null | grep -q .; then
         echo "   - Conditional award serial number demo data"
     fi
+    if grep -r "tax_info" database/seeders/ 2>/dev/null | grep -q .; then
+        echo "   - Tax information field in ownership details"
+    fi
     echo ""
     
     # Production uses CDN - no need to build Vite assets
