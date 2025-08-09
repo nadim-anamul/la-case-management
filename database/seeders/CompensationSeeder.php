@@ -66,34 +66,69 @@ class CompensationSeeder extends Seeder
             return [
                 'applicants' => [
                     [
-                        'name' => fake()->name(),
-                        'father_name' => fake()->name(),
-                        'address' => fake()->address(),
+                        'name' => fake()->randomElement(['আবদুল করিম', 'মোহাম্মদ আলী', 'রশিদা খাতুন', 'ফাতেমা বেগম']),
+                        'father_name' => fake()->randomElement(['আবদুর রহমান', 'মোস্তাফা কামাল', 'আবুল কাসেম', 'মোহাম্মদ হাসান']),
+                        'address' => 'বাড়ি নং- ' . fake()->numberBetween(1, 999) . ', ' . fake()->randomElement(['কালিগঞ্জ', 'রামপুর', 'সোনারগাঁও']) . ' ' . fake()->randomElement(['গ্রাম', 'পাড়া']),
                         'nid' => fake()->numerify('#############'),
-                        'mobile' => fake()->phoneNumber()
+                        'mobile' => '01' . fake()->numerify('#########')
                     ],
                     [
-                        'name' => fake()->name(),
-                        'father_name' => fake()->name(),
-                        'address' => fake()->address(),
+                        'name' => fake()->randomElement(['সালমা খাতুন', 'আয়েশা বেগম', 'আবদুল জব্বার', 'মোহাম্মদ ইউসুফ']),
+                        'father_name' => fake()->randomElement(['আবদুল মজিদ', 'মোহাম্মদ সালাম', 'আব্দুল হক', 'মোহাম্মদ নূর']),
+                        'address' => 'বাড়ি নং- ' . fake()->numberBetween(1, 999) . ', ' . fake()->randomElement(['বাগবাড়ি', 'পূর্বপাড়া', 'দক্ষিণপাড়া']) . ' ' . fake()->randomElement(['মহল্লা', 'কলোনি']),
                         'nid' => fake()->numerify('#############'),
-                        'mobile' => fake()->phoneNumber()
+                        'mobile' => '01' . fake()->numerify('#########')
                     ]
                 ],
                 'award_holder_names' => [
                     [
-                        'name' => fake()->name(),
-                        'father_name' => fake()->name(),
-                        'address' => fake()->address()
+                        'name' => fake()->randomElement(['রোকেয়া খাতুন', 'হাসিনা বেগম', 'আবদুল বারী', 'মোহাম্মদ শাহ']),
+                        'father_name' => fake()->randomElement(['আবুল হোসেন', 'মিনারা বেগম', 'সুফিয়া খাতুন', 'নূরজাহান বেগম']),
+                        'address' => 'বাড়ি নং- ' . fake()->numberBetween(1, 999) . ', ' . fake()->randomElement(['উত্তরপাড়া', 'মধ্যপাড়া', 'নতুনপাড়া']) . ' ' . fake()->randomElement(['গ্রাম', 'এলাকা'])
                     ],
                     [
-                        'name' => fake()->name(),
-                        'father_name' => fake()->name(),
-                        'address' => fake()->address()
+                        'name' => fake()->randomElement(['শাহনাজ পারভীন', 'রাবেয়া খাতুন', 'আবদুল করিম', 'মোহাম্মদ আলী']),
+                        'father_name' => fake()->randomElement(['আবদুর রহমান', 'মোস্তাফা কামাল', 'আবুল কাসেম', 'মোহাম্মদ হাসান']),
+                        'address' => 'বাড়ি নং- ' . fake()->numberBetween(1, 999) . ', ' . fake()->randomElement(['পুরাতনপাড়া', 'বাজারপাড়া', 'স্কুলপাড়া']) . ' ' . fake()->randomElement(['পাড়া', 'মহল্লা'])
                     ]
                 ],
                 'district' => fake()->randomElement(['বগুড়া', 'ঢাকা', 'চট্টগ্রাম', 'রাজশাহী']),
                 'upazila' => fake()->randomElement(['বগুড়া সদর', 'শিবগঞ্জ', 'শেরপুর', 'দুপচাঁচিয়া']),
+            ];
+        })->create();
+
+        // Generate 3 compensations with complex ownership sequences (SA records)
+        Compensation::factory()->count(3)->state(function (array $attributes) {
+            return [
+                'acquisition_record_basis' => 'SA',
+                'sa_plot_no' => 'SA-' . fake()->numberBetween(100, 999),
+                'land_schedule_sa_plot_no' => 'SA-PLOT-' . fake()->numberBetween(100, 999),
+                'sa_khatian_no' => 'SA-KH-' . fake()->numberBetween(100, 999),
+                'rs_plot_no' => null,
+                'land_schedule_rs_plot_no' => null,
+                'rs_khatian_no' => null,
+            ];
+        })->create();
+
+        // Generate 3 compensations with complex RS ownership sequences (RS records with disabled second step)
+        Compensation::factory()->count(3)->state(function (array $attributes) {
+            return [
+                'acquisition_record_basis' => 'RS',
+                'rs_plot_no' => 'RS-' . fake()->numberBetween(100, 999),
+                'land_schedule_rs_plot_no' => 'RS-PLOT-' . fake()->numberBetween(100, 999),
+                'rs_khatian_no' => 'RS-KH-' . fake()->numberBetween(100, 999),
+                'sa_plot_no' => null,
+                'land_schedule_sa_plot_no' => null,
+                'sa_khatian_no' => null,
+            ];
+        })->create();
+
+        // Generate 2 compensations with inheritance-heavy ownership sequences
+        Compensation::factory()->count(2)->state(function (array $attributes) {
+            // This will trigger the factory to generate more inheritance records
+            return [
+                'award_type' => ['জমি ও গাছপালা'],
+                'tree_compensation' => fake()->numberBetween(25000, 75000),
             ];
         })->create();
 

@@ -68,7 +68,7 @@
                     this.acquisition_record_basis = old.acquisition_record_basis || '';
                     this.selected_doc_types = old.additional_documents_info?.selected_types || [];
                     this.additional_documents_details = old.additional_documents_info?.details || {};
-                    this.award_type = old.award_type || '';
+                    this.award_type = Array.isArray(old.award_type) ? old.award_type[0] || '' : old.award_type || '';
                     this.award_holder_names = old.award_holder_names || [{ name: '', father_name: '', address: '' }];
                     this.land_category = old.land_category || [{ 
                         category_name: '', 
@@ -108,7 +108,7 @@
                     this.acquisition_record_basis = data.acquisition_record_basis || '';
                     this.selected_doc_types = (data.additional_documents_info?.selected_types) || [];
                     this.additional_documents_details = (data.additional_documents_info?.details) || {};
-                    this.award_type = data.award_type || '';
+                    this.award_type = Array.isArray(data.award_type) ? data.award_type[0] || '' : data.award_type || '';
                     this.award_holder_names = data.award_holder_names || [{ name: '', father_name: '', address: '' }];
                     this.land_category = data.land_category || [{ 
                         category_name: '', 
@@ -164,6 +164,16 @@
                         applicant_land: '' 
                     }];
                 }
+                
+                // Force reactivity update after initialization
+                this.$nextTick(() => {
+                    // Trigger a dummy update to force Alpine.js to re-evaluate conditionals
+                    const currentAwardType = this.award_type;
+                    this.award_type = '';
+                    this.$nextTick(() => {
+                        this.award_type = currentAwardType;
+                    });
+                });
             },
             
             addApplicant() {
