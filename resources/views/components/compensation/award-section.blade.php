@@ -199,10 +199,9 @@
                                            x-model="category.applicant_land" 
                                            placeholder="আবেদনকারীর জমি" 
                                            class="form-input w-full"
-                                           required
                                            min="0"
                                            step="0.01">
-                                    <label>আবেদনকারীর অধিগ্রহণকৃত জমি (একর)<span class="text-red-500">*</span></label>
+                                    <label>আবেদনকারীর অধিগ্রহণকৃত জমি (একর)<span class="text-blue-500">*</span></label>
                                 </div>
                                 <button type="button" 
                                         @click="removeLandCategory(index)" 
@@ -275,10 +274,9 @@
                                            :name="'land_category[' + index + '][applicant_land]'" 
                                            x-model="category.applicant_land" 
                                            class="form-input w-full"
-                                           required
                                            min="0"
                                            step="0.01">
-                                    <label>আবেদনকারীর অধিগ্রহণকৃত জমি (একর)<span class="text-red-500">*</span></label>
+                                    <label>আবেদনকারীর অধিগ্রহণকৃত জমি (একর)<span class="text-blue-500">*</span></label>
                                 </div>
                                 <button type="button" 
                                         @click="removeLandCategory(index)" 

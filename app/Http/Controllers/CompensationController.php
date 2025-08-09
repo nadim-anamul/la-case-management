@@ -232,16 +232,16 @@ class CompensationController extends Controller
             // Land Category
             'land_category' => 'nullable|array',
             'land_category.*.category_name' => 'required|string|max:255',
-            'land_category.*.total_land' => 'required|string|max:255',
-            'land_category.*.total_compensation' => 'required|string|max:255',
-            'land_category.*.applicant_land' => 'nullable|string|max:255',
+            'land_category.*.total_land' => 'required|numeric|min:0',
+            'land_category.*.total_compensation' => 'required|numeric|min:0',
+            'land_category.*.applicant_land' => 'nullable|numeric|min:0',
             
             // Additional Information
             'objector_details' => 'nullable|string',
             'is_applicant_in_award' => 'required|boolean',
-            'source_tax_percentage' => 'required|string|max:255',
-            'tree_compensation' => 'nullable|string|max:255',
-            'infrastructure_compensation' => 'nullable|string|max:255',
+            'source_tax_percentage' => 'required|numeric|min:0|max:100',
+            'tree_compensation' => 'nullable|numeric|min:0',
+            'infrastructure_compensation' => 'nullable|numeric|min:0',
             'district' => 'required|string|max:255',
             'upazila' => 'required|string|max:255',
             'mouza_name' => 'required|string|max:255',
