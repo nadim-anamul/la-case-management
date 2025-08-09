@@ -90,6 +90,8 @@
     }
     
     input[type="text"], 
+    input[type="number"],
+    input[type="tel"], 
     input[type="date"], 
     input[type="email"], 
     select, 
@@ -104,6 +106,8 @@
     }
     
     input[type="text"]:focus, 
+    input[type="number"]:focus,
+    input[type="tel"]:focus, 
     input[type="date"]:focus, 
     input[type="email"]:focus, 
     select:focus, 
@@ -381,6 +385,26 @@
         }
     }
     
+    /* Number input specific styles */
+    input[type="number"] {
+        -moz-appearance: textfield; /* Firefox */
+    }
+    
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    
+    /* Show spinner on hover/focus for better UX */
+    input[type="number"]:hover::-webkit-outer-spin-button,
+    input[type="number"]:hover::-webkit-inner-spin-button,
+    input[type="number"]:focus::-webkit-outer-spin-button,
+    input[type="number"]:focus::-webkit-inner-spin-button {
+        -webkit-appearance: inner-spin-button;
+        opacity: 1;
+    }
+
     /* Required field indicator styles */
     .text-red-500 {
         color: #ef4444;

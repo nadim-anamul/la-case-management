@@ -76,8 +76,11 @@
                         
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                             @if(is_array($item->applicants))
-                                @foreach($item->applicants as $applicant)
-                                    <p class="text-gray-900 whitespace-no-wrap">{{ is_array($applicant) ? ($applicant['name'] ?? '') : $applicant }}</p>
+                                @foreach($item->applicants as $index => $applicant)
+                                    <p class="text-gray-900 whitespace-no-wrap">
+                                        <span class="text-blue-600 font-medium">#{{ $index + 1 }}:</span> 
+                                        {{ is_array($applicant) ? ($applicant['name'] ?? '') : $applicant }}
+                                    </p>
                                 @endforeach
                             @else
                                 <p class="text-gray-900 whitespace-no-wrap">{{ is_string($item->applicants) ? $item->applicants : '' }}</p>

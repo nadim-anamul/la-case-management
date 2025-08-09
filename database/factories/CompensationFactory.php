@@ -29,7 +29,8 @@ class CompensationFactory extends Factory
                     'name' => $this->faker->name(),
                     'father_name' => $this->faker->name(),
                     'address' => $this->faker->address(),
-                    'nid' => $this->faker->numerify('#############')
+                    'nid' => $this->faker->numerify('#############'),
+                    'mobile' => '01' . $this->faker->numerify('#########')
                 ]
             ],
             'la_case_no' => 'LA-' . $this->faker->unique()->numberBetween(1000, 9999),
@@ -40,7 +41,11 @@ class CompensationFactory extends Factory
             'acquisition_record_basis' => $acquisitionBasis,
             'plot_no' => 'PLOT-' . $this->faker->numberBetween(100, 999),
             'award_holder_names' => [
-                ['name' => $this->faker->name()]
+                [
+                    'name' => $this->faker->name(),
+                    'father_name' => $this->faker->name(),
+                    'address' => $this->faker->address()
+                ]
             ],
             'land_category' => [
                 [
@@ -52,9 +57,11 @@ class CompensationFactory extends Factory
             ],
             'objector_details' => null,
             'is_applicant_in_award' => $this->faker->boolean(),
-            'source_tax_percentage' => $this->faker->numberBetween(1, 10),
+            'source_tax_percentage' => $this->faker->randomFloat(2, 0.5, 15.0),
             'tree_compensation' => null,
             'infrastructure_compensation' => null,
+            'district' => $this->faker->randomElement(['বগুড়া', 'ঢাকা', 'চট্টগ্রাম', 'রাজশাহী', 'খুলনা', 'সিলেট', 'রংপুর', 'বরিশাল']),
+            'upazila' => $this->faker->randomElement(['বগুড়া সদর', 'শিবগঞ্জ', 'শেরপুর', 'দুপচাঁচিয়া', 'আদমদীঘি', 'নন্দীগ্রাম', 'সোনাতলা', 'ধুনট', 'গাবতলী', 'কাহালু', 'সারিয়াকান্দি', 'শাজাহানপুর']),
             'mouza_name' => $this->faker->city(),
             'jl_no' => 'JL-' . $this->faker->numberBetween(100, 999),
             'land_schedule_sa_plot_no' => $acquisitionBasis === 'SA' ? 'SA-PLOT-' . $this->faker->numberBetween(100, 999) : null,

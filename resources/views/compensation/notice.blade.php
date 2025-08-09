@@ -73,6 +73,14 @@
                 <p class="text-gray-900">{{ $compensation->plot_no }}</p>
             </div>
             <div>
+                <label class="font-semibold text-gray-700">জেলা:</label>
+                <p class="text-gray-900">{{ $compensation->district ?? 'তথ্য নেই' }}</p>
+            </div>
+            <div>
+                <label class="font-semibold text-gray-700">উপজেলা:</label>
+                <p class="text-gray-900">{{ $compensation->upazila ?? 'তথ্য নেই' }}</p>
+            </div>
+            <div>
                 <label class="font-semibold text-gray-700">মৌজার নাম:</label>
                 <p class="text-gray-900">{{ $compensation->mouza_name }}</p>
             </div>
@@ -91,6 +99,7 @@
             <h3 class="font-semibold text-lg mb-3 text-green-600">আবেদনকারীগণ</h3>
             @foreach($compensation->applicants as $index => $applicant)
             <div class="bg-gray-50 p-4 rounded-lg mb-3">
+                <h4 class="font-semibold text-lg mb-3 text-blue-600">#{{ $index + 1 }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="font-semibold text-gray-700">নাম:</label>
@@ -114,11 +123,24 @@
             <h3 class="font-semibold text-lg mb-3 text-green-600">রোয়েদাদভুক্ত মালিকগণ</h3>
             @foreach($compensation->award_holder_names as $index => $holder)
             <div class="bg-gray-50 p-4 rounded-lg mb-3">
+                <h4 class="font-semibold text-lg mb-3 text-green-600">#{{ $index + 1 }}</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="font-semibold text-gray-700">নাম:</label>
                         <p class="text-gray-900">{{ $holder['name'] }}</p>
                     </div>
+                    @if(isset($holder['father_name']) && $holder['father_name'])
+                    <div>
+                        <label class="font-semibold text-gray-700">পিতার নাম:</label>
+                        <p class="text-gray-900">{{ $holder['father_name'] }}</p>
+                    </div>
+                    @endif
+                    @if(isset($holder['address']) && $holder['address'])
+                    <div class="md:col-span-2">
+                        <label class="font-semibold text-gray-700">ঠিকানা:</label>
+                        <p class="text-gray-900">{{ $holder['address'] }}</p>
+                    </div>
+                    @endif
                     <div>
                         <label class="font-semibold text-gray-700">মালিকানা ধরন:</label>
                         <p class="text-gray-900">রোয়েদাদভুক্ত মালিক</p>

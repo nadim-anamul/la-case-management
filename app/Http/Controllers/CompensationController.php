@@ -214,6 +214,7 @@ class CompensationController extends Controller
             'applicants.*.father_name' => 'required|string|max:255',
             'applicants.*.address' => 'required|string|max:255',
             'applicants.*.nid' => 'required|string|max:20',
+            'applicants.*.mobile' => 'required|string|max:15',
             
             // Award Information
             'la_case_no' => 'required|string|max:255',
@@ -225,13 +226,15 @@ class CompensationController extends Controller
             'plot_no' => 'required|string|max:255',
             'award_holder_names' => 'required|array|min:1',
             'award_holder_names.*.name' => 'required|string|max:255',
+            'award_holder_names.*.father_name' => 'required|string|max:255',
+            'award_holder_names.*.address' => 'required|string|max:255',
             
             // Land Category
             'land_category' => 'nullable|array',
             'land_category.*.category_name' => 'required|string|max:255',
             'land_category.*.total_land' => 'required|string|max:255',
             'land_category.*.total_compensation' => 'required|string|max:255',
-            'land_category.*.applicant_land' => 'required|string|max:255',
+            'land_category.*.applicant_land' => 'nullable|string|max:255',
             
             // Additional Information
             'objector_details' => 'nullable|string',
@@ -239,6 +242,8 @@ class CompensationController extends Controller
             'source_tax_percentage' => 'required|string|max:255',
             'tree_compensation' => 'nullable|string|max:255',
             'infrastructure_compensation' => 'nullable|string|max:255',
+            'district' => 'required|string|max:255',
+            'upazila' => 'required|string|max:255',
             'mouza_name' => 'required|string|max:255',
             'jl_no' => 'required|string|max:255',
             

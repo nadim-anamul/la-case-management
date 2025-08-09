@@ -101,7 +101,7 @@
                         <div class="mt-3 text-center transition-all duration-200 hover:-translate-y-0.5">
                             <div class="text-sm font-semibold transition-colors duration-200"
                                  :class="currentStep === 'applicant' ? 'text-blue-500' : completedSteps.includes('applicant') ? 'text-green-500' : 'text-gray-500'">
-                                আবেদনকারী তথ্য
+                                 আবেদনকারীর খারিজ ও খাজনা
                             </div>
                         </div>
                     </div>
@@ -151,14 +151,14 @@
                         @enderror
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="ownership_sa_total_land_in_plot" name="ownership_details[sa_info][sa_total_land_in_plot]" x-model="sa_info.sa_total_land_in_plot" placeholder=" ">
+                        <input type="number" id="ownership_sa_total_land_in_plot" name="ownership_details[sa_info][sa_total_land_in_plot]" x-model="sa_info.sa_total_land_in_plot" placeholder=" " min="0" step="0.01">
                         <label for="ownership_sa_total_land_in_plot">SA দাগে মোট জমি (একর)</label>
                         @error('ownership_details.sa_info.sa_total_land_in_plot')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="ownership_sa_land_in_khatian" name="ownership_details[sa_info][sa_land_in_khatian]" x-model="sa_info.sa_land_in_khatian" placeholder=" ">
+                        <input type="number" id="ownership_sa_land_in_khatian" name="ownership_details[sa_info][sa_land_in_khatian]" x-model="sa_info.sa_land_in_khatian" placeholder=" " min="0" step="0.01">
                         <label for="ownership_sa_land_in_khatian">উক্ত SA খতিয়ানে জমির পরিমাণ (একর)</label>
                         @error('ownership_details.sa_info.sa_land_in_khatian')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -198,14 +198,14 @@
                         @enderror
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="ownership_rs_total_land_in_plot" name="ownership_details[rs_info][rs_total_land_in_plot]" x-model="rs_info.rs_total_land_in_plot" placeholder=" ">
+                        <input type="number" id="ownership_rs_total_land_in_plot" name="ownership_details[rs_info][rs_total_land_in_plot]" x-model="rs_info.rs_total_land_in_plot" placeholder=" " min="0" step="0.01">
                         <label for="ownership_rs_total_land_in_plot">RS দাগে মোট জমি (একর)</label>
                         @error('ownership_details.rs_info.rs_total_land_in_plot')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="floating-label">
-                        <input type="text" id="ownership_rs_land_in_khatian" name="ownership_details[rs_info][rs_land_in_khatian]" x-model="rs_info.rs_land_in_khatian" placeholder=" ">
+                        <input type="number" id="ownership_rs_land_in_khatian" name="ownership_details[rs_info][rs_land_in_khatian]" x-model="rs_info.rs_land_in_khatian" placeholder=" " min="0" step="0.01">
                         <label for="ownership_rs_land_in_khatian">উক্ত দাগে RS খতিয়ানের হিস্যানুযায়ী জমির পরিমাণ (একর)</label>
                         @error('ownership_details.rs_info.rs_land_in_khatian')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -260,8 +260,8 @@
                     <svg class="w-12 h-12 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
-                    <p>কোন কাহিনী যোগ করা হয়নি</p>
-                    <p class="text-sm">নিচের বোতামগুলি ব্যবহার করে মালিকানার ধারাবাহিকতার কাহিনী তৈরি করুন</p>
+                    <p>কোন ক্রম যোগ করা হয়নি</p>
+                    <p class="text-sm">নিচের বোতামগুলি ব্যবহার করে মালিকানার ধারাবাহিকতার ক্রম তৈরি করুন</p>
                 </div>
             </div>
         </div>
@@ -334,7 +334,7 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">
                                     আবেদনকৃত 
                                     <input type="text" :name="'ownership_details[deed_transfers][' + index + '][application_specific_area]'" x-model="deed.application_specific_area" @input="validateApplicationAreaFields(deed)" class="form-input mx-2" style="width: 100px; display: inline;" placeholder=" " :class="{'border-red-500': deed.application_type === 'specific' && !deed.application_specific_area}">
-                                    <span class="text-red-500">*</span> দাগের সুনির্দিষ্টভাবে 
+                                    <span class="text-red-500">*</span> দাগে সুনির্দিষ্টভাবে 
                                     <input type="text" :name="'ownership_details[deed_transfers][' + index + '][application_sell_area]'" x-model="deed.application_sell_area" @input="validateApplicationAreaFields(deed)" class="form-input mx-2" style="width: 100px; display: inline;" placeholder=" " :class="{'border-red-500': deed.application_type === 'specific' && !deed.application_sell_area}">
                                     <span class="text-red-500">*</span> একর বিক্রয়
                                 </label>
@@ -408,8 +408,8 @@
                     
                     <!-- Tax Information Section -->
                     <div class="form-section md:col-span-2">
-                        <label class="font-semibold text-gray-700 mb-2">খাজনার তথ্য:</label>
-                        <textarea :name="'ownership_details[deed_transfers][' + index + '][tax_info]'" x-model="deed.tax_info" rows="4" class="form-input w-full" placeholder="খাজনার বিবরণ, পরিশোধের ইতিহাস, বকেয়া খাজনা ইত্যাদি লিখুন"></textarea>
+                        <label class="font-semibold text-gray-700 mb-2">খারিজের তথ্য:</label>
+                        <textarea :name="'ownership_details[deed_transfers][' + index + '][tax_info]'" x-model="deed.tax_info" rows="4" class="form-input w-full"></textarea>
                     </div>
 
                 </div>
@@ -468,7 +468,7 @@
                         <label :for="'rs_record_khatian_no_' + index">আরএস খতিয়ান নম্বর</label>
                     </div>
                     <div class="floating-label">
-                        <input type="text" :id="'rs_record_land_amount_' + index" :name="'ownership_details[rs_records][' + index + '][land_amount]'" x-model="rs.land_amount" placeholder=" ">
+                        <input type="number" :id="'rs_record_land_amount_' + index" :name="'ownership_details[rs_records][' + index + '][land_amount]'" x-model="rs.land_amount" placeholder=" " min="0" step="0.01">
                         <label :for="'rs_record_land_amount_' + index">আরএস দাগে জমির পরিমাণ (একর)</label>
                     </div>
                     <div class="flex items-center space-x-2">
@@ -493,7 +493,7 @@
 
     <!-- Step 3: Applicant Owner Information -->
     <div x-show="currentStep === 'applicant'" class="space-y-6">
-        <h3 class="text-lg font-bold mb-4">ধাপ ৩: আবেদনকারী তথ্য</h3>
+        <h3 class="text-lg font-bold mb-4">ধাপ ৩: আবেদনকারীর খারিজ ও খাজনা</h3>
         
         <!-- Summary Section -->
         <div class="bg-blue-50 p-6 rounded-lg mb-6">
@@ -532,7 +532,7 @@
             
             <!-- Story Sequence Summary -->
             <div class="mb-4" x-show="storySequence.length > 0">
-                <h5 class="font-semibold text-blue-700 mb-2">২। মালিকানার ধারাবাহিকতার কাহিনী:</h5>
+                <h5 class="font-semibold text-blue-700 mb-2">২। মালিকানার ধারাবাহিকতার ক্রম:</h5>
                 <div class="space-y-2">
                     <template x-for="(item, index) in storySequence" :key="index">
                         <div class="bg-white p-3 rounded-lg border-l-4 border-blue-500">
@@ -552,7 +552,7 @@
             
             <!-- Applicant Info Summary -->
             <div>
-                <h5 class="font-semibold text-blue-700 mb-2">৩। আবেদনকারী তথ্য:</h5>
+                <h5 class="font-semibold text-blue-700 mb-2">৩। আবেদনকারীর খারিজ ও খাজনা:</h5>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div x-show="applicant_info.applicant_name">
                         <span class="font-medium">আবেদনকারীর নাম:</span> <span x-text="applicant_info.applicant_name"></span>
@@ -595,7 +595,7 @@
                     <label>খারিজ দাগ নম্বর</label>
                 </div>
                 <div class="floating-label">
-                    <input type="text" name="ownership_details[applicant_info][kharij_land_amount]" x-model="applicant_info.kharij_land_amount" placeholder=" ">
+                    <input type="number" name="ownership_details[applicant_info][kharij_land_amount]" x-model="applicant_info.kharij_land_amount" placeholder=" " min="0" step="0.01">
                     <label>উক্ত দাগে খারিজকৃত জমির পরিমাণ (একর)</label>
                 </div>
                                     <div class="floating-label">
@@ -1426,7 +1426,7 @@ function ownershipContinuity() {
             const stepTexts = {
                 'info': 'রেকর্ডের বর্ণনা',
                 'transfers': 'হস্তান্তর/রেকর্ড',
-                'applicant': 'আবেদনকারী তথ্য'
+                'applicant': 'আবেদনকারীর খারিজ ও খাজনা'
             };
             return stepTexts[this.currentStep] || '';
         },

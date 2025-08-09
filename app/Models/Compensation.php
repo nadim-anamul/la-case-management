@@ -20,7 +20,7 @@ class Compensation extends Model
         'objector_details', 'is_applicant_in_award', 
         'source_tax_percentage', 'tree_compensation',
         'infrastructure_compensation',
-        'land_category', 'mouza_name', 'jl_no', 'sa_khatian_no', 
+        'land_category', 'district', 'upazila', 'mouza_name', 'jl_no', 'sa_khatian_no', 
         'land_schedule_sa_plot_no', 'rs_khatian_no', 'land_schedule_rs_plot_no', 
         'ownership_details', 'mutation_info', 'tax_info', 
         'additional_documents_info', 'kanungo_opinion',

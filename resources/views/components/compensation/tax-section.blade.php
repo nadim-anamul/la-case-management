@@ -16,11 +16,11 @@
         </div>
         <div class="floating-label">
             <input type="text" name="tax_info[english_year]" value="{{ old('tax_info.english_year', isset($compensation) ? $compensation->tax_info['english_year'] ?? '' : '') }}" placeholder=" ">
-            <label>ইংরেজি সাল প্রযোজ্যিত<span class="text-blue-500">*</span></label>
+            <label>ইংরেজি সাল পর্যন্ত<span class="text-blue-500">*</span></label>
         </div>
         <div class="floating-label">
             <input type="text" name="tax_info[bangla_year]" value="{{ old('tax_info.bangla_year', isset($compensation) ? $compensation->tax_info['bangla_year'] ?? '' : '') }}" placeholder=" ">
-            <label>বাংলা সাল প্রযোজ্যিত<span class="text-blue-500">*</span></label>
+            <label>বাংলা সাল পর্যন্ত<span class="text-blue-500">*</span></label>
         </div>
         
     </div>

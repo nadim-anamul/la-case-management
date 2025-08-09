@@ -54,9 +54,9 @@
         <div class="grid grid-cols-2 gap-5 mb-5">
             <div>
                 <p class="mb-1">প্রসেস নং:</p>
-                <p class="mb-1">ক্ষতিপূরণ কেস নং: {{ $compensation->la_case_no ?? 'N/A' }}</p>
+                <p class="mb-1">ক্ষতিপূরণ কেস নং: {{ $compensation->case_number ?? 'N/A' }}</p>
             </div>
-            <div class="flex flex-col items-center text-center">
+            <div class="flex flex-col items-center">
                 <p class="mb-1">তারিখ: ............................</p>
                 <p class="mb-1">এল.এ কেস নং: {{ $compensation->la_case_no ?? 'N/A' }}</p>
             </div>
@@ -66,8 +66,8 @@
             <table class="w-full border border-black">
                 <thead>
                     <tr>
-                        <th class="border border-black p-2">আবেদনকারীর নাম ও ঠিকানা</th>
-                        <th class="border border-black p-2">রোয়েদাদভুক্ত মালিকের নাম</th>
+                        <th class="border border-black p-2 w-1/2">আবেদনকারীর নাম ও ঠিকানা</th>
+                        <th class="border border-black p-2 w-1/2">রোয়েদাদভুক্ত মালিকের নাম ও ঠিকানা</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -75,10 +75,11 @@
                         <td class="border border-black p-2 align-top">
                             @if($compensation->applicants && is_array($compensation->applicants))
                                 @foreach($compensation->applicants as $index => $applicant)
-                                    @if($index > 0)<br>@endif
+                                    @if($index > 0)<br><br>@endif
+                                    <strong class="text-blue-600">#{{ $index + 1 }}:</strong><br>
                                     {{ $applicant['name'] ?? 'N/A' }}<br>
                                     পিতার নাম- {{ $applicant['father_name'] ?? 'N/A' }}<br>
-                                    সাং- {{ $applicant['address'] ?? 'N/A' }}
+                                    সাং- {{ $applicant['address'] ?? 'N/A' }}@if(isset($applicant['mobile']) && $applicant['mobile'])<br>মোবাইল- {{ $applicant['mobile'] }}@endif
                                 @endforeach
                             @else
                                 <span class="text-gray-500">কোন আবেদনকারী নেই</span>
@@ -87,8 +88,11 @@
                         <td class="border border-black p-2 align-top">
                             @if($compensation->award_holder_names && is_array($compensation->award_holder_names))
                                 @foreach($compensation->award_holder_names as $index => $holder)
-                                    @if($index > 0)<br>@endif
-                                    {{ $holder['name'] ?? 'N/A' }}
+                                    @if($index > 0)<br><br>@endif
+                                    <strong class="text-green-600">#{{ $index + 1 }}:</strong><br>
+                                    {{ $holder['name'] ?? 'N/A' }}<br>
+                                    @if(isset($holder['father_name']) && $holder['father_name'])পিতার নাম- {{ $holder['father_name'] }}<br>@endif
+                                    @if(isset($holder['address']) && $holder['address'])সাং- {{ $holder['address'] }}@endif
                                 @endforeach
                             @else
                                 <span class="text-gray-500">কোন রোয়েদাদভুক্ত মালিক নেই</span>
@@ -107,8 +111,9 @@
         <p class="text-justify">অন্যথায় বিধি মোতাবেক পরবর্তী আইনগত ব্যবস্থা গ্রহণ করা হবে।</p>
 
         <p class="mt-6 font-bold">তফসিলঃ</p>
-        <p>উপজেলা: বগুড়া সদর</p>
-        <p>মৌজা: {{ $compensation->mouza_name ?? 'N/A' }}</p>
+        <p>জেলা: {{ $compensation->district ?? 'তথ্য নেই' }}</p>
+        <p>উপজেলা: {{ $compensation->upazila ?? 'তথ্য নেই' }}</p>
+        <p>মৌজা: {{ $compensation->mouza_name ?? 'তথ্য নেই' }}</p>
 
         <table class="w-full border border-black mt-4">
             <thead class="bg-gray-100">

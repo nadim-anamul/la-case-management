@@ -5,6 +5,14 @@
     </h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-4 xs:gap-2">
         <div class="floating-label">
+            <input type="text" name="district" value="{{ old('district', isset($compensation) ? $compensation->district : '') }}" placeholder=" " required>
+            <label>জেলা<span class="text-red-500">*</span></label>
+        </div>
+        <div class="floating-label">
+            <input type="text" name="upazila" value="{{ old('upazila', isset($compensation) ? $compensation->upazila : '') }}" placeholder=" " required>
+            <label>উপজেলা<span class="text-red-500">*</span></label>
+        </div>
+        <div class="floating-label">
             <input type="text" name="mouza_name" value="{{ old('mouza_name', isset($compensation) ? $compensation->mouza_name : '') }}" placeholder=" " required>
             <label>মৌজার নাম<span class="text-red-500">*</span></label>
         </div>

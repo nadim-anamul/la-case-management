@@ -90,6 +90,12 @@
                     <label class="font-semibold text-gray-700">এন আই ডি:</label>
                     <p class="text-gray-900">{{ $applicant['nid'] }}</p>
                 </div>
+                @if(isset($applicant['mobile']) && $applicant['mobile'])
+                <div>
+                    <label class="font-semibold text-gray-700">মোবাইল নং:</label>
+                    <p class="text-gray-900">{{ $applicant['mobile'] }}</p>
+                </div>
+                @endif
             </div>
         </div>
         @endforeach
@@ -102,12 +108,30 @@
             রোয়েদাদের তথ্য
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div>
-                <label class="font-semibold text-gray-700">রোয়েদাদভুক্ত মালিকের নাম:</label>
+            <div class="md:col-span-2 lg:col-span-3">
+                <label class="font-semibold text-gray-700">রোয়েদাদভুক্ত মালিকের তথ্য:</label>
                 <div class="text-gray-900">
                     @foreach($compensation->award_holder_names as $index => $holder)
-                        <div class="mb-1">
-                            {{ $index + 1 }}. {{ $holder['name'] }}
+                        <div class="mb-4 p-4 border rounded-lg">
+                            <h4 class="font-semibold text-lg mb-2">মালিক #{{ $index + 1 }}</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="font-semibold text-gray-700">নাম:</label>
+                                    <p class="text-gray-900">{{ $holder['name'] }}</p>
+                                </div>
+                                @if(isset($holder['father_name']) && $holder['father_name'])
+                                <div>
+                                    <label class="font-semibold text-gray-700">পিতার নাম:</label>
+                                    <p class="text-gray-900">{{ $holder['father_name'] }}</p>
+                                </div>
+                                @endif
+                                @if(isset($holder['address']) && $holder['address'])
+                                <div class="md:col-span-2">
+                                    <label class="font-semibold text-gray-700">ঠিকানা:</label>
+                                    <p class="text-gray-900">{{ $holder['address'] }}</p>
+                                </div>
+                                @endif
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -187,7 +211,7 @@
                             </div>
                             <div>
                                 <span class="font-medium text-gray-600">আবেদনকারীর অধিগ্রহণকৃত জমি:</span>
-                                <span class="text-gray-900">{{ $category['applicant_land'] ?? '' }} একর</span>
+                                <span class="text-gray-900">{{ $category['applicant_land'] ? $category['applicant_land'] . ' একর' : 'তথ্য নেই' }}</span>
                             </div>
                         </div>
                     </div>
@@ -237,6 +261,14 @@
             আবেদনকৃত জমির তফসিল
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
+                <label class="font-semibold text-gray-700">জেলা:</label>
+                <p class="text-gray-900">{{ $compensation->district ?? 'তথ্য নেই' }}</p>
+            </div>
+            <div>
+                <label class="font-semibold text-gray-700">উপজেলা:</label>
+                <p class="text-gray-900">{{ $compensation->upazila ?? 'তথ্য নেই' }}</p>
+            </div>
             <div>
                 <label class="font-semibold text-gray-700">মৌজার নাম:</label>
                 <p class="text-gray-900">{{ $compensation->mouza_name }}</p>
@@ -460,7 +492,7 @@
                                 @endif
                                 @if(isset($deed['tax_info']) && $deed['tax_info'])
                                 <div class="md:col-span-2">
-                                    <label class="font-semibold text-gray-700">খাজনার তথ্য:</label>
+                                    <label class="font-semibold text-gray-700">খারিজের তথ্য:</label>
                                     <p class="text-gray-900">{{ $deed['tax_info'] }}</p>
                                 </div>
                                 @endif
@@ -572,7 +604,7 @@
                                 <!-- Application Area Fields -->
                                 @if(isset($deed['application_type']) && $deed['application_type'])
                                 <div>
-                                    <label class="font-semibold text-gray-700">আবেদনকৃত দাগের সুনির্দিষ্টভাবে বিক্রয়:</label>
+                                    <label class="font-semibold text-gray-700">আবেদনকৃত দাগে সুনির্দিষ্টভাবে বিক্রয়:</label>
                                     <p class="text-gray-900">{{ $compensation->formatApplicationAreaString($deed) }}</p>
                                 </div>
                                 @endif
@@ -887,7 +919,7 @@
                 @if(!empty($compensation->tax_info['holding_no'] ?? ''))
                     <p class="text-gray-900">{{ $compensation->tax_info['holding_no'] }}</p>
                 @else
-                    <p class="text-red-500 italic">অনুপলব্ধ</p>
+                    <p class="text-red-500 italic">তথ্য নেই</p>
                 @endif
             </div>
             <div>
@@ -895,7 +927,7 @@
                 @if(!empty($compensation->tax_info['paid_land_amount'] ?? ''))
                     <p class="text-gray-900">{{ $compensation->tax_info['paid_land_amount'] }}</p>
                 @else
-                    <p class="text-red-500 italic">অনুপলব্ধ</p>
+                    <p class="text-red-500 italic">তথ্য নেই</p>
                 @endif
             </div>
             <div>
@@ -903,7 +935,7 @@
                 @if(!empty($compensation->tax_info['english_year'] ?? ''))
                     <p class="text-gray-900">{{ $compensation->tax_info['english_year'] }}</p>
                 @else
-                    <p class="text-red-500 italic">অনুপলব্ধ</p>
+                    <p class="text-red-500 italic">তথ্য নেই</p>
                 @endif
             </div>
             <div>
@@ -911,7 +943,7 @@
                 @if(!empty($compensation->tax_info['bangla_year'] ?? ''))
                     <p class="text-gray-900">{{ $compensation->tax_info['bangla_year'] }}</p>
                 @else
-                    <p class="text-red-500 italic">অনুপলব্ধ</p>
+                    <p class="text-red-500 italic">তথ্য নেই</p>
                 @endif
             </div>
             
@@ -936,7 +968,7 @@
         @else
         <div class="mb-4">
             <label class="font-semibold text-gray-700">দাখিলকৃত ডকুমেন্টের ধরন:</label>
-            <p class="text-red-500 italic">অনুপলব্ধ</p>
+            <p class="text-red-500 italic">তথ্য নেই</p>
         </div>
         @endif
         
@@ -953,7 +985,7 @@
         @else
         <div>
             <label class="font-semibold text-gray-700">ডকুমেন্টের বিবরণ:</label>
-            <p class="text-red-500 italic">অনুপলব্ধ</p>
+            <p class="text-red-500 italic">তথ্য নেই</p>
         </div>
         @endif
     </div>
@@ -963,7 +995,7 @@
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
         <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
             <span class="section-icon">৮</span>
-            কানুনগো মতামত
+            কানুনগো/সার্ভেয়ারের মতামত
         </h2>
         <div class="grid grid-cols-1 gap-4">
             <div>
@@ -999,7 +1031,7 @@
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                     </svg>
-                    <span class="text-white font-bold text-lg">সকল পক্ষকে নোটিশ করুণ</span>
+                    <span class="text-white font-bold text-lg">সকল পক্ষকে নোটিশ করুন</span>
                 </div>
             </a>
             
@@ -1008,7 +1040,7 @@
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
-                    <span class="text-white font-bold text-lg">আবেদন বিশ্লেষণ</span>
+                    <span class="text-white font-bold text-lg">আবেদনপত্র বিশ্লেষণ</span>
                 </div>
             </a>
         </div>
