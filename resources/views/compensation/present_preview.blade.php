@@ -107,7 +107,17 @@
                 
                 <br><br>
                 <p>আবেদিত জমি {{ $compensation->la_case_no ?? 'N/A' }} নং এল.এ কেসে অধিগ্রহণ করা হয়েছে। উক্ত জমির ক্ষতিপূরণ বাবদ 
-                    @if($compensation->land_award_serial_no)
+                    @if($compensation->award_type && is_array($compensation->award_type) && in_array('জমি ও গাছপালা', $compensation->award_type))
+                        @if($compensation->land_award_serial_no && $compensation->tree_award_serial_no)
+                            জমির রোয়েদাদ নং {{ $compensation->land_award_serial_no }} এবং গাছপালার রোয়েদাদ নং {{ $compensation->tree_award_serial_no }}
+                        @elseif($compensation->land_award_serial_no)
+                            জমির রোয়েদাদ নং {{ $compensation->land_award_serial_no }}
+                        @elseif($compensation->tree_award_serial_no)
+                            গাছপালার রোয়েদাদ নং {{ $compensation->tree_award_serial_no }}
+                        @else
+                            N/A
+                        @endif
+                    @elseif($compensation->land_award_serial_no)
                         {{ $compensation->land_award_serial_no }}
                     @elseif($compensation->tree_award_serial_no)
                         {{ $compensation->tree_award_serial_no }}
@@ -119,7 +129,7 @@
                     নং এওয়ার্ড প্রার্থীর নামে আছে/নাই। আবেদনকারীকে নোটিশ প্রদান করা হোক। শুনানির জন্য পরবর্তী তারিখঃ  ............... খ্রি: .............</p>
                 <br><br><br>
                 <div class="text-right font-bold">
-                  ভূমি অধিগ্রহণ কমিটি <br>
+                  ভূমি অধিগ্রহণ কর্মকর্তা <br>
                   বগুড়া
                 </div>
               </td>

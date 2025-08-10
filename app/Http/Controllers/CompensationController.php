@@ -219,9 +219,9 @@ class CompensationController extends Controller
             // Award Information
             'la_case_no' => 'required|string|max:255',
             'award_type' => 'required|string|in:জমি,জমি ও গাছপালা,অবকাঠামো',
-            'land_award_serial_no' => 'nullable|string|max:255',
-            'tree_award_serial_no' => 'nullable|string|max:255',
-            'infrastructure_award_serial_no' => 'nullable|string|max:255',
+            'land_award_serial_no' => 'required_if:award_type,জমি|required_if:award_type,জমি ও গাছপালা|nullable|string|max:255',
+            'tree_award_serial_no' => 'required_if:award_type,জমি ও গাছপালা|nullable|string|max:255',
+            'infrastructure_award_serial_no' => 'required_if:award_type,অবকাঠামো|nullable|string|max:255',
             'acquisition_record_basis' => 'required|string|in:SA,RS',
             'plot_no' => 'required|string|max:255',
             'award_holder_names' => 'required|array|min:1',

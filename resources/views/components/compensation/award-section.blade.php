@@ -231,6 +231,11 @@
                 </div>
                 
                 <div class="floating-label">
+                    <input type="text" name="land_award_serial_no" value="{{ old('land_award_serial_no', isset($compensation) ? $compensation->land_award_serial_no : '') }}" placeholder=" " required>
+                    <label>জমির রোয়েদাদ নং<span class="text-red-500">*</span></label>
+                </div>
+                
+                <div class="floating-label">
                     <input type="number" name="tree_compensation" value="{{ old('tree_compensation', isset($compensation) ? $compensation->tree_compensation : '') }}" placeholder=" " required min="0" step="0.01">
                     <label>গাছপালার মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
                 </div>
