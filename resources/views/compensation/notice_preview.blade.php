@@ -1,47 +1,35 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>নোটিশ প্রিভিউ</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Noto Sans Bengali', 'Lohit Bengali', 'DejaVu Sans', 'Liberation Sans', Arial, sans-serif;
-        }
-    </style>
-</head>
-<body class="bg-gray-300">
-    <!-- Back Button -->
-    <div class="container mx-auto px-4 py-4">
-        <div class="flex justify-between items-center">
-            <a href="{{ route('compensation.preview', $compensation->id) }}" class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-bold rounded">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+@extends('layouts.app')
+
+@section('title', 'নোটিশ প্রিভিউ')
+
+@section('content')
+<div class="container mx-auto px-4 py-8">
+    <!-- Back Button and Actions -->
+    <div class="mb-6 flex justify-between items-center">
+        <a href="{{ route('compensation.preview', $compensation->id) }}" class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-bold rounded">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            ফিরে যান
+        </a>
+        <div class="flex space-x-3">
+            <a href="{{ route('compensation.notice.pdf', $compensation->id) }}" target="_blank" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
-                ফিরে যান
+                PDF ডাউনলোড করুন
             </a>
-            <div class="flex space-x-3">
-                <a href="{{ route('compensation.notice.pdf', $compensation->id) }}" target="_blank" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    PDF ডাউনলোড করুন
-                </a>
-            </div>
         </div>
     </div>
 
+    @if(session('error'))
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+        {{ session('error') }}
+    </div>
+    @endif
+
+    <!-- Notice Content -->
     <div class="bg-white w-[21cm] min-h-[29.7cm] mx-auto my-8 p-10 shadow-lg text-[16px] leading-8">
-        @if(session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-            {{ session('error') }}
-        </div>
-        @endif
-        
         <div class="text-center">
             <h1 class="text-xl font-bold">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</h1>
             <h2 class="text-lg font-bold">জেলা প্রশাসকের কার্যালয়</h2>
@@ -103,8 +91,6 @@
             </table>
         </div>
 
-        
-
         <p class="mt-6 text-justify">
             এতদ্বারা জানানো যাচ্ছে যে, নিম্ন তফসিল বর্ণিত সম্পত্তির ক্ষতিপূরণের বিষয়টি নিষ্পত্তির লক্ষ্যে শুনানীর জন্য আগামী <strong>............................</strong> ইং তারিখ দিন ধার্য করা হয়েছে। ধার্য তারিখে বেলা ৯.৩০ ঘটিকায় ক্ষতিপূরণ প্রাপ্তির স্বপক্ষে যাবতীয় প্রমাণাদির মূল কপিসহ শুনানীতে উপস্থিত হওয়ার জন্য বলা হলো।
         </p>
@@ -162,5 +148,5 @@
             <p>বগুড়া</p>
         </div>
     </div>
-</body>
-</html>
+</div>
+@endsection

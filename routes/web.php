@@ -44,6 +44,8 @@ Route::get('/compensation/{id}/present', [CompensationController::class, 'presen
 Route::post('/compensation/{id}/present', [CompensationController::class, 'storePresent'])->name('compensation.present.store');
 Route::get('/compensation/{id}/notice/preview', [CompensationController::class, 'noticePreview'])->name('compensation.notice.preview');
 Route::get('/compensation/{id}/notice/pdf', [CompensationController::class, 'generateNoticePdf'])->name('compensation.notice.pdf');
+Route::get('/compensation/{id}/present/preview', [CompensationController::class, 'presentPreview'])->name('compensation.present.preview');
+Route::get('/compensation/{id}/present/pdf', [CompensationController::class, 'generatePresentPdf'])->name('compensation.present.pdf');
 Route::get('/compensation/{id}/analysis', [CompensationController::class, 'analysis'])->name('compensation.analysis');
 Route::get('/compensation/{id}/analysis/pdf', [CompensationController::class, 'analysisPdf'])->name('compensation.analysis.pdf');
 Route::get('/compensation/{id}/analysis/excel', [CompensationController::class, 'analysisExcel'])->name('compensation.analysis.excel');

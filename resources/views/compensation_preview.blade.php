@@ -1017,7 +1017,7 @@
             পরবর্তী কার্যক্রম
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <a href="{{ route('compensation.present', $compensation->id) }}" class="action-card bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700">
+            <a href="{{ route('compensation.present.preview', $compensation->id) }}" target="_blank" class="action-card bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700">
                 <div class="flex items-center justify-center space-x-3">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>

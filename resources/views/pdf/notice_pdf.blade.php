@@ -4,15 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>নোটিশ</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Embedded Noto Serif Bengali font -->
     <style>
+        @font-face {
+            font-family: 'Noto Serif Bengali';
+            font-style: normal;
+            font-weight: 400;
+            src: url('https://fonts.gstatic.com/s/notoserifbengali/v1/yYLrQh9-fIXkJvOfkYQ2bL3XYPFvqA.woff2') format('woff2');
+        }
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Noto Sans Bengali', 'Lohit Bengali', 'DejaVu Sans', 'Liberation Sans', Arial, sans-serif;
+            font-family: 'Noto Serif Bengali', serif;
         }
         .notice-page {
             width: 21cm;

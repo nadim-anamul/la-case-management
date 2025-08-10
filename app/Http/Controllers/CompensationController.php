@@ -372,6 +372,51 @@ class CompensationController extends Controller
     }
 
     /**
+     * Preview presentation with actual data
+     */
+    public function presentPreview($id)
+    {
+        $compensation = Compensation::findOrFail($id);
+        return view('compensation.present_preview', compact('compensation'));
+    }
+
+    /**
+     * Generate PDF for presentation using Browsershot
+     */
+    public function generatePresentPdf($id)
+    {
+        // Increase execution time limit for PDF generation
+        set_time_limit(120); // 2 minutes
+        ini_set('memory_limit', '256M'); // Increase memory limit
+        
+        $compensation = Compensation::findOrFail($id);
+        
+        try {
+            // Generate PDF directly from HTML content for better performance
+            $html = view('pdf.present_pdf', compact('compensation'))->render();
+            
+            $pdf = PdfGeneratorService::generateFromHtml($html, [
+                'timeout' => 120,
+                'margins' => [10, 10, 10, 10],
+                'showBackground' => true,
+                'waitUntilNetworkIdle' => true
+            ]);
+                
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Presentation PDF generation error: ' . $e->getMessage());
+            
+            // Fallback: Return HTML view instead of PDF
+            return view('compensation.present_preview', compact('compensation'))
+                ->with('error', 'PDF তৈরি করতে সমস্যা হয়েছে। HTML ভার্সন দেখানো হচ্ছে।');
+        }
+
+        return response($pdf, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="presentation_'.$compensation->id.'.pdf"',
+        ]);
+    }
+
+    /**
      * Preview notice with actual data
      */
     public function noticePreview($id)
