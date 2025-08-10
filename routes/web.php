@@ -49,6 +49,7 @@ Route::get('/compensation/{id}/present/pdf', [CompensationController::class, 'ge
 Route::get('/compensation/{id}/analysis', [CompensationController::class, 'analysis'])->name('compensation.analysis');
 Route::get('/compensation/{id}/analysis/pdf', [CompensationController::class, 'analysisPdf'])->name('compensation.analysis.pdf');
 Route::get('/compensation/{id}/analysis/excel', [CompensationController::class, 'analysisExcel'])->name('compensation.analysis.excel');
+Route::get('/compensation/{id}/preview/pdf', [CompensationController::class, 'generatePreviewPdf'])->name('compensation.preview.pdf');
 
 // Test route for CSS
 Route::get('/test-css', function () {
