@@ -7,7 +7,7 @@ This guide provides comprehensive testing instructions for the updated compensat
 The database has been seeded with **11 comprehensive test records** covering:
 
 1. **Basic Land Case** (#1001) - Simple জমি award with standard values
-2. **Land & Trees Case** (#1002) - জমি ও গাছপালা with multiple land categories  
+2. **Land & Trees Case** (#1002) - গাছপালা/ফসল with multiple land categories
 3. **Infrastructure Case** (#1003) - অবকাঠামো award with RS basis
 4. **Multiple Applicants** (#1004) - Multiple applicants and award holders
 5. **Decimal Test Case** (#1005) - Complex decimal numbers (0.01 to 999.99)

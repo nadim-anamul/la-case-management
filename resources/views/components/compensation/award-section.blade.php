@@ -233,14 +233,15 @@
                     <h3 class="text-lg font-semibold text-green-600 border-b-2 border-green-200 pb-2">গাছপালা/ফসলের রোয়েদাদ</h3>
                 </div>
                 
-                <div class="floating-label">
-                    <input type="text" name="tree_award_serial_no" value="{{ old('tree_award_serial_no', isset($compensation) ? $compensation->tree_award_serial_no : '') }}" placeholder=" " required>
-                    <label>গাছপালা/ফসলের রোয়েদাদ নং<span class="text-red-500">*</span></label>
-                </div>
-                
-                <div class="floating-label">
-                    <input type="number" name="tree_compensation" value="{{ old('tree_compensation', isset($compensation) ? $compensation->tree_compensation : '') }}" placeholder=" " required min="0" step="0.000001">
-                    <label>গাছপালা/ফসলের মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="floating-label">
+                        <input type="text" name="tree_award_serial_no" value="{{ old('tree_award_serial_no', isset($compensation) ? $compensation->tree_award_serial_no : '') }}" placeholder=" " required>
+                        <label>গাছপালা/ফসলের রোয়েদাদ নং<span class="text-red-500">*</span></label>
+                    </div>
+                    <div class="floating-label">
+                        <input type="number" name="tree_compensation" value="{{ old('tree_compensation', isset($compensation) ? $compensation->tree_compensation : '') }}" placeholder=" " required min="0" step="0.000001">
+                        <label>গাছপালা/ফসলের মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
+                    </div>
                 </div>
             </div>
         </template>
@@ -252,14 +253,15 @@
                     <h3 class="text-lg font-semibold text-purple-600 border-b-2 border-purple-200 pb-2">অবকাঠামোর রোয়েদাদ</h3>
                 </div>
                 
-                <div class="floating-label">
-                    <input type="text" name="infrastructure_award_serial_no" value="{{ old('infrastructure_award_serial_no', isset($compensation) ? $compensation->infrastructure_award_serial_no : '') }}" placeholder=" " required>
-                    <label>অবকাঠামোর রোয়েদাদ নং<span class="text-red-500">*</span></label>
-                </div>
-                
-                <div class="floating-label">
-                    <input type="number" name="infrastructure_compensation" value="{{ old('infrastructure_compensation', isset($compensation) ? $compensation->infrastructure_compensation : '') }}" placeholder=" " required min="0" step="0.000001">
-                    <label>অবকাঠামোর মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="floating-label">
+                        <input type="text" name="infrastructure_award_serial_no" value="{{ old('infrastructure_award_serial_no', isset($compensation) ? $compensation->infrastructure_award_serial_no : '') }}" placeholder=" " required>
+                        <label>অবকাঠামোর রোয়েদাদ নং<span class="text-red-500">*</span></label>
+                    </div>
+                    <div class="floating-label">
+                        <input type="number" name="infrastructure_compensation" value="{{ old('infrastructure_compensation', isset($compensation) ? $compensation->infrastructure_compensation : '') }}" placeholder=" " required min="0" step="0.000001">
+                        <label>অবকাঠামোর মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
+                    </div>
                 </div>
             </div>
         </template>

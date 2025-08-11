@@ -3,10 +3,10 @@
 @section('title', 'ক্ষতিপূরণ তথ্য প্রিভিউ')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="mb-6 flex justify-between items-center">
-        <h1 class="text-3xl font-bold text-gray-800">ক্ষতিপূরণ তথ্য প্রিভিউ</h1>
-        <div class="space-x-4">
+<div class="container mx-auto px-4 py-6 max-w-7xl">
+    <div class="mb-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-800">ক্ষতিপূরণ তথ্য প্রিভিউ</h1>
+        <div class="space-x-3">
             <a href="{{ route('compensation.edit', $compensation->id) }}" class="btn-primary">
                 সম্পাদনা করুন
             </a>
@@ -17,12 +17,12 @@
     </div>
 
     <!-- Case Information -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
+        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
             <span class="section-icon">১</span>
             মামলার তথ্য
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             <div>
                 <label class="font-semibold text-gray-700">মামলা নম্বর:</label>
                 <p class="text-gray-900">{{ $compensation->case_number }}</p>
@@ -71,15 +71,15 @@
     </div>
 
     <!-- Applicant Information -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
+        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
             <span class="section-icon">২</span>
             আবেদনকারীর তথ্য
         </h2>
         @foreach($compensation->applicants as $index => $applicant)
-        <div class="mb-4 p-4 border rounded-lg">
-            <h3 class="font-semibold text-lg mb-2">আবেদনকারী #{{ $index + 1 }}</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="mb-3 p-3 border border-gray-200 rounded-md bg-gray-50">
+            <h3 class="font-semibold text-base mb-2 text-gray-700">আবেদনকারী #{{ $index + 1 }}</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                     <label class="font-semibold text-gray-700">নাম:</label>
                     <p class="text-gray-900">{{ $applicant['name'] }}</p>
@@ -108,19 +108,19 @@
     </div>
 
     <!-- Award Information -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
+        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
             <span class="section-icon">৩</span>
             রোয়েদাদের তথ্য
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             <div class="md:col-span-2 lg:col-span-3">
                 <label class="font-semibold text-gray-700">রোয়েদাদভুক্ত মালিকের তথ্য:</label>
                 <div class="text-gray-900">
                     @foreach($compensation->award_holder_names as $index => $holder)
-                        <div class="mb-4 p-4 border rounded-lg">
-                            <h4 class="font-semibold text-lg mb-2">মালিক #{{ $index + 1 }}</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="mb-3 p-3 border border-gray-200 rounded-md bg-gray-50">
+                            <h4 class="font-semibold text-base mb-2 text-gray-700">মালিক #{{ $index + 1 }}</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 <div>
                                     <label class="font-semibold text-gray-700">নাম:</label>
                                     <p class="text-gray-900">{{ $holder['name'] }}</p>
@@ -201,8 +201,8 @@
                 <label class="font-semibold text-gray-700">অধিগ্রহণকৃত জমির শ্রেণী:</label>
                 <div class="mt-2 space-y-2">
                     @foreach($compensation->land_category as $index => $category)
-                    <div class="bg-gray-50 p-3 rounded-lg">
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="bg-gray-50 p-3 rounded-md border border-gray-200">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                             <div>
                                 <span class="font-medium text-gray-600">জমির শ্রেণী:</span>
                                 <span class="text-gray-900">{{ $category['category_name'] ?? '' }}</span>
@@ -261,12 +261,12 @@
     </div>
 
     <!-- Land Schedule -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
+        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
             <span class="section-icon">৪</span>
             আবেদনকৃত জমির তফসিল
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             <div>
                 <label class="font-semibold text-gray-700">জেলা:</label>
                 <p class="text-gray-900">{{ $compensation->district ?? 'তথ্য নেই' }}</p>
@@ -304,26 +304,26 @@
 
     <!-- Ownership Continuity -->
     @if($compensation->ownership_details)
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
+        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
             <span class="section-icon">৫</span>
             মালিকানার ধারাবাহিকতার বর্ণনা
         </h2>
         
         <!-- Story Sequence Display - Show First -->
         @if(isset($compensation->ownership_details['storySequence']) && count($compensation->ownership_details['storySequence']) > 0)
-        <div class="mb-6">
-            <h3 class="font-semibold text-lg mb-3 text-green-600">মালিকানার ধারাবাহিকতার ক্রম</h3>
-            <div class="space-y-3">
+        <div class="mb-4">
+            <h3 class="font-semibold text-base mb-2 text-green-600">মালিকানার ধারাবাহিকতার ক্রম</h3>
+            <div class="space-y-2">
                 @foreach($compensation->ownership_details['storySequence'] as $index => $item)
-                <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                <div class="bg-blue-50 p-3 rounded-md border-l-4 border-blue-500">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
                             {{ $index + 1 }}
                         </div>
                         <div>
-                            <div class="font-semibold text-gray-800">{{ $item['type'] }}</div>
-                            <div class="text-sm text-gray-600">{{ $item['description'] }}</div>
+                            <div class="font-semibold text-gray-800 text-sm">{{ $item['type'] }}</div>
+                            <div class="text-xs text-gray-600">{{ $item['description'] }}</div>
                         </div>
                     </div>
                 </div>
@@ -333,9 +333,9 @@
         @endif
 
         @if($compensation->acquisition_record_basis === 'SA' && isset($compensation->ownership_details['sa_info']))
-        <div class="mb-6">
-            <h3 class="font-semibold text-lg mb-3 text-green-600">SA রেকর্ড তথ্য</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="mb-4">
+            <h3 class="font-semibold text-base mb-2 text-green-600">SA রেকর্ড তথ্য</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                     <label class="font-semibold text-gray-700">SA দাগ নম্বর:</label>
                     <p class="text-gray-900">{{ $compensation->ownership_details['sa_info']['sa_plot_no'] ?? '' }}</p>
@@ -366,9 +366,9 @@
         @endif
 
         @if($compensation->acquisition_record_basis === 'RS' && isset($compensation->ownership_details['rs_info']))
-        <div class="mb-6">
-            <h3 class="font-semibold text-lg mb-3 text-green-600">RS রেকর্ড তথ্য</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="mb-4">
+            <h3 class="font-semibold text-base mb-2 text-green-600">RS রেকর্ড তথ্য</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                     <label class="font-semibold text-gray-700">RS দাগ নম্বর:</label>
                     <p class="text-gray-900">{{ $compensation->ownership_details['rs_info']['rs_plot_no'] ?? '' }}</p>
@@ -419,11 +419,11 @@
             @foreach($compensation->ownership_details['storySequence'] as $index => $item)
                 @if($item['itemType'] === 'deed' && isset($deedTransfers[$item['itemIndex']]))
                     @php $deed = $deedTransfers[$item['itemIndex']]; $displayedDeeds[] = $item['itemIndex']; @endphp
-                    <div class="mb-6">
-                        <h3 class="font-semibold text-lg mb-3 text-green-600">দলিল মূলে হস্তান্তর তথ্য</h3>
-                        <div class="mb-4 p-4 border rounded-lg">
-                            <h4 class="font-semibold mb-2">দলিল #{{ $item['itemIndex'] + 1 }}</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="mb-4">
+                        <h3 class="font-semibold text-base mb-2 text-green-600">দলিল মূলে হস্তান্তর তথ্য</h3>
+                        <div class="mb-3 p-3 border border-gray-200 rounded-md bg-gray-50">
+                            <h4 class="font-semibold mb-2 text-sm">দলিল #{{ $item['itemIndex'] + 1 }}</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 <div>
                                     <label class="font-semibold text-gray-700">দাতার নাম:</label>
                                     @if(isset($deed['donor_names']))
@@ -914,12 +914,12 @@
     @endif
 
     <!-- Tax Information -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
+        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
             <span class="section-icon">৬</span>
             খাজনার তথ্য
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
                 <label class="font-semibold text-gray-700">হোল্ডিং নম্বর:</label>
                 @if(!empty($compensation->tax_info['holding_no'] ?? ''))
@@ -957,24 +957,24 @@
     </div>
 
     <!-- Additional Documents -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
+        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
             <span class="section-icon">৭</span>
             বণ্টন / না-দাবি / আপসনামা / এফিডেভিটের তথ্য
         </h2>
         @if(isset($compensation->additional_documents_info['selected_types']) && !empty($compensation->additional_documents_info['selected_types']))
-        <div class="mb-4">
+        <div class="mb-3">
             <label class="font-semibold text-gray-700">দাখিলকৃত ডকুমেন্টের ধরন:</label>
             <div class="mt-2">
                 @foreach($compensation->additional_documents_info['selected_types'] as $type)
-                <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-2 mb-2">{{ $type }}</span>
+                <span class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-xs mr-2 mb-1">{{ $type }}</span>
                 @endforeach
             </div>
         </div>
         @else
-        <div class="mb-4">
+        <div class="mb-3">
             <label class="font-semibold text-gray-700">দাখিলকৃত ডকুমেন্টের ধরন:</label>
-            <p class="text-red-500 italic">তথ্য নেই</p>
+            <p class="text-red-500 italic text-sm">তথ্য নেই</p>
         </div>
         @endif
         
@@ -1017,15 +1017,15 @@
     @endif
 
     <!-- Application Analysis -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
+        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
             <span class="section-icon">৯</span>
             আবেদনপত্র বিশ্লেষণ
         </h2>
-        <div class="space-y-4">
+        <div class="space-y-3">
             <!-- Application Type -->
-            <div class="p-4 bg-gray-50 rounded-lg">
-                <p class="text-gray-800">
+            <div class="p-3 bg-gray-50 rounded-md border border-gray-200">
+                <p class="text-gray-800 text-sm">
                     আবেদনকারী 
                     @if($compensation->award_type )
                     {{ is_array($compensation->award_type) ? implode(', ', $compensation->award_type) : $compensation->award_type }}
@@ -1037,8 +1037,8 @@
             </div>
 
             <!-- Applicant Count -->
-            <div class="p-4 bg-gray-50 rounded-lg">
-                <p class="text-gray-800">
+            <div class="p-3 bg-gray-50 rounded-md border border-gray-200">
+                <p class="text-gray-800 text-sm">
                     আবেদনকারী 
                     @if($compensation->applicants && is_array($compensation->applicants))
                         {{ count($compensation->applicants) }} জন।
@@ -1049,8 +1049,8 @@
             </div>
 
             <!-- Award Holder Count -->
-            <div class="p-4 bg-gray-50 rounded-lg">
-                <p class="text-gray-800">
+            <div class="p-3 bg-gray-50 rounded-md border border-gray-200">
+                <p class="text-gray-800 text-sm">
                     রোয়েদাদভুক্ত মালিক 
                     @if($compensation->award_holder_names && is_array($compensation->award_holder_names))
                         {{ count($compensation->award_holder_names) }} জন।
@@ -1197,36 +1197,36 @@
     </div>
 
     <!-- Action Buttons -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
+        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
             <span class="section-icon">১০</span>
             পরবর্তী কার্যক্রম
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             <a href="{{ route('compensation.present.preview', $compensation->id) }}" target="_blank" class="action-card bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700">
-                <div class="flex items-center justify-center space-x-3">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <span class="text-white font-bold text-lg">ক্ষতিপূরণ কেসে উপস্থাপন</span>
+                    <span class="text-white font-bold text-base">ক্ষতিপূরণ কেসে উপস্থাপন</span>
                 </div>
             </a>
             
             <a href="{{ route('compensation.notice.preview', $compensation->id) }}" class="action-card bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700">
-                <div class="flex items-center justify-center space-x-3">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                     </svg>
-                    <span class="text-white font-bold text-lg">সকল পক্ষকে নোটিশ করুন</span>
+                    <span class="text-white font-bold text-base">সকল পক্ষকে নোটিশ করুন</span>
                 </div>
             </a>
             
             <a target="_blank" href="{{ route('compensation.preview.pdf', $compensation->id) }}" class="action-card bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700">
-                <div class="flex items-center justify-center space-x-3">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
-                    <span class="text-white font-bold text-lg">আবেদনপত্র প্রিভিউ PDF</span>
+                    <span class="text-white font-bold text-base">আবেদনপত্র প্রিভিউ PDF</span>
                 </div>
             </a>
         </div>
@@ -1236,48 +1236,134 @@
 <style>
 .section-icon {
     display: inline-block;
-    width: 24px;
-    height: 24px;
-    background-color: #3b82f6;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
     border-radius: 50%;
     text-align: center;
-    line-height: 24px;
-    font-size: 12px;
+    line-height: 20px;
+    font-size: 11px;
     font-weight: bold;
-    margin-right: 8px;
+    margin-right: 6px;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
 }
 
 .btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded;
+    @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-md text-sm transition-colors duration-200;
 }
 
 .btn-secondary {
-    @apply bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded;
+    @apply bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-3 rounded-md text-sm transition-colors duration-200;
 }
 
 .btn-action {
-    @apply text-white font-bold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl;
+    @apply text-white font-bold py-3 px-4 rounded-md transition-all duration-200 transform hover:scale-102 shadow-md hover:shadow-lg;
 }
 
 .action-card {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 24px 16px;
+    padding: 20px 16px;
     border-radius: 8px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease;
     transform: scale(1);
+    border: 1px solid transparent;
 }
 
 .action-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: scale(1.02);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .action-icon {
-    @apply w-16 h-16 mb-2 text-white;
+    @apply w-12 h-12 mb-2 text-white;
+}
+
+/* Modern card styling */
+.bg-white {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+/* Improved typography */
+.font-semibold {
+    font-weight: 600;
+}
+
+/* Compact spacing */
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.mb-3 {
+    margin-bottom: 0.75rem;
+}
+
+.gap-3 {
+    gap: 0.75rem;
+}
+
+/* Enhanced borders */
+.border-gray-100 {
+    border-color: #f3f4f6;
+}
+
+.border-blue-200 {
+    border-color: #bfdbfe;
+}
+
+/* Smooth transitions */
+* {
+    transition: all 0.2s ease;
+}
+
+/* Enhanced shadows */
+.shadow-sm {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Improved spacing for labels and values */
+label {
+    font-size: 0.875rem;
+    color: #374151;
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Compact grid improvements */
+.grid {
+    align-items: start;
+}
+
+/* Modern card hover effects */
+.bg-white:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .grid {
+        gap: 0.5rem;
+    }
+    
+    .p-4 {
+        padding: 0.75rem;
+    }
 }
 </style>
 @endsection 

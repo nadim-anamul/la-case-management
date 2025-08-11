@@ -75,15 +75,15 @@ class CompensationFactory extends Factory
      */
     public function definition(): array
     {
+        $awardType = $this->faker->randomElement(['জমি', 'গাছপালা/ফসল', 'অবকাঠামো']);
         $acquisitionBasis = $this->faker->randomElement(['SA', 'RS']);
-        $awardType = $this->faker->randomElement(['জমি', 'জমি ও গাছপালা', 'অবকাঠামো']);
         
         // Generate plot numbers based on acquisition basis
         $plotNo = $acquisitionBasis === 'SA' ? 'SA-' . $this->faker->numberBetween(100, 999) : 'RS-' . $this->faker->numberBetween(100, 999);
         
         return [
-            'case_number' => 'COMP-' . $this->faker->unique()->numberBetween(1000, 9999),
-            'case_date' => $this->faker->date('Y-m-d'),
+            'case_number' => 'CASE-' . $this->faker->unique()->numberBetween(1000, 9999),
+            'case_date' => $this->faker->date(),
             'sa_plot_no' => $acquisitionBasis === 'SA' ? $plotNo : null,
             'rs_plot_no' => $acquisitionBasis === 'RS' ? $plotNo : null,
             'applicants' => [
@@ -91,14 +91,14 @@ class CompensationFactory extends Factory
                     'name' => $this->getBengaliName(),
                     'father_name' => $this->getBengaliName(),
                     'address' => $this->getBengaliAddress(),
-                    'nid' => $this->faker->numerify('#############'),
-                    'mobile' => '01' . $this->faker->numerify('#########')
+                    'nid' => $this->faker->numerify('##########'),
+                    'mobile' => $this->faker->numerify('01########')
                 ]
             ],
             'la_case_no' => 'LA-' . $this->faker->unique()->numberBetween(1000, 9999),
             'award_type' => [$awardType],
-            'land_award_serial_no' => $awardType === 'জমি' || $awardType === 'জমি ও গাছপালা' ? 'LAS-' . $this->faker->numberBetween(100, 999) : null,
-            'tree_award_serial_no' => $awardType === 'জমি ও গাছপালা' ? 'TAS-' . $this->faker->numberBetween(100, 999) : null,
+            'land_award_serial_no' => in_array($awardType, ['জমি', 'গাছপালা/ফসল']) ? 'LAS-' . $this->faker->numberBetween(100, 999) : null,
+            'tree_award_serial_no' => $awardType === 'গাছপালা/ফসল' ? 'TAS-' . $this->faker->numberBetween(100, 999) : null,
             'infrastructure_award_serial_no' => $awardType === 'অবকাঠামো' ? 'IAS-' . $this->faker->numberBetween(100, 999) : null,
             'acquisition_record_basis' => $acquisitionBasis,
             'plot_no' => $plotNo,
@@ -120,7 +120,7 @@ class CompensationFactory extends Factory
             'objector_details' => null,
             'is_applicant_in_award' => $this->faker->boolean(),
             'source_tax_percentage' => $this->faker->randomFloat(2, 0.5, 15.0),
-            'tree_compensation' => $awardType === 'জমি ও গাছপালা' ? $this->faker->numberBetween(25000, 75000) : null,
+            'tree_compensation' => in_array('গাছপালা/ফসল', [$awardType]) ? $this->faker->numberBetween(25000, 75000) : null,
             'infrastructure_compensation' => $awardType === 'অবকাঠামো' ? $this->faker->numberBetween(100000, 500000) : null,
             'district' => $this->faker->randomElement(['বগুড়া', 'ঢাকা', 'চট্টগ্রাম', 'রাজশাহী', 'খুলনা', 'সিলেট', 'রংপুর', 'বরিশাল']),
             'upazila' => $this->faker->randomElement(['বগুড়া সদর', 'শিবগঞ্জ', 'শেরপুর', 'দুপচাঁচিয়া', 'আদমদীঘি', 'নন্দীগ্রাম', 'সোনাতলা', 'ধুনট', 'গাবতলী', 'কাহালু', 'সারিয়াকান্দি', 'শাজাহানপুর']),

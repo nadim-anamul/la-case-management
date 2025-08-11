@@ -11,9 +11,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Call the CompensationSeeder
+        // Call the ModularCompensationSeeder for better organization
         $this->call([
-            CompensationSeeder::class,
+            ModularCompensationSeeder::class,
         ]);
     }
 }

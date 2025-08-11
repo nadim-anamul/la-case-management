@@ -29,7 +29,7 @@ class FormSubmissionTest extends TestCase
             
             // LA Case Information
             'la_case_no' => 'LA-TEST-001',
-            'award_type' => 'জমি',
+            'award_type' => ['গাছপালা/ফসল'],
             'land_award_serial_no' => 'LAND-AWARD-001',
             'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-001',
@@ -209,41 +209,45 @@ class FormSubmissionTest extends TestCase
     public function test_form_submission_with_english_dates()
     {
         $formData = [
-            // Basic Case Information
-            'case_number' => 'TEST-CASE-002',
-            'case_date' => '2024-01-15', // English date
-            
-            // Applicants Information
+            'case_number' => 'COMP-TEST-002',
+            'case_date' => '2024-01-16',
+            'sa_plot_no' => 'SA-002',
+            'rs_plot_no' => null,
             'applicants' => [
                 [
                     'name' => 'Test Applicant 2',
                     'father_name' => 'Test Father 2',
                     'address' => 'Test Address 2',
-                    'nid' => '09876543210987654321'
+                    'nid' => '1234567891',
+                    'mobile' => '01712345679'
                 ]
             ],
-            
-            // LA Case Information
             'la_case_no' => 'LA-TEST-002',
-            'award_type' => 'জমি ও গাছপালা',
+            'award_type' => ['গাছপালা/ফসল'],
             'land_award_serial_no' => 'LAND-AWARD-002',
             'tree_award_serial_no' => 'TREE-AWARD-002',
-            'acquisition_record_basis' => 'RS',
+            'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-002',
             'award_holder_names' => [
-                ['name' => 'Award Holder 2']
+                [
+                    'name' => 'Award Holder 2',
+                    'father_name' => 'Test Father 2',
+                    'address' => 'Test Address 2'
+                ]
             ],
             'objector_details' => 'Test objector details 2',
             'is_applicant_in_award' => false,
-            'source_tax_percentage' => '5%',
+            'source_tax_percentage' => '5.0',
             'tree_compensation' => '25000',
+            'infrastructure_compensation' => null,
+            'district' => 'বগুড়া',
+            'upazila' => 'শিবগঞ্জ',
             'mouza_name' => 'Test Mouza 2',
             'jl_no' => 'JL-002',
-            'land_schedule_rs_plot_no' => 'RS-PLOT-002',
-            'rs_khatian_no' => 'RS-KHATIAN-002',
-            'rs_plot_no' => 'RS-PLOT-002',
-            
-            // Land Category
+            'sa_khatian_no' => 'SA-KH-002',
+            'land_schedule_sa_plot_no' => 'SA-PLOT-002',
+            'land_schedule_rs_plot_no' => null,
+            'rs_khatian_no' => null,
             'land_category' => [
                 [
                     'category_name' => 'Agricultural Land',
@@ -252,16 +256,12 @@ class FormSubmissionTest extends TestCase
                     'applicant_land' => '2.0'
                 ]
             ],
-            
-            // Tax Information
             'tax_info' => [
                 'english_year' => '2024',
                 'bangla_year' => '১৪৩১',
                 'holding_no' => 'HLD-002',
-                'paid_land_amount' => '3.0 acres'
+                'paid_land_amount' => '3.0'
             ],
-            
-            // Additional Documents Information
             'additional_documents_info' => [
                 'selected_types' => ['deed', 'affidavit'],
                 'details' => [
@@ -269,20 +269,18 @@ class FormSubmissionTest extends TestCase
                     'affidavit' => 'Test affidavit details'
                 ]
             ],
-            
-            // Ownership Details with English dates
             'ownership_details' => [
                 'sa_info' => [
                     'sa_plot_no' => 'SA-PLOT-002',
-                    'sa_khatian_no' => 'SA-KHATIAN-002',
-                    'sa_total_land_in_plot' => '6 acres',
-                    'sa_land_in_khatian' => '4 acres'
+                    'sa_khatian_no' => 'SA-KH-002',
+                    'sa_total_land_in_plot' => '6',
+                    'sa_land_in_khatian' => '4'
                 ],
                 'rs_info' => [
                     'rs_plot_no' => 'RS-PLOT-002',
-                    'rs_khatian_no' => 'RS-KHATIAN-002',
-                    'rs_total_land_in_plot' => '5 acres',
-                    'rs_land_in_khatian' => '3 acres'
+                    'rs_khatian_no' => 'RS-KH-002',
+                    'rs_total_land_in_plot' => '5',
+                    'rs_land_in_khatian' => '3'
                 ],
                 'sa_owners' => [
                     ['name' => 'John Doe 2']
@@ -295,19 +293,17 @@ class FormSubmissionTest extends TestCase
                         'donor_names' => [['name' => 'Mohammad Ali 2']],
                         'recipient_names' => [['name' => 'Abdul Rahman 2']],
                         'deed_number' => 'DEED-002',
-                        'deed_date' => '2024-02-15', // English date
+                        'deed_date' => '2024-02-15',
                         'sale_type' => 'দলিল',
-
                         'possession_mentioned' => 'no',
                         'possession_plot_no' => '',
-                        'possession_description' => '',
-
+                        'possession_description' => ''
                     ]
                 ],
                 'inheritance_records' => [
                     [
                         'previous_owner_name' => 'Deceased Owner 2',
-                        'death_date' => '2023-11-01', // English date
+                        'death_date' => '2023-11-01',
                         'has_death_cert' => 'no',
                         'heirship_certificate_info' => 'Certificate number: HEIR-002'
                     ]
@@ -315,8 +311,8 @@ class FormSubmissionTest extends TestCase
                 'rs_records' => [
                     [
                         'plot_no' => 'RS-PLOT-003',
-                        'khatian_no' => 'RS-KHATIAN-003',
-                        'land_amount' => '2.5 acres',
+                        'khatian_no' => 'RS-KH-003',
+                        'land_amount' => '2.5',
                         'owner_names' => [
                             ['name' => 'RS Owner 2']
                         ],
@@ -325,20 +321,31 @@ class FormSubmissionTest extends TestCase
                 ],
                 'applicant_info' => [
                     'applicant_name' => 'Test Applicant 2',
-                    'kharij_case_no' => 'KHARIJ-002',
-                    'kharij_plot_no' => 'KHARIJ-PLOT-002',
-                    'kharij_land_amount' => '3 acres',
-                    'kharij_date' => '2024-07-01', // English date
-                    'kharij_details' => 'Test kharij details for mutation 2'
+                    'kharij_case_no' => 'KH-002',
+                    'kharij_plot_no' => 'KH-PLOT-002',
+                    'kharij_land_amount' => '2.0',
+                    'kharij_date' => '2024-02-16',
+                    'kharij_details' => 'Test kharij details 2'
                 ],
-                'transferItems' => [
-                    ['type' => 'দলিল', 'index' => 0],
-                    ['type' => 'ওয়ারিশ', 'index' => 0],
-                    ['type' => 'আরএস রেকর্ড', 'index' => 0]
+                'storySequence' => [
+                    [
+                        'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
+                        'description' => 'দলিল নম্বর: DEED-002',
+                        'itemType' => 'deed',
+                        'itemIndex' => 0,
+                        'sequenceIndex' => 0
+                    ],
+                    [
+                        'type' => 'ওয়ারিশমূলে হস্তান্তর',
+                        'description' => 'পূর্ববর্তী মালিক: Deceased Owner 2',
+                        'itemType' => 'inheritance',
+                        'itemIndex' => 0,
+                        'sequenceIndex' => 1
+                    ]
                 ],
                 'currentStep' => 'applicant',
-                'completedSteps' => ['info', 'transfers'],
-                'rs_record_disabled' => true
+                'completedSteps' => ['info', 'transfers', 'applicant'],
+                'rs_record_disabled' => false
             ]
         ];
 

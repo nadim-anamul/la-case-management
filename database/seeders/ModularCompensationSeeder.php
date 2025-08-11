@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Compensation;
 
-class CompensationSeeder extends Seeder
+class ModularCompensationSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,10 +15,55 @@ class CompensationSeeder extends Seeder
         // Clear existing data
         Compensation::truncate();
 
-        // Generate comprehensive test cases for form validation
-        $this->createTestCases();
+        $this->command->info('Starting modular compensation seeding...');
 
-        // Generate 3 compensations with all optional fields filled (maximal data)
+        // Seed basic test cases
+        $this->seedBasicTestCases();
+        
+        // Seed comprehensive test cases
+        $this->seedComprehensiveTestCases();
+        
+        // Seed edge cases
+        $this->seedEdgeCases();
+        
+        // Seed complex ownership cases
+        $this->seedComplexOwnershipCases();
+
+        $this->command->info('Modular compensation seeding completed!');
+        $this->command->info('Total records created: ' . Compensation::count());
+    }
+
+    /**
+     * Seed basic test cases for form validation
+     */
+    private function seedBasicTestCases()
+    {
+        $this->command->info('Seeding basic test cases...');
+        
+        // Basic Land Award Case
+        $this->createBasicLandCase();
+        
+        // Land and Trees Case
+        $this->createLandAndTreesCase();
+        
+        // Infrastructure Case
+        $this->createInfrastructureCase();
+        
+        // Multiple Applicants Case
+        $this->createMultipleApplicantsCase();
+        
+        // Decimal Numbers Test Case
+        $this->createDecimalTestCase();
+    }
+
+    /**
+     * Seed comprehensive test cases with all fields
+     */
+    private function seedComprehensiveTestCases()
+    {
+        $this->command->info('Seeding comprehensive test cases...');
+        
+        // Generate 3 compensations with all optional fields filled
         Compensation::factory()->count(3)->state(function (array $attributes) {
             $awardType = fake()->randomElement(['জমি', 'গাছপালা/ফসল', 'অবকাঠামো']);
             
@@ -78,10 +123,49 @@ class CompensationSeeder extends Seeder
                         'applicant_land' => '1.00'
                     ]
                 ],
+                'district' => fake()->randomElement(['বগুড়া', 'ঢাকা', 'চট্টগ্রাম', 'রাজশাহী']),
+                'upazila' => fake()->randomElement(['বগুড়া সদর', 'শিবগঞ্জ', 'শেরপুর', 'দুপচাঁচিয়া']),
+                'mouza_name' => fake()->word() . ' মৌজা',
+                'jl_no' => fake()->numberBetween(1, 999),
+                'sa_khatian_no' => fake()->optional()->numberBetween(1, 999),
+                'rs_khatian_no' => fake()->optional()->numberBetween(1, 999),
+                'land_schedule_sa_plot_no' => fake()->optional()->numberBetween(1, 999),
+                'land_schedule_rs_plot_no' => fake()->optional()->numberBetween(1, 999),
+                'ownership_details' => [
+                    'sa_info' => [
+                        'sa_plot_no' => fake()->numberBetween(1, 999),
+                        'sa_khatian_no' => fake()->numberBetween(1, 999),
+                        'sa_total_land_in_plot' => fake()->randomFloat(2, 1, 10),
+                        'sa_land_in_khatian' => fake()->randomFloat(2, 0.5, 5)
+                    ],
+                    'sa_owners' => [['name' => fake()->name()]],
+                    'deed_transfers' => [],
+                    'inheritance_records' => [],
+                    'rs_records' => [],
+                    'applicant_info' => [
+                        'applicant_name' => fake()->name(),
+                        'kharij_land_amount' => fake()->randomFloat(2, 0.5, 5)
+                    ],
+                    'storySequence' => [],
+                    'currentStep' => 'applicant',
+                    'completedSteps' => ['info'],
+                    'rs_record_disabled' => false
+                ],
+                'mutation_info' => [],
+                'kanungo_opinion' => [],
+                'status' => 'pending'
             ];
         })->create();
+    }
 
-        // Generate 2 compensations with only minimal required fields (edge case)
+    /**
+     * Seed edge cases with minimal data
+     */
+    private function seedEdgeCases()
+    {
+        $this->command->info('Seeding edge cases...');
+        
+        // Generate 2 compensations with only minimal required fields
         Compensation::factory()->count(2)->state(function (array $attributes) {
             return [
                 'tree_compensation' => null,
@@ -99,8 +183,16 @@ class CompensationSeeder extends Seeder
                 ],
             ];
         })->create();
+    }
 
-        // Generate 2 compensations with multiple applicants and award holders (comprehensive test)
+    /**
+     * Seed complex ownership cases
+     */
+    private function seedComplexOwnershipCases()
+    {
+        $this->command->info('Seeding complex ownership cases...');
+        
+        // Generate 2 compensations with multiple applicants and award holders
         Compensation::factory()->count(2)->state(function (array $attributes) {
             return [
                 'applicants' => [
@@ -139,7 +231,7 @@ class CompensationSeeder extends Seeder
         // Generate 3 compensations with complex ownership sequences (SA records)
         Compensation::factory()->count(3)->saRecord()->create();
 
-        // Generate 3 compensations with complex RS ownership sequences (RS records with disabled second step)
+        // Generate 3 compensations with complex RS ownership sequences
         Compensation::factory()->count(3)->rsRecord()->create();
 
         // Generate 2 compensations with inheritance-heavy ownership sequences
@@ -149,227 +241,13 @@ class CompensationSeeder extends Seeder
                 'tree_compensation' => fake()->numberBetween(25000, 75000),
             ];
         })->create();
-
-        $this->command->info('Compensation records with comprehensive test cases seeded successfully!');
-        $this->command->info('Total records created: ' . Compensation::count());
     }
 
-    private function createTestCases()
-    {
-        $this->command->info('Creating comprehensive test data for form validation...');
-
-        // Test Case 1: Basic Land Award (জমি) - Simple case with proper number formats
-        $this->createBasicLandCase();
-
-        // Test Case 2: Land and Trees Award (গাছপালা/ফসল) with decimal numbers
-        Compensation::create([
-            'case_number' => 'CASE-1002',
-            'case_date' => '2024-01-15',
-            'sa_plot_no' => 'SA-150',
-            'rs_plot_no' => null,
-            'applicants' => [
-                [
-                    'name' => 'আব্দুল মালেক',
-                    'father_name' => 'মোঃ আব্দুল হামিদ',
-                    'address' => 'গ্রাম: মালেকপুর, পোস্ট: মালেকপুর, উপজেলা: শিবগঞ্জ, জেলা: বগুড়া',
-                    'nid' => '1234567890',
-                    'mobile' => '01712345678'
-                ]
-            ],
-            'la_case_no' => 'LA-1002',
-            'award_type' => ['গাছপালা/ফসল'],
-            'land_award_serial_no' => '601',
-            'tree_award_serial_no' => 'TAS-601',
-            'tree_compensation' => '75000.50',
-            'acquisition_record_basis' => 'SA',
-            'plot_no' => 'SA-150',
-            'award_holder_names' => [
-                [
-                    'name' => 'মোছাঃ ফাতেমা খাতুন',
-                    'father_name' => 'মোঃ আব্দুল হামিদ',
-                    'address' => 'গ্রাম: কুমারপুর, ডাকঘর: শিবগঞ্জ, জেলা: বগুড়া'
-                ]
-            ],
-            'land_category' => [
-                [
-                    'category_name' => 'আবাদি জমি',
-                    'total_land' => '1.75',
-                    'total_compensation' => '175000.75',
-                    'applicant_land' => '1.75'
-                ],
-                [
-                    'category_name' => 'বাগান জমি',
-                    'total_land' => '0.50',
-                    'total_compensation' => '80000.25',
-                    'applicant_land' => '0.50'
-                ]
-            ],
-            'is_applicant_in_award' => true,
-            'source_tax_percentage' => '7.25',
-            'district' => 'বগুড়া',
-            'upazila' => 'শিবগঞ্জ',
-            'mouza_name' => 'কুমারপুর',
-            'jl_no' => '25',
-            'sa_khatian_no' => '302',
-            'land_schedule_sa_plot_no' => 'SA-150',
-            'ownership_details' => [
-                'sa_info' => [
-                    'sa_plot_no' => 'SA-150',
-                    'sa_khatian_no' => '302',
-                    'sa_total_land_in_plot' => '3.25',
-                    'sa_land_in_khatian' => '2.25'
-                ],
-                'sa_owners' => [['name' => 'মোছাঃ ফাতেমা খাতুন']],
-                'deed_transfers' => [
-                    [
-                        'donor_names' => [['name' => 'মোঃ আব্দুল হামিদ']],
-                        'recipient_names' => [['name' => 'মোছাঃ ফাতেমা খাতুন']],
-                        'deed_number' => 'DEED-1002',
-                        'deed_date' => '2020-02-10',
-                        'sale_type' => 'দান দলিল',
-                        'application_type' => 'specific',
-                        'application_specific_area' => 'SA-150',
-                        'application_sell_area' => '2.25',
-                        'application_other_areas' => null,
-                        'application_total_area' => null,
-                        'application_sell_area_other' => null,
-                        'possession_mentioned' => 'yes',
-                        'possession_plot_no' => 'SA-150',
-                        'possession_description' => 'জমিটি পৈতৃক সম্পত্তি হিসেবে দান করা হয়েছে',
-                        'possession_deed' => 'yes',
-                        'possession_application' => 'yes',
-                        'mentioned_areas' => 'SA-150'
-                    ]
-                ],
-                'inheritance_records' => [],
-                'rs_records' => [],
-                'applicant_info' => [
-                    'applicant_name' => 'মোছাঃ ফাতেমা খাতুন',
-                    'kharij_land_amount' => '2.25'
-                ],
-                'storySequence' => [
-                    [
-                        'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
-                        'description' => 'দলিল নম্বর: DEED-1002',
-                        'itemType' => 'deed',
-                        'itemIndex' => 0,
-                        'sequenceIndex' => 0
-                    ]
-                ],
-                'currentStep' => 'applicant',
-                'completedSteps' => ['info', 'transfers', 'applicant'],
-                'rs_record_disabled' => false
-            ],
-            'tax_info' => [
-                'holding_no' => '1002',
-                'paid_land_amount' => '2.25',
-                'english_year' => '2024',
-                'bangla_year' => '১৪৩১'
-            ]
-        ]);
-
-        // Test Case 3: Infrastructure Award (অবকাঠামো)
-        $this->createInfrastructureCase();
-
-        // Test Case 4: Mixed Award Types (জমি + গাছপালা/ফসল)
-        Compensation::create([
-            'case_number' => 'CASE-1004',
-            'case_date' => '2024-01-20',
-            'sa_plot_no' => 'SA-200',
-            'rs_plot_no' => null,
-            'applicants' => [
-                [
-                    'name' => 'মোঃ রফিকুল ইসলাম',
-                    'father_name' => 'মোঃ আব্দুল মতিন',
-                    'address' => 'গ্রাম: রফিকপুর, পোস্ট: রফিকপুর, উপজেলা: দুপচাঁচিয়া, জেলা: বগুড়া',
-                    'nid' => '1234567894',
-                    'mobile' => '01712345682'
-                ]
-            ],
-            'la_case_no' => 'LA-1004',
-            'award_type' => ['জমি', 'গাছপালা/ফসল'],
-            'land_award_serial_no' => '504',
-            'tree_award_serial_no' => 'TAS-504',
-            'tree_compensation' => '75000.50',
-            'acquisition_record_basis' => 'SA',
-            'plot_no' => 'SA-200',
-            'award_holder_names' => [
-                [
-                    'name' => 'মোঃ আব্দুর রহমান',
-                    'father_name' => 'মোঃ আব্দুল কাদের',
-                    'address' => 'গ্রাম: নয়াপাড়া, ডাকঘর: দুপচাঁচিয়া, জেলা: বগুড়া'
-                ]
-            ],
-            'land_category' => [
-                [
-                    'category_name' => 'আবাদি জমি',
-                    'total_land' => '4.00',
-                    'total_compensation' => '400000.00',
-                    'applicant_land' => '2.00'
-                ]
-            ],
-            'is_applicant_in_award' => false,
-            'source_tax_percentage' => '6.75',
-            'district' => 'বগুড়া',
-            'upazila' => 'দুপচাঁচিয়া',
-            'mouza_name' => 'নয়াপাড়া',
-            'jl_no' => '45',
-            'sa_khatian_no' => '504',
-            'land_schedule_sa_plot_no' => 'SA-200',
-            'ownership_details' => [
-                'sa_info' => [
-                    'sa_plot_no' => 'SA-200',
-                    'sa_khatian_no' => '504',
-                    'sa_total_land_in_plot' => '4.00',
-                    'sa_land_in_khatian' => '2.00'
-                ],
-                'sa_owners' => [['name' => 'মোঃ আব্দুর রহমান']],
-                'deed_transfers' => [
-                    [
-                        'donor_names' => [['name' => 'মোঃ আব্দুল কাদের']],
-                        'recipient_names' => [['name' => 'মোঃ আব্দুর রহমান']],
-                        'deed_number' => 'DEED-1004',
-                        'deed_date' => '2020-04-20',
-                        'sale_type' => 'বিক্রয় দলিল',
-                        'application_type' => 'specific',
-                        'application_specific_area' => 'SA-200',
-                        'application_sell_area' => '2.00',
-                        'application_other_areas' => null,
-                        'application_total_area' => null,
-                        'application_sell_area_other' => null,
-                        'possession_mentioned' => 'yes',
-                        'possession_plot_no' => 'SA-200',
-                        'possession_description' => 'জমিটি যৌথ মালিকানায় রয়েছে',
-                        'possession_deed' => 'yes',
-                        'possession_application' => 'yes',
-                        'mentioned_areas' => 'SA-200'
-                    ]
-                ],
-                'inheritance_records' => [],
-                'rs_records' => [],
-                'applicant_info' => [
-                    'applicant_name' => 'মোঃ আব্দুর রহমান',
-                    'kharij_land_amount' => '2.00'
-                ],
-                'storySequence' => [
-                    [
-                        'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
-                        'description' => 'দলিল নম্বর: DEED-1004',
-                        'itemType' => 'deed',
-                        'itemIndex' => 0,
-                        'sequenceIndex' => 0
-                    ]
-                ],
-                'currentStep' => 'applicant',
-                'completedSteps' => ['info', 'transfers', 'applicant'],
-                'rs_record_disabled' => false
-            ]
-        ]);
-
-        // Test Case 5: Complex decimal numbers test
-        $this->createDecimalTestCase();
-    }
-
+    // Individual test case methods will be added in the next batch...
+    
+    /**
+     * Create basic land award case
+     */
     private function createBasicLandCase()
     {
         $plotNo = '101';
@@ -389,8 +267,11 @@ class CompensationSeeder extends Seeder
             'acquisition_record_basis' => 'SA',
             'plot_no' => $plotNo,
             'sa_plot_no' => $plotNo,
+            'rs_plot_no' => null, // Added missing field
             'award_type' => ['জমি'],
             'land_award_serial_no' => '501',
+            'tree_award_serial_no' => null, // Added missing field
+            'infrastructure_award_serial_no' => null, // Added missing field
             'award_holder_names' => [
                 [
                     'name' => 'মোঃ রহিম উদ্দিন',
@@ -398,6 +279,11 @@ class CompensationSeeder extends Seeder
                     'address' => 'গ্রাম: পাড়াতলী, ডাকঘর: বগুড়া সদর, জেলা: বগুড়া'
                 ]
             ],
+            'objector_details' => null, // Added missing field
+            'is_applicant_in_award' => true,
+            'source_tax_percentage' => '5.50',
+            'tree_compensation' => null, // Added missing field
+            'infrastructure_compensation' => null, // Added missing field
             'land_category' => [
                 [
                     'category_name' => 'ধানী জমি',
@@ -406,14 +292,14 @@ class CompensationSeeder extends Seeder
                     'applicant_land' => '2.50'
                 ]
             ],
-            'is_applicant_in_award' => true,
-            'source_tax_percentage' => '5.50',
             'district' => 'বগুড়া',
             'upazila' => 'বগুড়া সদর',
             'mouza_name' => 'পাড়াতলী',
             'jl_no' => '15',
             'sa_khatian_no' => '201',
+            'rs_khatian_no' => null, // Added missing field
             'land_schedule_sa_plot_no' => $plotNo,
+            'land_schedule_rs_plot_no' => null, // Added missing field
             'ownership_details' => [
                 'sa_info' => [
                     'sa_plot_no' => $plotNo,
@@ -462,16 +348,22 @@ class CompensationSeeder extends Seeder
                 'completedSteps' => ['info', 'transfers', 'applicant'],
                 'rs_record_disabled' => false
             ],
+            'mutation_info' => [], // Added missing field
             'tax_info' => [
                 'holding_no' => '1001',
                 'paid_land_amount' => '2.50',
                 'english_year' => '2024',
                 'bangla_year' => '১৪৩১'
             ],
+            'additional_documents_info' => [], // Added missing field
+            'kanungo_opinion' => [], // Added missing field
             'status' => 'pending'
         ]);
     }
 
+    /**
+     * Create land and trees case
+     */
     private function createLandAndTreesCase()
     {
         $plotNo = '102';
@@ -491,9 +383,11 @@ class CompensationSeeder extends Seeder
             'acquisition_record_basis' => 'SA',
             'plot_no' => $plotNo,
             'sa_plot_no' => $plotNo,
+            'rs_plot_no' => null, // Added missing field
             'award_type' => ['জমি', 'গাছপালা/ফসল'],
+            'land_award_serial_no' => 'LAS-602', // Added missing field
             'tree_award_serial_no' => '601',
-            'tree_compensation' => '75000.50',
+            'infrastructure_award_serial_no' => null, // Added missing field
             'award_holder_names' => [
                 [
                     'name' => 'মোছাঃ ফাতেমা খাতুন',
@@ -501,6 +395,11 @@ class CompensationSeeder extends Seeder
                     'address' => 'গ্রাম: কুমারপুর, ডাকঘর: শিবগঞ্জ, জেলা: বগুড়া'
                 ]
             ],
+            'objector_details' => null, // Added missing field
+            'is_applicant_in_award' => true,
+            'source_tax_percentage' => '7.25',
+            'tree_compensation' => '75000.50',
+            'infrastructure_compensation' => null, // Added missing field
             'land_category' => [
                 [
                     'category_name' => 'আবাদি জমি',
@@ -515,14 +414,14 @@ class CompensationSeeder extends Seeder
                     'applicant_land' => '0.50'
                 ]
             ],
-            'is_applicant_in_award' => true,
-            'source_tax_percentage' => '7.25',
             'district' => 'বগুড়া',
             'upazila' => 'শিবগঞ্জ',
             'mouza_name' => 'কুমারপুর',
             'jl_no' => '25',
             'sa_khatian_no' => '302',
+            'rs_khatian_no' => null, // Added missing field
             'land_schedule_sa_plot_no' => $plotNo,
+            'land_schedule_rs_plot_no' => null, // Added missing field
             'ownership_details' => [
                 'sa_info' => [
                     'sa_plot_no' => $plotNo,
@@ -571,15 +470,22 @@ class CompensationSeeder extends Seeder
                 'completedSteps' => ['info', 'transfers', 'applicant'],
                 'rs_record_disabled' => false
             ],
+            'mutation_info' => [], // Added missing field
             'tax_info' => [
                 'holding_no' => '1002',
                 'paid_land_amount' => '2.25',
                 'english_year' => '2024',
                 'bangla_year' => '১৪৩১'
-            ]
+            ],
+            'additional_documents_info' => [], // Added missing field
+            'kanungo_opinion' => [], // Added missing field
+            'status' => 'pending' // Added missing field
         ]);
     }
 
+    /**
+     * Create infrastructure case
+     */
     private function createInfrastructureCase()
     {
         $plotNo = '203';
@@ -598,10 +504,12 @@ class CompensationSeeder extends Seeder
             'la_case_no' => '2003',
             'acquisition_record_basis' => 'RS',
             'plot_no' => $plotNo,
+            'sa_plot_no' => null, // Added missing field
             'rs_plot_no' => $plotNo,
             'award_type' => ['অবকাঠামো'],
+            'land_award_serial_no' => null, // Added missing field
+            'tree_award_serial_no' => null, // Added missing field
             'infrastructure_award_serial_no' => '701',
-            'infrastructure_compensation' => '500000.00',
             'award_holder_names' => [
                 [
                     'name' => 'মোঃ আলমগীর হোসেন',
@@ -609,13 +517,19 @@ class CompensationSeeder extends Seeder
                     'address' => 'গ্রাম: রামপুর, ডাকঘর: শেরপুর, জেলা: বগুড়া'
                 ]
             ],
+            'objector_details' => null, // Added missing field
             'is_applicant_in_award' => true,
             'source_tax_percentage' => '10.00',
+            'tree_compensation' => null, // Added missing field
+            'infrastructure_compensation' => '500000.00',
+            'land_category' => [], // Added missing field
             'district' => 'বগুড়া',
             'upazila' => 'শেরপুর',
             'mouza_name' => 'রামপুর',
             'jl_no' => '35',
+            'sa_khatian_no' => null, // Added missing field
             'rs_khatian_no' => '403',
+            'land_schedule_sa_plot_no' => null, // Added missing field
             'land_schedule_rs_plot_no' => $plotNo,
             'ownership_details' => [
                 'rs_info' => [
@@ -625,6 +539,8 @@ class CompensationSeeder extends Seeder
                     'rs_land_in_khatian' => '1.00',
                     'dp_khatian' => false
                 ],
+                'sa_info' => null, // Added missing field
+                'sa_owners' => [], // Added missing field
                 'rs_owners' => [['name' => 'মোঃ আলমগীর হোসেন']],
                 'deed_transfers' => [
                     [
@@ -680,15 +596,22 @@ class CompensationSeeder extends Seeder
                 'completedSteps' => ['info', 'transfers', 'applicant'],
                 'rs_record_disabled' => true
             ],
+            'mutation_info' => [], // Added missing field
             'tax_info' => [
                 'holding_no' => '1003',
                 'paid_land_amount' => '1.00',
                 'english_year' => '2024',
                 'bangla_year' => '১৪৩১'
-            ]
+            ],
+            'additional_documents_info' => [], // Added missing field
+            'kanungo_opinion' => [], // Added missing field
+            'status' => 'pending' // Added missing field
         ]);
     }
 
+    /**
+     * Create multiple applicants case
+     */
     private function createMultipleApplicantsCase()
     {
         $plotNo = '104';
@@ -791,6 +714,9 @@ class CompensationSeeder extends Seeder
         ]);
     }
 
+    /**
+     * Create decimal numbers test case
+     */
     private function createDecimalTestCase()
     {
         $plotNo = '105';
@@ -896,4 +822,4 @@ class CompensationSeeder extends Seeder
             'jl_no' => '105'
         ]);
     }
-} 
+}

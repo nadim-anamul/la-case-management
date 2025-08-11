@@ -301,8 +301,8 @@ class CompensationController extends Controller
             'tax_info.holding_no' => 'nullable|string|max:255',
             'tax_info.paid_land_amount' => 'nullable|string|max:255',
             
-            // Ownership Details Tax Info
-            'ownership_details.deed_transfers.*.tax_info' => 'nullable|string',
+            // Ownership Details Tax Info - removed to prevent stripping of other fields
+            // 'ownership_details.deed_transfers.*.tax_info' => 'nullable|string',
             
             // Additional Documents
             'additional_documents_info' => 'nullable|array',
@@ -516,7 +516,7 @@ class CompensationController extends Controller
         }
         
         // Convert rs_info dp_khatian checkbox value to boolean
-        if (isset($ownershipDetails['rs_info']['dp_khatian'])) {
+        if (isset($ownershipDetails['rs_info']) && isset($ownershipDetails['rs_info']['dp_khatian'])) {
             $ownershipDetails['rs_info']['dp_khatian'] = in_array($ownershipDetails['rs_info']['dp_khatian'], ['on', '1', 'true'], true);
         }
 
