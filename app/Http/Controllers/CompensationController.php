@@ -79,10 +79,47 @@ class CompensationController extends Controller
     {
         $compensation = Compensation::findOrFail($id);
         
+        // Debug: Log the received data
+        Log::info('Compensation update request data:', [
+            'id' => $id,
+            'ownership_details' => $request->input('ownership_details'),
+            'storySequence' => $request->input('ownership_details.storySequence'),
+            'storySequence_type' => gettype($request->input('ownership_details.storySequence')),
+            'storySequence_raw' => $request->input('ownership_details.storySequence')
+        ]);
+        
         $validatedData = $this->validateCompensationData($request);
         $validatedData = $this->processCompensationData($validatedData);
+        
+        // Debug: Log the processed data
+        Log::info('Processed compensation data:', [
+            'ownership_details' => $validatedData['ownership_details'] ?? null,
+            'storySequence' => $validatedData['ownership_details']['storySequence'] ?? null,
+            'storySequence_type' => isset($validatedData['ownership_details']['storySequence']) ? gettype($validatedData['ownership_details']['storySequence']) : 'not_set'
+        ]);
+
+        // Ensure story sequence exists and is not empty
+        if (isset($validatedData['ownership_details']) && 
+            (!isset($validatedData['ownership_details']['storySequence']) || 
+             empty($validatedData['ownership_details']['storySequence']))) {
+            
+            Log::info('Story sequence is missing or empty, regenerating from existing data...');
+            $validatedData['ownership_details']['storySequence'] = $this->regenerateStorySequence($validatedData['ownership_details']);
+            
+            Log::info('Regenerated story sequence:', [
+                'storySequence' => $validatedData['ownership_details']['storySequence']
+            ]);
+        }
 
         $compensation->update($validatedData);
+        
+        // Debug: Log the saved data
+        $compensation->refresh();
+        Log::info('Saved compensation data:', [
+            'ownership_details' => $compensation->ownership_details,
+            'storySequence' => $compensation->ownership_details['storySequence'] ?? null,
+            'storySequence_type' => isset($compensation->ownership_details['storySequence']) ? gettype($compensation->ownership_details['storySequence']) : 'not_set'
+        ]);
 
         return redirect()->route('compensation.preview', $compensation->id)
             ->with('success', 'ক্ষতিপূরণ তথ্য সফলভাবে আপডেট করা হয়েছে।');
@@ -306,27 +343,47 @@ class CompensationController extends Controller
      */
     private function processOwnershipDetails(array $ownershipDetails)
     {
-        // Convert checkbox values to boolean for rs_records
-        if (isset($ownershipDetails['rs_records'])) {
-            foreach ($ownershipDetails['rs_records'] as &$rsRecord) {
-                if (isset($rsRecord['dp_khatian'])) {
-                    $rsRecord['dp_khatian'] = in_array($rsRecord['dp_khatian'], ['on', '1', 'true'], true);
-                }
-            }
-        }
-        
-        // Convert rs_info dp_khatian checkbox value to boolean
-        if (isset($ownershipDetails['rs_info']['dp_khatian'])) {
-            $ownershipDetails['rs_info']['dp_khatian'] = in_array($ownershipDetails['rs_info']['dp_khatian'], ['on', '1', 'true'], true);
-        }
+        // Debug: Log the incoming ownership details
+        Log::info('Processing ownership details:', [
+            'storySequence' => $ownershipDetails['storySequence'] ?? null,
+            'storySequence_type' => isset($ownershipDetails['storySequence']) ? gettype($ownershipDetails['storySequence']) : 'not_set',
+            'all_keys' => array_keys($ownershipDetails),
+            'raw_ownership_details' => $ownershipDetails
+        ]);
         
         // Process story sequence if it's a JSON string
         if (isset($ownershipDetails['storySequence']) && is_string($ownershipDetails['storySequence'])) {
+            Log::info('Processing storySequence string:', [
+                'value' => $ownershipDetails['storySequence'],
+                'length' => strlen($ownershipDetails['storySequence'])
+            ]);
+            
             $storySequence = json_decode($ownershipDetails['storySequence'], true);
             if (json_last_error() === JSON_ERROR_NONE) {
                 $ownershipDetails['storySequence'] = $storySequence;
+                Log::info('StorySequence JSON decoded successfully:', [
+                    'decoded' => $storySequence,
+                    'count' => count($storySequence)
+                ]);
             } else {
+                Log::error('StorySequence JSON decode failed:', [
+                    'error' => json_last_error_msg(),
+                    'raw_value' => $ownershipDetails['storySequence']
+                ]);
                 $ownershipDetails['storySequence'] = [];
+            }
+        } else {
+            Log::info('StorySequence is not a string or not set:', [
+                'value' => $ownershipDetails['storySequence'] ?? null,
+                'type' => isset($ownershipDetails['storySequence']) ? gettype($ownershipDetails['storySequence']) : 'not_set'
+            ]);
+            
+            // Try to find storySequence in the raw data
+            Log::info('Searching for storySequence in raw data...');
+            foreach ($ownershipDetails as $key => $value) {
+                if (strpos($key, 'storySequence') !== false) {
+                    Log::info("Found storySequence-like key: {$key} = " . (is_string($value) ? $value : json_encode($value)));
+                }
             }
         }
         
@@ -340,12 +397,181 @@ class CompensationController extends Controller
             }
         }
         
+        // Process deed_transfers if it's a JSON string
+        if (isset($ownershipDetails['deed_transfers']) && is_string($ownershipDetails['deed_transfers'])) {
+            $deedTransfers = json_decode($ownershipDetails['deed_transfers'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $ownershipDetails['deed_transfers'] = $deedTransfers;
+                Log::info('Deed transfers JSON decoded successfully:', ['count' => count($deedTransfers)]);
+            } else {
+                Log::error('Deed transfers JSON decode failed:', ['error' => json_last_error_msg()]);
+                $ownershipDetails['deed_transfers'] = [];
+            }
+        }
+        
+        // Process inheritance_records if it's a JSON string
+        if (isset($ownershipDetails['inheritance_records']) && is_string($ownershipDetails['inheritance_records'])) {
+            $inheritanceRecords = json_decode($ownershipDetails['inheritance_records'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $ownershipDetails['inheritance_records'] = $inheritanceRecords;
+                Log::info('Inheritance records JSON decoded successfully:', ['count' => count($inheritanceRecords)]);
+            } else {
+                Log::error('Inheritance records JSON decode failed:', ['error' => json_last_error_msg()]);
+                $ownershipDetails['inheritance_records'] = [];
+            }
+        }
+        
+        // Process rs_records if it's a JSON string
+        if (isset($ownershipDetails['rs_records']) && is_string($ownershipDetails['rs_records'])) {
+            $rsRecords = json_decode($ownershipDetails['rs_records'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $ownershipDetails['rs_records'] = $rsRecords;
+                Log::info('RS records JSON decoded successfully:', ['count' => count($rsRecords)]);
+            } else {
+                Log::error('RS records JSON decode failed:', ['error' => json_last_error_msg()]);
+                $ownershipDetails['rs_records'] = [];
+            }
+        }
+        
+        // Process sa_owners if it's a JSON string
+        if (isset($ownershipDetails['sa_owners']) && is_string($ownershipDetails['sa_owners'])) {
+            $saOwners = json_decode($ownershipDetails['sa_owners'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $ownershipDetails['sa_owners'] = $saOwners;
+                Log::info('SA owners JSON decoded successfully:', ['count' => count($saOwners)]);
+            } else {
+                Log::error('SA owners JSON decode failed:', ['error' => json_last_error_msg()]);
+                $ownershipDetails['sa_owners'] = [];
+            }
+        }
+        
+        // Process rs_owners if it's a JSON string
+        if (isset($ownershipDetails['rs_owners']) && is_string($ownershipDetails['rs_owners'])) {
+            $rsOwners = json_decode($ownershipDetails['rs_owners'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $ownershipDetails['rs_owners'] = $rsOwners;
+                Log::info('RS owners JSON decoded successfully:', ['count' => count($rsOwners)]);
+            } else {
+                Log::error('RS owners JSON decode failed:', ['error' => json_last_error_msg()]);
+                $ownershipDetails['rs_owners'] = [];
+            }
+        }
+        
+        // Process sa_info if it's a JSON string
+        if (isset($ownershipDetails['sa_info']) && is_string($ownershipDetails['sa_info'])) {
+            $saInfo = json_decode($ownershipDetails['sa_info'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $ownershipDetails['sa_info'] = $saInfo;
+                Log::info('SA info JSON decoded successfully');
+            } else {
+                Log::error('SA info JSON decode failed:', ['error' => json_last_error_msg()]);
+                $ownershipDetails['sa_info'] = [];
+            }
+        }
+        
+        // Process rs_info if it's a JSON string
+        if (isset($ownershipDetails['rs_info']) && is_string($ownershipDetails['rs_info'])) {
+            $rsInfo = json_decode($ownershipDetails['rs_info'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $ownershipDetails['rs_info'] = $rsInfo;
+                Log::info('RS info JSON decoded successfully');
+            } else {
+                Log::error('RS info JSON decode failed:', ['error' => json_last_error_msg()]);
+                $ownershipDetails['rs_info'] = [];
+            }
+        }
+        
+        // Process applicant_info if it's a JSON string
+        if (isset($ownershipDetails['applicant_info']) && is_string($ownershipDetails['applicant_info'])) {
+            $applicantInfo = json_decode($ownershipDetails['applicant_info'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $ownershipDetails['applicant_info'] = $applicantInfo;
+                Log::info('Applicant info JSON decoded successfully');
+            } else {
+                Log::error('Applicant info JSON decode failed:', ['error' => json_last_error_msg()]);
+                $ownershipDetails['applicant_info'] = [];
+            }
+        }
+        
         // Convert rs_record_disabled to boolean
         if (isset($ownershipDetails['rs_record_disabled'])) {
             $ownershipDetails['rs_record_disabled'] = in_array($ownershipDetails['rs_record_disabled'], ['on', '1', 'true'], true);
         }
+        
+        // Now process checkbox values after all JSON fields have been decoded
+        
+        // Convert checkbox values to boolean for rs_records
+        if (isset($ownershipDetails['rs_records']) && is_array($ownershipDetails['rs_records'])) {
+            foreach ($ownershipDetails['rs_records'] as &$rsRecord) {
+                if (isset($rsRecord['dp_khatian'])) {
+                    $rsRecord['dp_khatian'] = in_array($rsRecord['dp_khatian'], ['on', '1', 'true'], true);
+                }
+            }
+        }
+        
+        // Convert rs_info dp_khatian checkbox value to boolean
+        if (isset($ownershipDetails['rs_info']['dp_khatian'])) {
+            $ownershipDetails['rs_info']['dp_khatian'] = in_array($ownershipDetails['rs_info']['dp_khatian'], ['on', '1', 'true'], true);
+        }
+
+        // Debug: Log the processed ownership details
+        Log::info('Processed ownership details:', [
+            'storySequence' => $ownershipDetails['storySequence'] ?? null,
+            'storySequence_type' => isset($ownershipDetails['storySequence']) ? gettype($ownershipDetails['storySequence']) : 'not_set'
+        ]);
 
         return $ownershipDetails;
+    }
+
+    /**
+     * Regenerate story sequence from existing ownership details data
+     */
+    private function regenerateStorySequence(array $ownershipDetails): array
+    {
+        $storySequence = [];
+        $sequenceIndex = 0;
+
+        // Generate story sequence from deed transfers
+        if (isset($ownershipDetails['deed_transfers']) && is_array($ownershipDetails['deed_transfers'])) {
+            foreach ($ownershipDetails['deed_transfers'] as $index => $deed) {
+                $storySequence[] = [
+                    'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
+                    'description' => 'দলিল নম্বর: ' . ($deed['deed_number'] ?? 'N/A'),
+                    'itemType' => 'deed',
+                    'itemIndex' => $index,
+                    'sequenceIndex' => $sequenceIndex++
+                ];
+            }
+        }
+
+        // Generate story sequence from inheritance records
+        if (isset($ownershipDetails['inheritance_records']) && is_array($ownershipDetails['inheritance_records'])) {
+            foreach ($ownershipDetails['inheritance_records'] as $index => $inheritance) {
+                $storySequence[] = [
+                    'type' => 'ওয়ারিশমূলে হস্তান্তর',
+                    'description' => 'পূর্ববর্তী মালিক: ' . ($inheritance['previous_owner_name'] ?? 'N/A'),
+                    'itemType' => 'inheritance',
+                    'itemIndex' => $index,
+                    'sequenceIndex' => $sequenceIndex++
+                ];
+            }
+        }
+
+        // Generate story sequence from RS records
+        if (isset($ownershipDetails['rs_records']) && is_array($ownershipDetails['rs_records'])) {
+            foreach ($ownershipDetails['rs_records'] as $index => $rsRecord) {
+                $storySequence[] = [
+                    'type' => 'আরএস রেকর্ড যোগ',
+                    'description' => 'দাগ নম্বর: ' . ($rsRecord['plot_no'] ?? 'N/A'),
+                    'itemType' => 'rs',
+                    'itemIndex' => $index,
+                    'sequenceIndex' => $sequenceIndex++
+                ];
+            }
+        }
+
+        Log::info('Regenerated story sequence with ' . count($storySequence) . ' items');
+        return $storySequence;
     }
 
     /**

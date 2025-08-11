@@ -27,7 +27,7 @@ class CompensationTest extends TestCase
                 ]
             ],
             'la_case_no' => 'LA-001',
-            'award_type' => 'জমি',
+            'award_type' => ['জমি'],
             'land_award_serial_no' => 'LAS-001',
             'tree_award_serial_no' => null,
             'infrastructure_award_serial_no' => null,
@@ -75,20 +75,36 @@ class CompensationTest extends TestCase
                         'application_type' => 'specific',
                         'application_specific_area' => 'SA-123',
                         'application_sell_area' => '2.50',
+                        'application_other_areas' => null,
+                        'application_total_area' => null,
+                        'application_sell_area_other' => null,
+                        'possession_mentioned' => 'yes',
+                        'possession_plot_no' => 'SA-123',
+                        'possession_description' => 'জমিটি দীর্ঘদিন যাবৎ চাষাবাদের কাজে ব্যবহৃত',
                         'possession_deed' => 'yes',
                         'possession_application' => 'yes',
                         'mentioned_areas' => 'SA-123',
                         'special_details' => null
                     ]
                 ],
+                'inheritance_records' => [],
+                'rs_records' => [],
                 'applicant_info' => [
                     'applicant_name' => 'আব্দুল রহমান',
-                    'kharij_case_no' => 'KH-001',
-                    'kharij_plot_no' => 'KH-PLOT-123',
-                    'kharij_land_amount' => '1.25',
-                    'kharij_date' => '১৫/০২/২০২১',
-                    'kharij_details' => 'খারিজের বিবরণ'
-                ]
+                    'kharij_land_amount' => '1.25'
+                ],
+                'storySequence' => [
+                    [
+                        'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
+                        'description' => 'দলিল নম্বর: DEED-001',
+                        'itemType' => 'deed',
+                        'itemIndex' => 0,
+                        'sequenceIndex' => 0
+                    ]
+                ],
+                'currentStep' => 'applicant',
+                'completedSteps' => ['info', 'transfers', 'applicant'],
+                'rs_record_disabled' => false
             ],
             'tax_info' => [
                 'english_year' => '2024-25',
@@ -97,9 +113,9 @@ class CompensationTest extends TestCase
                 'paid_land_amount' => '1.25'
             ],
             'additional_documents_info' => [
-                'selected_types' => ['বণ্টননামা'],
+                'selected_types' => ['আপস- বন্টননামা'],
                 'details' => [
-                    'বণ্টননামা' => 'বণ্টননামার বিবরণ'
+                    'আপস- বন্টননামা' => 'বণ্টননামার বিবরণ'
                 ]
             ]
         ];

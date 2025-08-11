@@ -19,10 +19,11 @@ class StorySequenceTest extends TestCase
             'la_case_no' => 'LA-TEST-001',
             'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-TEST-123',
+            'sa_plot_no' => 'PLOT-TEST-123',
             'applicants' => [
                 ['name' => 'Test Applicant', 'father_name' => 'Test Father', 'address' => 'Test Address', 'nid' => '1234567890']
             ],
-            'award_type' => ['land'],
+            'award_type' => ['জমি'],
             'award_holder_names' => [
                 ['name' => 'Test Applicant']
             ],
@@ -38,11 +39,11 @@ class StorySequenceTest extends TestCase
             'source_tax_percentage' => '6',
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-TEST-001',
-            'land_schedule_sa_plot_no' => 'SA-PLOT-TEST-123',
+            'land_schedule_sa_plot_no' => 'PLOT-TEST-123',
             'sa_khatian_no' => 'KH-TEST-456',
             'ownership_details' => [
                 'sa_info' => [
-                    'sa_plot_no' => 'SA-TEST-123',
+                    'sa_plot_no' => 'PLOT-TEST-123',
                     'sa_khatian_no' => 'KH-TEST-456',
                     'sa_total_land_in_plot' => '3.00',
                     'sa_land_in_khatian' => '2.50'
@@ -79,10 +80,16 @@ class StorySequenceTest extends TestCase
                         'recipient_names' => [['name' => 'Test Recipient']],
                         'deed_number' => 'DEED-TEST-001',
                         'deed_date' => '2020-05-15',
-                        'sale_type' => 'বিক্রয়',
+                        'sale_type' => 'বিক্রয় দলিল',
                         'application_type' => 'specific',
                         'application_specific_area' => 'PLOT-TEST-123',
                         'application_sell_area' => '2.50',
+                        'application_other_areas' => null,
+                        'application_total_area' => null,
+                        'application_sell_area_other' => null,
+                        'possession_mentioned' => 'yes',
+                        'possession_plot_no' => 'PLOT-TEST-123',
+                        'possession_description' => 'Test possession description',
                         'possession_deed' => 'yes',
                         'possession_application' => 'yes',
                         'mentioned_areas' => 'PLOT-TEST-123',
@@ -91,6 +98,7 @@ class StorySequenceTest extends TestCase
                 ],
                 'inheritance_records' => [
                     [
+                        'is_heir_applicant' => 'yes',
                         'previous_owner_name' => 'Test Previous Owner',
                         'death_date' => '2020-12-15',
                         'has_death_cert' => 'yes',
@@ -102,18 +110,16 @@ class StorySequenceTest extends TestCase
                         'owner_names' => [['name' => 'Test RS Owner']],
                         'plot_no' => 'RS-TEST-789',
                         'khatian_no' => 'KH-TEST-012',
-                        'land_amount' => '3.25',
-                        'dp_khatian' => true
+                        'land_amount' => '3.25'
                     ]
                 ],
                 'applicant_info' => [
                     'applicant_name' => 'Test Applicant',
-                    'kharij_case_no' => 'KHARIJ-TEST-001',
-                    'kharij_plot_no' => 'PLOT-TEST-123',
-                    'kharij_land_amount' => '2.50',
-                    'kharij_date' => '2023-12-01',
-                    'kharij_details' => 'Test kharij details'
-                ]
+                    'kharij_land_amount' => '2.50'
+                ],
+                'currentStep' => 'applicant',
+                'completedSteps' => ['info', 'transfers', 'applicant'],
+                'rs_record_disabled' => false
             ],
             'tax_info' => [
                 'english_year' => '2023-24',
@@ -122,9 +128,9 @@ class StorySequenceTest extends TestCase
                 'paid_land_amount' => '2.50'
             ],
             'additional_documents_info' => [
-                'selected_types' => ['distribution'],
+                'selected_types' => ['আপস- বন্টননামা'],
                 'details' => [
-                    'distribution' => 'Test distribution details'
+                    'আপস- বন্টননামা' => 'Test distribution details'
                 ]
             ],
             'status' => 'pending'
@@ -152,10 +158,11 @@ class StorySequenceTest extends TestCase
             'la_case_no' => 'LA-TEST-002',
             'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-TEST-456',
+            'sa_plot_no' => 'PLOT-TEST-456',
             'applicants' => [
                 ['name' => 'Test Applicant 2', 'father_name' => 'Test Father 2', 'address' => 'Test Address 2', 'nid' => '0987654321']
             ],
-            'award_type' => ['land'],
+            'award_type' => ['জমি'],
             'award_holder_names' => [
                 ['name' => 'Test Applicant 2']
             ],
@@ -171,11 +178,11 @@ class StorySequenceTest extends TestCase
             'source_tax_percentage' => '6',
             'mouza_name' => 'Test Mouza 2',
             'jl_no' => 'JL-TEST-002',
-            'land_schedule_sa_plot_no' => 'SA-PLOT-TEST-456',
+            'land_schedule_sa_plot_no' => 'PLOT-TEST-456',
             'sa_khatian_no' => 'KH-TEST-789',
             'ownership_details' => [
                 'sa_info' => [
-                    'sa_plot_no' => 'SA-TEST-456',
+                    'sa_plot_no' => 'PLOT-TEST-456',
                     'sa_khatian_no' => 'KH-TEST-789',
                     'sa_total_land_in_plot' => '2.00',
                     'sa_land_in_khatian' => '1.75'
@@ -189,10 +196,16 @@ class StorySequenceTest extends TestCase
                         'recipient_names' => [['name' => 'Test Recipient 2']],
                         'deed_number' => 'DEED-TEST-002',
                         'deed_date' => '2020-05-15',
-                        'sale_type' => 'বিক্রয়',
+                        'sale_type' => 'বিক্রয় দলিল',
                         'application_type' => 'specific',
                         'application_specific_area' => 'PLOT-TEST-456',
                         'application_sell_area' => '1.75',
+                        'application_other_areas' => null,
+                        'application_total_area' => null,
+                        'application_sell_area_other' => null,
+                        'possession_mentioned' => 'yes',
+                        'possession_plot_no' => 'PLOT-TEST-456',
+                        'possession_description' => 'Test possession description 2',
                         'possession_deed' => 'yes',
                         'possession_application' => 'yes',
                         'mentioned_areas' => 'PLOT-TEST-456',
@@ -201,6 +214,7 @@ class StorySequenceTest extends TestCase
                 ],
                 'inheritance_records' => [
                     [
+                        'is_heir_applicant' => 'yes',
                         'previous_owner_name' => 'Test Previous Owner 2',
                         'death_date' => '2020-12-15',
                         'has_death_cert' => 'yes',
@@ -209,12 +223,11 @@ class StorySequenceTest extends TestCase
                 ],
                 'applicant_info' => [
                     'applicant_name' => 'Test Applicant 2',
-                    'kharij_case_no' => 'KHARIJ-TEST-002',
-                    'kharij_plot_no' => 'PLOT-TEST-456',
-                    'kharij_land_amount' => '1.75',
-                    'kharij_date' => '2023-12-01',
-                    'kharij_details' => 'Test kharij details 2'
-                ]
+                    'kharij_land_amount' => '1.75'
+                ],
+                'currentStep' => 'applicant',
+                'completedSteps' => ['info', 'transfers', 'applicant'],
+                'rs_record_disabled' => false
             ],
             'tax_info' => [
                 'english_year' => '2023-24',
@@ -223,9 +236,9 @@ class StorySequenceTest extends TestCase
                 'paid_land_amount' => '1.75'
             ],
             'additional_documents_info' => [
-                'selected_types' => ['distribution'],
+                'selected_types' => ['আপস- বন্টননামা'],
                 'details' => [
-                    'distribution' => 'Test distribution details 2'
+                    'আপস- বন্টননামা' => 'Test distribution details 2'
                 ]
             ],
             'status' => 'pending'
@@ -264,10 +277,11 @@ class StorySequenceTest extends TestCase
             'la_case_no' => 'LA-TEST-003',
             'acquisition_record_basis' => 'SA',
             'plot_no' => 'PLOT-TEST-789',
+            'sa_plot_no' => 'PLOT-TEST-789',
             'applicants' => [
                 ['name' => 'Test Applicant 3', 'father_name' => 'Test Father 3', 'address' => 'Test Address 3', 'nid' => '1122334455']
             ],
-            'award_type' => ['land'],
+            'award_type' => ['জমি'],
             'award_holder_names' => [
                 ['name' => 'Test Applicant 3']
             ],
@@ -283,9 +297,18 @@ class StorySequenceTest extends TestCase
             'source_tax_percentage' => '6',
             'mouza_name' => 'Test Mouza 3',
             'jl_no' => 'JL-TEST-003',
-            'land_schedule_sa_plot_no' => 'SA-PLOT-TEST-789',
+            'land_schedule_sa_plot_no' => 'PLOT-TEST-789',
             'sa_khatian_no' => 'KH-TEST-012',
             'ownership_details' => [
+                'sa_info' => [
+                    'sa_plot_no' => 'PLOT-TEST-789',
+                    'sa_khatian_no' => 'KH-TEST-012',
+                    'sa_total_land_in_plot' => '4.00',
+                    'sa_land_in_khatian' => '3.25'
+                ],
+                'sa_owners' => [
+                    ['name' => 'Test Owner 3']
+                ],
                 'storySequence' => $storySequence,
                 'deed_transfers' => [
                     [
@@ -293,10 +316,16 @@ class StorySequenceTest extends TestCase
                         'recipient_names' => [['name' => 'Test Recipient 3']],
                         'deed_number' => 'DEED-TEST-003',
                         'deed_date' => '2020-05-15',
-                        'sale_type' => 'বিক্রয়',
+                        'sale_type' => 'বিক্রয় দলিল',
                         'application_type' => 'specific',
                         'application_specific_area' => 'PLOT-TEST-789',
                         'application_sell_area' => '3.25',
+                        'application_other_areas' => null,
+                        'application_total_area' => null,
+                        'application_sell_area_other' => null,
+                        'possession_mentioned' => 'yes',
+                        'possession_plot_no' => 'PLOT-TEST-789',
+                        'possession_description' => 'Test possession description 3',
                         'possession_deed' => 'yes',
                         'possession_application' => 'yes',
                         'mentioned_areas' => 'PLOT-TEST-789',
@@ -305,6 +334,7 @@ class StorySequenceTest extends TestCase
                 ],
                 'inheritance_records' => [
                     [
+                        'is_heir_applicant' => 'yes',
                         'previous_owner_name' => 'Test Previous Owner 3',
                         'death_date' => '2020-12-15',
                         'has_death_cert' => 'yes',
@@ -313,12 +343,11 @@ class StorySequenceTest extends TestCase
                 ],
                 'applicant_info' => [
                     'applicant_name' => 'Test Applicant 3',
-                    'kharij_case_no' => 'KHARIJ-TEST-003',
-                    'kharij_plot_no' => 'PLOT-TEST-789',
-                    'kharij_land_amount' => '3.25',
-                    'kharij_date' => '2023-12-01',
-                    'kharij_details' => 'Test kharij details 3'
-                ]
+                    'kharij_land_amount' => '3.25'
+                ],
+                'currentStep' => 'applicant',
+                'completedSteps' => ['info', 'transfers', 'applicant'],
+                'rs_record_disabled' => false
             ],
             'tax_info' => [
                 'english_year' => '2023-24',
@@ -327,9 +356,9 @@ class StorySequenceTest extends TestCase
                 'paid_land_amount' => '3.25'
             ],
             'additional_documents_info' => [
-                'selected_types' => ['distribution'],
+                'selected_types' => ['আপস- বন্টননামা'],
                 'details' => [
-                    'distribution' => 'Test distribution details 3'
+                    'আপস- বন্টননামা' => 'Test distribution details 3'
                 ]
             ],
             'status' => 'pending'

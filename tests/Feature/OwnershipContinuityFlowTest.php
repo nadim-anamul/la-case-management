@@ -24,8 +24,8 @@ class OwnershipContinuityFlowTest extends TestCase
                 ]
             ],
             'la_case_no' => 'LA-001',
-            'award_type' => 'জমি',
-            'award_serial_no' => 'AWD-001',
+            'award_type' => ['জমি'],
+            'land_award_serial_no' => 'AWD-001',
             'acquisition_record_basis' => 'SA',
             'sa_plot_no' => 'SA-PLOT-001',
             'plot_no' => 'PLOT-001',
@@ -34,7 +34,14 @@ class OwnershipContinuityFlowTest extends TestCase
             ],
             'is_applicant_in_award' => true,
             'source_tax_percentage' => '3%',
-            'applicant_acquired_land' => '1.00',
+            'land_category' => [
+                [
+                    'category_name' => 'ধানী জমি',
+                    'total_land' => '2.00',
+                    'total_compensation' => '200000',
+                    'applicant_land' => '1.00'
+                ]
+            ],
             'mouza_name' => 'Test Mouza',
             'jl_no' => 'JL-001',
             'sa_khatian_no' => 'SA-001',
@@ -62,26 +69,39 @@ class OwnershipContinuityFlowTest extends TestCase
                         'recipient_names' => [['name' => 'Deed Recipient']],
                         'deed_number' => 'DEED-001',
                         'deed_date' => '2024-01-01',
-                        'sale_type' => 'দলিল',
-
+                        'sale_type' => 'বিক্রয় দলিল',
+                        'application_type' => 'specific',
+                        'application_specific_area' => 'SA-PLOT-001',
+                        'application_sell_area' => '1.50',
+                        'application_other_areas' => null,
+                        'application_total_area' => null,
+                        'application_sell_area_other' => null,
                         'possession_mentioned' => 'yes',
                         'possession_plot_no' => 'POSSESSION-001',
                         'possession_description' => 'Possession details',
+                        'possession_deed' => 'yes',
+                        'possession_application' => 'yes',
+                        'mentioned_areas' => 'SA-PLOT-001'
                     ]
                 ],
                 'inheritance_records' => [],
                 'rs_records' => [],
                 'applicant_info' => [
                     'applicant_name' => 'Test Applicant',
-                    'kharij_case_no' => 'KHARIJ-001',
-                    'kharij_plot_no' => 'KHARIJ-PLOT-001',
-                    'kharij_land_amount' => '1.00',
-                    'kharij_date' => '2024-01-01',
-                    'kharij_details' => 'Kharij details',
+                    'kharij_land_amount' => '1.00'
                 ],
-                'transferItems' => [
-                    ['type' => 'দলিল', 'index' => 0]
-                ]
+                'storySequence' => [
+                    [
+                        'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
+                        'description' => 'দলিল নম্বর: DEED-001',
+                        'itemType' => 'deed',
+                        'itemIndex' => 0,
+                        'sequenceIndex' => 0
+                    ]
+                ],
+                'currentStep' => 'applicant',
+                'completedSteps' => ['info', 'transfers', 'applicant'],
+                'rs_record_disabled' => false
             ],
             'mutation_info' => [
                 'records' => []
@@ -91,9 +111,9 @@ class OwnershipContinuityFlowTest extends TestCase
                 'bangla_year' => '১৪৩১'
             ],
             'additional_documents_info' => [
-                'selected_types' => ['deed'],
+                'selected_types' => ['আপস- বন্টননামা'],
                 'details' => [
-                    'deed' => 'Test deed details'
+                    'আপস- বন্টননামা' => 'Test deed details'
                 ]
             ]
         ];

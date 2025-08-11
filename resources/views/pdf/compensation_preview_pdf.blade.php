@@ -1316,19 +1316,13 @@
 
             <!-- Land Compensation Claim -->
             @if($compensation->land_category && is_array($compensation->land_category))
+            @php
+                $total_land = number_format($compensation->total_land_amount, 2);
+                $applicant_acquired_land = number_format($compensation->applicant_acquired_land, 2);
+            @endphp
             <div class="p-4 bg-gray-50 rounded-lg">
                 <p class="text-gray-800">
-                    আবেদনকারী উল্লিখিত দাগে অধিগ্রহণকৃত 
-                    @if($compensation->getApplicantAcquiredLandAttribute() > 0)
-                        {{ $compensation->getApplicantAcquiredLandAttribute() }} একর জমির মধ্যে
-                        @if($compensation->getApplicantAcquiredLandAttribute() > 0)
-                            {{ $compensation->getApplicantAcquiredLandAttribute() }} একরের ক্ষতিপূরণ দাবী করেন।
-                        @else
-                            তার দাবীর পরিমাণ নির্দিষ্ট করেননি।
-                        @endif
-                    @else
-                        জমির পরিমাণ নির্ধারণ করা যায়নি।
-                    @endif
+                    আবেদনকারী উল্লিখিত দাগে অধিগ্রহণকৃত {{ $total_land }} একর জমির মধ্যে {{ $applicant_acquired_land }} একরের ক্ষতিপূরণ দাবী করেন।
                 </p>
             </div>
             @endif
@@ -1372,7 +1366,7 @@
                 <p class="summary-text">
                     মামলা নং {{ $compensation->case_number }} এর অধীনে {{ $compensation->mouza_name }} মৌজার {{ $compensation->plot_no }} দাগে 
                     @if($compensation->land_category && is_array($compensation->land_category))
-                        মোট {{ number_format(array_sum(array_column($compensation->land_category, 'total_land')), 2) }} একর জমি অধিগ্রহণ করা হয়েছে।
+                        মোট {{ number_format($compensation->total_land_amount, 2) }} একর জমি অধিগ্রহণ করা হয়েছে।
                     @else
                         জমি অধিগ্রহণ করা হয়েছে।
                     @endif
@@ -1383,7 +1377,7 @@
                 <h3 class="summary-title">ক্ষতিপূরণের পরিমাণ</h3>
                 <p class="summary-text">
                     @if($compensation->land_category && is_array($compensation->land_category))
-                        মোট ক্ষতিপূরণের পরিমাণ {{ number_format(array_sum(array_column($compensation->land_category, 'total_compensation')), 2) }} টাকা।
+                        মোট ক্ষতিপূরণের পরিমাণ {{ number_format($compensation->total_compensation_amount, 2) }} টাকা।
                     @else
                         ক্ষতিপূরণের পরিমাণ নির্ধারণ করা যায়নি।
                     @endif
@@ -1394,8 +1388,8 @@
                 <h3 class="summary-title">আবেদনকারীর দাবী</h3>
                 <p class="summary-text">
                     আবেদনকারী 
-                    @if($compensation->getApplicantAcquiredLandAttribute() > 0)
-                        {{ $compensation->getApplicantAcquiredLandAttribute() }} একর জমির ক্ষতিপূরণ দাবী করেন।
+                    @if($compensation->applicant_acquired_land > 0)
+                        {{ $compensation->applicant_acquired_land }} একর জমির ক্ষতিপূরণ দাবী করেন।
                     @else
                         জমির ক্ষতিপূরণ দাবী করেন।
                     @endif

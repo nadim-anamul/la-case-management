@@ -76,12 +76,16 @@ class CompensationFactory extends Factory
     public function definition(): array
     {
         $acquisitionBasis = $this->faker->randomElement(['SA', 'RS']);
+        $awardType = $this->faker->randomElement(['জমি', 'জমি ও গাছপালা', 'অবকাঠামো']);
+        
+        // Generate plot numbers based on acquisition basis
+        $plotNo = $acquisitionBasis === 'SA' ? 'SA-' . $this->faker->numberBetween(100, 999) : 'RS-' . $this->faker->numberBetween(100, 999);
         
         return [
             'case_number' => 'COMP-' . $this->faker->unique()->numberBetween(1000, 9999),
             'case_date' => $this->faker->date('Y-m-d'),
-            'sa_plot_no' => $acquisitionBasis === 'SA' ? 'SA-' . $this->faker->numberBetween(100, 999) : null,
-            'rs_plot_no' => $acquisitionBasis === 'RS' ? 'RS-' . $this->faker->numberBetween(100, 999) : null,
+            'sa_plot_no' => $acquisitionBasis === 'SA' ? $plotNo : null,
+            'rs_plot_no' => $acquisitionBasis === 'RS' ? $plotNo : null,
             'applicants' => [
                 [
                     'name' => $this->getBengaliName(),
@@ -92,12 +96,12 @@ class CompensationFactory extends Factory
                 ]
             ],
             'la_case_no' => 'LA-' . $this->faker->unique()->numberBetween(1000, 9999),
-            'award_type' => [$this->faker->randomElement(['জমি', 'জমি ও গাছপালা', 'অবকাঠামো'])],
-            'land_award_serial_no' => 'LAS-' . $this->faker->numberBetween(100, 999),
-            'tree_award_serial_no' => null,
-            'infrastructure_award_serial_no' => null,
+            'award_type' => [$awardType],
+            'land_award_serial_no' => $awardType === 'জমি' || $awardType === 'জমি ও গাছপালা' ? 'LAS-' . $this->faker->numberBetween(100, 999) : null,
+            'tree_award_serial_no' => $awardType === 'জমি ও গাছপালা' ? 'TAS-' . $this->faker->numberBetween(100, 999) : null,
+            'infrastructure_award_serial_no' => $awardType === 'অবকাঠামো' ? 'IAS-' . $this->faker->numberBetween(100, 999) : null,
             'acquisition_record_basis' => $acquisitionBasis,
-            'plot_no' => 'PLOT-' . $this->faker->numberBetween(100, 999),
+            'plot_no' => $plotNo,
             'award_holder_names' => [
                 [
                     'name' => $this->getBengaliName(),
@@ -107,7 +111,7 @@ class CompensationFactory extends Factory
             ],
             'land_category' => [
                 [
-                    'category_name' => $this->faker->randomElement(['আবাদি জমি', 'অনাবাদি জমি', 'বাড়িঘর']),
+                    'category_name' => $this->faker->randomElement(['আবাদি জমি', 'অনাবাদি জমি', 'বাড়িঘর', 'ধানী জমি', 'বাগান জমি']),
                     'total_land' => $this->faker->randomFloat(2, 1, 10),
                     'total_compensation' => $this->faker->numberBetween(100000, 1000000),
                     'applicant_land' => $this->faker->randomFloat(2, 0.5, 5)
@@ -116,17 +120,17 @@ class CompensationFactory extends Factory
             'objector_details' => null,
             'is_applicant_in_award' => $this->faker->boolean(),
             'source_tax_percentage' => $this->faker->randomFloat(2, 0.5, 15.0),
-            'tree_compensation' => null,
-            'infrastructure_compensation' => null,
+            'tree_compensation' => $awardType === 'জমি ও গাছপালা' ? $this->faker->numberBetween(25000, 75000) : null,
+            'infrastructure_compensation' => $awardType === 'অবকাঠামো' ? $this->faker->numberBetween(100000, 500000) : null,
             'district' => $this->faker->randomElement(['বগুড়া', 'ঢাকা', 'চট্টগ্রাম', 'রাজশাহী', 'খুলনা', 'সিলেট', 'রংপুর', 'বরিশাল']),
             'upazila' => $this->faker->randomElement(['বগুড়া সদর', 'শিবগঞ্জ', 'শেরপুর', 'দুপচাঁচিয়া', 'আদমদীঘি', 'নন্দীগ্রাম', 'সোনাতলা', 'ধুনট', 'গাবতলী', 'কাহালু', 'সারিয়াকান্দি', 'শাজাহানপুর']),
             'mouza_name' => $this->faker->city(),
             'jl_no' => 'JL-' . $this->faker->numberBetween(100, 999),
-            'land_schedule_sa_plot_no' => $acquisitionBasis === 'SA' ? 'SA-PLOT-' . $this->faker->numberBetween(100, 999) : null,
-            'land_schedule_rs_plot_no' => $acquisitionBasis === 'RS' ? 'RS-PLOT-' . $this->faker->numberBetween(100, 999) : null,
+            'land_schedule_sa_plot_no' => $acquisitionBasis === 'SA' ? $plotNo : null,
+            'land_schedule_rs_plot_no' => $acquisitionBasis === 'RS' ? $plotNo : null,
             'sa_khatian_no' => $acquisitionBasis === 'SA' ? 'SA-KH-' . $this->faker->numberBetween(100, 999) : null,
             'rs_khatian_no' => $acquisitionBasis === 'RS' ? 'RS-KH-' . $this->faker->numberBetween(100, 999) : null,
-            'ownership_details' => $this->generateOwnershipDetails($acquisitionBasis),
+            'ownership_details' => $this->generateOwnershipDetails($acquisitionBasis, $plotNo),
             'mutation_info' => null,
             'tax_info' => [
                 'english_year' => '2024-25',
@@ -153,51 +157,81 @@ class CompensationFactory extends Factory
     /**
      * Generate ownership details based on acquisition basis
      */
-    private function generateOwnershipDetails(string $acquisitionBasis): array
+    private function generateOwnershipDetails(string $acquisitionBasis, string $plotNo): array
     {
         if ($acquisitionBasis === 'SA') {
-            return $this->generateSAOwnershipDetails();
+            return $this->generateSAOwnershipDetails($plotNo);
         } else {
-            return $this->generateRSOwnershipDetails();
+            return $this->generateRSOwnershipDetails($plotNo);
         }
     }
 
     /**
-     * Generate SA ownership details with multiple sequences
+     * Generate SA ownership details with complete and consistent data
      */
-    private function generateSAOwnershipDetails(): array
+    private function generateSAOwnershipDetails(string $plotNo): array
     {
-        $deedCount = $this->faker->numberBetween(1, 3);
-        $inheritanceCount = $this->faker->numberBetween(0, 2);
+        $deedCount = $this->faker->numberBetween(1, 2);
+        $inheritanceCount = $this->faker->numberBetween(0, 1);
         
-        // Generate multiple deed transfers
+        // Generate deed transfers with complete data
         $deedTransfers = [];
         $storySequence = [];
         $sequenceIndex = 0;
         
         for ($i = 0; $i < $deedCount; $i++) {
             $applicationType = $this->faker->randomElement(['specific', 'multiple']);
-            $deedTransfers[] = [
-                'donor_names' => [['name' => $this->getBengaliName()]],
-                'recipient_names' => [['name' => $this->getBengaliName()]],
-                'deed_number' => 'DEED-' . $this->faker->numberBetween(1000, 9999),
-                'deed_date' => $this->faker->date('Y-m-d'),
-                'sale_type' => $this->faker->randomElement(['বিক্রয় দলিল', 'দান দলিল', 'বায়া দলিল']),
-                'application_type' => $applicationType,
-                'application_specific_area' => $applicationType === 'specific' ? 'SA-' . $this->faker->numberBetween(100, 999) : null,
-                'application_sell_area' => $applicationType === 'specific' ? $this->faker->randomFloat(2, 1, 5) : null,
-                'application_other_areas' => $applicationType === 'multiple' ? 'SA-' . $this->faker->numberBetween(100, 999) . ', SA-' . $this->faker->numberBetween(100, 999) : null,
-                'application_total_area' => $applicationType === 'multiple' ? $this->faker->randomFloat(2, 3, 10) : null,
-                'application_sell_area_other' => $applicationType === 'multiple' ? $this->faker->randomFloat(2, 1, 5) : null,
-                'possession_mentioned' => $this->faker->randomElement(['yes', 'no']),
-                'possession_plot_no' => 'PLOT-' . $this->faker->numberBetween(100, 999),
-                'possession_description' => $this->getBengaliDescription(),
-                'possession_deed' => $this->faker->randomElement(['yes', 'no']),
-                'possession_application' => $this->faker->randomElement(['yes', 'no']),
-                'mentioned_areas' => 'SA-' . $this->faker->numberBetween(100, 999),
-                'special_details' => $this->faker->optional(0.3)->passthrough($this->getBengaliDescription()),
-                'tax_info' => $this->faker->optional(0.7)->passthrough($this->getBengaliDescription())
-            ];
+            $sellArea = $this->faker->randomFloat(2, 1, 5);
+            
+            if ($applicationType === 'specific') {
+                $deedTransfers[] = [
+                    'donor_names' => [['name' => $this->getBengaliName()]],
+                    'recipient_names' => [['name' => $this->getBengaliName()]],
+                    'deed_number' => 'DEED-' . $this->faker->numberBetween(1000, 9999),
+                    'deed_date' => $this->faker->date('Y-m-d'),
+                    'sale_type' => $this->faker->randomElement(['বিক্রয় দলিল', 'দান দলিল', 'বায়া দলিল']),
+                    'application_type' => 'specific',
+                    'application_specific_area' => $plotNo,
+                    'application_sell_area' => $sellArea,
+                    'application_other_areas' => null,
+                    'application_total_area' => null,
+                    'application_sell_area_other' => null,
+                    'possession_mentioned' => 'yes',
+                    'possession_plot_no' => $plotNo,
+                    'possession_description' => $this->getBengaliDescription(),
+                    'possession_deed' => 'yes',
+                    'possession_application' => 'yes',
+                    'mentioned_areas' => $plotNo,
+                    'special_details' => $this->faker->optional(0.3)->passthrough($this->getBengaliDescription()),
+                    'tax_info' => $this->faker->optional(0.7)->passthrough($this->getBengaliDescription())
+                ];
+            } else {
+                $otherAreas = $plotNo . ', ' . 'SA-' . $this->faker->numberBetween(100, 999);
+                $totalArea = $sellArea + $this->faker->randomFloat(2, 1, 3);
+                $sellAreaOther = $this->faker->randomFloat(2, 1, 3);
+                
+                $deedTransfers[] = [
+                    'donor_names' => [['name' => $this->getBengaliName()]],
+                    'recipient_names' => [['name' => $this->getBengaliName()]],
+                    'deed_number' => 'DEED-' . $this->faker->numberBetween(1000, 9999),
+                    'deed_date' => $this->faker->date('Y-m-d'),
+                    'sale_type' => $this->faker->randomElement(['বিক্রয় দলিল', 'দান দলিল', 'বায়া দলিল']),
+                    'application_type' => 'multiple',
+                    'application_specific_area' => null,
+                    'application_sell_area' => null,
+                    'application_other_areas' => $otherAreas,
+                    'application_total_area' => $totalArea,
+                    'application_sell_area_other' => $sellAreaOther,
+                    'possession_mentioned' => 'yes',
+                    'possession_plot_no' => $plotNo,
+                    'possession_description' => $this->getBengaliDescription(),
+                    'possession_deed' => 'yes',
+                    'possession_application' => 'yes',
+                    'mentioned_areas' => $otherAreas,
+                    'special_details' => $this->faker->optional(0.3)->passthrough($this->getBengaliDescription()),
+                    'tax_info' => $this->faker->optional(0.7)->passthrough($this->getBengaliDescription())
+                ];
+            }
             
             $storySequence[] = [
                 'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
@@ -220,7 +254,7 @@ class CompensationFactory extends Factory
             ];
             
             $storySequence[] = [
-                'type' => 'উত্তরাধিকার সূত্রে প্রাপ্তি',
+                'type' => 'ওয়ারিশমূলে হস্তান্তর',
                 'description' => 'পূর্ববর্তী মালিক: ' . $this->getBengaliName(),
                 'itemType' => 'inheritance',
                 'itemIndex' => $i,
@@ -230,7 +264,7 @@ class CompensationFactory extends Factory
         
         return [
             'sa_info' => [
-                'sa_plot_no' => 'SA-' . $this->faker->numberBetween(100, 999),
+                'sa_plot_no' => $plotNo,
                 'sa_khatian_no' => 'SA-KH-' . $this->faker->numberBetween(100, 999),
                 'sa_total_land_in_plot' => $this->faker->randomFloat(2, 5, 20),
                 'sa_land_in_khatian' => $this->faker->randomFloat(2, 2, 10)
@@ -241,13 +275,10 @@ class CompensationFactory extends Factory
             ],
             'deed_transfers' => $deedTransfers,
             'inheritance_records' => $inheritanceRecords,
+            'rs_records' => [], // Empty for SA records
             'applicant_info' => [
                 'applicant_name' => $this->getBengaliName(),
-                'kharij_case_no' => 'KH-' . $this->faker->numberBetween(1000, 9999),
-                'kharij_plot_no' => 'KH-PLOT-' . $this->faker->numberBetween(100, 999),
-                'kharij_land_amount' => $this->faker->randomFloat(2, 0.5, 5),
-                'kharij_date' => $this->faker->date('Y-m-d'),
-                'kharij_details' => $this->getBengaliDescription()
+                'kharij_land_amount' => $this->faker->randomFloat(2, 0.5, 5)
             ],
             'storySequence' => $storySequence,
             'currentStep' => 'applicant',
@@ -257,43 +288,71 @@ class CompensationFactory extends Factory
     }
 
     /**
-     * Generate RS ownership details with multiple sequences
-     * For RS records, we should not store RS info in second step
+     * Generate RS ownership details with complete and consistent data
      */
-    private function generateRSOwnershipDetails(): array
+    private function generateRSOwnershipDetails(string $plotNo): array
     {
-        $deedCount = $this->faker->numberBetween(1, 3);
-        $inheritanceCount = $this->faker->numberBetween(0, 2);
-        $rsRecordCount = 1; // Only one RS record per compensation
+        $deedCount = $this->faker->numberBetween(1, 2);
+        $inheritanceCount = $this->faker->numberBetween(0, 1);
         
-        // Generate multiple deed transfers
+        // Generate deed transfers with complete data
         $deedTransfers = [];
         $storySequence = [];
         $sequenceIndex = 0;
         
         for ($i = 0; $i < $deedCount; $i++) {
             $applicationType = $this->faker->randomElement(['specific', 'multiple']);
-            $deedTransfers[] = [
-                'donor_names' => [['name' => $this->getBengaliName()]],
-                'recipient_names' => [['name' => $this->getBengaliName()]],
-                'deed_number' => 'DEED-' . $this->faker->numberBetween(1000, 9999),
-                'deed_date' => $this->faker->date('Y-m-d'),
-                'sale_type' => $this->faker->randomElement(['বিক্রয় দলিল', 'দান দলিল', 'বায়া দলিল']),
-                'application_type' => $applicationType,
-                'application_specific_area' => $applicationType === 'specific' ? 'RS-' . $this->faker->numberBetween(100, 999) : null,
-                'application_sell_area' => $applicationType === 'specific' ? $this->faker->randomFloat(2, 1, 5) : null,
-                'application_other_areas' => $applicationType === 'multiple' ? 'RS-' . $this->faker->numberBetween(100, 999) . ', RS-' . $this->faker->numberBetween(100, 999) : null,
-                'application_total_area' => $applicationType === 'multiple' ? $this->faker->randomFloat(2, 3, 10) : null,
-                'application_sell_area_other' => $applicationType === 'multiple' ? $this->faker->randomFloat(2, 1, 5) : null,
-                'possession_mentioned' => $this->faker->randomElement(['yes', 'no']),
-                'possession_plot_no' => 'PLOT-' . $this->faker->numberBetween(100, 999),
-                'possession_description' => $this->getBengaliDescription(),
-                'possession_deed' => $this->faker->randomElement(['yes', 'no']),
-                'possession_application' => $this->faker->randomElement(['yes', 'no']),
-                'mentioned_areas' => 'RS-' . $this->faker->numberBetween(100, 999),
-                'special_details' => $this->faker->optional(0.3)->passthrough($this->getBengaliDescription()),
-                'tax_info' => $this->faker->optional(0.7)->passthrough($this->getBengaliDescription())
-            ];
+            $sellArea = $this->faker->randomFloat(2, 1, 5);
+            
+            if ($applicationType === 'specific') {
+                $deedTransfers[] = [
+                    'donor_names' => [['name' => $this->getBengaliName()]],
+                    'recipient_names' => [['name' => $this->getBengaliName()]],
+                    'deed_number' => 'DEED-' . $this->faker->numberBetween(1000, 9999),
+                    'deed_date' => $this->faker->date('Y-m-d'),
+                    'sale_type' => $this->faker->randomElement(['বিক্রয় দলিল', 'দান দলিল', 'বায়া দলিল']),
+                    'application_type' => 'specific',
+                    'application_specific_area' => $plotNo,
+                    'application_sell_area' => $sellArea,
+                    'application_other_areas' => null,
+                    'application_total_area' => null,
+                    'application_sell_area_other' => null,
+                    'possession_mentioned' => 'yes',
+                    'possession_plot_no' => $plotNo,
+                    'possession_description' => $this->getBengaliDescription(),
+                    'possession_deed' => 'yes',
+                    'possession_application' => 'yes',
+                    'mentioned_areas' => $plotNo,
+                    'special_details' => $this->faker->optional(0.3)->passthrough($this->getBengaliDescription()),
+                    'tax_info' => $this->faker->optional(0.7)->passthrough($this->getBengaliDescription())
+                ];
+            } else {
+                $otherAreas = $plotNo . ', ' . 'RS-' . $this->faker->numberBetween(100, 999);
+                $totalArea = $sellArea + $this->faker->randomFloat(2, 1, 3);
+                $sellAreaOther = $this->faker->randomFloat(2, 1, 3);
+                
+                $deedTransfers[] = [
+                    'donor_names' => [['name' => $this->getBengaliName()]],
+                    'recipient_names' => [['name' => $this->getBengaliName()]],
+                    'deed_number' => 'DEED-' . $this->faker->numberBetween(1000, 9999),
+                    'deed_date' => $this->faker->date('Y-m-d'),
+                    'sale_type' => $this->faker->randomElement(['বিক্রয় দলিল', 'দান দলিল', 'বায়া দলিল']),
+                    'application_type' => 'multiple',
+                    'application_specific_area' => null,
+                    'application_sell_area' => null,
+                    'application_other_areas' => $otherAreas,
+                    'application_total_area' => $totalArea,
+                    'application_sell_area_other' => $sellAreaOther,
+                    'possession_mentioned' => 'yes',
+                    'possession_plot_no' => $plotNo,
+                    'possession_description' => $this->getBengaliDescription(),
+                    'possession_deed' => 'yes',
+                    'possession_application' => 'yes',
+                    'mentioned_areas' => $otherAreas,
+                    'special_details' => $this->faker->optional(0.3)->passthrough($this->getBengaliDescription()),
+                    'tax_info' => $this->faker->optional(0.7)->passthrough($this->getBengaliDescription())
+                ];
+            }
             
             $storySequence[] = [
                 'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
@@ -316,7 +375,7 @@ class CompensationFactory extends Factory
             ];
             
             $storySequence[] = [
-                'type' => 'উত্তরাধিকার সূত্রে প্রাপ্তি',
+                'type' => 'ওয়ারিশমূলে হস্তান্তর',
                 'description' => 'পূর্ববর্তী মালিক: ' . $this->getBengaliName(),
                 'itemType' => 'inheritance',
                 'itemIndex' => $i,
@@ -325,30 +384,29 @@ class CompensationFactory extends Factory
         }
         
         // Generate RS records (only for first step, not second step as per requirement)
-        $rsRecords = [];
-        for ($i = 0; $i < $rsRecordCount; $i++) {
-            $rsRecords[] = [
-                'plot_no' => 'RS-' . $this->faker->numberBetween(100, 999),
+        $rsRecords = [
+            [
+                'plot_no' => $plotNo,
                 'khatian_no' => 'RS-KH-' . $this->faker->numberBetween(100, 999),
                 'land_amount' => $this->faker->randomFloat(2, 1, 10),
                 'owner_names' => [
                     ['name' => $this->getBengaliName()],
                     ['name' => $this->getBengaliName()]
                 ]
-            ];
-            
-            $storySequence[] = [
-                'type' => 'আরএস রেকর্ড অনুযায়ী মালিকানা',
-                'description' => 'আরএস দাগ: RS-' . $this->faker->numberBetween(100, 999) . ', খতিয়ান: RS-KH-' . $this->faker->numberBetween(100, 999),
-                'itemType' => 'rs_record',
-                'itemIndex' => $i,
-                'sequenceIndex' => $sequenceIndex++
-            ];
-        }
+            ]
+        ];
+        
+        $storySequence[] = [
+            'type' => 'আরএস রেকর্ড যোগ',
+            'description' => 'দাগ নম্বর: ' . $plotNo,
+            'itemType' => 'rs',
+            'itemIndex' => 0,
+            'sequenceIndex' => $sequenceIndex++
+        ];
         
         return [
             'rs_info' => [
-                'rs_plot_no' => 'RS-' . $this->faker->numberBetween(100, 999),
+                'rs_plot_no' => $plotNo,
                 'rs_khatian_no' => 'RS-KH-' . $this->faker->numberBetween(100, 999),
                 'rs_total_land_in_plot' => $this->faker->randomFloat(2, 5, 20),
                 'rs_land_in_khatian' => $this->faker->randomFloat(2, 2, 10),
@@ -363,11 +421,7 @@ class CompensationFactory extends Factory
             'rs_records' => $rsRecords,
             'applicant_info' => [
                 'applicant_name' => $this->getBengaliName(),
-                'kharij_case_no' => 'KH-' . $this->faker->numberBetween(1000, 9999),
-                'kharij_plot_no' => 'KH-PLOT-' . $this->faker->numberBetween(100, 999),
-                'kharij_land_amount' => $this->faker->randomFloat(2, 0.5, 5),
-                'kharij_date' => $this->faker->date('Y-m-d'),
-                'kharij_details' => $this->getBengaliDescription()
+                'kharij_land_amount' => $this->faker->randomFloat(2, 0.5, 5)
             ],
             'storySequence' => $storySequence,
             'currentStep' => 'applicant',
@@ -418,7 +472,24 @@ class CompensationFactory extends Factory
             'sa_plot_no' => null,
             'land_schedule_sa_plot_no' => null,
             'sa_khatian_no' => null,
-            'ownership_details' => $this->generateOwnershipDetails('RS')
+            'ownership_details' => $this->generateOwnershipDetails('RS', 'RS-' . $this->faker->numberBetween(100, 999))
+        ]);
+    }
+
+    /**
+     * Indicate that the compensation is for SA record basis.
+     */
+    public function saRecord(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'acquisition_record_basis' => 'SA',
+            'sa_plot_no' => 'SA-' . $this->faker->numberBetween(100, 999),
+            'land_schedule_sa_plot_no' => 'SA-PLOT-' . $this->faker->numberBetween(100, 999),
+            'sa_khatian_no' => 'SA-KH-' . $this->faker->numberBetween(100, 999),
+            'rs_plot_no' => null,
+            'land_schedule_rs_plot_no' => null,
+            'rs_khatian_no' => null,
+            'ownership_details' => $this->generateOwnershipDetails('SA', 'SA-' . $this->faker->numberBetween(100, 999))
         ]);
     }
 } 

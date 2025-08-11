@@ -1167,19 +1167,13 @@
 
             <!-- Land Compensation Claim -->
             @if($compensation->land_category && is_array($compensation->land_category))
+            @php
+                $total_land = number_format($compensation->total_land_amount, 2);
+                $applicant_acquired_land = number_format($compensation->applicant_acquired_land, 2);
+            @endphp
             <div class="p-4 bg-gray-50 rounded-lg">
                 <p class="text-gray-800">
-                    আবেদনকারী উল্লিখিত দাগে অধিগ্রহণকৃত 
-                    @if($compensation->getApplicantAcquiredLandAttribute() > 0)
-                        {{ $compensation->getApplicantAcquiredLandAttribute() }} একর জমির মধ্যে
-                        @if($compensation->getApplicantAcquiredLandAttribute() > 0)
-                            {{ $compensation->getApplicantAcquiredLandAttribute() }} একরের ক্ষতিপূরণ দাবী করেন।
-                        @else
-                            তার দাবীর পরিমাণ নির্দিষ্ট করেননি।
-                        @endif
-                    @else
-                        জমির পরিমাণ নির্ধারণ করা যায়নি।
-                    @endif
+                    আবেদনকারী উল্লিখিত দাগে অধিগ্রহণকৃত {{ $total_land }} একর জমির মধ্যে {{ $applicant_acquired_land }} একরের ক্ষতিপূরণ দাবী করেন।
                 </p>
             </div>
             @endif

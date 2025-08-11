@@ -18,11 +18,13 @@ class CompensationSeeder extends Seeder
         // Generate comprehensive test cases for form validation
         $this->createTestCases();
 
-        // Generate 2 compensations with all optional fields filled (maximal data)
-        Compensation::factory()->count(2)->state(function (array $attributes) {
+        // Generate 3 compensations with all optional fields filled (maximal data)
+        Compensation::factory()->count(3)->state(function (array $attributes) {
+            $awardType = fake()->randomElement(['জমি', 'জমি ও গাছপালা', 'অবকাঠামো']);
+            
             return [
-                'tree_compensation' => '50000',
-                'infrastructure_compensation' => '75000',
+                'tree_compensation' => $awardType === 'জমি ও গাছপালা' ? fake()->numberBetween(25000, 75000) : null,
+                'infrastructure_compensation' => $awardType === 'অবকাঠামো' ? fake()->numberBetween(100000, 500000) : null,
                 'objector_details' => 'বিরোধী পক্ষের বিস্তারিত',
                 'tax_info' => [
                     'english_year' => '2024-25',
@@ -38,7 +40,7 @@ class CompensationSeeder extends Seeder
                         'সরেজমিন তদন্ত' => fake()->paragraph(),
                         'এফিডেভিট' => fake()->paragraph()
                     ]
-                ],
+                ]
             ];
         })->create();
 
@@ -98,34 +100,13 @@ class CompensationSeeder extends Seeder
         })->create();
 
         // Generate 3 compensations with complex ownership sequences (SA records)
-        Compensation::factory()->count(3)->state(function (array $attributes) {
-            return [
-                'acquisition_record_basis' => 'SA',
-                'sa_plot_no' => 'SA-' . fake()->numberBetween(100, 999),
-                'land_schedule_sa_plot_no' => 'SA-PLOT-' . fake()->numberBetween(100, 999),
-                'sa_khatian_no' => 'SA-KH-' . fake()->numberBetween(100, 999),
-                'rs_plot_no' => null,
-                'land_schedule_rs_plot_no' => null,
-                'rs_khatian_no' => null,
-            ];
-        })->create();
+        Compensation::factory()->count(3)->saRecord()->create();
 
         // Generate 3 compensations with complex RS ownership sequences (RS records with disabled second step)
-        Compensation::factory()->count(3)->state(function (array $attributes) {
-            return [
-                'acquisition_record_basis' => 'RS',
-                'rs_plot_no' => 'RS-' . fake()->numberBetween(100, 999),
-                'land_schedule_rs_plot_no' => 'RS-PLOT-' . fake()->numberBetween(100, 999),
-                'rs_khatian_no' => 'RS-KH-' . fake()->numberBetween(100, 999),
-                'sa_plot_no' => null,
-                'land_schedule_sa_plot_no' => null,
-                'sa_khatian_no' => null,
-            ];
-        })->create();
+        Compensation::factory()->count(3)->rsRecord()->create();
 
         // Generate 2 compensations with inheritance-heavy ownership sequences
         Compensation::factory()->count(2)->state(function (array $attributes) {
-            // This will trigger the factory to generate more inheritance records
             return [
                 'award_type' => ['জমি ও গাছপালা'],
                 'tree_compensation' => fake()->numberBetween(25000, 75000),
@@ -158,6 +139,7 @@ class CompensationSeeder extends Seeder
 
     private function createBasicLandCase()
     {
+        $plotNo = '101';
         Compensation::create([
             'case_number' => '1001',
             'case_date' => '2024-01-15',
@@ -172,9 +154,9 @@ class CompensationSeeder extends Seeder
             ],
             'la_case_no' => '2001',
             'acquisition_record_basis' => 'SA',
-            'plot_no' => '101',
-            'sa_plot_no' => '101',
-            'award_type' => 'জমি',
+            'plot_no' => $plotNo,
+            'sa_plot_no' => $plotNo,
+            'award_type' => ['জমি'],
             'land_award_serial_no' => '501',
             'award_holder_names' => [
                 [
@@ -198,19 +180,54 @@ class CompensationSeeder extends Seeder
             'mouza_name' => 'পাড়াতলী',
             'jl_no' => '15',
             'sa_khatian_no' => '201',
-            'land_schedule_sa_plot_no' => '101',
+            'land_schedule_sa_plot_no' => $plotNo,
             'ownership_details' => [
                 'sa_info' => [
-                    'sa_plot_no' => '101',
+                    'sa_plot_no' => $plotNo,
                     'sa_khatian_no' => '201',
                     'sa_total_land_in_plot' => '5.00',
                     'sa_land_in_khatian' => '2.50'
                 ],
                 'sa_owners' => [['name' => 'মোঃ রহিম উদ্দিন']],
+                'deed_transfers' => [
+                    [
+                        'donor_names' => [['name' => 'মোঃ করিম উদ্দিন']],
+                        'recipient_names' => [['name' => 'মোঃ রহিম উদ্দিন']],
+                        'deed_number' => 'DEED-1001',
+                        'deed_date' => '2020-01-15',
+                        'sale_type' => 'বিক্রয় দলিল',
+                        'application_type' => 'specific',
+                        'application_specific_area' => $plotNo,
+                        'application_sell_area' => '2.50',
+                        'application_other_areas' => null,
+                        'application_total_area' => null,
+                        'application_sell_area_other' => null,
+                        'possession_mentioned' => 'yes',
+                        'possession_plot_no' => $plotNo,
+                        'possession_description' => 'জমিটি দীর্ঘদিন যাবৎ চাষাবাদের কাজে ব্যবহৃত',
+                        'possession_deed' => 'yes',
+                        'possession_application' => 'yes',
+                        'mentioned_areas' => $plotNo
+                    ]
+                ],
+                'inheritance_records' => [],
+                'rs_records' => [],
                 'applicant_info' => [
                     'applicant_name' => 'মোঃ রহিম উদ্দিন',
                     'kharij_land_amount' => '2.50'
-                ]
+                ],
+                'storySequence' => [
+                    [
+                        'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
+                        'description' => 'দলিল নম্বর: DEED-1001',
+                        'itemType' => 'deed',
+                        'itemIndex' => 0,
+                        'sequenceIndex' => 0
+                    ]
+                ],
+                'currentStep' => 'applicant',
+                'completedSteps' => ['info', 'transfers', 'applicant'],
+                'rs_record_disabled' => false
             ],
             'tax_info' => [
                 'holding_no' => '1001',
@@ -224,6 +241,7 @@ class CompensationSeeder extends Seeder
 
     private function createLandAndTreesCase()
     {
+        $plotNo = '102';
         Compensation::create([
             'case_number' => '1002',
             'case_date' => '2024-02-10',
@@ -238,9 +256,9 @@ class CompensationSeeder extends Seeder
             ],
             'la_case_no' => '2002',
             'acquisition_record_basis' => 'SA',
-            'plot_no' => '102',
-            'sa_plot_no' => '102',
-            'award_type' => 'জমি ও গাছপালা',
+            'plot_no' => $plotNo,
+            'sa_plot_no' => $plotNo,
+            'award_type' => ['জমি ও গাছপালা'],
             'tree_award_serial_no' => '601',
             'tree_compensation' => '75000.50',
             'award_holder_names' => [
@@ -271,14 +289,54 @@ class CompensationSeeder extends Seeder
             'mouza_name' => 'কুমারপুর',
             'jl_no' => '25',
             'sa_khatian_no' => '302',
-            'land_schedule_sa_plot_no' => '102',
+            'land_schedule_sa_plot_no' => $plotNo,
             'ownership_details' => [
                 'sa_info' => [
+                    'sa_plot_no' => $plotNo,
+                    'sa_khatian_no' => '302',
                     'sa_total_land_in_plot' => '3.25',
                     'sa_land_in_khatian' => '2.25'
                 ],
                 'sa_owners' => [['name' => 'মোছাঃ ফাতেমা খাতুন']],
-                'applicant_info' => ['kharij_land_amount' => '2.25']
+                'deed_transfers' => [
+                    [
+                        'donor_names' => [['name' => 'মোঃ আব্দুল হামিদ']],
+                        'recipient_names' => [['name' => 'মোছাঃ ফাতেমা খাতুন']],
+                        'deed_number' => 'DEED-1002',
+                        'deed_date' => '2020-02-10',
+                        'sale_type' => 'দান দলিল',
+                        'application_type' => 'specific',
+                        'application_specific_area' => $plotNo,
+                        'application_sell_area' => '2.25',
+                        'application_other_areas' => null,
+                        'application_total_area' => null,
+                        'application_sell_area_other' => null,
+                        'possession_mentioned' => 'yes',
+                        'possession_plot_no' => $plotNo,
+                        'possession_description' => 'জমিটি পৈতৃক সম্পত্তি হিসেবে দান করা হয়েছে',
+                        'possession_deed' => 'yes',
+                        'possession_application' => 'yes',
+                        'mentioned_areas' => $plotNo
+                    ]
+                ],
+                'inheritance_records' => [],
+                'rs_records' => [],
+                'applicant_info' => [
+                    'applicant_name' => 'মোছাঃ ফাতেমা খাতুন',
+                    'kharij_land_amount' => '2.25'
+                ],
+                'storySequence' => [
+                    [
+                        'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
+                        'description' => 'দলিল নম্বর: DEED-1002',
+                        'itemType' => 'deed',
+                        'itemIndex' => 0,
+                        'sequenceIndex' => 0
+                    ]
+                ],
+                'currentStep' => 'applicant',
+                'completedSteps' => ['info', 'transfers', 'applicant'],
+                'rs_record_disabled' => false
             ],
             'tax_info' => [
                 'holding_no' => '1002',
@@ -291,6 +349,7 @@ class CompensationSeeder extends Seeder
 
     private function createInfrastructureCase()
     {
+        $plotNo = '203';
         Compensation::create([
             'case_number' => '1003',
             'case_date' => '2024-03-05',
@@ -305,9 +364,9 @@ class CompensationSeeder extends Seeder
             ],
             'la_case_no' => '2003',
             'acquisition_record_basis' => 'RS',
-            'plot_no' => '203',
-            'rs_plot_no' => '203',
-            'award_type' => 'অবকাঠামো',
+            'plot_no' => $plotNo,
+            'rs_plot_no' => $plotNo,
+            'award_type' => ['অবকাঠামো'],
             'infrastructure_award_serial_no' => '701',
             'infrastructure_compensation' => '500000.00',
             'award_holder_names' => [
@@ -324,14 +383,69 @@ class CompensationSeeder extends Seeder
             'mouza_name' => 'রামপুর',
             'jl_no' => '35',
             'rs_khatian_no' => '403',
-            'land_schedule_rs_plot_no' => '203',
+            'land_schedule_rs_plot_no' => $plotNo,
             'ownership_details' => [
                 'rs_info' => [
+                    'rs_plot_no' => $plotNo,
+                    'rs_khatian_no' => '403',
                     'rs_total_land_in_plot' => '1.00',
-                    'rs_land_in_khatian' => '1.00'
+                    'rs_land_in_khatian' => '1.00',
+                    'dp_khatian' => false
                 ],
                 'rs_owners' => [['name' => 'মোঃ আলমগীর হোসেন']],
-                'applicant_info' => ['kharij_land_amount' => '1.00']
+                'deed_transfers' => [
+                    [
+                        'donor_names' => [['name' => 'মোঃ নূরুল ইসলাম']],
+                        'recipient_names' => [['name' => 'মোঃ আলমগীর হোসেন']],
+                        'deed_number' => 'DEED-1003',
+                        'deed_date' => '2020-03-05',
+                        'sale_type' => 'বিক্রয় দলিল',
+                        'application_type' => 'specific',
+                        'application_specific_area' => $plotNo,
+                        'application_sell_area' => '1.00',
+                        'application_other_areas' => null,
+                        'application_total_area' => null,
+                        'application_sell_area_other' => null,
+                        'possession_mentioned' => 'yes',
+                        'possession_plot_no' => $plotNo,
+                        'possession_description' => 'জমিটি অবকাঠামো নির্মাণের জন্য ব্যবহৃত',
+                        'possession_deed' => 'yes',
+                        'possession_application' => 'yes',
+                        'mentioned_areas' => $plotNo
+                    ]
+                ],
+                'inheritance_records' => [],
+                'rs_records' => [
+                    [
+                        'plot_no' => $plotNo,
+                        'khatian_no' => '403',
+                        'land_amount' => '1.00',
+                        'owner_names' => [['name' => 'মোঃ আলমগীর হোসেন']]
+                    ]
+                ],
+                'applicant_info' => [
+                    'applicant_name' => 'মোঃ আলমগীর হোসেন',
+                    'kharij_land_amount' => '1.00'
+                ],
+                'storySequence' => [
+                    [
+                        'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
+                        'description' => 'দলিল নম্বর: DEED-1003',
+                        'itemType' => 'deed',
+                        'itemIndex' => 0,
+                        'sequenceIndex' => 0
+                    ],
+                    [
+                        'type' => 'আরএস রেকর্ড যোগ',
+                        'description' => 'দাগ নম্বর: ' . $plotNo,
+                        'itemType' => 'rs',
+                        'itemIndex' => 0,
+                        'sequenceIndex' => 1
+                    ]
+                ],
+                'currentStep' => 'applicant',
+                'completedSteps' => ['info', 'transfers', 'applicant'],
+                'rs_record_disabled' => true
             ],
             'tax_info' => [
                 'holding_no' => '1003',
@@ -344,6 +458,7 @@ class CompensationSeeder extends Seeder
 
     private function createMultipleApplicantsCase()
     {
+        $plotNo = '104';
         Compensation::create([
             'case_number' => '1004',
             'case_date' => '2024-04-20',
@@ -365,9 +480,9 @@ class CompensationSeeder extends Seeder
             ],
             'la_case_no' => '2004',
             'acquisition_record_basis' => 'SA',
-            'plot_no' => '104',
-            'sa_plot_no' => '104',
-            'award_type' => 'জমি',
+            'plot_no' => $plotNo,
+            'sa_plot_no' => $plotNo,
+            'award_type' => ['জমি'],
             'land_award_serial_no' => '504',
             'award_holder_names' => [
                 [
@@ -391,12 +506,61 @@ class CompensationSeeder extends Seeder
             'mouza_name' => 'নয়াপাড়া',
             'jl_no' => '45',
             'sa_khatian_no' => '504',
-            'land_schedule_sa_plot_no' => '104'
+            'land_schedule_sa_plot_no' => $plotNo,
+            'ownership_details' => [
+                'sa_info' => [
+                    'sa_plot_no' => $plotNo,
+                    'sa_khatian_no' => '504',
+                    'sa_total_land_in_plot' => '4.00',
+                    'sa_land_in_khatian' => '2.00'
+                ],
+                'sa_owners' => [['name' => 'মোঃ আব্দুর রহমান']],
+                'deed_transfers' => [
+                    [
+                        'donor_names' => [['name' => 'মোঃ আব্দুল কাদের']],
+                        'recipient_names' => [['name' => 'মোঃ আব্দুর রহমান']],
+                        'deed_number' => 'DEED-1004',
+                        'deed_date' => '2020-04-20',
+                        'sale_type' => 'বিক্রয় দলিল',
+                        'application_type' => 'specific',
+                        'application_specific_area' => $plotNo,
+                        'application_sell_area' => '2.00',
+                        'application_other_areas' => null,
+                        'application_total_area' => null,
+                        'application_sell_area_other' => null,
+                        'possession_mentioned' => 'yes',
+                        'possession_plot_no' => $plotNo,
+                        'possession_description' => 'জমিটি যৌথ মালিকানায় রয়েছে',
+                        'possession_deed' => 'yes',
+                        'possession_application' => 'yes',
+                        'mentioned_areas' => $plotNo
+                    ]
+                ],
+                'inheritance_records' => [],
+                'rs_records' => [],
+                'applicant_info' => [
+                    'applicant_name' => 'মোঃ আব্দুর রহমান',
+                    'kharij_land_amount' => '2.00'
+                ],
+                'storySequence' => [
+                    [
+                        'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
+                        'description' => 'দলিল নম্বর: DEED-1004',
+                        'itemType' => 'deed',
+                        'itemIndex' => 0,
+                        'sequenceIndex' => 0
+                    ]
+                ],
+                'currentStep' => 'applicant',
+                'completedSteps' => ['info', 'transfers', 'applicant'],
+                'rs_record_disabled' => false
+            ]
         ]);
     }
 
     private function createDecimalTestCase()
     {
+        $plotNo = '105';
         Compensation::create([
             'case_number' => '1005',
             'case_date' => '2024-05-15',
@@ -411,8 +575,9 @@ class CompensationSeeder extends Seeder
             ],
             'la_case_no' => '2005',
             'acquisition_record_basis' => 'SA',
-            'plot_no' => '105',
-            'award_type' => 'জমি ও গাছপালা',
+            'plot_no' => $plotNo,
+            'sa_plot_no' => $plotNo,
+            'award_type' => ['জমি ও গাছপালা'],
             'tree_award_serial_no' => '605',
             'tree_compensation' => '12345.67',
             'award_holder_names' => [
@@ -440,11 +605,51 @@ class CompensationSeeder extends Seeder
             'source_tax_percentage' => '12.34',
             'ownership_details' => [
                 'sa_info' => [
+                    'sa_plot_no' => $plotNo,
+                    'sa_khatian_no' => '505',
                     'sa_total_land_in_plot' => '999.99',
                     'sa_land_in_khatian' => '123.45'
                 ],
                 'sa_owners' => [['name' => 'দশমিক সংখ্যা টেস্ট']],
-                'applicant_info' => ['kharij_land_amount' => '67.89']
+                'deed_transfers' => [
+                    [
+                        'donor_names' => [['name' => 'নিউমেরিক ভ্যালিডেশন']],
+                        'recipient_names' => [['name' => 'দশমিক সংখ্যা টেস্ট']],
+                        'deed_number' => 'DEED-1005',
+                        'deed_date' => '2020-05-15',
+                        'sale_type' => 'বিক্রয় দলিল',
+                        'application_type' => 'multiple',
+                        'application_specific_area' => null,
+                        'application_sell_area' => null,
+                        'application_other_areas' => $plotNo . ', 106',
+                        'application_total_area' => '123.45',
+                        'application_sell_area_other' => '67.89',
+                        'possession_mentioned' => 'yes',
+                        'possession_plot_no' => $plotNo,
+                        'possession_description' => 'দশমিক সংখ্যা পরীক্ষার জন্য ব্যবহৃত',
+                        'possession_deed' => 'yes',
+                        'possession_application' => 'yes',
+                        'mentioned_areas' => $plotNo . ', 106'
+                    ]
+                ],
+                'inheritance_records' => [],
+                'rs_records' => [],
+                'applicant_info' => [
+                    'applicant_name' => 'দশমিক সংখ্যা টেস্ট',
+                    'kharij_land_amount' => '67.89'
+                ],
+                'storySequence' => [
+                    [
+                        'type' => 'দলিলমূলে মালিকানা হস্তান্তর',
+                        'description' => 'দলিল নম্বর: DEED-1005',
+                        'itemType' => 'deed',
+                        'itemIndex' => 0,
+                        'sequenceIndex' => 0
+                    ]
+                ],
+                'currentStep' => 'applicant',
+                'completedSteps' => ['info', 'transfers', 'applicant'],
+                'rs_record_disabled' => false
             ],
             'tax_info' => [
                 'holding_no' => '1005',
@@ -455,7 +660,7 @@ class CompensationSeeder extends Seeder
             'district' => 'দশমিক জেলা',
             'upazila' => 'দশমিক উপজেলা',
             'mouza_name' => 'দশমিক মৌজা',
-                        'jl_no' => '105'
+            'jl_no' => '105'
         ]);
     }
 } 
