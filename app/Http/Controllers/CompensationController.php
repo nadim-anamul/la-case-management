@@ -255,10 +255,11 @@ class CompensationController extends Controller
             
             // Award Information
             'la_case_no' => 'required|string|max:255',
-            'award_type' => 'required|string|in:জমি,জমি ও গাছপালা,অবকাঠামো',
-            'land_award_serial_no' => 'required_if:award_type,জমি|required_if:award_type,জমি ও গাছপালা|nullable|string|max:255',
-            'tree_award_serial_no' => 'required_if:award_type,জমি ও গাছপালা|nullable|string|max:255',
-            'infrastructure_award_serial_no' => 'required_if:award_type,অবকাঠামো|nullable|string|max:255',
+            'award_type' => 'required|array|min:1',
+            'award_type.*' => 'required|string|in:জমি,গাছপালা/ফসল,অবকাঠামো',
+            'land_award_serial_no' => 'required_if:award_type.*,জমি|nullable|string|max:255',
+            'tree_award_serial_no' => 'required_if:award_type.*,গাছপালা/ফসল|nullable|string|max:255',
+            'infrastructure_award_serial_no' => 'required_if:award_type.*,অবকাঠামো|nullable|string|max:255',
             'acquisition_record_basis' => 'required|string|in:SA,RS',
             'plot_no' => 'required|string|max:255',
             'award_holder_names' => 'required|array|min:1',
@@ -321,7 +322,12 @@ class CompensationController extends Controller
 
         // Convert award_type string to array for database storage
         if (isset($data['award_type'])) {
-            $data['award_type'] = [$data['award_type']];
+            // Ensure award_type is always an array
+            if (!is_array($data['award_type'])) {
+                $data['award_type'] = [$data['award_type']];
+            }
+            // Filter out empty values
+            $data['award_type'] = array_filter($data['award_type']);
         }
 
         // Process ownership details if present

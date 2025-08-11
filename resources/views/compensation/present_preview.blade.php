@@ -99,22 +99,26 @@
                 
                 <br>
                 <p>আবেদিত জমি {{ $compensation->la_case_no ?? 'N/A' }} নং এল.এ কেসে অধিগ্রহণ করা হয়েছে। উক্ত জমির ক্ষতিপূরণ বাবদ 
-                    @if($compensation->award_type && is_array($compensation->award_type) && in_array('জমি ও গাছপালা', $compensation->award_type))
-                        @if($compensation->land_award_serial_no && $compensation->tree_award_serial_no)
-                            জমির রোয়েদাদ নং {{ $compensation->land_award_serial_no }} এবং গাছপালার রোয়েদাদ নং {{ $compensation->tree_award_serial_no }}
-                        @elseif($compensation->land_award_serial_no)
+                    @if($compensation->award_type && is_array($compensation->award_type))
+                        @if(in_array('জমি', $compensation->award_type) && in_array('গাছপালা/ফসল', $compensation->award_type))
+                            @if($compensation->land_award_serial_no && $compensation->tree_award_serial_no)
+                                জমির রোয়েদাদ নং {{ $compensation->land_award_serial_no }} এবং গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->tree_award_serial_no }}
+                            @elseif($compensation->land_award_serial_no)
+                                জমির রোয়েদাদ নং {{ $compensation->land_award_serial_no }}
+                            @elseif($compensation->tree_award_serial_no)
+                                গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->tree_award_serial_no }}
+                            @else
+                                N/A
+                            @endif
+                        @elseif(in_array('জমি', $compensation->award_type) && $compensation->land_award_serial_no)
                             জমির রোয়েদাদ নং {{ $compensation->land_award_serial_no }}
-                        @elseif($compensation->tree_award_serial_no)
-                            গাছপালার রোয়েদাদ নং {{ $compensation->tree_award_serial_no }}
+                        @elseif(in_array('গাছপালা/ফসল', $compensation->award_type) && $compensation->tree_award_serial_no)
+                            গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->tree_award_serial_no }}
+                        @elseif(in_array('অবকাঠামো', $compensation->award_type) && $compensation->infrastructure_award_serial_no)
+                            অবকাঠামোর রোয়েদাদ নং {{ $compensation->infrastructure_award_serial_no }}
                         @else
                             N/A
                         @endif
-                    @elseif($compensation->land_award_serial_no)
-                        {{ $compensation->land_award_serial_no }}
-                    @elseif($compensation->tree_award_serial_no)
-                        {{ $compensation->tree_award_serial_no }}
-                    @elseif($compensation->infrastructure_award_serial_no)
-                        {{ $compensation->infrastructure_award_serial_no }}
                     @else
                         N/A
                     @endif

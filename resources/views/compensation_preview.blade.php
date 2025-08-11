@@ -35,38 +35,29 @@
                 <label class="font-semibold text-gray-700">এলএ কেস নং:</label>
                 <p class="text-gray-900">{{ $compensation->la_case_no }}</p>
             </div>
-            @if($compensation->award_type && is_array($compensation->award_type) && in_array('জমি ও গাছপালা', $compensation->award_type))
+            @if($compensation->award_type && is_array($compensation->award_type) && in_array('জমি', $compensation->award_type))
                 @if($compensation->land_award_serial_no)
                 <div>
                     <label class="font-semibold text-gray-700">জমির রোয়েদাদ নং:</label>
                     <p class="text-gray-900">{{ $compensation->land_award_serial_no }}</p>
                 </div>
                 @endif
+            @endif
+            @if($compensation->award_type && is_array($compensation->award_type) && in_array('গাছপালা/ফসল', $compensation->award_type))
                 @if($compensation->tree_award_serial_no)
                 <div>
-                    <label class="font-semibold text-gray-700">গাছপালার রোয়েদাদ নং:</label>
-                    <p class="text-gray-900">{{ $compensation->tree_award_serial_no }}</p>
-                </div>
-                @endif
-            @else
-                @if($compensation->land_award_serial_no)
-                <div>
-                    <label class="font-semibold text-gray-700">জমির রোয়েদাদ নং:</label>
-                    <p class="text-gray-900">{{ $compensation->land_award_serial_no }}</p>
-                </div>
-                @endif
-                @if($compensation->tree_award_serial_no)
-                <div>
-                    <label class="font-semibold text-gray-700">গাছপালার রোয়েদাদ নং:</label>
+                    <label class="font-semibold text-gray-700">গাছপালা/ফসলের রোয়েদাদ নং:</label>
                     <p class="text-gray-900">{{ $compensation->tree_award_serial_no }}</p>
                 </div>
                 @endif
             @endif
-            @if($compensation->infrastructure_award_serial_no)
-            <div>
-                <label class="font-semibold text-gray-700">অবকাঠামোর রোয়েদাদ নং:</label>
-                <p class="text-gray-900">{{ $compensation->infrastructure_award_serial_no }}</p>
-            </div>
+            @if($compensation->award_type && is_array($compensation->award_type) && in_array('অবকাঠামো', $compensation->award_type))
+                @if($compensation->infrastructure_award_serial_no)
+                <div>
+                    <label class="font-semibold text-gray-700">অবকাঠামোর রোয়েদাদ নং:</label>
+                    <p class="text-gray-900">{{ $compensation->infrastructure_award_serial_no }}</p>
+                </div>
+                @endif
             @endif
             <div>
                 <label class="font-semibold text-gray-700">যে রেকর্ড মূলে অধিগ্রহণ:</label>
