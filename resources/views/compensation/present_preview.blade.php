@@ -35,19 +35,19 @@
         <p class="text-center text-sm mb-4">( ১৯১৭ সালের রেকর্ড ম্যানুয়েলের ১২৯ নং বিধি )</p>
 
         <!-- Date Row -->
-        <div class="flex justify-between mb-4">
+        <div class="flex justify-between mb-1">
           <span>আদেশ পত্র তারিখ: ...........................................</span>
           <span>হইতে: ........................................................ পর্যন্ত</span>
         </div>
 
         <!-- Region Row -->
-        <div class="flex justify-between mb-4">
+        <div class="flex justify-between mb-1">
           <span>জেলা: {{ $compensation->district ?? '…………………………….' }}</span>
           <span>সাল: …………………………. পর্যন্ত</span>
         </div>
 
         <!-- Case Info -->
-        <div class="flex justify-between mb-4">
+        <div class="flex justify-between mb-1">
           <span>মামলার ধরন: ক্ষতিপূরণ কেস নং: {{ $compensation->case_number ?? 'N/A' }}</span> 
           <span>এল.এ কেস: {{ $compensation->la_case_no ?? 'N/A' }}</span>
         </div>
@@ -56,9 +56,9 @@
         <table class="w-full border border-black border-collapse mb-6">
           <thead>
             <tr>
-              <th class="border border-black p-2 w-[35mm]">আদেশের ক্রমিক নং ও তারিখ</th>
+              <th class="border border-black p-2 w-[25mm]">আদেশের ক্রমিক নং ও তারিখ</th>
               <th class="border border-black p-2">আদেশ ও অফিসারের স্বাক্ষর</th>
-              <th class="border border-black p-2 w-[35mm]">আদেশের উপর গৃহীত ব্যবস্থা</th>
+              <th class="border border-black p-2 w-[25mm]">আদেশের উপর গৃহীত ব্যবস্থা</th>
             </tr>
           </thead>
           <tbody>
@@ -75,9 +75,9 @@
                     <p class="text-sm">পিতা- (পিতার নাম), সাং- (ঠিকানা)</p>
                     <p class="text-sm">উপজেলা- (উপজেলার নাম), জেলা: বগুড়া</p> 
                 @endif
-                <br><br>
+                <br>
                 <p>নিম্ন তফসিল বর্ণিত সম্পত্তির ক্ষতিপূরণ দাবী করে আবেদন দাখিল করেছেন</p>
-                <br><br>
+                <br>
                 <p>উপজেলা: {{ $compensation->upazila ?? 'N/A' }}</p>
                 <p>মৌজা: {{ $compensation->mouza_name ?? 'N/A' }}</p>
                 <p>জেএল নং: {{ $compensation->jl_no ?? 'N/A' }}</p>
@@ -90,22 +90,14 @@
                         {{ $compensation->award_type ?? 'N/A' }}
                     @endif
                 </p>
-                <p>অধিগ্রহণকৃত জমির পরিমাণ (একরে): 
-                    @if($compensation->land_category && is_array($compensation->land_category) && count($compensation->land_category) > 0)
-                        {{ $compensation->land_category[0]['total_land'] ?? 'N/A' }}
-                    @else
-                        N/A
-                    @endif
-                </p>
-                <p>দাবীকৃত জমির পরিমাণ (একরে): 
-                    @if($compensation->land_category && is_array($compensation->land_category) && count($compensation->land_category) > 0)
-                        {{ $compensation->land_category[0]['total_land'] ?? 'N/A' }}
-                    @else
-                        N/A
-                    @endif
-                </p>
+                @php
+                    $total_land = isset($compensation->total_land_amount) ? $compensation->total_land_amount : 'N/A';
+                    $applicant_acquired_land = isset($compensation->applicant_acquired_land) ? $compensation->applicant_acquired_land : 'N/A';
+                @endphp
+                <p>অধিগ্রহণকৃত জমির পরিমাণ (একরে): {{ $total_land }}</p>
+                <p>দাবীকৃত জমির পরিমাণ (একরে): {{ $applicant_acquired_land }}</p>
                 
-                <br><br>
+                <br>
                 <p>আবেদিত জমি {{ $compensation->la_case_no ?? 'N/A' }} নং এল.এ কেসে অধিগ্রহণ করা হয়েছে। উক্ত জমির ক্ষতিপূরণ বাবদ 
                     @if($compensation->award_type && is_array($compensation->award_type) && in_array('জমি ও গাছপালা', $compensation->award_type))
                         @if($compensation->land_award_serial_no && $compensation->tree_award_serial_no)
@@ -126,8 +118,8 @@
                     @else
                         N/A
                     @endif
-                    নং এওয়ার্ড প্রার্থীর নামে আছে/নাই। আবেদনকারীকে নোটিশ প্রদান করা হোক। শুনানির জন্য পরবর্তী তারিখঃ  ............... খ্রি: .............</p>
-                <br><br><br>
+                    নং এওয়ার্ড প্রার্থীর নামে আছে/নাই। আবেদনকারীকে নোটিশ প্রদান করা হোক। শুনানির জন্য পরবর্তী তারিখঃ  ............... </p>
+                <br><br>
                 <div class="text-right font-bold">
                   ভূমি অধিগ্রহণ কর্মকর্তা <br>
                   বগুড়া

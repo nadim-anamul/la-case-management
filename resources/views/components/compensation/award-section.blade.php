@@ -76,7 +76,7 @@
                     <template x-for="(holder, index) in award_holder_names" :key="index">
                         <div class="record-card relative mb-4">
                             <h5 x-text="'মালিক #' + (index + 1)" class="font-semibold mb-3"></h5>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 sm:gap-2 xs:gap-1">
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4 sm:gap-2 xs:gap-1">
                                 <div class="floating-label">
                                     <input type="text" 
                                            :name="'award_holder_names[' + index + '][name]'" 
@@ -95,7 +95,7 @@
                                            required>
                                     <label>পিতার নাম<span class="text-red-500">*</span></label>
                                 </div>
-                                <div class="floating-label md:col-span-2">
+                                <div class="floating-label">
                                     <input type="text" 
                                            :name="'award_holder_names[' + index + '][address]'" 
                                            x-model="holder.address" 

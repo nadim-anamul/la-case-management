@@ -3,7 +3,7 @@
         <span class="section-icon">৪</span>
         খাজনার তথ্য
     </h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-2 xs:gap-1">
+    <div class="grid grid-cols-1 xl:grid-cols-4 md:grid-cols-3 gap-4 sm:gap-2 xs:gap-1">
         <div class="floating-label">
             <input type="text" name="tax_info[holding_no]" value="{{ old('tax_info.holding_no', isset(
                 $compensation) ? $compensation->tax_info['holding_no'] ?? '' : '') }}" placeholder=" ">
