@@ -165,7 +165,7 @@
                                 $totalLand += floatval($category['total_land'] ?? 0);
                             }
                         }
-                        echo number_format($totalLand, 2) . ' একর';
+                        echo number_format($totalLand, 6) . ' একর';
                     @endphp
                 </p>
             </div>
@@ -1168,8 +1168,8 @@
             <!-- Land Compensation Claim -->
             @if($compensation->land_category && is_array($compensation->land_category))
             @php
-                $total_land = number_format($compensation->total_land_amount, 2);
-                $applicant_acquired_land = number_format($compensation->applicant_acquired_land, 2);
+                $total_land = number_format($compensation->total_land_amount, 6);
+                $applicant_acquired_land = number_format($compensation->applicant_acquired_land, 6);
             @endphp
             <div class="p-4 bg-gray-50 rounded-lg">
                 <p class="text-gray-800">

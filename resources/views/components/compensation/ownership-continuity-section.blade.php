@@ -157,11 +157,11 @@
                         <label for="ownership_sa_khatian_no">SA খতিয়ান নম্বর</label>
                     </div>
                     <div class="floating-label">
-                        <input type="number" id="ownership_sa_total_land_in_plot" x-model="sa_info.sa_total_land_in_plot" placeholder=" " min="0" step="0.01">
+                        <input type="number" id="ownership_sa_total_land_in_plot" x-model="sa_info.sa_total_land_in_plot" placeholder=" " min="0" step="0.000001">
                         <label for="ownership_sa_plot_no">SA দাগে মোট জমি (একর)</label>
                     </div>
                     <div class="floating-label">
-                        <input type="number" id="ownership_sa_land_in_khatian" x-model="sa_info.sa_land_in_khatian" placeholder=" " min="0" step="0.01">
+                        <input type="number" id="ownership_sa_land_in_khatian" x-model="sa_info.sa_land_in_khatian" placeholder=" " min="0" step="0.000001">
                         <label for="ownership_sa_land_in_khatian">উক্ত SA খতিয়ানে জমির পরিমাণ (একর)</label>
                     </div>
                 </div>
@@ -192,11 +192,11 @@
                         <label for="ownership_rs_khatian_no">RS খতিয়ান নম্বর</label>
                     </div>
                     <div class="floating-label">
-                        <input type="number" id="ownership_rs_total_land_in_plot" x-model="rs_info.rs_total_land_in_plot" placeholder=" " min="0" step="0.01">
+                        <input type="number" id="ownership_rs_total_land_in_plot" x-model="rs_info.rs_total_land_in_plot" placeholder=" " min="0" step="0.000001">
                         <label for="ownership_rs_total_land_in_plot">RS দাগে মোট জমি (একর)</label>
                     </div>
                     <div class="floating-label">
-                        <input type="number" id="ownership_rs_land_in_khatian" x-model="rs_info.rs_land_in_khatian" placeholder=" " min="0" step="0.01">
+                        <input type="number" id="ownership_rs_land_in_khatian" x-model="rs_info.rs_land_in_khatian" placeholder=" " min="0" step="0.000001">
                         <label for="ownership_rs_land_in_khatian">উক্ত দাগে RS খতিয়ানের হিস্যানুযায়ী জমির পরিমাণ (একর)</label>
 
                     </div>
@@ -457,7 +457,7 @@
                         <label :for="'rs_record_khatian_no_' + index">আরএস খতিয়ান নম্বর</label>
                     </div>
                     <div class="floating-label">
-                        <input type="number" :id="'rs_record_land_amount_' + index" x-model="rs.land_amount" placeholder=" " min="0" step="0.01">
+                        <input type="number" :id="'rs_record_land_amount_' + index" x-model="rs.land_amount" placeholder=" " min="0" step="0.000001">
                         <label :for="'rs_record_land_amount_' + index">আরএস দাগে জমির পরিমাণ (একর)</label>
                     </div>
                     <div class="flex items-center space-x-2">
@@ -584,7 +584,7 @@
                     <label>খারিজ দাগ নম্বর</label>
                 </div>
                 <div class="floating-label">
-                    <input type="number" x-model="applicant_info.kharij_land_amount" placeholder=" " min="0" step="0.01">
+                    <input type="number" x-model="applicant_info.kharij_land_amount" placeholder=" " min="0" step="0.000001">
                     <label>উক্ত দাগে খারিজকৃত জমির পরিমাণ (একর)</label>
                 </div>
                                     <div class="floating-label">

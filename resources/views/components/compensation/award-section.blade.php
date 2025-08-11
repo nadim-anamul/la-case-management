@@ -135,7 +135,7 @@
             </div>
         </div>
         <div class="floating-label">
-            <input type="number" name="source_tax_percentage" value="{{ old('source_tax_percentage', isset($compensation) ? $compensation->source_tax_percentage : '') }}" placeholder=" " required min="0" max="100" step="0.01">
+            <input type="number" name="source_tax_percentage" value="{{ old('source_tax_percentage', isset($compensation) ? $compensation->source_tax_percentage : '') }}" placeholder=" " required min="0" max="100" step="0.000001">
             <label>উৎস কর %<span class="text-red-500">*</span></label>
         </div>
         <div>
@@ -179,7 +179,7 @@
                                            class="form-input w-full" 
                                            required
                                            min="0"
-                                           step="0.01">
+                                           step="0.000001">
                                     <label>মোট জমির পরিমাণ (একর)<span class="text-red-500">*</span></label>
                                 </div>
                                 <div class="floating-label">
@@ -190,7 +190,7 @@
                                            class="form-input w-full" 
                                            required
                                            min="0"
-                                           step="0.01">
+                                           step="0.000001">
                                     <label>মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
                                 </div>
                                 <div class="floating-label">
@@ -200,7 +200,7 @@
                                            placeholder="আবেদনকারীর জমি" 
                                            class="form-input w-full"
                                            min="0"
-                                           step="0.01">
+                                           step="0.000001">
                                     <label>আবেদনকারীর অধিগ্রহণকৃত জমি (একর)<span class="text-blue-500">*</span></label>
                                 </div>
                                 <button type="button" 
@@ -236,7 +236,7 @@
                 </div>
                 
                 <div class="floating-label">
-                    <input type="number" name="tree_compensation" value="{{ old('tree_compensation', isset($compensation) ? $compensation->tree_compensation : '') }}" placeholder=" " required min="0" step="0.01">
+                    <input type="number" name="tree_compensation" value="{{ old('tree_compensation', isset($compensation) ? $compensation->tree_compensation : '') }}" placeholder=" " required min="0" step="0.000001">
                     <label>গাছপালার মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
                 </div>
                 
@@ -261,7 +261,7 @@
                                            class="form-input w-full" 
                                            required
                                            min="0"
-                                           step="0.01">
+                                           step="0.000001">
                                     <label>দাগে অধিগ্রহণকৃত মোট জমির পরিমাণ (একর)<span class="text-red-500">*</span></label>
                                 </div>
                                 <div class="floating-label">
@@ -271,7 +271,7 @@
                                            class="form-input w-full" 
                                            required
                                            min="0"
-                                           step="0.01">
+                                           step="0.000001">
                                     <label>মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
                                 </div>
                                 <div class="floating-label">
@@ -280,7 +280,7 @@
                                            x-model="category.applicant_land" 
                                            class="form-input w-full"
                                            min="0"
-                                           step="0.01">
+                                           step="0.000001">
                                     <label>আবেদনকারীর অধিগ্রহণকৃত জমি (একর)<span class="text-blue-500">*</span></label>
                                 </div>
                                 <button type="button" 
@@ -311,7 +311,7 @@
                 </div>
                 
                 <div class="floating-label">
-                    <input type="number" name="infrastructure_compensation" value="{{ old('infrastructure_compensation', isset($compensation) ? $compensation->infrastructure_compensation : '') }}" placeholder=" " required min="0" step="0.01">
+                    <input type="number" name="infrastructure_compensation" value="{{ old('infrastructure_compensation', isset($compensation) ? $compensation->infrastructure_compensation : '') }}" placeholder=" " required min="0" step="0.000001">
                     <label>অবকাঠামোর মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
                 </div>
             </div>
