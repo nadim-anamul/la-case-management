@@ -19,7 +19,6 @@
     <!-- Case Information -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
         <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
-            <span class="section-icon">১</span>
             মামলার তথ্য
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -73,7 +72,6 @@
     <!-- Applicant Information -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
         <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
-            <span class="section-icon">২</span>
             আবেদনকারীর তথ্য
         </h2>
         @foreach($compensation->applicants as $index => $applicant)
@@ -110,7 +108,6 @@
     <!-- Award Information -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
         <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
-            <span class="section-icon">৩</span>
             রোয়েদাদের তথ্য
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -263,7 +260,6 @@
     <!-- Land Schedule -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
         <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
-            <span class="section-icon">৪</span>
             আবেদনকৃত জমির তফসিল
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -306,7 +302,6 @@
     @if($compensation->ownership_details)
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
         <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
-            <span class="section-icon">৫</span>
             মালিকানার ধারাবাহিকতার বর্ণনা
         </h2>
         
@@ -798,7 +793,7 @@
                         @if(isset($deed['application_type']) && $deed['application_type'])
                         <div>
                             <label class="font-semibold text-gray-700">আবেদনকৃত দাগের সুনির্দিষ্টভাবে বিক্রয়:</label>
-                            <p class="text-gray-900">{{ $compensation->formatApplicationAreaString($deed) }}</p>
+                        <p class="text-gray-900">{{ $compensation->formatApplicationAreaString($deed) }}</p>
                         </div>
                         @endif
                         <div>
@@ -949,7 +944,6 @@
     <!-- Tax Information -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
         <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
-            <span class="section-icon">৬</span>
             খাজনার তথ্য
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -992,7 +986,6 @@
     <!-- Additional Documents -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
         <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
-            <span class="section-icon">৭</span>
             বণ্টন / না-দাবি / আপসনামা / এফিডেভিটের তথ্য
         </h2>
         @if(isset($compensation->additional_documents_info['selected_types']) && !empty($compensation->additional_documents_info['selected_types']))
@@ -1052,7 +1045,6 @@
     <!-- Application Analysis -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
         <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
-            <span class="section-icon">৯</span>
             আবেদনপত্র বিশ্লেষণ
         </h2>
         <div class="space-y-3">
@@ -1229,10 +1221,68 @@
         </div>
     </div>
 
+    <!-- Order Information - Case Completion Status -->
+    @if($compensation->order_signature_date)
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
+        <h2 class="text-lg font-semibold mb-3 text-green-600 border-b border-green-200 pb-2">
+            আদেশ তথ্য - কেস নিষ্পত্তিকৃত
+        </h2>
+        <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+            <div class="flex items-center space-x-2">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <h3 class="text-lg font-semibold text-green-800">এই ক্ষতিপূরণ কেসটি নিষ্পত্তিকৃত হয়েছে</h3>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+                <label class="font-semibold text-gray-700">আদেশ স্বাক্ষরের তারিখ:</label>
+                <p class="text-gray-900">{{ $compensation->order_signature_date }}</p>
+            </div>
+            <div>
+                <label class="font-semibold text-gray-700">স্বাক্ষরকারী কর্মকর্তার নাম:</label>
+                <p class="text-gray-900">{{ $compensation->signing_officer_name ?? 'তথ্য নেই' }}</p>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Required Actions Section -->
+    @if(empty($compensation->kanungo_opinion) || empty($compensation->order_signature_date))
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
+        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
+            প্রয়োজনীয় কার্যক্রম
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            @if(empty($compensation->kanungo_opinion))
+            <button type="button" onclick="openKanungoOpinionModal({{ $compensation->id }})" class="action-card bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m-4-4h8" />
+                    </svg>
+                    <span class="text-white font-bold text-base">কানুনগো/সার্ভেয়ারের মতামত</span>
+                </div>
+            </button>
+            @endif
+            
+            @if(empty($compensation->order_signature_date))
+            <button type="button" onclick="openOrderModal({{ $compensation->id }})" class="action-card bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="text-white font-bold text-base">কেস নিষ্পত্তি করুন</span>
+                </div>
+            </button>
+            @endif
+        </div>
+    </div>
+    @endif
+
     <!-- Action Buttons -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
         <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
-            <span class="section-icon">১০</span>
             পরবর্তী কার্যক্রম
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -1262,6 +1312,99 @@
                     <span class="text-white font-bold text-base">আবেদনপত্র প্রিভিউ PDF</span>
                 </div>
             </a>
+        </div>
+    </div>
+</div>
+
+<!-- Kanungo Opinion Modal -->
+<div id="kanungoOpinionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium text-gray-900">কানুনগো/সার্ভেয়ারের মতামত</h3>
+                <button onclick="closeKanungoOpinionModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <form id="kanungoOpinionForm" method="POST">
+                @csrf
+                <input type="hidden" name="_method" value="PUT">
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">মালিকানার ধারাবাহিকতা আছে কিনা<span class="text-red-500">*</span></label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="radio" name="kanungo_opinion[has_ownership_continuity]" value="yes" class="mr-2">
+                                <span>হ্যাঁ</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="kanungo_opinion[has_ownership_continuity]" value="no" class="mr-2">
+                                <span>না</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">মতামতঃ</label>
+                        <textarea name="kanungo_opinion[opinion_details]" rows="6" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="আপনার মতামত লিখুন..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" onclick="closeKanungoOpinionModal()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+                        বাতিল
+                    </button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        জমা দিন
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Order Modal -->
+<div id="orderModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium text-gray-900">আদেশ</h3>
+                <button onclick="closeOrderModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <form id="orderForm" method="POST">
+                @csrf
+                <input type="hidden" name="_method" value="PUT">
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">আদেশ স্বাক্ষরের তারিখ<span class="text-red-500">*</span></label>
+                        <input type="text" name="order_signature_date" placeholder="দিন/মাস/বছর" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">স্বাক্ষরকারী কর্মকর্তার নাম<span class="text-red-500">*</span></label>
+                        <input type="text" name="signing_officer_name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="কর্মকর্তার নাম লিখুন..." required>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" onclick="closeOrderModal()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+                        বাতিল
+                    </button>
+                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                        আদেশ নিষ্পত্তিকৃত করুন
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -1399,4 +1542,125 @@ p {
     }
 }
 </style>
+
+<script>
+  window.openKanungoOpinionModal = function(compensationId) {
+    const modal = document.getElementById('kanungoOpinionModal');
+    const form = document.getElementById('kanungoOpinionForm');
+    form.action = `/compensation/${compensationId}/kanungo-opinion`;
+    modal.classList.remove('hidden');
+    // Prefill if exists
+    fetch(`/compensation/${compensationId}/kanungo-opinion`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data && data.kanungo_opinion) {
+          const opinion = data.kanungo_opinion;
+          const radio = document.querySelector(`input[name="kanungo_opinion[has_ownership_continuity]"][value="${opinion.has_ownership_continuity}"]`);
+          if (radio) radio.checked = true;
+          const textarea = document.querySelector('textarea[name="kanungo_opinion[opinion_details]"]');
+          if (textarea) textarea.value = opinion.opinion_details || '';
+        }
+      })
+      .catch(() => {});
+  };
+
+  window.closeKanungoOpinionModal = function() {
+    const modal = document.getElementById('kanungoOpinionModal');
+    modal.classList.add('hidden');
+    const form = document.getElementById('kanungoOpinionForm');
+    if (form) form.reset();
+  };
+
+  const kanungoFormEl = document.getElementById('kanungoOpinionForm');
+  if (kanungoFormEl) {
+    kanungoFormEl.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = this;
+      const formData = new FormData(form);
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }
+      })
+      .then(resp => { if (!resp.ok) throw new Error('Network'); return resp.json(); })
+      .then(data => {
+        if (data.success) {
+          window.closeKanungoOpinionModal();
+          setTimeout(() => { window.location.reload(); }, 500);
+        } else {
+          alert('কিছু সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+        }
+      })
+      .catch(() => alert('কিছু সমস্যা হয়েছে। আবার চেষ্টা করুন।'));
+    });
+  }
+
+  const kanungoModalEl = document.getElementById('kanungoOpinionModal');
+  if (kanungoModalEl) {
+    kanungoModalEl.addEventListener('click', function(e) {
+      if (e.target === this) { window.closeKanungoOpinionModal(); }
+    });
+  }
+
+  // Order Modal Functions
+  window.openOrderModal = function(compensationId) {
+    const modal = document.getElementById('orderModal');
+    const form = document.getElementById('orderForm');
+    form.action = `/compensation/${compensationId}/order`;
+    modal.classList.remove('hidden');
+    // Prefill if exists
+    fetch(`/compensation/${compensationId}/order`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data && data.order) {
+          const order = data.order;
+          const dateInput = document.querySelector('input[name="order_signature_date"]');
+          if (dateInput) dateInput.value = order.order_signature_date || '';
+          const nameInput = document.querySelector('input[name="signing_officer_name"]');
+          if (nameInput) nameInput.value = order.signing_officer_name || '';
+        }
+      })
+      .catch(() => {});
+  };
+
+  window.closeOrderModal = function() {
+    const modal = document.getElementById('orderModal');
+    modal.classList.add('hidden');
+    const form = document.getElementById('orderForm');
+    if (form) form.reset();
+  };
+
+  const orderFormEl = document.getElementById('orderForm');
+  if (orderFormEl) {
+    orderFormEl.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = this;
+      const formData = new FormData(form);
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }
+      })
+      .then(resp => { if (!resp.ok) throw new Error('Network'); return resp.json(); })
+      .then(data => {
+        if (data.success) {
+          window.closeOrderModal();
+          setTimeout(() => { window.location.reload(); }, 500);
+        } else {
+          alert('কিছু সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+        }
+      })
+      .catch(() => alert('কিছু সমস্যা হয়েছে। আবার চেষ্টা করুন।'));
+    });
+  }
+
+  const orderModalEl = document.getElementById('orderModal');
+  if (orderModalEl) {
+    orderModalEl.addEventListener('click', function(e) {
+      if (e.target === this) { window.closeOrderModal(); }
+    });
+  }
+</script>
 @endsection 
