@@ -941,6 +941,8 @@
     </div>
     @endif
 
+
+
     <!-- Tax Information -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
         <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
@@ -1026,7 +1028,6 @@
     @if($compensation->kanungo_opinion)
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
         <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
-            <span class="section-icon">৮</span>
             কানুনগো/সার্ভেয়ারের মতামত
         </h2>
         <div class="grid grid-cols-1 gap-4">
@@ -1221,6 +1222,91 @@
         </div>
     </div>
 
+    <!-- Final Order Information -->
+    @if($compensation->final_order)
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
+        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
+            চূড়ান্ত আদেশ
+        </h2>
+        
+        @if(isset($compensation->final_order['land']) && $compensation->final_order['land']['selected'])
+        <div class="mb-4">
+            <h3 class="font-semibold text-base mb-2 text-green-600">জমি</h3>
+            <div class="space-y-2">
+                @if(isset($compensation->final_order['land']['categories']) && is_array($compensation->final_order['land']['categories']))
+                    @foreach($compensation->final_order['land']['categories'] as $index => $category)
+                    <div class="bg-gray-50 p-3 rounded-md border border-gray-200">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="font-semibold text-gray-700">জমির শ্রেণী:</label>
+                                <p class="text-gray-900">{{ $category['category_name'] ?? '' }}</p>
+                            </div>
+                            <div>
+                                <label class="font-semibold text-gray-700">অধিগ্রহণকৃত জমি (একর):</label>
+                                <p class="text-gray-900">{{ $category['acquired_land'] ?? '' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                @elseif(isset($compensation->final_order['land']['records']) && is_array($compensation->final_order['land']['records']))
+                    <!-- Fallback for old format -->
+                    @foreach($compensation->final_order['land']['records'] as $index => $record)
+                    <div class="bg-gray-50 p-3 rounded-md border border-gray-200">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="font-semibold text-gray-700">দাগ নম্বর:</label>
+                                <p class="text-gray-900">{{ $record['plot_no'] ?? '' }}</p>
+                            </div>
+                            <div>
+                                <label class="font-semibold text-gray-700">জমির পরিমাণ:</label>
+                                <p class="text-gray-900">{{ $record['area'] ?? '' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                @endif
+            </div>
+        </div>
+        @endif
+
+        @if(isset($compensation->final_order['trees_crops']) && $compensation->final_order['trees_crops']['selected'])
+        <div class="mb-4">
+            <h3 class="font-semibold text-base mb-2 text-green-600">গাছপালা/ফসল</h3>
+            <div class="bg-gray-50 p-3 rounded-md border border-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="font-semibold text-gray-700">ক্ষতিপূরণের ধরন:</label>
+                        <p class="text-gray-900">{{ $compensation->final_order['trees_crops']['compensation_type'] === 'full' ? 'সম্পূর্ণ' : 'আংশিক' }}</p>
+                    </div>
+                    <div>
+                        <label class="font-semibold text-gray-700">ক্ষতিপূরণের পরিমাণ:</label>
+                        <p class="text-gray-900">{{ $compensation->final_order['trees_crops']['amount'] ?? '' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        @if(isset($compensation->final_order['infrastructure']) && $compensation->final_order['infrastructure']['selected'])
+        <div class="mb-4">
+            <h3 class="font-semibold text-base mb-2 text-green-600">অবকাঠামো</h3>
+            <div class="bg-gray-50 p-3 rounded-md border border-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="font-semibold text-gray-700">ক্ষতিপূরণের ধরন:</label>
+                        <p class="text-gray-900">{{ $compensation->final_order['infrastructure']['compensation_type'] === 'full' ? 'সম্পূর্ণ' : 'আংশিক' }}</p>
+                    </div>
+                    <div>
+                        <label class="font-semibold text-gray-700">ক্ষতিপূরণের পরিমাণ:</label>
+                        <p class="text-gray-900">{{ $compensation->final_order['infrastructure']['amount'] ?? '' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+    </div>
+    @endif
+
     <!-- Order Information - Case Completion Status -->
     @if($compensation->order_signature_date)
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
@@ -1249,12 +1335,12 @@
     @endif
 
     <!-- Required Actions Section -->
-    @if(empty($compensation->kanungo_opinion) || empty($compensation->order_signature_date))
+    @if(empty($compensation->kanungo_opinion) || empty($compensation->order_signature_date) || empty($compensation->final_order))
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
         <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
             প্রয়োজনীয় কার্যক্রম
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
             @if(empty($compensation->kanungo_opinion))
             <button type="button" onclick="openKanungoOpinionModal({{ $compensation->id }})" class="action-card bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700">
                 <div class="flex items-center justify-center space-x-2">
@@ -1276,9 +1362,22 @@
                 </div>
             </button>
             @endif
+
+            @if(empty($compensation->final_order))
+            <button type="button" onclick="openFinalOrderModal({{ $compensation->id }})" class="action-card bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="text-white font-bold text-base">চূড়ান্ত আদেশ</span>
+                </div>
+            </button>
+            @endif
         </div>
     </div>
     @endif
+
+    
 
     <!-- Action Buttons -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
@@ -1402,6 +1501,140 @@
                     </button>
                     <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                         আদেশ নিষ্পত্তিকৃত করুন
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Final Order Modal -->
+<div id="finalOrderModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-2/3 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium text-gray-900">চূড়ান্ত আদেশ</h3>
+                <button onclick="closeFinalOrderModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <form id="finalOrderForm" method="POST">
+                @csrf
+                <input type="hidden" name="_method" value="PUT">
+                
+                <div class="space-y-6">
+                    <!-- Land Section -->
+                    @if($compensation->award_type && is_array($compensation->award_type) && in_array('জমি', $compensation->award_type))
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <label class="flex items-center mb-3">
+                            <input type="checkbox" name="final_order[land][selected]" value="1" class="mr-2" onchange="toggleLandFields()">
+                            <span class="font-semibold text-gray-700">জমি</span>
+                        </label>
+                        <div id="landFields" class="hidden space-y-3">
+                            <div id="landRecords" class="space-y-3">
+                                @if($compensation->land_category && is_array($compensation->land_category))
+                                    @foreach($compensation->land_category as $index => $category)
+                                    <div class="land-record bg-gray-50 p-3 rounded border">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ $category['category_name'] ?? 'জমির শ্রেণী' }}</label>
+                                                <input type="text" name="final_order[land][categories][{{ $index }}][category_name]" value="{{ $category['category_name'] ?? '' }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" readonly>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">অধিগ্রহণকৃত জমি (একর)</label>
+                                                <input type="text" name="final_order[land][categories][{{ $index }}][acquired_land]" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="জমির পরিমাণ লিখুন">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                @else
+                                    <!-- Fallback if no land categories -->
+                                    <div class="land-record bg-gray-50 p-3 rounded border">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">জমির শ্রেণী</label>
+                                                <input type="text" name="final_order[land][categories][0][category_name]" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="জমির শ্রেণী লিখুন">
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">অধিগ্রহণকৃত জমি (একর)</label>
+                                                <input type="text" name="final_order[land][categories][0][acquired_land]" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="জমির পরিমাণ লিখুন">
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- Trees/Crops Section -->
+                    @if($compensation->award_type && is_array($compensation->award_type) && in_array('গাছপালা/ফসল', $compensation->award_type))
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <label class="flex items-center mb-3">
+                            <input type="checkbox" name="final_order[trees_crops][selected]" value="1" class="mr-2" onchange="toggleTreesCropsFields()">
+                            <span class="font-semibold text-gray-700">গাছপালা/ফসল</span>
+                        </label>
+                        <div id="treesCropsFields" class="hidden space-y-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">ক্ষতিপূরণের ধরন</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="final_order[trees_crops][compensation_type]" value="full" class="mr-2">
+                                        <span>সম্পূর্ণ</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" name="final_order[trees_crops][compensation_type]" value="partial" class="mr-2">
+                                        <span>আংশিক</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">ক্ষতিপূরণের পরিমাণ</label>
+                                <input type="text" name="final_order[trees_crops][amount]" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="ক্ষতিপূরণের পরিমাণ লিখুন">
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- Infrastructure Section -->
+                    @if($compensation->award_type && is_array($compensation->award_type) && in_array('অবকাঠামো', $compensation->award_type))
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <label class="flex items-center mb-3">
+                            <input type="checkbox" name="final_order[infrastructure][selected]" value="1" class="mr-2" onchange="toggleInfrastructureFields()">
+                            <span class="font-semibold text-gray-700">অবকাঠামো</span>
+                        </label>
+                        <div id="infrastructureFields" class="hidden space-y-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">ক্ষতিপূরণের ধরন</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="final_order[infrastructure][compensation_type]" value="full" class="mr-2">
+                                        <span>সম্পূর্ণ</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" name="final_order[infrastructure][compensation_type]" value="partial" class="mr-2">
+                                        <span>আংশিক</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">ক্ষতিপূরণের পরিমাণ</label>
+                                <input type="text" name="final_order[infrastructure][amount]" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="ক্ষতিপূরণের পরিমাণ লিখুন">
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                </div>
+                
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" onclick="closeFinalOrderModal()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+                        বাতিল
+                    </button>
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                        চূড়ান্ত আদেশ জমা দিন
                     </button>
                 </div>
             </form>
@@ -1662,5 +1895,246 @@ p {
       if (e.target === this) { window.closeOrderModal(); }
     });
   }
+
+  // Final Order Modal Functions
+  window.openFinalOrderModal = function(compensationId) {
+    const modal = document.getElementById('finalOrderModal');
+    const form = document.getElementById('finalOrderForm');
+    form.action = `/compensation/${compensationId}/final-order`;
+    modal.classList.remove('hidden');
+    
+    // Prefill if exists
+    fetch(`/compensation/${compensationId}/final-order`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data && data.final_order) {
+          const finalOrder = data.final_order;
+          
+          // Handle land checkbox and fields
+          const landCheckbox = document.querySelector('input[name="final_order[land][selected]"]');
+          if (landCheckbox) {
+            landCheckbox.checked = finalOrder.land && finalOrder.land.selected;
+            if (finalOrder.land && finalOrder.land.selected) {
+              toggleLandFields();
+              // Load land categories
+              const landRecords = document.getElementById('landRecords');
+              if (landRecords && finalOrder.land.categories) {
+                // Prefill existing land categories data
+                finalOrder.land.categories.forEach((category, index) => {
+                  const categoryNameInput = landRecords.querySelector(`input[name="final_order[land][categories][${index}][category_name]"]`);
+                  const acquiredLandInput = landRecords.querySelector(`input[name="final_order[land][categories][${index}][acquired_land]"]`);
+                  if (categoryNameInput) categoryNameInput.value = category.category_name || '';
+                  if (acquiredLandInput) acquiredLandInput.value = category.acquired_land || '';
+                });
+              }
+            }
+          }
+          
+          // Handle trees/crops checkbox and fields
+          const treesCropsCheckbox = document.querySelector('input[name="final_order[trees_crops][selected]"]');
+          if (treesCropsCheckbox) {
+            treesCropsCheckbox.checked = finalOrder.trees_crops && finalOrder.trees_crops.selected;
+            if (finalOrder.trees_crops && finalOrder.trees_crops.selected) {
+              toggleTreesCropsFields();
+              // Set compensation type
+              const radio = document.querySelector(`input[name="final_order[trees_crops][compensation_type]"][value="${finalOrder.trees_crops.compensation_type}"]`);
+              if (radio) radio.checked = true;
+              // Set amount
+              const amountInput = document.querySelector('input[name="final_order[trees_crops][amount]"]');
+              if (amountInput) amountInput.value = finalOrder.trees_crops.amount || '';
+            }
+          }
+          
+          // Handle infrastructure checkbox and fields
+          const infrastructureCheckbox = document.querySelector('input[name="final_order[infrastructure][selected]"]');
+          if (infrastructureCheckbox) {
+            infrastructureCheckbox.checked = finalOrder.infrastructure && finalOrder.infrastructure.selected;
+            if (finalOrder.infrastructure && finalOrder.infrastructure.selected) {
+              toggleInfrastructureFields();
+              // Set compensation type
+              const radio = document.querySelector(`input[name="final_order[infrastructure][compensation_type]"][value="${finalOrder.infrastructure.compensation_type}"]`);
+              if (radio) radio.checked = true;
+              // Set amount
+              const amountInput = document.querySelector('input[name="final_order[infrastructure][amount]"]');
+              if (amountInput) amountInput.value = finalOrder.infrastructure.amount || '';
+            }
+          }
+        }
+      })
+      .catch(() => {});
+  };
+
+  window.closeFinalOrderModal = function() {
+    const modal = document.getElementById('finalOrderModal');
+    modal.classList.add('hidden');
+    const form = document.getElementById('finalOrderForm');
+    if (form) {
+      form.reset();
+      // Reset all field visibility
+      const landFields = document.getElementById('landFields');
+      const treesCropsFields = document.getElementById('treesCropsFields');
+      const infrastructureFields = document.getElementById('infrastructureFields');
+      
+      if (landFields) landFields.classList.add('hidden');
+      if (treesCropsFields) treesCropsFields.classList.add('hidden');
+      if (infrastructureFields) infrastructureFields.classList.add('hidden');
+
+    }
+  };
+
+  const finalOrderFormEl = document.getElementById('finalOrderForm');
+  if (finalOrderFormEl) {
+    finalOrderFormEl.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = this;
+      const formData = new FormData(form);
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      
+      // Process form data before submission
+      const finalOrderData = {
+        land: {
+          selected: formData.get('final_order[land][selected]') === '1',
+          categories: []
+        },
+        trees_crops: {
+          selected: formData.get('final_order[trees_crops][selected]') === '1',
+          compensation_type: formData.get('final_order[trees_crops][compensation_type]'),
+          amount: formData.get('final_order[trees_crops][amount]')
+        },
+        infrastructure: {
+          selected: formData.get('final_order[infrastructure][selected]') === '1',
+          compensation_type: formData.get('final_order[infrastructure][compensation_type]'),
+          amount: formData.get('final_order[infrastructure][amount]')
+        }
+      };
+
+      console.log('Form data processing:', {
+        landSelected: formData.get('final_order[land][selected]'),
+        treesCropsSelected: formData.get('final_order[trees_crops][selected]'),
+        infrastructureSelected: formData.get('final_order[infrastructure][selected]')
+      });
+
+      // Process land categories only if land section exists
+      if (document.getElementById('landFields')) {
+        const landRecords = document.querySelectorAll('.land-record');
+        console.log('Found land records:', landRecords.length);
+        landRecords.forEach((record, index) => {
+          const categoryNameInput = record.querySelector('input[name*="[category_name]"]');
+          const acquiredLandInput = record.querySelector('input[name*="[acquired_land]"]');
+          
+          if (categoryNameInput && acquiredLandInput) {
+            const categoryName = categoryNameInput.value;
+            const acquiredLand = acquiredLandInput.value;
+            console.log(`Land record ${index}:`, { categoryName, acquiredLand });
+            
+            if (categoryName || acquiredLand) {
+              finalOrderData.land.categories.push({
+                category_name: categoryName,
+                acquired_land: acquiredLand
+              });
+            }
+          }
+        });
+      }
+
+      // Create new FormData with processed data
+      const processedFormData = new FormData();
+      processedFormData.append('_token', csrfToken);
+      processedFormData.append('_method', 'PUT');
+      processedFormData.append('final_order', JSON.stringify(finalOrderData));
+
+      fetch(form.action, {
+        method: 'POST',
+        body: processedFormData,
+        headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }
+      })
+      .then(resp => {
+        console.log('Response status:', resp.status);
+        console.log('Response headers:', resp.headers);
+        if (!resp.ok) {
+          throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
+        }
+        return resp.json();
+      })
+      .then(data => {
+        console.log('Response data:', data);
+        if (data.success) {
+          window.closeFinalOrderModal();
+          setTimeout(() => { window.location.reload(); }, 500);
+        } else {
+          alert('কিছু সমস্যা হয়েছে: ' + (data.message || 'অজানা ত্রুটি'));
+        }
+      })
+      .catch((error) => {
+        console.error('Fetch error details:', {
+          error: error,
+          message: error.message,
+          stack: error.stack,
+          name: error.name
+        });
+        alert('কিছু সমস্যা হয়েছে: ' + error.message);
+      });
+    });
+  }
+
+  const finalOrderModalEl = document.getElementById('finalOrderModal');
+  if (finalOrderModalEl) {
+    finalOrderModalEl.addEventListener('click', function(e) {
+      if (e.target === this) { window.closeFinalOrderModal(); }
+    });
+  }
+
+  // Toggle Land Fields
+  function toggleLandFields() {
+    const landFields = document.getElementById('landFields');
+    const landCheckbox = document.querySelector('input[name="final_order[land][selected]"]');
+    
+    if (!landFields || !landCheckbox) {
+      console.warn('Land fields or checkbox not found');
+      return;
+    }
+    
+    if (landCheckbox.checked) {
+      landFields.classList.remove('hidden');
+    } else {
+      landFields.classList.add('hidden');
+    }
+  }
+
+  // Toggle Trees/Crops Fields
+  function toggleTreesCropsFields() {
+    const treesCropsFields = document.getElementById('treesCropsFields');
+    const treesCropsCheckbox = document.querySelector('input[name="final_order[trees_crops][selected]"]');
+    
+    if (!treesCropsFields || !treesCropsCheckbox) {
+      console.warn('Trees/Crops fields or checkbox not found');
+      return;
+    }
+    
+    if (treesCropsCheckbox.checked) {
+      treesCropsFields.classList.remove('hidden');
+    } else {
+      treesCropsFields.classList.add('hidden');
+    }
+  }
+
+  // Toggle Infrastructure Fields
+  function toggleInfrastructureFields() {
+    const infrastructureFields = document.getElementById('infrastructureFields');
+    const infrastructureCheckbox = document.querySelector('input[name="final_order[infrastructure][selected]"]');
+    
+    if (!infrastructureFields || !infrastructureCheckbox) {
+      console.warn('Infrastructure fields or checkbox not found');
+      return;
+    }
+    
+    if (infrastructureCheckbox.checked) {
+      infrastructureFields.classList.remove('hidden');
+    } else {
+      infrastructureFields.classList.add('hidden');
+    }
+  }
+
+
 </script>
 @endsection 

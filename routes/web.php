@@ -39,6 +39,10 @@ Route::put('/compensation/{id}/kanungo-opinion', [CompensationController::class,
 Route::get('/compensation/{id}/order', [CompensationController::class, 'getOrder'])->name('compensation.order.get');
 Route::put('/compensation/{id}/order', [CompensationController::class, 'updateOrder'])->name('compensation.order.update');
 
+// Final Order Routes
+Route::get('/compensation/{id}/final-order', [CompensationController::class, 'getFinalOrder'])->name('compensation.final-order.get');
+Route::put('/compensation/{id}/final-order', [CompensationController::class, 'updateFinalOrder'])->name('compensation.final-order.update');
+
 // Action Routes
 Route::get('/compensation/{id}/present', [CompensationController::class, 'present'])->name('compensation.present');
 Route::post('/compensation/{id}/present', [CompensationController::class, 'storePresent'])->name('compensation.present.store');

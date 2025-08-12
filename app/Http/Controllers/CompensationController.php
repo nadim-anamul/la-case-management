@@ -787,4 +787,107 @@ class CompensationController extends Controller
         return redirect()->route('compensation.analysis', $id)
             ->with('info', 'এক্সেল ডাউনলোড ফিচার শীঘ্রই যোগ করা হবে।');
     }
+
+    /**
+     * Get final order data
+     */
+    public function getFinalOrder($id)
+    {
+        try {
+            $compensation = Compensation::findOrFail($id);
+            
+            return response()->json([
+                'success' => true,
+                'final_order' => $compensation->final_order
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Get final order error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'কিছু সমস্যা হয়েছে: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Update final order data
+     */
+    public function updateFinalOrder(Request $request, $id)
+    {
+        try {
+            $compensation = Compensation::findOrFail($id);
+            
+            // Debug: Log what we're receiving
+            \Illuminate\Support\Facades\Log::info('Final order request data:', [
+                'all_data' => $request->all(),
+                'final_order_raw' => $request->input('final_order'),
+                'final_order_type' => gettype($request->input('final_order')),
+                'content_type' => $request->header('Content-Type')
+            ]);
+            
+            // Get the final_order data - it might be sent as JSON string
+            $finalOrderData = $request->input('final_order');
+            
+            // If it's a JSON string, decode it
+            if (is_string($finalOrderData)) {
+                $decoded = json_decode($finalOrderData, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    throw new \Exception('Invalid JSON data: ' . json_last_error_msg());
+                }
+                $finalOrderData = $decoded;
+                \Illuminate\Support\Facades\Log::info('Decoded final order data:', [
+                    'decoded' => $finalOrderData,
+                    'decoded_type' => gettype($finalOrderData)
+                ]);
+            }
+            
+            // Validate the decoded data
+            if (!is_array($finalOrderData)) {
+                throw new \Exception('Final order data must be an array');
+            }
+            
+            // Process the final order data
+            $finalOrder = $finalOrderData;
+            
+            // Clean up empty records for land
+            if (isset($finalOrder['land']['records']) && is_array($finalOrder['land']['records'])) {
+                $finalOrder['land']['records'] = array_filter($finalOrder['land']['records'], function($record) {
+                    return !empty($record['plot_no']) || !empty($record['area']);
+                });
+            }
+
+            \Illuminate\Support\Facades\Log::info('About to update database with final order:', [
+                'final_order_data' => $finalOrder,
+                'compensation_id' => $id
+            ]);
+
+            // Update the compensation record
+            $result = $compensation->update([
+                'final_order' => $finalOrder
+            ]);
+            
+            \Illuminate\Support\Facades\Log::info('Database update result:', [
+                'update_result' => $result,
+                'compensation_id' => $id
+            ]);
+            
+            // Verify the update
+            $compensation->refresh();
+            \Illuminate\Support\Facades\Log::info('After update verification:', [
+                'final_order_after_update' => $compensation->final_order,
+                'compensation_id' => $id
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'চূড়ান্ত আদেশ সফলভাবে সংরক্ষিত হয়েছে।'
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Final order update error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'কিছু সমস্যা হয়েছে: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
