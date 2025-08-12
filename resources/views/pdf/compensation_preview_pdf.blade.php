@@ -26,7 +26,6 @@
     <!-- Case Information -->
     <div class="card-pdf">
         <h2 class="section-header">
-            <span class="section-icon">১</span>
             মামলার তথ্য
         </h2>
         <div class="info-grid">
@@ -74,7 +73,6 @@
     <!-- Applicant Information -->
     <div class="card-pdf">
         <h2 class="section-header">
-            <span class="section-icon">২</span>
             আবেদনকারীর তথ্য
         </h2>
         @foreach($compensation->applicants as $index => $applicant)
@@ -117,7 +115,6 @@
     <!-- Award Information -->
     <div class="card-pdf">
         <h2 class="section-header">
-            <span class="section-icon">৩</span>
             রোয়েদাদের তথ্য
         </h2>
         
@@ -308,7 +305,6 @@
     <!-- Land Schedule -->
     <div class="card-pdf">
         <h2 class="section-header">
-            <span class="section-icon">৪</span>
             আবেদনকৃত জমির তফসিল
         </h2>
         <div class="land-schedule-info">
@@ -362,27 +358,22 @@
 
     <!-- Ownership Continuity -->
     @if($compensation->ownership_details)
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
-            <span class="section-icon">৫</span>
+    <div class="card-pdf">
+        <h2 class="section-header">
             মালিকানার ধারাবাহিকতার বর্ণনা
         </h2>
         
         <!-- Story Sequence Display - Show First -->
         @if(isset($compensation->ownership_details['storySequence']) && count($compensation->ownership_details['storySequence']) > 0)
-        <div class="mb-6">
-            <h3 class="font-semibold text-lg mb-3 text-green-600">মালিকানার ধারাবাহিকতার ক্রম</h3>
-            <div class="space-y-3">
+        <div class="mb-4">
+            <h3 class="subsection-title">মালিকানার ধারাবাহিকতার ক্রম</h3>
+            <div class="story-sequence">
                 @foreach($compensation->ownership_details['storySequence'] as $index => $item)
-                <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                            {{ $index + 1 }}
-                        </div>
-                        <div>
-                            <div class="font-semibold text-gray-800">{{ $item['type'] }}</div>
-                            <div class="text-sm text-gray-600">{{ $item['description'] }}</div>
-                        </div>
+                <div class="story-item">
+                    <div class="story-number">{{ $index + 1 }}</div>
+                    <div class="story-content">
+                        <div class="story-type">{{ $item['type'] }}</div>
+                        <div class="story-description">{{ $item['description'] }}</div>
                     </div>
                 </div>
                 @endforeach
@@ -391,32 +382,32 @@
         @endif
 
         @if($compensation->acquisition_record_basis === 'SA' && isset($compensation->ownership_details['sa_info']))
-        <div class="mb-6">
-            <h3 class="font-semibold text-lg mb-3 text-green-600">SA রেকর্ড তথ্য</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="font-semibold text-gray-700">SA দাগ নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['sa_info']['sa_plot_no'] ?? '' }}</p>
+        <div class="mb-4">
+            <h3 class="subsection-title">SA রেকর্ড তথ্য</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>SA দাগ নম্বর:</label>
+                    <span>{{ $compensation->ownership_details['sa_info']['sa_plot_no'] ?? '' }}</span>
                 </div>
-                <div>
-                    <label class="font-semibold text-gray-700">SA খতিয়ান নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['sa_info']['sa_khatian_no'] ?? '' }}</p>
+                <div class="info-item">
+                    <label>SA খতিয়ান নম্বর:</label>
+                    <span>{{ $compensation->ownership_details['sa_info']['sa_khatian_no'] ?? '' }}</span>
                 </div>
-                <div>
-                    <label class="font-semibold text-gray-700">SA দাগে মোট জমি:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['sa_info']['sa_total_land_in_plot'] ?? '' }}</p>
+                <div class="info-item">
+                    <label>SA দাগে মোট জমি:</label>
+                    <span>{{ $compensation->ownership_details['sa_info']['sa_total_land_in_plot'] ?? '' }}</span>
                 </div>
-                <div>
-                    <label class="font-semibold text-gray-700">SA উক্ত খতিয়ানে জমির পরিমাণ:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['sa_info']['sa_land_in_khatian'] ?? '' }}</p>
+                <div class="info-item">
+                    <label>SA উক্ত খতিয়ানে জমির পরিমাণ:</label>
+                    <span>{{ $compensation->ownership_details['sa_info']['sa_land_in_khatian'] ?? '' }}</span>
                 </div>
             </div>
             
             @if(isset($compensation->ownership_details['sa_owners']))
-            <div class="mt-4">
-                <h4 class="font-semibold mb-2">SA মালিকগণ:</h4>
+            <div class="mt-3">
+                <h4 class="subsection-subtitle">SA মালিকগণ:</h4>
                 @foreach($compensation->ownership_details['sa_owners'] as $owner)
-                <p class="text-gray-900">• {{ $owner['name'] }}</p>
+                <p class="owner-item">• {{ $owner['name'] }}</p>
                 @endforeach
             </div>
             @endif
@@ -424,36 +415,36 @@
         @endif
 
         @if($compensation->acquisition_record_basis === 'RS' && isset($compensation->ownership_details['rs_info']))
-        <div class="mb-6">
-            <h3 class="font-semibold text-lg mb-3 text-green-600">RS রেকর্ড তথ্য</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="font-semibold text-gray-700">RS দাগ নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['rs_info']['rs_plot_no'] ?? '' }}</p>
+        <div class="mb-4">
+            <h3 class="subsection-title">RS রেকর্ড তথ্য</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>RS দাগ নম্বর:</label>
+                    <span>{{ $compensation->ownership_details['rs_info']['rs_plot_no'] ?? '' }}</span>
                 </div>
-                <div>
-                    <label class="font-semibold text-gray-700">RS খতিয়ান নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['rs_info']['rs_khatian_no'] ?? '' }}</p>
+                <div class="info-item">
+                    <label>RS খতিয়ান নম্বর:</label>
+                    <span>{{ $compensation->ownership_details['rs_info']['rs_khatian_no'] ?? '' }}</span>
                 </div>
-                <div>
-                    <label class="font-semibold text-gray-700">RS দাগে মোট জমি:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['rs_info']['rs_total_land_in_plot'] ?? '' }}</p>
+                <div class="info-item">
+                    <label>RS দাগে মোট জমি:</label>
+                    <span>{{ $compensation->ownership_details['rs_info']['rs_total_land_in_plot'] ?? '' }}</span>
                 </div>
-                <div>
-                    <label class="font-semibold text-gray-700">RS খতিয়ানে মোট জমির পরিমাণ:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['rs_info']['rs_land_in_khatian'] ?? '' }}</p>
+                <div class="info-item">
+                    <label>RS খতিয়ানে মোট জমির পরিমাণ:</label>
+                    <span>{{ $compensation->ownership_details['rs_info']['rs_land_in_khatian'] ?? '' }}</span>
                 </div>
-                <div>
-                    <label class="font-semibold text-gray-700">ডিপি খতিয়ান:</label>
-                    <p class="text-gray-900">{{ isset($compensation->ownership_details['rs_info']['dp_khatian']) && $compensation->ownership_details['rs_info']['dp_khatian'] ? 'হ্যাঁ' : 'না' }}</p>
+                <div class="info-item">
+                    <label>ডিপি খতিয়ান:</label>
+                    <span>{{ isset($compensation->ownership_details['rs_info']['dp_khatian']) && $compensation->ownership_details['rs_info']['dp_khatian'] ? 'হ্যাঁ' : 'না' }}</span>
                 </div>
             </div>
             
             @if(isset($compensation->ownership_details['rs_owners']))
-            <div class="mt-4">
-                <h4 class="font-semibold mb-2">RS মালিকগণ:</h4>
+            <div class="mt-3">
+                <h4 class="subsection-subtitle">RS মালিকগণ:</h4>
                 @foreach($compensation->ownership_details['rs_owners'] as $owner)
-                <p class="text-gray-900">• {{ $owner['name'] }}</p>
+                <p class="owner-item">• {{ $owner['name'] }}</p>
                 @endforeach
             </div>
             @endif
@@ -972,103 +963,195 @@
     @endif
 
     <!-- Tax Information -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
-            <span class="section-icon">৬</span>
+    <div class="card-pdf">
+        <h2 class="section-header">
             খাজনার তথ্য
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label class="font-semibold text-gray-700">হোল্ডিং নম্বর:</label>
+        <div class="info-grid">
+            <div class="info-item">
+                <label>হোল্ডিং নম্বর:</label>
                 @if(!empty($compensation->tax_info['holding_no'] ?? ''))
-                    <p class="text-gray-900">{{ $compensation->tax_info['holding_no'] }}</p>
+                    <span>{{ $compensation->tax_info['holding_no'] }}</span>
                 @else
-                    <p class="text-red-500 italic">তথ্য নেই</p>
+                    <span class="no-data">তথ্য নেই</span>
                 @endif
             </div>
-            <div>
-                <label class="font-semibold text-gray-700">আবেদনকৃত দাগে খাজনা প্রদানকৃত জমির পরিমান (একরে)</label>
+            <div class="info-item">
+                <label>আবেদনকৃত দাগে খাজনা প্রদানকৃত জমির পরিমান (একরে):</label>
                 @if(!empty($compensation->tax_info['paid_land_amount'] ?? ''))
-                    <p class="text-gray-900">{{ $compensation->tax_info['paid_land_amount'] }}</p>
+                    <span>{{ $compensation->tax_info['paid_land_amount'] }}</span>
                 @else
-                    <p class="text-red-500 italic">তথ্য নেই</p>
+                    <span class="no-data">তথ্য নেই</span>
                 @endif
             </div>
-            <div>
-                <label class="font-semibold text-gray-700">ইংরেজি বছর:</label>
+            <div class="info-item">
+                <label>ইংরেজি বছর:</label>
                 @if(!empty($compensation->tax_info['english_year'] ?? ''))
-                    <p class="text-gray-900">{{ $compensation->tax_info['english_year'] }}</p>
+                    <span>{{ $compensation->tax_info['english_year'] }}</span>
                 @else
-                    <p class="text-red-500 italic">তথ্য নেই</p>
+                    <span class="no-data">তথ্য নেই</span>
                 @endif
             </div>
-            <div>
-                <label class="font-semibold text-gray-700">বাংলা বছর:</label>
+            <div class="info-item">
+                <label>বাংলা বছর:</label>
                 @if(!empty($compensation->tax_info['bangla_year'] ?? ''))
-                    <p class="text-gray-900">{{ $compensation->tax_info['bangla_year'] }}</p>
+                    <span>{{ $compensation->tax_info['bangla_year'] }}</span>
                 @else
-                    <p class="text-red-500 italic">তথ্য নেই</p>
+                    <span class="no-data">তথ্য নেই</span>
                 @endif
             </div>
-            
         </div>
     </div>
 
     <!-- Additional Documents -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
-            <span class="section-icon">৭</span>
+    <div class="card-pdf">
+        <h2 class="section-header">
             বণ্টন / না-দাবি / আপসনামা / এফিডেভিটের তথ্য
         </h2>
         @if(isset($compensation->additional_documents_info['selected_types']) && !empty($compensation->additional_documents_info['selected_types']))
-        <div class="mb-4">
-            <label class="font-semibold text-gray-700">দাখিলকৃত ডকুমেন্টের ধরন:</label>
-            <div class="mt-2">
+        <div class="mb-3">
+            <label class="section-label">দাখিলকৃত ডকুমেন্টের ধরন:</label>
+            <div class="document-types">
                 @foreach($compensation->additional_documents_info['selected_types'] as $type)
-                <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-2 mb-2">{{ $type }}</span>
+                <span class="document-type-badge">{{ $type }}</span>
                 @endforeach
             </div>
         </div>
         @else
-        <div class="mb-4">
-            <label class="font-semibold text-gray-700">দাখিলকৃত ডকুমেন্টের ধরন:</label>
-            <p class="text-red-500 italic">তথ্য নেই</p>
+        <div class="mb-3">
+            <label class="section-label">দাখিলকৃত ডকুমেন্টের ধরন:</label>
+            <span class="no-data">তথ্য নেই</span>
         </div>
         @endif
         
         @if(isset($compensation->additional_documents_info['details']) && !empty($compensation->additional_documents_info['details']))
         <div>
-            <label class="font-semibold text-gray-700">ডকুমেন্টের বিবরণ:</label>
+            <label class="section-label">ডকুমেন্টের বিবরণ:</label>
             @foreach($compensation->additional_documents_info['details'] as $type => $details)
-            <div class="mt-3 p-3 border rounded-lg">
-                <h4 class="font-semibold text-gray-700 mb-2">{{ $type }}:</h4>
-                <p class="text-gray-900">{{ $details }}</p>
+            <div class="document-detail">
+                <h4 class="document-type-title">{{ $type }}:</h4>
+                <p class="document-description">{{ $details }}</p>
             </div>
             @endforeach
         </div>
         @else
         <div>
-            <label class="font-semibold text-gray-700">ডকুমেন্টের বিবরণ:</label>
-            <p class="text-red-500 italic">তথ্য নেই</p>
+            <label class="section-label">ডকুমেন্টের বিবরণ:</label>
+            <span class="no-data">তথ্য নেই</span>
         </div>
         @endif
     </div>
 
     <!-- Kanungo Opinion -->
     @if($compensation->kanungo_opinion)
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
-            <span class="section-icon">৮</span>
+    <div class="card-pdf">
+        <h2 class="section-header">
             কানুনগো/সার্ভেয়ারের মতামত
         </h2>
-        <div class="grid grid-cols-1 gap-4">
-            <div>
-                <label class="font-semibold text-gray-700">মালিকানার ধারাবাহিকতা আছে কিনা:</label>
-                                        <p class="text-gray-900">{{ isset($compensation->kanungo_opinion['has_ownership_continuity']) && $compensation->kanungo_opinion['has_ownership_continuity'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
+        <div class="info-grid">
+            <div class="info-item">
+                <label>মালিকানার ধারাবাহিকতা আছে কিনা:</label>
+                <span class="status-badge {{ isset($compensation->kanungo_opinion['has_ownership_continuity']) && $compensation->kanungo_opinion['has_ownership_continuity'] === 'yes' ? 'status-yes' : 'status-no' }}">
+                    {{ isset($compensation->kanungo_opinion['has_ownership_continuity']) && $compensation->kanungo_opinion['has_ownership_continuity'] === 'yes' ? 'হ্যাঁ' : 'না' }}
+                </span>
             </div>
-            <div>
-                <label class="font-semibold text-gray-700">মতামতের বিবরণ:</label>
-                <p class="text-gray-900">{{ $compensation->kanungo_opinion['opinion_details'] ?? '' }}</p>
+            <div class="info-item">
+                <label>মতামতের বিবরণ:</label>
+                <span>{{ $compensation->kanungo_opinion['opinion_details'] ?? '' }}</span>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Final Order Information -->
+    @if($compensation->final_order)
+    <div class="card-pdf">
+        <h2 class="section-header">
+            চূড়ান্ত আদেশ
+        </h2>
+        
+        @if(isset($compensation->final_order['land']) && $compensation->final_order['land']['selected'])
+        <div class="mb-4">
+            <h3 class="subsection-title">জমি</h3>
+            <div class="land-categories">
+                @if(isset($compensation->final_order['land']['categories']) && is_array($compensation->final_order['land']['categories']))
+                    @foreach($compensation->final_order['land']['categories'] as $index => $category)
+                    <div class="category-item">
+                        <div class="category-grid">
+                            <div class="category-field">
+                                <label>জমির শ্রেণী:</label>
+                                <span>{{ $category['category_name'] ?? '' }}</span>
+                            </div>
+                            <div class="category-field">
+                                <label>অধিগ্রহণকৃত জমি (একর):</label>
+                                <span>{{ $category['acquired_land'] ?? '' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                @endif
+            </div>
+        </div>
+        @endif
+
+        @if(isset($compensation->final_order['trees_crops']) && $compensation->final_order['trees_crops']['selected'])
+        <div class="mb-4">
+            <h3 class="subsection-title">গাছপালা/ফসল</h3>
+            <div class="compensation-item">
+                <div class="compensation-grid">
+                    <div class="compensation-field">
+                        <label>ক্ষতিপূরণের ধরন:</label>
+                        <span>{{ $compensation->final_order['trees_crops']['compensation_type'] === 'full' ? 'সম্পূর্ণ' : 'আংশিক' }}</span>
+                    </div>
+                    <div class="compensation-field">
+                        <label>ক্ষতিপূরণের পরিমাণ:</label>
+                        <span>{{ $compensation->final_order['trees_crops']['amount'] ?? '' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        @if(isset($compensation->final_order['infrastructure']) && $compensation->final_order['infrastructure']['selected'])
+        <div class="mb-4">
+            <h3 class="subsection-title">অবকাঠামো</h3>
+            <div class="compensation-item">
+                <div class="compensation-grid">
+                    <div class="compensation-field">
+                        <label>ক্ষতিপূরণের ধরন:</label>
+                        <span>{{ $compensation->final_order['infrastructure']['compensation_type'] === 'full' ? 'সম্পূর্ণ' : 'আংশিক' }}</span>
+                    </div>
+                    <div class="compensation-field">
+                        <label>ক্ষতিপূরণের পরিমাণ:</label>
+                        <span>{{ $compensation->final_order['infrastructure']['amount'] ?? '' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+    </div>
+    @endif
+
+    <!-- Order Information - Case Completion Status -->
+    @if($compensation->order_signature_date)
+    <div class="card-pdf">
+        <h2 class="section-header">
+            আদেশ তথ্য - কেস নিষ্পত্তিকৃত
+        </h2>
+        <div class="completion-status">
+            <div class="status-indicator">
+                <span class="status-icon">✓</span>
+                <span class="status-text">এই ক্ষতিপূরণ কেসটি নিষ্পত্তিকৃত হয়েছে</span>
+            </div>
+        </div>
+        <div class="info-grid">
+            <div class="info-item">
+                <label>আদেশ স্বাক্ষরের তারিখ:</label>
+                <span>{{ $compensation->order_signature_date }}</span>
+            </div>
+            <div class="info-item">
+                <label>স্বাক্ষরকারী কর্মকর্তার নাম:</label>
+                <span>{{ $compensation->signing_officer_name ?? 'তথ্য নেই' }}</span>
             </div>
         </div>
     </div>
@@ -1078,7 +1161,6 @@
     @if($compensation->mutation_info)
     <div class="card-pdf">
         <h2 class="section-header">
-            <span class="section-icon">৯</span>
             নামজারির তথ্য
         </h2>
         <div class="info-grid">
@@ -1110,7 +1192,6 @@
     @if($compensation->order_signature_date || $compensation->signing_officer_name)
     <div class="card-pdf">
         <h2 class="section-header">
-            <span class="section-icon">১০</span>
             আদেশের তথ্য
         </h2>
         <div class="info-grid">
@@ -1126,26 +1207,6 @@
                 <span>{{ $compensation->signing_officer_name }}</span>
             </div>
             @endif
-            @if($compensation->status)
-            <div class="info-item">
-                <label>মামলার অবস্থা:</label>
-                <span class="status-badge {{ $compensation->status === 'completed' ? 'status-yes' : ($compensation->status === 'pending' ? 'status-no' : '') }}">
-                    @switch($compensation->status)
-                        @case('completed')
-                            সম্পন্ন
-                            @break
-                        @case('pending')
-                            অপেক্ষমান
-                            @break
-                        @case('rejected')
-                            প্রত্যাখ্যাত
-                            @break
-                        @default
-                            {{ $compensation->status }}
-                    @endswitch
-                </span>
-            </div>
-            @endif
         </div>
     </div>
     @endif
@@ -1154,7 +1215,6 @@
     @if($compensation->former_plot_no || $compensation->current_plot_no)
     <div class="card-pdf">
         <h2 class="section-header">
-            <span class="section-icon">১১</span>
             দাগ নম্বরের তথ্য
         </h2>
         <div class="info-grid">
@@ -1177,13 +1237,12 @@
     <!-- Application Analysis -->
     <div class="card-pdf">
         <h2 class="section-header">
-            <span class="section-icon">১২</span>
             আবেদনপত্র বিশ্লেষণ
         </h2>
         <div class="space-y-4">
             <!-- Application Type -->
-            <div class="p-4 bg-gray-50 rounded-lg">
-                <p class="text-gray-800">
+            <div class="analysis-item">
+                <p class="analysis-text">
                     আবেদনকারী 
                     @if($compensation->award_type )
                     {{ is_array($compensation->award_type) ? implode(', ', $compensation->award_type) : $compensation->award_type }}
@@ -1195,8 +1254,8 @@
             </div>
 
             <!-- Applicant Count -->
-            <div class="p-4 bg-gray-50 rounded-lg">
-                <p class="text-gray-800">
+            <div class="analysis-item">
+                <p class="analysis-text">
                     আবেদনকারী 
                     @if($compensation->applicants && is_array($compensation->applicants))
                         {{ count($compensation->applicants) }} জন।
@@ -1207,7 +1266,7 @@
             </div>
 
             <!-- Award Holder Count -->
-            <div class="p-4 bg-gray-50 rounded-lg">
+            <div class="analysis-item">
                 <p class="text-gray-800">
                     রোয়েদাদভুক্ত মালিক 
                     @if($compensation->award_holder_names && is_array($compensation->award_holder_names))
@@ -1219,8 +1278,8 @@
             </div>
 
             <!-- Applicant in Award Status -->
-            <div class="p-4 bg-gray-50 rounded-lg">
-                <p class="text-gray-800">
+            <div class="analysis-item">
+                <p class="analysis-text">
                     আবেদনকারীর নাম রোয়েদাদে 
                     @if($compensation->is_applicant_in_award)
                         আছে।
@@ -1231,8 +1290,8 @@
             </div>
 
             <!-- Settlement Distribution Logic -->
-            <div class="p-4 bg-gray-50 rounded-lg">
-                <p class="text-gray-800">
+            <div class="analysis-item">
+                <p class="analysis-text">
                     @if($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) == 1 && $compensation->is_applicant_in_award)
                         রোয়েদাদভুক্ত মালিক ১ জন বিধায় আপসবন্টন/ না-দাবীনামা প্রয়োজন নেই।
                     @elseif($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) > 1)
@@ -1244,8 +1303,8 @@
             </div>
 
             <!-- Settlement/No Claim Documents -->
-            <div class="p-4 bg-gray-50 rounded-lg">
-                <p class="text-gray-800">
+            <div class="analysis-item">
+                <p class="analysis-text">
                     @php
                         $hasSettlementOrNoClaim = $compensation->additional_documents_info && 
                                                 isset($compensation->additional_documents_info['selected_types']) && 
@@ -1263,8 +1322,8 @@
             </div>
 
             <!-- Mutation Status -->
-            <div class="p-4 bg-gray-50 rounded-lg">
-                <p class="text-gray-800">
+            <div class="analysis-item">
+                <p class="analysis-text">
                     আবেদনকারীর নামে উল্লিখিত দাগে খারিজ করা 
                     @if($compensation->mutation_info && isset($compensation->mutation_info['has_mutation']) && $compensation->mutation_info['has_mutation'])
                         আছে।
@@ -1275,8 +1334,8 @@
             </div>
 
             <!-- Tax Receipt Status -->
-            <div class="p-4 bg-gray-50 rounded-lg">
-                <p class="text-gray-800">
+            <div class="analysis-item">
+                <p class="analysis-text">
                     @php
                         $hasTaxInfo = $compensation->tax_info && 
                                      isset($compensation->tax_info['english_year']) && 
@@ -1297,8 +1356,8 @@
 
             <!-- Deed Information -->
             @if($compensation->ownership_details && isset($compensation->ownership_details['deed_transfers']) && count($compensation->ownership_details['deed_transfers']) > 0)
-            <div class="p-4 bg-gray-50 rounded-lg">
-                <p class="text-gray-800">
+            <div class="analysis-item">
+                <p class="analysis-text">
                     @foreach($compensation->ownership_details['deed_transfers'] as $deed)
                         @if(isset($deed['deed_number']) && !empty($deed['deed_number']))
                             আবেদনকারীর দাখিলকৃত দলিল নং {{ $deed['deed_number'] }} তে উল্লিখিত দাগে দখল উল্লেখ করা 
@@ -1320,29 +1379,29 @@
                 $total_land = number_format($compensation->total_land_amount, 6);
                 $applicant_acquired_land = number_format($compensation->applicant_acquired_land, 6);
             @endphp
-            <div class="p-4 bg-gray-50 rounded-lg">
-                <p class="text-gray-800">
+            <div class="analysis-item">
+                <p class="analysis-text">
                     আবেদনকারী উল্লিখিত দাগে অধিগ্রহণকৃত {{ $total_land }} একর জমির মধ্যে {{ $applicant_acquired_land }} একরের ক্ষতিপূরণ দাবী করেন।
                 </p>
             </div>
             @endif
 
             <!-- Acquisition Record Basis -->
-            <div class="p-4 bg-gray-50 rounded-lg">
-                <p class="text-gray-800">
+            <div class="analysis-item">
+                <p class="analysis-text">
                     {{ $compensation->acquisition_record_basis ?? 'এসএ/ আরএস' }} রেকর্ডমূলে অধিগ্রহণ।
                 </p>
             </div>
             @if($compensation->acquisition_record_basis === 'SA' && (!$compensation->ownership_details || !isset($compensation->ownership_details['rs_record_info'])))
-            <div class="p-4 bg-gray-50 rounded-lg">
-                <p class="text-gray-800">
+            <div class="analysis-item">
+                <p class="analysis-text">
                         এস এ রেকর্ডমূলে অধিগ্রহণ, কিন্তু আরএস রেকর্ডের তথ্য দাখিল করা হয়নি।
                 </p>
             </div>
             @endif
             <!-- Objection Status -->
-            <div class="p-4 bg-gray-50 rounded-lg">
-                <p class="text-gray-800">
+            <div class="analysis-item">
+                <p class="analysis-text">
                     রোয়েদাদে আপত্তি দাখিল 
                     @if($compensation->objector_details)
                         আছে।
@@ -1354,159 +1413,108 @@
         </div>
     </div>
 
-    <!-- Summary and Recommendations -->
-    {{-- <div class="card-pdf">
-        <h2 class="section-header">
-            <span class="section-icon">১৩</span>
-            সারসংক্ষেপ ও সুপারিশ
-        </h2>
-        <div class="summary-content">
-            <div class="summary-item">
-                <h3 class="summary-title">মামলার সারসংক্ষেপ</h3>
-                <p class="summary-text">
-                    মামলা নং {{ $compensation->case_number }} এর অধীনে {{ $compensation->mouza_name }} মৌজার {{ $compensation->plot_no }} দাগে 
-                    @if($compensation->land_category && is_array($compensation->land_category))
-                        মোট {{ number_format($compensation->total_land_amount, 6) }} একর জমি অধিগ্রহণ করা হয়েছে।
-                    @else
-                        জমি অধিগ্রহণ করা হয়েছে।
-                    @endif
-                </p>
-            </div>
-
-            <div class="summary-item">
-                <h3 class="summary-title">ক্ষতিপূরণের পরিমাণ</h3>
-                <p class="summary-text">
-                    @if($compensation->land_category && is_array($compensation->land_category))
-                        মোট ক্ষতিপূরণের পরিমাণ {{ number_format($compensation->total_compensation_amount, 2) }} টাকা।
-                    @else
-                        ক্ষতিপূরণের পরিমাণ নির্ধারণ করা যায়নি।
-                    @endif
-                </p>
-            </div>
-
-            <div class="summary-item">
-                <h3 class="summary-title">আবেদনকারীর দাবী</h3>
-                <p class="summary-text">
-                    আবেদনকারী 
-                    @if($compensation->applicant_acquired_land > 0)
-                        {{ $compensation->applicant_acquired_land }} একর জমির ক্ষতিপূরণ দাবী করেন।
-                    @else
-                        জমির ক্ষতিপূরণ দাবী করেন।
-                    @endif
-                </p>
-            </div>
-
-            <div class="summary-item">
-                <h3 class="summary-title">সুপারিশ</h3>
-                <div class="recommendations">
-                    @if($compensation->is_applicant_in_award)
-                        <p class="recommendation-item positive">✓ আবেদনকারীর নাম রোয়েদাদে আছে।</p>
-                    @else
-                        <p class="recommendation-item negative">✗ আবেদনকারীর নাম রোয়েদাদে নাই।</p>
-                    @endif
-
-                    @if($compensation->mutation_info && isset($compensation->mutation_info['has_mutation']) && $compensation->mutation_info['has_mutation'])
-                        <p class="recommendation-item positive">✓ নামজারি সম্পন্ন হয়েছে।</p>
-                    @else
-                        <p class="recommendation-item negative">✗ নামজারি সম্পন্ন হয়নি।</p>
-                    @endif
-
-                    @php
-                        $hasTaxInfo = $compensation->tax_info && 
-                                     isset($compensation->tax_info['english_year']) && 
-                                     !empty($compensation->tax_info['english_year']) &&
-                                     isset($compensation->tax_info['bangla_year']) && 
-                                     !empty($compensation->tax_info['bangla_year']) &&
-                                     isset($compensation->tax_info['paid_land_amount']) && 
-                                     !empty($compensation->tax_info['paid_land_amount']);
-                    @endphp
-                    
-                    @if($hasTaxInfo)
-                        <p class="recommendation-item positive">✓ খাজনার রশিদ দাখিল করা হয়েছে।</p>
-                    @else
-                        <p class="recommendation-item negative">✗ খাজনার রশিদ দাখিল করা হয়নি।</p>
-                    @endif
-
-                    @if($compensation->kanungo_opinion && isset($compensation->kanungo_opinion['has_ownership_continuity']) && $compensation->kanungo_opinion['has_ownership_continuity'] === 'yes')
-                        <p class="recommendation-item positive">✓ কানুনগো/সার্ভেয়ার মালিকানার ধারাবাহিকতা নিশ্চিত করেছেন।</p>
-                    @elseif($compensation->kanungo_opinion)
-                        <p class="recommendation-item negative">✗ কানুনগো/সার্ভেয়ার মালিকানার ধারাবাহিকতা নিশ্চিত করেননি।</p>
-                    @else
-                        <p class="recommendation-item warning">⚠ কানুনগো/সার্ভেয়ারের মতামত পাওয়া যায়নি।</p>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div> --}}
+    
 </div>
 
 <style>
-/* PDF-optimized compact styles */
+/* PDF-optimized styles matching preview page */
 body {
     font-family: 'Tiro Bangla', serif;
-    line-height: 1.4;
-    color: #333;
+    line-height: 1.5;
+    color: #111827;
     margin: 0;
     padding: 0;
+    background-color: #f9fafb;
 }
 
-/* Compact container */
+/* Container matching preview page */
 .container-pdf {
     max-width: 100%;
-    margin: 0;
-    padding: 15px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9fafb;
 }
 
-/* Compact headings */
-h1 {
-    font-size: 24px;
-    font-weight: bold;
+/* Header section matching preview */
+.header-section {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb;
+    padding: 20px;
+    margin-bottom: 20px;
     text-align: center;
-    margin: 0 0 20px 0;
-    color: #1f2937;
-    border-bottom: 2px solid #3b82f6;
-    padding-bottom: 10px;
 }
 
-h2 {
-    font-size: 18px;
+.main-title {
+    font-size: 28px;
     font-weight: bold;
-    margin: 15px 0 10px 0;
+    color: #1f2937;
+    margin: 0 0 20px 0;
+    border-bottom: 2px solid #3b82f6;
+    padding-bottom: 15px;
+}
+
+.case-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.summary-item {
+    text-align: center;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+}
+
+.summary-label {
+    display: block;
+    font-weight: 600;
+    color: #4b5563;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.summary-value {
+    color: #1f2937;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Section headers matching preview page */
+h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 20px 0 15px 0;
     color: #2563eb;
-    border-bottom: 1px solid #d1d5db;
-    padding-bottom: 5px;
+    border-bottom: 2px solid #bfdbfe;
+    padding-bottom: 8px;
 }
 
 h3 {
-    font-size: 16px;
-    font-weight: bold;
-    margin: 10px 0 5px 0;
-    color: #374151;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 15px 0 10px 0;
+    color: #059669;
 }
 
-/* Compact section icons */
-.section-icon {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    background-color: #3b82f6;
-    color: white;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 20px;
-    font-size: 11px;
-    font-weight: bold;
-    margin-right: 6px;
-}
-
-/* Compact cards */
+/* Cards matching preview page styling */
 .card-pdf {
-    background: #ffffff;
+    background: white;
     border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    padding: 12px;
-    margin-bottom: 15px;
-    page-break-inside: avoid;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease;
+}
+
+.card-pdf:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 /* Compact grids */
@@ -1528,53 +1536,56 @@ h3 {
     gap: 8px;
 }
 
-/* Info grid for sections */
+/* Info grid matching preview page */
 .info-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 12px;
-    margin-top: 10px;
+    gap: 15px;
+    margin-top: 15px;
 }
 
 .info-item {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
 }
 
 .info-item label {
     font-weight: 600;
-    color: #4b5563;
-    font-size: 13px;
+    color: #374151;
+    font-size: 14px;
+    margin-bottom: 4px;
 }
 
 .info-item span {
     color: #111827;
-    font-size: 13px;
-    padding: 4px 0;
+    font-size: 14px;
+    padding: 6px 0;
+    line-height: 1.5;
 }
 
-/* Status badges */
+/* Status badges matching preview page */
 .status-badge {
     display: inline-block;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
     font-weight: 600;
     text-align: center;
-    min-width: 60px;
+    min-width: 70px;
+    border: 1px solid transparent;
 }
 
 .status-yes {
     background: #dcfce7;
     color: #166534;
-    border: 1px solid #bbf7d0;
+    border-color: #bbf7d0;
 }
 
 .status-no {
     background: #fef2f2;
     color: #991b1b;
-    border: 1px solid #fecaca;
+    border-color: #fecaca;
 }
 
 /* Compact form fields */
@@ -1597,50 +1608,114 @@ h3 {
     padding: 2px 0;
 }
 
-/* Compact applicant sections */
-.applicant-pdf {
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
-    padding: 8px;
-    margin-bottom: 10px;
-    background: #f9fafb;
-}
-
-/* Compact land schedule */
-.land-schedule-pdf {
+/* Applicant sections matching preview page */
+.applicant-card {
     border: 1px solid #e5e7eb;
-    border-radius: 4px;
-    padding: 8px;
-    margin-bottom: 8px;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
     background: #f9fafb;
 }
 
-.land-schedule-pdf h4 {
-    font-size: 14px;
+.applicant-title {
+    font-size: 16px;
     font-weight: 600;
-    margin: 0 0 5px 0;
     color: #374151;
+    margin: 0 0 10px 0;
+    border-bottom: 1px solid #d1d5db;
+    padding-bottom: 5px;
 }
 
-/* Compact tables */
-.table-pdf {
+.applicant-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.info-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.info-col {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-col.full-width {
+    grid-column: 1 / -1;
+}
+
+.info-col label {
+    font-weight: 600;
+    color: #374151;
+    font-size: 14px;
+}
+
+.info-col span {
+    color: #111827;
+    font-size: 14px;
+    padding: 4px 0;
+}
+
+/* Award holders matching preview page */
+.holder-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #f9fafb;
+}
+
+.holder-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+    margin: 0 0 10px 0;
+    border-bottom: 1px solid #d1d5db;
+    padding-bottom: 5px;
+}
+
+.holder-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Tables matching preview page */
+.data-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 8px 0;
+    margin: 15px 0;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
-.table-pdf th,
-.table-pdf td {
-    border: 1px solid #d1d5db;
-    padding: 4px 6px;
-    font-size: 12px;
+.data-table th,
+.data-table td {
+    border: 1px solid #e5e7eb;
+    padding: 12px;
+    font-size: 14px;
     text-align: left;
 }
 
-.table-pdf th {
-    background: #f3f4f6;
+.data-table th {
+    background: #f8fafc;
     font-weight: 600;
     color: #374151;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.data-table tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+.data-table tr:hover {
+    background: #f3f4f6;
 }
 
 /* Compact status indicators */
@@ -1692,6 +1767,277 @@ h3 {
     h2 {
         break-after: avoid;
     }
+}
+
+
+
+/* Analysis section matching preview page */
+.analysis-item {
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 12px;
+}
+
+.analysis-text {
+    margin: 0;
+    color: #111827;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Award summary matching preview page */
+.award-summary {
+    margin: 15px 0;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.summary-box {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.summary-box label {
+    display: block;
+    font-weight: 600;
+    color: #4b5563;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.highlight-value {
+    color: #1f2937;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Subsection titles matching preview page */
+.subsection-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #059669;
+    margin: 15px 0 10px 0;
+    border-bottom: 1px solid #d1fae5;
+    padding-bottom: 5px;
+}
+
+.subsection-subtitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin: 10px 0 5px 0;
+}
+
+/* Section label matching preview page */
+.section-label {
+    font-weight: 600;
+    color: #4b5563;
+    font-size: 13px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Story sequence matching preview page */
+.story-sequence {
+    margin-top: 10px;
+}
+
+.story-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    padding: 8px;
+    background: #eff6ff;
+    border-radius: 6px;
+    border-left: 4px solid #3b82f6;
+}
+
+.story-number {
+    width: 24px;
+    height: 24px;
+    background: #3b82f6;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.story-content {
+    flex: 1;
+}
+
+.story-type {
+    font-weight: 600;
+    color: #1e40af;
+    font-size: 13px;
+    margin-bottom: 2px;
+}
+
+.story-description {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.owner-item {
+    margin: 4px 0;
+    color: #111827;
+    font-size: 13px;
+}
+
+.no-data {
+    color: #dc2626;
+    font-style: italic;
+    font-size: 13px;
+}
+
+/* Document types matching preview page */
+.document-types {
+    margin-top: 8px;
+}
+
+.document-type-badge {
+    display: inline-block;
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    margin-right: 6px;
+    margin-bottom: 6px;
+}
+
+.document-detail {
+    margin-top: 12px;
+    padding: 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: #f9fafb;
+}
+
+.document-type-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    margin: 0 0 5px 0;
+}
+
+.document-description {
+    margin: 0;
+    color: #111827;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+/* Land categories matching preview page */
+.land-categories {
+    margin-top: 10px;
+}
+
+.category-item {
+    background: #f9fafb;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 8px;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
+}
+
+.category-field {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.category-field label {
+    font-weight: 600;
+    color: #4b5563;
+    font-size: 12px;
+}
+
+.category-field span {
+    color: #111827;
+    font-size: 12px;
+}
+
+.compensation-item {
+    background: #f9fafb;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+}
+
+.compensation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
+}
+
+.compensation-field {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.compensation-field label {
+    font-weight: 600;
+    color: #4b5563;
+    font-size: 12px;
+}
+
+.compensation-field span {
+    color: #111827;
+    font-size: 12px;
+}
+
+.completion-status {
+    margin: 15px 0;
+    padding: 12px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-icon {
+    width: 20px;
+    height: 20px;
+    background: #16a34a;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #166534;
 }
 
 /* Summary section styles */

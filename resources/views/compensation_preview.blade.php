@@ -1334,51 +1334,6 @@
     </div>
     @endif
 
-    <!-- Required Actions Section -->
-    @if(empty($compensation->kanungo_opinion) || empty($compensation->order_signature_date) || empty($compensation->final_order))
-    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
-        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
-            প্রয়োজনীয় কার্যক্রম
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-            @if(empty($compensation->kanungo_opinion))
-            <button type="button" onclick="openKanungoOpinionModal({{ $compensation->id }})" class="action-card bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700">
-                <div class="flex items-center justify-center space-x-2">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m-4-4h8" />
-                    </svg>
-                    <span class="text-white font-bold text-base">কানুনগো/সার্ভেয়ারের মতামত</span>
-                </div>
-            </button>
-            @endif
-            
-            @if(empty($compensation->order_signature_date))
-            <button type="button" onclick="openOrderModal({{ $compensation->id }})" class="action-card bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
-                <div class="flex items-center justify-center space-x-2">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <span class="text-white font-bold text-base">কেস নিষ্পত্তি করুন</span>
-                </div>
-            </button>
-            @endif
-
-            @if(empty($compensation->final_order))
-            <button type="button" onclick="openFinalOrderModal({{ $compensation->id }})" class="action-card bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700">
-                <div class="flex items-center justify-center space-x-2">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <span class="text-white font-bold text-base">চূড়ান্ত আদেশ</span>
-                </div>
-            </button>
-            @endif
-        </div>
-    </div>
-    @endif
-
-    
-
     <!-- Action Buttons -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
         <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
@@ -1413,6 +1368,42 @@
             </a>
         </div>
     </div>
+
+    <!-- Required Actions Section -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
+        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
+            প্রয়োজনীয় কার্যক্রম
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <button type="button" onclick="openKanungoOpinionModal({{ $compensation->id }})" class="action-card bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m-4-4h8" />
+                    </svg>
+                    <span class="text-white font-bold text-base">কানুনগো/সার্ভেয়ারের মতামত</span>
+                </div>
+            </button>
+
+            <button type="button" onclick="openOrderModal({{ $compensation->id }})" class="action-card bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="text-white font-bold text-base">কেস নিষ্পত্তি করুন</span>
+                </div>
+            </button>
+
+            <button type="button" onclick="openFinalOrderModal({{ $compensation->id }})" class="action-card bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="text-white font-bold text-base">চূড়ান্ত আদেশ</span>
+                </div>
+            </button>
+        </div>
+    </div>
+
 </div>
 
 <!-- Kanungo Opinion Modal -->
@@ -1486,12 +1477,12 @@
                 <div class="space-y-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">আদেশ স্বাক্ষরের তারিখ<span class="text-red-500">*</span></label>
-                        <input type="text" name="order_signature_date" placeholder="দিন/মাস/বছর" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                        <input type="text" name="order_signature_date" value="{{ $compensation->order_signature_date ?? '' }}" placeholder="দিন/মাস/বছর" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
                     </div>
                     
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">স্বাক্ষরকারী কর্মকর্তার নাম<span class="text-red-500">*</span></label>
-                        <input type="text" name="signing_officer_name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="কর্মকর্তার নাম লিখুন..." required>
+                        <input type="text" name="signing_officer_name" value="{{ $compensation->signing_officer_name ?? '' }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="কর্মকর্তার নাম লিখুন..." required>
                     </div>
                 </div>
                 
@@ -1842,16 +1833,29 @@ p {
     const form = document.getElementById('orderForm');
     form.action = `/compensation/${compensationId}/order`;
     modal.classList.remove('hidden');
-    // Prefill if exists
+    
+    // Prefill with existing data from the page if available
+    const existingDate = '{{ $compensation->order_signature_date ?? "" }}';
+    const existingName = '{{ $compensation->signing_officer_name ?? "" }}';
+    
+    if (existingDate || existingName) {
+      const dateInput = document.querySelector('input[name="order_signature_date"]');
+      const nameInput = document.querySelector('input[name="signing_officer_name"]');
+      
+      if (dateInput && existingDate) dateInput.value = existingDate;
+      if (nameInput && existingName) nameInput.value = existingName;
+    }
+    
+    // Also try to fetch from API if available
     fetch(`/compensation/${compensationId}/order`)
       .then(r => r.ok ? r.json() : null)
       .then(data => {
         if (data && data.order) {
           const order = data.order;
           const dateInput = document.querySelector('input[name="order_signature_date"]');
-          if (dateInput) dateInput.value = order.order_signature_date || '';
           const nameInput = document.querySelector('input[name="signing_officer_name"]');
-          if (nameInput) nameInput.value = order.signing_officer_name || '';
+          if (dateInput) dateInput.value = order.order_signature_date || dateInput.value || '';
+          if (nameInput) nameInput.value = order.signing_officer_name || nameInput.value || '';
         }
       })
       .catch(() => {});
@@ -1860,8 +1864,9 @@ p {
   window.closeOrderModal = function() {
     const modal = document.getElementById('orderModal');
     modal.classList.add('hidden');
-    const form = document.getElementById('orderForm');
-    if (form) form.reset();
+    // Don't reset the form to preserve existing data
+    // const form = document.getElementById('orderForm');
+    // if (form) form.reset();
   };
 
   const orderFormEl = document.getElementById('orderForm');
