@@ -417,94 +417,108 @@
             @endphp
             
             @foreach($compensation->ownership_details['storySequence'] as $index => $item)
-                @if($item['itemType'] === 'deed' && isset($deedTransfers[$item['itemIndex']]))
-                    @php $deed = $deedTransfers[$item['itemIndex']]; $displayedDeeds[] = $item['itemIndex']; @endphp
-                    <div class="mb-4">
-                        <h3 class="font-semibold text-base mb-2 text-green-600">দলিল মূলে হস্তান্তর তথ্য</h3>
-                        <div class="mb-3 p-3 border border-gray-200 rounded-md bg-gray-50">
-                            <h4 class="font-semibold mb-2 text-sm">দলিল #{{ $item['itemIndex'] + 1 }}</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="font-semibold text-gray-700">দাতার নাম:</label>
-                                    @if(isset($deed['donor_names']))
-                                        @foreach($deed['donor_names'] as $donor)
-                                            <p class="text-gray-900">• {{ $donor['name'] ?? '' }}</p>
-                                        @endforeach
-                                    @endif
-                                </div>
-                                <div>
-                                    <label class="font-semibold text-gray-700">গ্রহীতার নাম:</label>
-                                    @if(isset($deed['recipient_names']))
-                                        @foreach($deed['recipient_names'] as $recipient)
-                                            <p class="text-gray-900">• {{ $recipient['name'] ?? '' }}</p>
-                                        @endforeach
-                                    @endif
-                                </div>
-                                <div>
-                                    <label class="font-semibold text-gray-700">দলিল নম্বর:</label>
-                                    <p class="text-gray-900">{{ $deed['deed_number'] ?? '' }}</p>
-                                </div>
-                                <div>
-                                    <label class="font-semibold text-gray-700">দলিলের তারিখ:</label>
-                                    <p class="text-gray-900">{{ $deed['deed_date'] ?? '' }}</p>
-                                </div>
-                                <div>
-                                    <label class="font-semibold text-gray-700">দলিলের ধরন:</label>
-                                    <p class="text-gray-900">{{ $deed['sale_type'] ?? '' }}</p>
-                                </div>
+                @if($item['itemType'] === 'deed')
+                    @php 
+                        $deedIndex = $item['itemIndex'];
+                        $deed = $deedTransfers[$deedIndex] ?? null;
+                        
+                        if ($deed) {
+                            $displayedDeeds[] = $deedIndex;
+                        }
+                    @endphp
+                    
+                    @if($deed)
+                        <div class="mb-4">
+                            <h3 class="font-semibold text-base mb-2 text-green-600">দলিল মূলে হস্তান্তর তথ্য</h3>
+                            <div class="mb-3 p-3 border border-gray-200 rounded-md bg-gray-50">
+                                <h4 class="font-semibold mb-2 text-sm">দলিল #{{ $deedIndex + 1 }}</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="font-semibold text-gray-700">দাতার নাম:</label>
+                                        @if(isset($deed['donor_names']) && is_array($deed['donor_names']))
+                                            @foreach($deed['donor_names'] as $donor)
+                                                <p class="text-gray-900">• {{ $donor['name'] ?? '' }}</p>
+                                            @endforeach
+                                        @else
+                                            <p class="text-gray-500 italic">তথ্য নেই</p>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <label class="font-semibold text-gray-700">গ্রহীতার নাম:</label>
+                                        @if(isset($deed['recipient_names']) && is_array($deed['recipient_names']))
+                                            @foreach($deed['recipient_names'] as $recipient)
+                                                <p class="text-gray-900">• {{ $recipient['name'] ?? '' }}</p>
+                                            @endforeach
+                                        @else
+                                            <p class="text-gray-500 italic">তথ্য নেই</p>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <label class="font-semibold text-gray-700">দলিল নম্বর:</label>
+                                        <p class="text-gray-900">{{ $deed['deed_number'] ?? 'তথ্য নেই' }}</p>
+                                    </div>
+                                    <div>
+                                        <label class="font-semibold text-gray-700">দলিলের তারিখ:</label>
+                                        <p class="text-gray-900">{{ $deed['deed_date'] ?? 'তথ্য নেই' }}</p>
+                                    </div>
+                                    <div>
+                                        <label class="font-semibold text-gray-700">দলিলের ধরন:</label>
+                                        <p class="text-gray-900">{{ $deed['sale_type'] ?? 'তথ্য নেই' }}</p>
+                                    </div>
 
-                                <!-- Application Area Fields -->
-                                @if(isset($deed['application_type']) && $deed['application_type'])
-                                <div>
-                                    <label class="font-semibold text-gray-700">আবেদনকৃত দাগের সুনির্দিষ্টভাবে বিক্রয়:</label>
-                                    <p class="text-gray-900">{{ $compensation->formatApplicationAreaString($deed) }}</p>
+                                    <!-- Application Area Fields -->
+                                    @if(isset($deed['application_type']) && $deed['application_type'])
+                                    <div>
+                                        <label class="font-semibold text-gray-700">আবেদনকৃত দাগের সুনির্দিষ্টভাবে বিক্রয়:</label>
+                                        <p class="text-gray-900">{{ $compensation->formatApplicationAreaString($deed) }}</p>
+                                    </div>
+                                    @endif
+                                    <div>
+                                        <label class="font-semibold text-gray-700">দখল উল্লেখ করা আছে কিনা:</label>
+                                        <p class="text-gray-900">{{ isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
+                                    </div>
+                                    @if(isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes')
+                                    <div>
+                                        <label class="font-semibold text-gray-700">দখলের দাগ নম্বর:</label>
+                                        <p class="text-gray-900">{{ $deed['possession_plot_no'] ?? '' }}</p>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="font-semibold text-gray-700">দখল এর বর্ণনা:</label>
+                                        <p class="text-gray-900">{{ $deed['possession_description'] ?? '' }}</p>
+                                    </div>
+                                    @endif
+                                    
+                                    <!-- New Possession Fields -->
+                                    <div>
+                                        <label class="font-semibold text-gray-700">দলিলের বিবরণ ও হস্তান্তরের সময় দখল উল্লেখ রয়েছে কিনা:</label>
+                                        <p class="text-gray-900">{{ isset($deed['possession_deed']) && $deed['possession_deed'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
+                                    </div>
+                                    <div>
+                                        <label class="font-semibold text-gray-700">আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা:</label>
+                                        <p class="text-gray-900">{{ isset($deed['possession_application']) && $deed['possession_application'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
+                                    </div>
+                                    @if(isset($deed['mentioned_areas']) && $deed['mentioned_areas'])
+                                    <div>
+                                        <label class="font-semibold text-gray-700">যে সকল দাগে দখল উল্লেখ করা:</label>
+                                        <p class="text-gray-900">{{ $deed['mentioned_areas'] }}</p>
+                                    </div>
+                                    @endif
+                                    @if(isset($deed['special_details']) && $deed['special_details'])
+                                    <div class="md:col-span-2">
+                                        <label class="font-semibold text-gray-700">প্রযোজ্যক্ষেত্রে দলিলের বিশেষ বিবরণ:</label>
+                                        <p class="text-gray-900">{{ $deed['special_details'] }}</p>
+                                    </div>
+                                    @endif
+                                    @if(isset($deed['tax_info']) && $deed['tax_info'])
+                                    <div class="md:col-span-2">
+                                        <label class="font-semibold text-gray-700">খারিজের তথ্য:</label>
+                                        <p class="text-gray-900">{{ $deed['tax_info'] }}</p>
+                                    </div>
+                                    @endif
                                 </div>
-                                @endif
-                                <div>
-                                    <label class="font-semibold text-gray-700">দখল উল্লেখ করা আছে কিনা:</label>
-                                    <p class="text-gray-900">{{ isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
-                                </div>
-                                @if(isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes')
-                                <div>
-                                    <label class="font-semibold text-gray-700">দখলের দাগ নম্বর:</label>
-                                    <p class="text-gray-900">{{ $deed['possession_plot_no'] ?? '' }}</p>
-                                </div>
-                                <div class="md:col-span-2">
-                                    <label class="font-semibold text-gray-700">দখল এর বর্ণনা:</label>
-                                    <p class="text-gray-900">{{ $deed['possession_description'] ?? '' }}</p>
-                                </div>
-                                @endif
-                                
-                                <!-- New Possession Fields -->
-                                <div>
-                                    <label class="font-semibold text-gray-700">দলিলের বিবরণ ও হস্তান্তরের সময় দখল উল্লেখ রয়েছে কিনা:</label>
-                                    <p class="text-gray-900">{{ isset($deed['possession_deed']) && $deed['possession_deed'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
-                                </div>
-                                <div>
-                                    <label class="font-semibold text-gray-700">আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা:</label>
-                                    <p class="text-gray-900">{{ isset($deed['possession_application']) && $deed['possession_application'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
-                                </div>
-                                @if(isset($deed['mentioned_areas']) && $deed['mentioned_areas'])
-                                <div>
-                                    <label class="font-semibold text-gray-700">যে সকল দাগে দখল উল্লেখ করা:</label>
-                                    <p class="text-gray-900">{{ $deed['mentioned_areas'] }}</p>
-                                </div>
-                                @endif
-                                @if(isset($deed['special_details']) && $deed['special_details'])
-                                <div class="md:col-span-2">
-                                    <label class="font-semibold text-gray-700">প্রযোজ্যক্ষেত্রে দলিলের বিশেষ বিবরণ:</label>
-                                    <p class="text-gray-900">{{ $deed['special_details'] }}</p>
-                                </div>
-                                @endif
-                                @if(isset($deed['tax_info']) && $deed['tax_info'])
-                                <div class="md:col-span-2">
-                                    <label class="font-semibold text-gray-700">খারিজের তথ্য:</label>
-                                    <p class="text-gray-900">{{ $deed['tax_info'] }}</p>
-                                </div>
-                                @endif
                             </div>
                         </div>
-                    </div>
+                    @endif
                 @elseif($item['itemType'] === 'inheritance' && isset($inheritanceRecords[$item['itemIndex']]))
                     @php $inheritance = $inheritanceRecords[$item['itemIndex']]; $displayedInheritances[] = $item['itemIndex']; @endphp
                     <div class="mb-6">
@@ -567,6 +581,25 @@
                             </div>
                         </div>
                     </div>
+                @elseif($item['itemType'] === 'deed')
+                    <!-- Debug: Show why deed is not being displayed -->
+                    <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <h4 class="font-semibold text-red-800 mb-2">Debug: Deed not displayed</h4>
+                        <div class="text-sm text-red-700">
+                            <p>Item Type: {{ $item['itemType'] }}</p>
+                            <p>Item Index: {{ $item['itemIndex'] }} (Type: {{ gettype($item['itemIndex']) }})</p>
+                            <p>Deed Transfers Count: {{ count($deedTransfers) }}</p>
+                            <p>Deed Transfers Keys: {{ implode(', ', array_keys($deedTransfers)) }}</p>
+                            <p>Deed Transfers Keys Types: 
+                                @foreach(array_keys($deedTransfers) as $key)
+                                    {{ $key }}({{ gettype($key) }}){{ !$loop->last ? ', ' : '' }}
+                                @endforeach
+                            </p>
+                            <p>isset($deedTransfers[{{ $item['itemIndex'] }}]): {{ isset($deedTransfers[$item['itemIndex']]) ? 'true' : 'false' }}</p>
+                            <p>array_key_exists({{ $item['itemIndex'] }}, $deedTransfers): {{ array_key_exists($item['itemIndex'], $deedTransfers) ? 'true' : 'false' }}</p>
+                            <p>Direct access test: {{ isset($deedTransfers[0]) ? 'Index 0 exists' : 'Index 0 missing' }}, {{ isset($deedTransfers[1]) ? 'Index 1 exists' : 'Index 1 missing' }}, {{ isset($deedTransfers[2]) ? 'Index 2 exists' : 'Index 2 missing' }}</p>
+                        </div>
+                    </div>
                 @endif
             @endforeach
             
@@ -610,7 +643,7 @@
                                 <!-- Application Area Fields -->
                                 @if(isset($deed['application_type']) && $deed['application_type'])
                                 <div>
-                                    <label class="font-semibold text-gray-700">আবেদনকৃত দাগে সুনির্দিষ্টভাবে বিক্রয়:</label>
+                                    <label class="font-semibold text-gray-700">আবেদনকৃত দাগের সুনির্দিষ্টভাবে বিক্রয়:</label>
                                     <p class="text-gray-900">{{ $compensation->formatApplicationAreaString($deed) }}</p>
                                 </div>
                                 @endif

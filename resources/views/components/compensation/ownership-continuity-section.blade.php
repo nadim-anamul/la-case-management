@@ -786,11 +786,14 @@ document.addEventListener('alpine:init', () => {
             if (data.deed_transfers) this.deed_transfers = [...data.deed_transfers];
             if (data.inheritance_records) this.inheritance_records = [...data.inheritance_records];
             if (data.rs_records) this.rs_records = [...data.rs_records];
-            if (data.storySequence) this.storySequence = [...data.storySequence];
             if (data.currentStep) this.currentStep = data.currentStep;
             if (data.completedSteps) this.completedSteps = [...data.completedSteps];
             if (data.rs_record_disabled !== undefined) this.rs_record_disabled = data.rs_record_disabled;
             if (data.acquisition_record_basis) this.acquisition_record_basis = data.acquisition_record_basis;
+            
+            // Always regenerate story sequence from actual data instead of using stored story sequence
+            // This ensures the correct information is displayed
+            this.generateStorySequence();
             
             // Update completed steps after loading data
             this.updateCompletedSteps();
@@ -806,11 +809,14 @@ document.addEventListener('alpine:init', () => {
             if (data.deed_transfers) this.deed_transfers = [...data.deed_transfers];
             if (data.inheritance_records) this.inheritance_records = [...data.inheritance_records];
             if (data.rs_records) this.rs_records = [...data.rs_records];
-            if (data.storySequence) this.storySequence = [...data.storySequence];
             if (data.currentStep) this.currentStep = data.currentStep;
             if (data.completedSteps) this.completedSteps = [...data.completedSteps];
             if (data.rs_record_disabled !== undefined) this.rs_record_disabled = data.rs_record_disabled;
             if (data.acquisition_record_basis) this.acquisition_record_basis = data.acquisition_record_basis;
+            
+            // Always regenerate story sequence from actual data instead of using stored story sequence
+            // This ensures the correct information is displayed
+            this.generateStorySequence();
             
             // Update completed steps after loading data
             this.updateCompletedSteps();
@@ -822,9 +828,15 @@ document.addEventListener('alpine:init', () => {
             
             // Add deed transfers
             this.deed_transfers.forEach((deed, index) => {
+                // Helper function to check if a value is meaningful
+                const hasValue = (value) => value && value.toString().trim() !== '';
+                
+                const deedNumber = hasValue(deed.deed_number) ? deed.deed_number : 'অনির্ধারিত';
+                const deedDate = hasValue(deed.deed_date) ? deed.deed_date : 'অনির্ধারিত';
+                
                 this.storySequence.push({
                     type: 'দলিলমূলে মালিকানা হস্তান্তর',
-                    description: `দলিল নম্বর: ${deed.deed_number || 'অনির্ধারিত'}, তারিখ: ${deed.deed_date || 'অনির্ধারিত'}`,
+                    description: `দলিল নম্বর: ${deedNumber}, তারিখ: ${deedDate}`,
                     itemType: 'deed',
                     itemIndex: index,
                     sequenceIndex: index
@@ -833,9 +845,12 @@ document.addEventListener('alpine:init', () => {
             
             // Add inheritance records
             this.inheritance_records.forEach((inheritance, index) => {
+                const hasValue = (value) => value && value.toString().trim() !== '';
+                const previousOwner = hasValue(inheritance.previous_owner_name) ? inheritance.previous_owner_name : 'অনির্ধারিত';
+                
                 this.storySequence.push({
                     type: 'ওয়ারিশমূলে হস্তান্তর',
-                    description: `পূর্ববর্তী মালিক: ${inheritance.previous_owner_name || 'অনির্ধারিত'}`,
+                    description: `পূর্ববর্তী মালিক: ${previousOwner}`,
                     itemType: 'inheritance',
                     itemIndex: index,
                     sequenceIndex: this.storySequence.length
@@ -844,9 +859,12 @@ document.addEventListener('alpine:init', () => {
             
             // Add RS records
             this.rs_records.forEach((rs, index) => {
+                const hasValue = (value) => value && value.toString().trim() !== '';
+                const plotNo = hasValue(rs.plot_no) ? rs.plot_no : 'অনির্ধারিত';
+                
                 this.storySequence.push({
                     type: 'আরএস রেকর্ড যোগ',
-                    description: `দাগ নম্বর: ${rs.plot_no || 'অনির্ধারিত'}`,
+                    description: `দাগ নম্বর: ${plotNo}`,
                     itemType: 'rs',
                     itemIndex: index,
                     sequenceIndex: this.storySequence.length
@@ -956,6 +974,31 @@ document.addEventListener('alpine:init', () => {
                     deed.application_total_area = (specific + sell).toFixed(2);
                 }
             }
+        },
+        
+        // Get application area validation status
+        getApplicationAreaValidation(deed) {
+            if (!deed.application_type) {
+                return { hasError: false, message: '' };
+            }
+            
+            if (deed.application_type === 'specific') {
+                if (!deed.application_specific_area || !deed.application_sell_area) {
+                    return { 
+                        hasError: true, 
+                        message: 'সুনির্দিষ্ট দাগ এবং বিক্রয়কৃত জমির পরিমাণ প্রয়োজন' 
+                    };
+                }
+            } else if (deed.application_type === 'multiple') {
+                if (!deed.application_other_areas || !deed.application_total_area || !deed.application_sell_area_other) {
+                    return { 
+                        hasError: true, 
+                        message: 'বিভিন্ন দাগ, মোট জমির পরিমাণ এবং বিক্রয়কৃত জমির পরিমাণ প্রয়োজন' 
+                    };
+                }
+            }
+            
+            return { hasError: false, message: '' };
         },
         
         // Check if step is valid
@@ -1074,8 +1117,41 @@ document.addEventListener('alpine:init', () => {
         
         // Remove story item
         removeStoryItem(index) {
-            this.storySequence.splice(index, 1);
-            this.updateCompletedSteps();
+            const item = this.storySequence[index];
+            
+            if (item) {
+                // Remove from the corresponding data array based on item type
+                if (item.itemType === 'deed' && typeof item.itemIndex === 'number') {
+                    // Remove deed transfer
+                    if (this.deed_transfers[item.itemIndex]) {
+                        this.deed_transfers.splice(item.itemIndex, 1);
+                        console.log(`Removed deed transfer at index ${item.itemIndex}`);
+                    }
+                } else if (item.itemType === 'inheritance' && typeof item.itemIndex === 'number') {
+                    // Remove inheritance record
+                    if (this.inheritance_records[item.itemIndex]) {
+                        this.inheritance_records.splice(item.itemIndex, 1);
+                        console.log(`Removed inheritance record at index ${item.itemIndex}`);
+                    }
+                } else if (item.itemType === 'rs' && typeof item.itemIndex === 'number') {
+                    // Remove RS record
+                    if (this.rs_records[item.itemIndex]) {
+                        this.rs_records.splice(item.itemIndex, 1);
+                        console.log(`Removed RS record at index ${item.itemIndex}`);
+                    }
+                }
+                
+                // Remove from story sequence
+                this.storySequence.splice(index, 1);
+                
+                // Regenerate story sequence to update indices
+                this.generateStorySequence();
+                
+                // Update completed steps
+                this.updateCompletedSteps();
+                
+                console.log('Story item removed and data arrays updated');
+            }
         },
         
         // Scroll to story item
