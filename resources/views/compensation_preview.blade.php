@@ -1388,6 +1388,14 @@
                     <span class="text-white font-bold text-base">কানুনগো/সার্ভেয়ারের মতামত</span>
                 </div>
             </button>
+            <button type="button" onclick="openFinalOrderModal({{ $compensation->id }})" class="action-card bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="text-white font-bold text-base">চূড়ান্ত আদেশ</span>
+                </div>
+            </button>
 
             <button type="button" onclick="openOrderModal({{ $compensation->id }})" class="action-card bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
                 <div class="flex items-center justify-center space-x-2">
@@ -1398,24 +1406,8 @@
                 </div>
             </button>
 
-            <button type="button" onclick="openFinalOrderModal({{ $compensation->id }})" class="action-card bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700">
-                <div class="flex items-center justify-center space-x-2">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <span class="text-white font-bold text-base">চূড়ান্ত আদেশ</span>
-                </div>
-            </button>
+            
 
-            <!-- <a href="{{ route('compensation.final-order.preview', $compensation->id) }}" target="_blank" class="action-card bg-gradient-to-br from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700">
-                <div class="flex items-center justify-center space-x-2">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                    </svg>
-                    <span class="text-white font-bold text-base">চূড়ান্ত আদেশ প্রিভিউ</span>
-                </div>
-            </a> -->
         </div>
     </div>
 

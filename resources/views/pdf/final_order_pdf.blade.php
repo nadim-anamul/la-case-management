@@ -1,35 +1,76 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <title>চুড়ান্ত অর্ডারশিট ডাউনলোড</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-@section('title', 'চুড়ান্ত অর্ডারশিট প্রিভিউ')
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-@section('content')
-<div class="container mx-auto px-4 py-8">
-    <!-- Back Button and Actions -->
-    <div class="mb-6 flex justify-between items-center">
-        <a href="{{ route('compensation.preview', $compensation->id) }}" class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-bold rounded">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-            </svg>
-            ফিরে যান
-        </a>
-        <div class="flex space-x-3">
-            <a href="{{ route('compensation.final-order.pdf', $compensation->id) }}" target="_blank" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-                PDF ডাউনলোড করুন
-            </a>
-        </div>
-    </div>
-
-    @if(session('error'))
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-        {{ session('error') }}
-    </div>
-    @endif
-
-    <!-- Present Content -->
-    <div class="bg-white w-[21cm] min-h-[29.7cm] mx-auto my-8 p-10 shadow-lg text-[16px] leading-8">
+  <!-- Embedded Noto Serif Bengali font -->
+  <style>
+    @page {
+      size: A4;
+      margin: 15mm;
+    }
+    @font-face {
+      font-family: 'Noto Serif Bengali';
+      font-style: normal;
+      font-weight: 400;
+      src: url('https://fonts.gstatic.com/s/notoserifbengali/v1/yYLrQh9-fIXkJvOfkYQ2bL3XYPFvqA.woff2') format('woff2');
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Serif Bengali', serif;
+    }
+    .a4 {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      padding: 15mm;
+      background: white;
+      box-sizing: border-box;
+    }
+    table {
+      table-layout: fixed;
+    }
+    /* Calculation table print safety and compact spacing */
+    .calc-table { 
+      width: 100%;
+      border-collapse: collapse; 
+      table-layout: fixed; 
+      margin-bottom: 6mm; 
+    }
+    .calc-table thead { display: table-header-group; }
+    .calc-table tfoot { display: table-footer-group; }
+    .calc-table tr,
+    .calc-table th,
+    .calc-table td { page-break-inside: avoid; }
+    .calc-table th,
+    .calc-table td { padding: 6px 8px; vertical-align: middle; word-break: break-word; }
+    .avoid-break { page-break-inside: avoid; }
+    /* Headings shouldn't be stranded at page end and should have breathing room */
+    h1, h2, h3, h4, strong { page-break-after: avoid; }
+    h1, h2, h3, h4 { margin-top: 6mm; }
+    /* Tighten default spacing */
+    .mb-6 { margin-bottom: 10px !important; }
+    .my-8 { margin-top: 12px !important; margin-bottom: 12px !important; }
+    @media print {
+      body { margin: 0; }
+      .a4 { 
+        width: 210mm; 
+        min-height: 297mm; 
+        margin: 0; 
+        padding: 15mm;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="a4">
         <!-- Title -->
         <h1 class="text-center text-lg font-bold">আদেশ পত্র</h1>
         <p class="text-center text-sm mb-4">( ১৯১৭ সালের রেকর্ড ম্যানুয়েলের ১২৯ নং বিধি )</p>
@@ -416,7 +457,15 @@
                   <br><br>
                   
                   <!-- Compensation Details Table -->
-                  <table class="w-full border border-black border-collapse mb-4">
+                  <table class="calc-table w-full border border-black border-collapse mb-4">
+                      <colgroup>
+                          <col style="width:16%">
+                          <col style="width:12%">
+                          <col style="width:12%">
+                          <col style="width:16%">
+                          <col style="width:22%">
+                          <col style="width:22%">
+                      </colgroup>
                       <thead>
                           <tr>
                               <th class="border border-black p-2 text-center">রোয়েদাদ নং</th>
@@ -640,5 +689,6 @@
           </tbody>
         </table>
     </div>
-</div>
-@endsection
+  </div>
+</body>
+</html>

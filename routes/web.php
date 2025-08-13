@@ -43,6 +43,7 @@ Route::put('/compensation/{id}/order', [CompensationController::class, 'updateOr
 Route::get('/compensation/{id}/final-order', [CompensationController::class, 'getFinalOrder'])->name('compensation.final-order.get');
 Route::put('/compensation/{id}/final-order', [CompensationController::class, 'updateFinalOrder'])->name('compensation.final-order.update');
 Route::get('/compensation/{id}/final-order/preview', [CompensationController::class, 'finalOrderPreview'])->name('compensation.final-order.preview');
+Route::get('/compensation/{id}/final-order/pdf', [CompensationController::class, 'generateFinalOrderPdf'])->name('compensation.final-order.pdf');
 
 // Action Routes
 Route::get('/compensation/{id}/present', [CompensationController::class, 'present'])->name('compensation.present');

@@ -694,6 +694,41 @@ class CompensationController extends Controller
     }
 
     /**
+     * Generate PDF for final order using Browsershot
+     */
+    public function generateFinalOrderPdf($id)
+    {
+        // Increase execution time limit for PDF generation
+        set_time_limit(120);
+        ini_set('memory_limit', '256M');
+
+        $compensation = Compensation::findOrFail($id);
+
+        try {
+            // Render the dedicated PDF view for final order
+            $html = view('pdf.final_order_pdf', compact('compensation'))->render();
+
+            $pdf = PdfGeneratorService::generateFromHtml($html, [
+                'timeout' => 120,
+                'margins' => [10, 10, 10, 10],
+                'showBackground' => true,
+                'waitUntilNetworkIdle' => true
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Final Order PDF generation error: ' . $e->getMessage());
+
+            // Fallback: show HTML preview if PDF generation fails
+            return view('compensation.final_order_preview', compact('compensation'))
+                ->with('error', 'PDF তৈরি করতে সমস্যা হয়েছে। HTML ভার্সন দেখানো হচ্ছে।');
+        }
+
+        return response($pdf, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="final_order_'.$compensation->id.'.pdf"',
+        ]);
+    }
+
+    /**
      * Print application and document analysis
      */
     public function analysis($id)
