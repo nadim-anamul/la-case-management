@@ -9,6 +9,7 @@
         <input type="hidden" name="ownership_details[currentStep]" :value="currentStep">
         <input type="hidden" name="ownership_details[completedSteps]" :value="JSON.stringify(completedSteps)">
         <input type="hidden" name="ownership_details[rs_record_disabled]" :value="rs_record_disabled">
+        <input type="hidden" name="ownership_details[nextCreationOrder]" :value="nextCreationOrder">
         
         <!-- Hidden fields for arrays to ensure data persistence -->
         <input type="hidden" name="ownership_details[sa_owners]" :value="JSON.stringify(sa_owners)">
@@ -684,6 +685,7 @@ document.addEventListener('alpine:init', () => {
         completedSteps: [],
         currentStep: 'info',
         rs_record_disabled: false,
+        nextCreationOrder: 1,
         
         // Alert system
         alert: {
@@ -702,6 +704,9 @@ document.addEventListener('alpine:init', () => {
             if (this.deed_transfers.length === 0) this.deed_transfers = [];
             if (this.inheritance_records.length === 0) this.inheritance_records = [];
             if (this.rs_records.length === 0) this.rs_records = [];
+            
+            // Ensure all existing items have creation orders
+            this.ensureCreationOrders();
             
             // Generate story sequence if empty
             if (this.storySequence.length === 0) {
@@ -794,6 +799,10 @@ document.addEventListener('alpine:init', () => {
             if (data.completedSteps) this.completedSteps = [...data.completedSteps];
             if (data.rs_record_disabled !== undefined) this.rs_record_disabled = data.rs_record_disabled;
             if (data.acquisition_record_basis) this.acquisition_record_basis = data.acquisition_record_basis;
+            if (data.nextCreationOrder) this.nextCreationOrder = data.nextCreationOrder;
+            
+            // Ensure all existing items have creation orders
+            this.ensureCreationOrders();
             
             // Always regenerate story sequence from actual data instead of using stored story sequence
             // This ensures the correct information is displayed
@@ -817,6 +826,10 @@ document.addEventListener('alpine:init', () => {
             if (data.completedSteps) this.completedSteps = [...data.completedSteps];
             if (data.rs_record_disabled !== undefined) this.rs_record_disabled = data.rs_record_disabled;
             if (data.acquisition_record_basis) this.acquisition_record_basis = data.acquisition_record_basis;
+            if (data.nextCreationOrder) this.nextCreationOrder = data.nextCreationOrder;
+            
+            // Ensure all existing items have creation orders
+            this.ensureCreationOrders();
             
             // Always regenerate story sequence from actual data instead of using stored story sequence
             // This ensures the correct information is displayed
@@ -830,49 +843,93 @@ document.addEventListener('alpine:init', () => {
         generateStorySequence() {
             this.storySequence = [];
             
-            // Add deed transfers
+            // Create a combined array with all items and their creation order
+            const allItems = [];
+            
+            // Add deed transfers with their creation order
             this.deed_transfers.forEach((deed, index) => {
-                // Helper function to check if a value is meaningful
                 const hasValue = (value) => value && value.toString().trim() !== '';
-                
                 const deedNumber = hasValue(deed.deed_number) ? deed.deed_number : 'অনির্ধারিত';
                 const deedDate = hasValue(deed.deed_date) ? deed.deed_date : 'অনির্ধারিত';
                 
-                this.storySequence.push({
+                allItems.push({
                     type: 'দলিলমূলে মালিকানা হস্তান্তর',
                     description: `দলিল নম্বর: ${deedNumber}, তারিখ: ${deedDate}`,
                     itemType: 'deed',
                     itemIndex: index,
-                    sequenceIndex: index
+                    creationOrder: deed.creationOrder || 0
                 });
             });
             
-            // Add inheritance records
+            // Add inheritance records with their creation order
             this.inheritance_records.forEach((inheritance, index) => {
                 const hasValue = (value) => value && value.toString().trim() !== '';
                 const previousOwner = hasValue(inheritance.previous_owner_name) ? inheritance.previous_owner_name : 'অনির্ধারিত';
                 
-                this.storySequence.push({
+                allItems.push({
                     type: 'ওয়ারিশমূলে হস্তান্তর',
                     description: `পূর্ববর্তী মালিক: ${previousOwner}`,
                     itemType: 'inheritance',
                     itemIndex: index,
-                    sequenceIndex: this.storySequence.length
+                    creationOrder: inheritance.creationOrder || 0
                 });
             });
             
-            // Add RS records
+            // Add RS records with their creation order
             this.rs_records.forEach((rs, index) => {
                 const hasValue = (value) => value && value.toString().trim() !== '';
                 const plotNo = hasValue(rs.plot_no) ? rs.plot_no : 'অনির্ধারিত';
                 
-                this.storySequence.push({
+                allItems.push({
                     type: 'আরএস রেকর্ড যোগ',
                     description: `দাগ নম্বর: ${plotNo}`,
                     itemType: 'rs',
                     itemIndex: index,
-                    sequenceIndex: this.storySequence.length
+                    creationOrder: rs.creationOrder || 0
                 });
+            });
+            
+            // Sort by creation order to maintain the sequence in which items were added
+            allItems.sort((a, b) => a.creationOrder - b.creationOrder);
+            
+            // Add sequence index for display
+            allItems.forEach((item, index) => {
+                item.sequenceIndex = index;
+            });
+            
+            // Debug logging
+            console.log('Generated story sequence:', this.storySequence);
+            console.log('All items before sorting:', allItems);
+            
+            this.storySequence = allItems;
+        },
+        
+        // Get next creation order number
+        getNextCreationOrder() {
+            return this.nextCreationOrder++;
+        },
+        
+        // Ensure all existing items have creation orders
+        ensureCreationOrders() {
+            // Assign creation orders to deed transfers if they don't have them
+            this.deed_transfers.forEach((deed, index) => {
+                if (deed.creationOrder === undefined) {
+                    deed.creationOrder = this.getNextCreationOrder();
+                }
+            });
+            
+            // Assign creation orders to inheritance records if they don't have them
+            this.inheritance_records.forEach((inheritance, index) => {
+                if (inheritance.creationOrder === undefined) {
+                    inheritance.creationOrder = this.getNextCreationOrder();
+                }
+            });
+            
+            // Assign creation orders to RS records if they don't have them
+            this.rs_records.forEach((rs, index) => {
+                if (rs.creationOrder === undefined) {
+                    rs.creationOrder = this.getNextCreationOrder();
+                }
             });
         },
         
@@ -884,6 +941,8 @@ document.addEventListener('alpine:init', () => {
         
         // Add new deed transfer
         addDeedTransfer() {
+            const creationOrder = this.getNextCreationOrder();
+            console.log('Adding deed transfer with creation order:', creationOrder);
             this.deed_transfers.push({
                 donor_names: [{'name': ''}],
                 recipient_names: [{'name': ''}],
@@ -900,7 +959,8 @@ document.addEventListener('alpine:init', () => {
                 possession_application: 'yes',
                 mentioned_areas: '',
                 special_details: '',
-                tax_info: ''
+                tax_info: '',
+                creationOrder: creationOrder
             });
             this.updateStorySequence();
         },
@@ -913,11 +973,14 @@ document.addEventListener('alpine:init', () => {
         
         // Add new inheritance record
         addInheritanceRecord() {
+            const creationOrder = this.getNextCreationOrder();
+            console.log('Adding inheritance record with creation order:', creationOrder);
             this.inheritance_records.push({
                 previous_owner_name: '',
                 death_date: '',
                 has_death_cert: 'yes',
-                heirship_certificate_info: ''
+                heirship_certificate_info: '',
+                creationOrder: creationOrder
             });
             this.updateStorySequence();
         },
@@ -930,12 +993,15 @@ document.addEventListener('alpine:init', () => {
         
         // Add new RS record
         addRsRecord() {
+            const creationOrder = this.getNextCreationOrder();
+            console.log('Adding RS record with creation order:', creationOrder);
             this.rs_records.push({
                 owner_names: [{'name': ''}],
                 plot_no: '',
                 khatian_no: '',
                 land_amount: '',
-                dp_khatian: false
+                dp_khatian: false,
+                creationOrder: creationOrder
             });
             this.updateStorySequence();
         },
@@ -1148,7 +1214,7 @@ document.addEventListener('alpine:init', () => {
                 // Remove from story sequence
                 this.storySequence.splice(index, 1);
                 
-                // Regenerate story sequence to update indices
+                // Regenerate story sequence to update indices and maintain order
                 this.generateStorySequence();
                 
                 // Update completed steps
@@ -1212,7 +1278,8 @@ document.addEventListener('alpine:init', () => {
                 storySequence: this.storySequence,
                 currentStep: this.currentStep,
                 completedSteps: this.completedSteps,
-                rs_record_disabled: this.rs_record_disabled
+                rs_record_disabled: this.rs_record_disabled,
+                nextCreationOrder: this.nextCreationOrder
             }));
             
             this.showAlert('success', 'বর্তমান ধাপের তথ্য সংরক্ষণ করা হয়েছে');
@@ -1233,7 +1300,8 @@ document.addEventListener('alpine:init', () => {
                 storySequence: this.storySequence,
                 currentStep: this.currentStep,
                 completedSteps: this.completedSteps,
-                rs_record_disabled: this.rs_record_disabled
+                rs_record_disabled: this.rs_record_disabled,
+                nextCreationOrder: this.nextCreationOrder
             }));
             
             this.showAlert('success', 'সব তথ্য সফলভাবে সংরক্ষণ করা হয়েছে');
@@ -1271,4 +1339,5 @@ document.addEventListener('alpine:init', () => {
     .btn-success, .btn-danger { min-width: 36px; min-height: 36px; font-size: 0.95rem; }
     .stepper-step { width: 28px !important; height: 28px !important; font-size: 0.95rem !important; }
 }
+</style>
 </style>
