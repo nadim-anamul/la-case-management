@@ -440,11 +440,11 @@
                               if (isset($finalOrder['land']) && $finalOrder['land']['selected']) {
                                   if (isset($finalOrder['land']['categories']) && is_array($finalOrder['land']['categories'])) {
                                       foreach ($finalOrder['land']['categories'] as $category) {
-                                          $finalOrderLand += floatval($category['acquired_land'] ?? 0);
+                                          $finalOrderLand += floatval($compensation->enDigits($category['acquired_land'] ?? 0));
                                       }
                                   } elseif (isset($finalOrder['land']['records']) && is_array($finalOrder['land']['records'])) {
                                       foreach ($finalOrder['land']['records'] as $record) {
-                                          $finalOrderLand += floatval($record['area'] ?? 0);
+                                          $finalOrderLand += floatval($compensation->enDigits($record['area'] ?? 0));
                                       }
                                   }
                                   // Get land compensation from land_category total
@@ -456,11 +456,11 @@
                               }
                               
                               if (isset($finalOrder['trees_crops']) && $finalOrder['trees_crops']['selected']) {
-                                  $finalOrderTreeCompensation = floatval($finalOrder['trees_crops']['amount'] ?? 0);
+                                  $finalOrderTreeCompensation = floatval($compensation->enDigits($finalOrder['trees_crops']['amount'] ?? 0));
                               }
                               
                               if (isset($finalOrder['infrastructure']) && $finalOrder['infrastructure']['selected']) {
-                                  $finalOrderInfrastructureCompensation = floatval($finalOrder['infrastructure']['amount'] ?? 0);
+                                  $finalOrderInfrastructureCompensation = floatval($compensation->enDigits($finalOrder['infrastructure']['amount'] ?? 0));
                               }
                               
                               // Get award data from রোয়েদাদের তথ্যঃ section

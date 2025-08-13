@@ -170,6 +170,24 @@ trait BengaliDateTrait
     }
 
     /**
+     * Convert Bengali numerals to English numerals (internal)
+     */
+    private function convertToEnglishNumerals($number)
+    {
+        $bengaliNumerals = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+        $englishNumerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        return str_replace($bengaliNumerals, $englishNumerals, (string)$number);
+    }
+
+    /**
+     * Public helper: Convert Bengali numerals to English numerals
+     */
+    public function enDigits($value)
+    {
+        return $this->convertToEnglishNumerals((string)$value);
+    }
+
+    /**
      * Process date fields in the request data
      */
     public function processBengaliDates($data)
