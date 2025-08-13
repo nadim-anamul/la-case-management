@@ -42,6 +42,7 @@ Route::put('/compensation/{id}/order', [CompensationController::class, 'updateOr
 // Final Order Routes
 Route::get('/compensation/{id}/final-order', [CompensationController::class, 'getFinalOrder'])->name('compensation.final-order.get');
 Route::put('/compensation/{id}/final-order', [CompensationController::class, 'updateFinalOrder'])->name('compensation.final-order.update');
+Route::get('/compensation/{id}/final-order/preview', [CompensationController::class, 'finalOrderPreview'])->name('compensation.final-order.preview');
 
 // Action Routes
 Route::get('/compensation/{id}/present', [CompensationController::class, 'present'])->name('compensation.present');

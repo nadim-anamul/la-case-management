@@ -1225,9 +1225,14 @@
     <!-- Final Order Information -->
     @if($compensation->final_order)
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
-        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
-            চূড়ান্ত আদেশ
-        </h2>
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="text-lg font-semibold text-blue-600 border-b border-blue-200 pb-2">
+                চূড়ান্ত আদেশ
+            </h2>
+            <a href="{{ route('compensation.final-order.preview', $compensation->id) }}" target="_blank" class="bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold text-base py-2 px-4 rounded">
+                চূড়ান্ত আদেশ প্রিভিউ দেখুন
+            </a>
+        </div>
         
         @if(isset($compensation->final_order['land']) && $compensation->final_order['land']['selected'])
         <div class="mb-4">
@@ -1401,6 +1406,16 @@
                     <span class="text-white font-bold text-base">চূড়ান্ত আদেশ</span>
                 </div>
             </button>
+
+            <!-- <a href="{{ route('compensation.final-order.preview', $compensation->id) }}" target="_blank" class="action-card bg-gradient-to-br from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    <span class="text-white font-bold text-base">চূড়ান্ত আদেশ প্রিভিউ</span>
+                </div>
+            </a> -->
         </div>
     </div>
 

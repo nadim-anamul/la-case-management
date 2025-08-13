@@ -890,4 +890,19 @@ class CompensationController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Show final order preview page
+     */
+    public function finalOrderPreview($id)
+    {
+        try {
+            $compensation = Compensation::findOrFail($id);
+            return view('compensation.final_order_preview', compact('compensation'));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Final order preview error: ' . $e->getMessage());
+            return redirect()->route('compensation.preview', $id)
+                ->with('error', 'চূড়ান্ত আদেশ প্রিভিউ দেখানো সম্ভব নয়: ' . $e->getMessage());
+        }
+    }
 }
