@@ -106,12 +106,23 @@
                     {{ $compensation->award_type ?? 'N/A' }}
                 @endif
             </p>
-            @php
-                $total_land = isset($compensation->total_land_amount) ? $compensation->bnDigits($compensation->total_land_amount) : 'N/A';
-                $applicant_acquired_land = isset($compensation->applicant_acquired_land) ? $compensation->bnDigits($compensation->applicant_acquired_land) : 'N/A';
-            @endphp
-            <p>অধিগ্রহণকৃত জমির পরিমাণ (একরে): {{ $total_land }}</p>
-            <p>দাবীকৃত জমির পরিমাণ (একরে): {{ $applicant_acquired_land }}</p>
+            @if($compensation->award_type && is_array($compensation->award_type))
+              @if(in_array('জমি', $compensation->award_type) && $compensation->land_category && is_array($compensation->land_category))
+                  @foreach($compensation->land_category as $index => $category)
+                      <p class="ml-4">• জমির রোয়েদাদ নং {{ $compensation->bnDigits($compensation->land_award_serial_no ?? 'N/A') }}: {{ $category['category_name'] ?? 'N/A' }} - {{ $compensation->bnDigits(number_format($category['total_land'] ?? 0, 4)) }} একর জমি, ক্ষতিপূরণ: {{ $compensation->bnDigits(number_format($category['total_compensation'] ?? 0, 2)) }} টাকা</p>
+                  @endforeach
+              @endif
+              
+              @if(in_array('গাছপালা/ফসল', $compensation->award_type) && $compensation->tree_compensation)
+                  <p class="ml-4">• গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->bnDigits($compensation->tree_award_serial_no ?? 'N/A') }}: ক্ষতিপূরণ {{ $compensation->bnDigits(number_format($compensation->tree_compensation, 2)) }} টাকা</p>
+              @endif
+              
+              @if(in_array('অবকাঠামো', $compensation->award_type) && $compensation->infrastructure_compensation)
+                  <p class="ml-4">• অবকাঠামোর রোয়েদাদ নং {{ $compensation->bnDigits($compensation->infrastructure_award_serial_no ?? 'N/A') }}: ক্ষতিপূরণ {{ $compensation->bnDigits(number_format($compensation->infrastructure_compensation, 2)) }} টাকা</p>
+              @endif
+          @else
+              <p class="ml-4">কোন রোয়েদাদ পাওয়া যায়নি</p>
+          @endif
             
             <br>
             <p>আবেদিত জমি {{ $compensation->la_case_no ?? 'N/A' }} নং এল.এ কেসে অধিগ্রহণ করা হয়েছে। উক্ত জমির ক্ষতিপূরণ বাবদ 
