@@ -117,50 +117,6 @@
         <h2 class="section-header">
             রোয়েদাদের তথ্য
         </h2>
-        
-        <!-- Award Summary -->
-        <div class="award-summary">
-            <div class="summary-grid">
-                <div class="summary-box">
-                    <label>মোট জমির পরিমাণ:</label>
-                    <span class="highlight-value">
-                        @php
-                            $totalLand = 0;
-                            if($compensation->land_category && is_array($compensation->land_category)) {
-                                foreach($compensation->land_category as $category) {
-                                    $totalLand += floatval($category['total_land'] ?? 0);
-                                }
-                            }
-                            echo $compensation->bnDigits(number_format($totalLand, 6)) . ' একর';
-                        @endphp
-                    </span>
-                </div>
-                <div class="summary-box">
-                    <label>মোট ক্ষতিপূরণ:</label>
-                    <span class="highlight-value">
-                        @php
-                            $totalCompensation = 0;
-                            if($compensation->land_category && is_array($compensation->land_category)) {
-                                foreach($compensation->land_category as $category) {
-                                    $totalCompensation += floatval($category['total_compensation'] ?? 0);
-                                }
-                            }
-                            echo $compensation->bnDigits(number_format($totalCompensation, 2)) . ' টাকা';
-                        @endphp
-                    </span>
-                </div>
-                <div class="summary-box">
-                    <label>উৎস কর %:</label>
-                    <span>{{ $compensation->getBengaliValue('source_tax_percentage') }}</span>
-                </div>
-                <div class="summary-box">
-                    <label>আবেদনকারী রোয়েদাদে আছে:</label>
-                    <span class="status-badge {{ $compensation->is_applicant_in_award ? 'status-yes' : 'status-no' }}">
-                        {{ $compensation->is_applicant_in_award ? 'হ্যাঁ' : 'না' }}
-                    </span>
-                </div>
-            </div>
-        </div>
 
         <!-- Award Holders -->
         @if($compensation->award_holder_names && count($compensation->award_holder_names) > 0)
@@ -201,10 +157,22 @@
         <div class="additional-compensation">
             <h3 class="subsection-title">অতিরিক্ত ক্ষতিপূরণের তথ্য</h3>
             <div class="compensation-grid">
+                @if($compensation->tree_award_serial_no)
+                <div>
+                    <label class="font-semibold text-gray-700">গাছপালা/ফসলের রোয়েদাদ নং</label>
+                    <p class="text-gray-900">{{ $compensation->getBengaliValue('tree_award_serial_no') }}</p>
+                </div>
+                @endif
                 @if($compensation->tree_compensation)
                 <div class="compensation-item">
                     <label>গাছপালার ক্ষতিপূরণ:</label>
                     <span class="highlight-value">{{ $compensation->tree_compensation }}</span>
+                </div>
+                @endif
+                @if($compensation->infrastructure_award_serial_no)
+                <div class="compensation-item">
+                    <label class="font-semibold text-gray-700">অবকাঠামোর রোয়েদাদ নং:</label>
+                    <p class="text-gray-900">{{ $compensation->getBengaliValue('infrastructure_award_serial_no') }}</p>
                 </div>
                 @endif
                 @if($compensation->infrastructure_compensation)
@@ -213,10 +181,10 @@
                     <span class="highlight-value">{{ $compensation->infrastructure_compensation }}</span>
                 </div>
                 @endif
-                @if($compensation->applicant_acquired_land)
+                @if($compensation->land_award_serial_no)
                 <div class="compensation-item">
-                    <label>আবেদনকারীর অধিগ্রহণকৃত জমি:</label>
-                    <span class="highlight-value">{{ $compensation->bnDigits($compensation->applicant_acquired_land) }}</span>
+                    <label class="font-semibold text-gray-700">জমির রোয়েদাদ নং:</label>
+                    <p class="text-gray-900">{{ $compensation->getBengaliValue('land_award_serial_no') }}</p>
                 </div>
                 @endif
             </div>

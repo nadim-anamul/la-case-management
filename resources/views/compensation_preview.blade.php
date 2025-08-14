@@ -143,42 +143,27 @@
                 <label class="font-semibold text-gray-700">আবেদনকারীর নাম রোয়েদাদে আছে কিনা:</label>
                 <p class="text-gray-900">{{ $compensation->is_applicant_in_award ? 'হ্যাঁ' : 'না' }}</p>
             </div>
-            <div>
-                <label class="font-semibold text-gray-700">অধিগ্রহণকৃত মোট জমির পরিমাণ:</label>
-                <p class="text-gray-900">
-                    @php
-                        $totalLand = 0;
-                        if($compensation->land_category && is_array($compensation->land_category)) {
-                            foreach($compensation->land_category as $category) {
-                                $totalLand += floatval($category['total_land'] ?? 0);
-                            }
-                        }
-                        echo $compensation->bnDigits(number_format($totalLand, 6)) . ' একর';
-                    @endphp
-                </p>
-            </div>
-            <div>
-                <label class="font-semibold text-gray-700">অধিগ্রহণকৃত জমির মোট ক্ষতিপূরণ:</label>
-                <p class="text-gray-900">
-                    @php
-                        $totalCompensation = 0;
-                        if($compensation->land_category && is_array($compensation->land_category)) {
-                            foreach($compensation->land_category as $category) {
-                                $totalCompensation += floatval($category['total_compensation'] ?? 0);
-                            }
-                        }
-                        echo $compensation->bnDigits(number_format($totalCompensation, 2)) . ' টাকা';
-                    @endphp
-                </p>
-            </div>
+            
             <div>
                 <label class="font-semibold text-gray-700">উৎস কর %:</label>
                 <p class="text-gray-900">{{ $compensation->getBengaliValue('source_tax_percentage') }}</p>
             </div>
+            @if($compensation->tree_award_serial_no)
+            <div>
+                <label class="font-semibold text-gray-700">গাছপালা/ফসলের রোয়েদাদ নং</label>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('tree_award_serial_no') }}</p>
+            </div>
+            @endif
             @if($compensation->tree_compensation)
             <div>
                 <label class="font-semibold text-gray-700">গাছপালার মোট ক্ষতিপূরণ:</label>
                 <p class="text-gray-900">{{ $compensation->getBengaliValue('tree_compensation') }}</p>
+            </div>
+            @endif
+            @if($compensation->infrastructure_award_serial_no)
+            <div>
+                <label class="font-semibold text-gray-700">অবকাঠামোর রোয়েদাদ নং:</label>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('infrastructure_award_serial_no') }}</p>
             </div>
             @endif
             @if($compensation->infrastructure_compensation)
@@ -187,12 +172,13 @@
                 <p class="text-gray-900">{{ $compensation->getBengaliValue('infrastructure_compensation') }}</p>
             </div>
             @endif
-            @if($compensation->applicant_acquired_land)
+            @if($compensation->land_award_serial_no)
             <div>
-                <label class="font-semibold text-gray-700">আবেদনকারীর অধিগ্রহণকৃত জমির পরিমাণ:</label>
-                <p class="text-gray-900">{{ $compensation->getBengaliValue('applicant_acquired_land') }}</p>
+                <label class="font-semibold text-gray-700">জমির রোয়েদাদ নং:</label>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('land_award_serial_no') }}</p>
             </div>
             @endif
+
             @if($compensation->land_category && count($compensation->land_category) > 0)
             <div class="md:col-span-2 lg:col-span-3">
                 <label class="font-semibold text-gray-700">অধিগ্রহণকৃত জমির শ্রেণী:</label>

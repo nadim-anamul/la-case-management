@@ -12,7 +12,7 @@
   <style>
     @page {
       size: A4;
-      margin: 15mm;
+      margin: 10mm 10mm 15mm 10mm;
     }
     @font-face {
       font-family: 'Noto Serif Bengali';
@@ -29,7 +29,7 @@
       width: 210mm;
       min-height: 297mm;
       margin: 0 auto;
-      padding: 15mm;
+      padding: 10mm;
       background: white;
       box-sizing: border-box;
     }
@@ -63,7 +63,7 @@
         width: 210mm; 
         min-height: 297mm; 
         margin: 0; 
-        padding: 15mm;
+        padding: 10mm;
         box-shadow: none;
       }
     }
@@ -130,8 +130,8 @@
                   @else
                       ………………………….
                   @endif
-                                  {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->getBengaliValue('sa_khatian_no') ?? '…………………………….' ) : ($compensation->getBengaliValue('rs_khatian_no') ?? '…………………………….' ) }} নং খতিয়ানের
-                {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->getBengaliValue('land_schedule_sa_plot_no') ?? '…………………………….' ) : ($compensation->getBengaliValue('land_schedule_rs_plot_no') ?? '…………………………….' ) }} নং দাগের 
+                                  {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->sa_khatian_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->rs_khatian_no ?? '…………………………….' )) }} নং খতিয়ানের
+                {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->land_schedule_sa_plot_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' )) }} নং দাগের 
                   @if($compensation->award_type && is_array($compensation->award_type) && count($compensation->award_type) > 0)
                       @foreach($compensation->award_type as $index => $type)
                           @if($index > 0)
@@ -156,17 +156,17 @@
                   @if($compensation->award_type && is_array($compensation->award_type) && in_array('জমি', $compensation->award_type))
                       জমির রোয়েদাদের 
                       @if($compensation->land_award_serial_no)
-                          {{ str_pad((string)$compensation->getBengaliValue('land_award_serial_no'), 6, '0', STR_PAD_LEFT) }} নং ক্রমিকে
+                          {{ str_pad((string)$compensation->bnDigits($compensation->land_award_serial_no ?? ''), 6, '0', STR_PAD_LEFT) }} নং ক্রমিকে
                       @else
                           …………………………. নং ক্রমিকে
                       @endif
-                      {{ $compensation->mouza_name ?? '…………………………….' }}/{{ $compensation->getBengaliValue('jl_no') ?? '…………………………….' }} মৌজার 
+                      {{ $compensation->mouza_name ?? '…………………………….' }}/{{ $compensation->bnDigits($compensation->jl_no ?? '……………………………') }} মৌজার 
                       @if($compensation->acquisition_record_basis === 'SA')
-                          {{ $compensation->getBengaliValue('land_schedule_sa_plot_no') ?? '…………………………….' }}
+                          {{ $compensation->bnDigits($compensation->land_schedule_sa_plot_no ?? '……………………………') }}
                       @elseif($compensation->acquisition_record_basis === 'RS')
-                          {{ $compensation->getBengaliValue('land_schedule_rs_plot_no') ?? '…………………………….' }}
+                          {{ $compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '……………………………') }}
                       @else
-                          {{ $compensation->getBengaliValue('plot_no') ?? '…………………………….' }}
+                          {{ $compensation->bnDigits($compensation->plot_no ?? '……………………………') }}
                       @endif
                       নং দাগের 
                       @if($compensation->land_category && is_array($compensation->land_category))
@@ -197,7 +197,7 @@
                   @if($compensation->award_type && is_array($compensation->award_type) && in_array('গাছপালা/ফসল', $compensation->award_type))
                       গাছপালার/ফসলের রোয়েদাদের 
                       @if($compensation->tree_award_serial_no)
-                          {{ str_pad((string)$compensation->getBengaliValue('tree_award_serial_no'), 6, '0', STR_PAD_LEFT) }} নং ক্রমিকে
+                          {{ str_pad((string)$compensation->bnDigits($compensation->tree_award_serial_no ?? ''), 6, '0', STR_PAD_LEFT) }} নং ক্রমিকে
                       @else
                           …………………………. নং ক্রমিকে
                       @endif
@@ -215,7 +215,7 @@
                   @if($compensation->award_type && is_array($compensation->award_type) && in_array('অবকাঠামো', $compensation->award_type))
                       অবকাঠামোর রোয়েদাদের 
                       @if($compensation->infrastructure_award_serial_no)
-                          {{ str_pad((string)$compensation->getBengaliValue('infrastructure_award_serial_no'), 6, '0', STR_PAD_LEFT) }} নং ক্রমিকে
+                          {{ str_pad((string)$compensation->bnDigits($compensation->infrastructure_award_serial_no ?? ''), 6, '0', STR_PAD_LEFT) }} নং ক্রমিকে
                       @else
                           …………………………. নং ক্রমিকে
                       @endif
@@ -240,31 +240,71 @@
                   @if($compensation->acquisition_record_basis === 'SA')
                       <div class="ml-4 mt-2">
                           <strong>১. এসএ রেকর্ডের বর্ণনাঃ</strong> 
-                          @if($compensation->sa_khatian_no && $compensation->land_schedule_sa_plot_no)
-                              নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_sa_plot_no) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
-                              @if($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) > 0)
-                                  {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }} পিং-{{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
-                              @else
-                                  …………………………. পিং-…………………………….
-                              @endif
-                              নামে এসএ রেকর্ড প্রস্তুত হয়েছে।
+                          @if($compensation->ownership_details && is_array($compensation->ownership_details) && isset($compensation->ownership_details['sa_info']))
+                              @php
+                                  $saInfo = $compensation->ownership_details['sa_info'];
+                                  $saKhatianNo = $saInfo['sa_khatian_no'] ?? $compensation->sa_khatian_no ?? '……………………………';
+                                  $saPlotNo = $saInfo['sa_plot_no'] ?? $compensation->land_schedule_sa_plot_no ?? '……………………………';
+                                  $saLandInKhatian = $saInfo['sa_land_in_khatian'] ?? '……………………………';
+                                  $saOwners = $compensation->ownership_details['sa_owners'] ?? [];
+                                  $ownerNames = [];
+                                  if (is_array($saOwners) && count($saOwners) > 0) {
+                                      foreach ($saOwners as $owner) {
+                                          if (!empty($owner['name'])) {
+                                              $ownerNames[] = $owner['name'];
+                                          }
+                                      }
+                                  }
+                                  $ownerDisplay = count($ownerNames) > 0 ? implode(' ', $ownerNames) : '……………………………';
+                              @endphp
+                              এস এ {{ $compensation->bnDigits($saKhatianNo) }} নং খতিয়ানে {{ $compensation->bnDigits($saPlotNo) }} নং দাগে {{ $compensation->bnDigits($saLandInKhatian) }} একর জমি {{ $ownerDisplay }} নামে এস এ রেকর্ড প্রস্তুত রয়েছে
                           @else
-                              ………………………….
+                              @if($compensation->sa_khatian_no && $compensation->land_schedule_sa_plot_no)
+                                  নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_sa_plot_no) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
+                                  @if($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) > 0)
+                                      {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }} পিং-{{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
+                                  @else
+                                      …………………………. পিং-…………………………….
+                                  @endif
+                                  নামে এসএ রেকর্ড প্রস্তুত হয়েছে।
+                              @else
+                                  ………………………….
+                              @endif
                           @endif
                       </div>
                   @elseif($compensation->acquisition_record_basis === 'RS')
                       <div class="ml-4 mt-2">
                           <strong>১. আরএস রেকর্ডের বর্ণনাঃ</strong> 
-                          @if($compensation->rs_khatian_no && $compensation->land_schedule_rs_plot_no)
-                              নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_rs_plot_no) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
-                              @if($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) > 0)
-                                  {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }} পিং-{{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
-                              @else
-                                  …………………………. পিং-…………………………….
-                              @endif
-                              নামে আরএস রেকর্ড প্রস্তুত হয়েছে।
+                          @if($compensation->ownership_details && is_array($compensation->ownership_details) && isset($compensation->ownership_details['rs_info']))
+                              @php
+                                  $rsInfo = $compensation->ownership_details['rs_info'];
+                                  $rsKhatianNo = $rsInfo['rs_khatian_no'] ?? $compensation->rs_khatian_no ?? '……………………………';
+                                  $rsPlotNo = $rsInfo['rs_plot_no'] ?? $compensation->land_schedule_rs_plot_no ?? '……………………………';
+                                  $rsLandInKhatian = $rsInfo['rs_land_in_khatian'] ?? '……………………………';
+                                  $rsOwners = $compensation->ownership_details['rs_owners'] ?? [];
+                                  $ownerNames = [];
+                                  if (is_array($rsOwners) && count($rsOwners) > 0) {
+                                      foreach ($rsOwners as $owner) {
+                                          if (!empty($owner['name'])) {
+                                              $ownerNames[] = $owner['name'];
+                                          }
+                                      }
+                                  }
+                                  $ownerDisplay = count($ownerNames) > 0 ? implode(' ', $ownerNames) : '……………………………';
+                              @endphp
+                              আর এস {{ $compensation->bnDigits($rsKhatianNo) }} নং খতিয়ানে {{ $compensation->bnDigits($rsPlotNo) }} নং দাগে {{ $compensation->bnDigits($rsLandInKhatian) }} একর জমি {{ $ownerDisplay }} নামে আর এস রেকর্ড প্রস্তুত রয়েছে
                           @else
-                              ………………………….
+                              @if($compensation->rs_khatian_no && $compensation->land_schedule_rs_plot_no)
+                                  নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_rs_plot_no) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
+                                  @if($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) > 0)
+                                      {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }} পিং-{{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
+                                  @else
+                                      …………………………. পিং-…………………………….
+                                  @endif
+                                  নামে আরএস রেকর্ড প্রস্তুত হয়েছে।
+                              @else
+                                  ………………………….
+                              @endif
                           @endif
                       </div>
                   @else
@@ -315,25 +355,44 @@
                           @elseif(str_contains($sectionType, 'দলিল') || str_contains($sectionType, 'document') || str_contains($sectionType, 'transfer'))
                               <div class="ml-4 mt-2">
                                   <strong>{{ $sectionNumber }}. দলিলমূলে হস্তান্তরের বর্ণনাঃ</strong><br>
-                                  @if($compensation->ownership_details && is_array($compensation->ownership_details) && isset($compensation->ownership_details['deed_transfers']) && count($compensation->ownership_details['deed_transfers']) > 0)
-                                      @foreach($compensation->ownership_details['deed_transfers'] as $deedIndex => $deed)
-                                          @if($deedIndex > 0)
-                                              <br>
-                                          @endif
-                                          @if(isset($deed['donor_names']) && is_array($deed['donor_names']) && count($deed['donor_names']) > 0 && isset($deed['recipient_names']) && is_array($deed['recipient_names']) && count($deed['recipient_names']) > 0)
-                                              @php
-                                                  $donorNames = collect($deed['donor_names'])->pluck('name')->filter()->implode(', ');
-                                                  $recipientNames = collect($deed['recipient_names'])->pluck('name')->filter()->implode(', ');
-                                                  $deedNumber = $deed['deed_number'] ?? '……………………………';
-                                                  $deedDate = $deed['deed_date'] ?? '……………………………';
-                                                  $deedType = $deed['sale_type'] ?? '……………………………';
-                                              @endphp
-                                              
-                                              {{ $donorNames }}, পিং {{ $deed['donor_names'][0]['father_name'] ?? '…………………………….' }} গত {{ $deedDate }} তারিখের {{ $deedNumber }} নং {{ $deedType }} {{ $recipientNames }}, পিং {{ $deed['recipient_names'][0]['father_name'] ?? '…………………………….' }} বরাবর নালিশী {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->land_schedule_sa_plot_no ?? '…………………………….' ) : ($compensation->land_schedule_rs_plot_no ?? '…………………………….' ) }} দাগের {{ $compensation->land_category && is_array($compensation->land_category) ? number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4) : '…………………………….' }} একর জমি হস্তান্তর করেন।
-                                          @else
-                                              {{ $sectionDescription }}
-                                          @endif
-                                      @endforeach
+                                  @php
+                                      // Find the specific deed that corresponds to this story sequence item
+                                      $currentDeed = null;
+                                      if ($compensation->ownership_details && is_array($compensation->ownership_details) && isset($compensation->ownership_details['deed_transfers']) && count($compensation->ownership_details['deed_transfers']) > 0) {
+                                          foreach ($compensation->ownership_details['deed_transfers'] as $deedIndex => $deed) {
+                                              if (isset($deed['deed_number']) && isset($deed['deed_date'])) {
+                                                  if (str_contains($sectionDescription, $deed['deed_number']) || str_contains($sectionDescription, $deed['deed_date'])) {
+                                                      $currentDeed = $deed;
+                                                      break;
+                                                  }
+                                              }
+                                          }
+                                          if (!$currentDeed && isset($compensation->ownership_details['deed_transfers'][0])) {
+                                              $currentDeed = $compensation->ownership_details['deed_transfers'][0];
+                                          }
+                                      }
+                                  @endphp
+                                  @if($currentDeed && isset($currentDeed['donor_names']) && is_array($currentDeed['donor_names']) && count($currentDeed['donor_names']) > 0 && isset($currentDeed['recipient_names']) && is_array($currentDeed['recipient_names']) && count($currentDeed['recipient_names']) > 0)
+                                      @php
+                                          $donorNames = collect($currentDeed['donor_names'])->pluck('name')->filter()->implode(', ');
+                                          $recipientNames = collect($currentDeed['recipient_names'])->pluck('name')->filter()->implode(', ');
+                                          $deedNumber = $currentDeed['deed_number'] ?? '……………………………';
+                                          $deedDate = $currentDeed['deed_date'] ?? '……………………………';
+                                          $deedType = $currentDeed['sale_type'] ?? '……………………………';
+                                          // Calculate land amount for this deed
+                                          $deedLandAmount = '……………………………';
+                                          if (isset($currentDeed['application_sell_area']) && !empty($currentDeed['application_sell_area'])) {
+                                              $deedLandAmount = number_format(floatval($currentDeed['application_sell_area']), 4);
+                                          } elseif ($compensation->land_category && is_array($compensation->land_category)) {
+                                              $totalLand = collect($compensation->land_category)->sum(function($category) { 
+                                                  return floatval($category['total_land'] ?? 0); 
+                                              });
+                                              $deedLandAmount = number_format($totalLand, 4);
+                                          }
+                                      @endphp
+                                      {{ $donorNames }}, গত {{ $compensation->bnDigits($deedDate) }} তারিখের {{ $compensation->bnDigits($deedNumber) }} নং {{ $deedType }} {{ $recipientNames }}, বরাবর নালিশী {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->land_schedule_sa_plot_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' )) }} দাগের {{ $compensation->bnDigits($deedLandAmount) }} একর জমি হস্তান্তর করেন।
+                                  @elseif($currentDeed)
+                                      দলিলের তথ্য অসম্পূর্ণ। দলিল নম্বর: {{ $compensation->bnDigits($currentDeed['deed_number'] ?? '……………………………') }}, তারিখ: {{ $compensation->bnDigits($currentDeed['deed_date'] ?? '……………………………') }}
                                   @else
                                       {{ $sectionDescription }}
                                   @endif
@@ -374,7 +433,7 @@
                       
                       <div class="ml-4 mt-2">
                           <strong>{{ $nextSectionNumber }}. নামজারী ও খাজনার বর্ণনাঃ</strong><br>
-                          আবেদনকারী {{ $applicantName }} প্রাপ্ত জমি {{ $kharijCaseNo }} নং নামজারী কেসমূলে রেকর্ড সংশোধনপূর্বক {{ $kharijKhatianNo }} নং নামজারী খতিয়ানে {{ $kharijPlotNo }} নং দাগে {{ $kharijLandAmount }} একর জমি নামজারী করেন। খাজনার রশিদ যাচাই করে দেখা যায়, {{ $holdingNo }} নং হোল্ডিং এ {{ $kharijPlotNo }} নং দাগে {{ $paidLandAmount }} একর জমির বিপরীতে বাংলা {{ $banglaYear }} সন পর্যন্ত ভূমি উন্নয়ন কর পরিশোধ অন্তে খাজনার রশিদ দাখিল করেছেন।
+                          আবেদনকারী {{ $applicantName }} প্রাপ্ত জমি {{ $compensation->bnDigits($kharijCaseNo) }} নং নামজারী কেসমূলে রেকর্ড সংশোধনপূর্বক {{ $compensation->bnDigits($kharijKhatianNo) }} নং নামজারী খতিয়ানে {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($kharijLandAmount) }} একর জমি নামজারী করেন। খাজনার রশিদ যাচাই করে দেখা যায়, {{ $compensation->bnDigits($holdingNo) }} নং হোল্ডিং এ {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($paidLandAmount) }} একর জমির বিপরীতে বাংলা {{ $compensation->bnDigits($banglaYear) }} সন পর্যন্ত ভূমি উন্নয়ন কর পরিশোধ অন্তে খাজনার রশিদ দাখিল করেছেন।
                           
                           @if($kharijDetails)
                               <br><br>
@@ -416,24 +475,17 @@
                   @endif
                   
                   <br><br>
-                  কানুনগো ও সার্ভেয়ারের মতামতঃ 
-                  
-                  @if($compensation->kanungo_opinion && is_array($compensation->kanungo_opinion) && isset($compensation->kanungo_opinion['opinion_details']) && $compensation->kanungo_opinion['opinion_details'])
-                      {{ $compensation->kanungo_opinion['opinion_details'] }}
-                  @else
-                      কাগজপত্রাদি পর্যালোচনা ও শুনানি অন্তে প্রতীয়মান হয় যে আবেদনকারী 
-                      @if($compensation->applicants && is_array($compensation->applicants) && count($compensation->applicants) > 0)
-                          ({{ $compensation->applicants[0]['name'] ?? '…………………………….' }})
-                      @else
-                          (…………………………….)
-                      @endif
-                      উক্ত প্রাপ্য অর্থের হকদার। 
-                      
-                      দাখিলকৃত কাগজপত্র যাচাইপূর্বক কানুনগো ও সার্ভেয়ারগণের দাখিলকৃত প্রতিবেদনে উল্লেখ করা হয় যে আবেদনকারী মালিকানার দাবীর স্বপক্ষে কাগজপত্রের ধারাবাহিকতা আছে।
-                  @endif
+                  কানুনগো ও সার্ভেয়ারের মতামতঃ দাখিলকৃত কাগজপত্র যাচাইপূর্বক কানুনুনগো ও সার্ভেয়ারগণের দাখিলকৃত প্রতিবেদনে উল্লেখ করা হয় যে আবেদনকারী মালিকানার দাবীর স্বপক্ষে কাগজপত্রের ধারাবাহিকতা আছে।
                   
                   <br><br>
-                  দাখিলকৃত কাগজপত্র যাচাইপূর্বক কানুনগো ও সার্ভেয়ারগণের দাখিলকৃত প্রতিবেদনে উল্লেখ করা হয় যে আবেদনকারী মালিকানার দাবীর স্বপক্ষে কাগজপত্রের ধারাবাহিকতা আছে।
+                  
+                  সার্বিক কাগজপত্রাদি পর্যালোচনা ও শুনানি অন্তে  প্রতীয়মান হয় যে আবেদনকারী 
+                  @if($compensation->applicants && is_array($compensation->applicants) && count($compensation->applicants) > 0)
+                      {{ collect($compensation->applicants)->pluck('name')->filter()->implode(', ') }}
+                  @else
+                      ………………………….
+                  @endif
+                  উক্ত ক্ষতিপূরণের প্রাপ্য অর্থের হকদার।
                   
                   <br><br>
                   অতএব আদেশ হয় যে, কানুনগো ও সার্ভেয়ারের দাখিলকৃত যৌথ প্রতিবেদন ও আবেদনকারীর কাগজপত্র পর্যালোচনা করে দেখা যায় আবেদিত সম্পত্তি প্রার্থীর ভোগ-দখলীয় সম্পত্তি, মালিকানাস্বত্বের কাগজপত্র সঠিক থাকায় 
@@ -451,7 +503,7 @@
                   @else
                       …………………………., পিং …………………………., সাং: …………………………., উপজেলা: …………………………., জেলা: ………………………….
                   @endif
-                  কে {{ $compensation->mouza_name ?? '…………………………….' }}/{{ $compensation->jl_no ?? '…………………………….' }} মৌজার নিম্নে উল্লিখিত তফসিল বর্ণিত সম্পত্তির ক্ষতিপূরণ প্রদান করা হলো।
+                  কে {{ $compensation->mouza_name ?? '…………………………….' }}/{{ $compensation->bnDigits($compensation->jl_no ?? '……………………………') }} মৌজার নিম্নে উল্লিখিত তফসিল বর্ণিত সম্পত্তির ক্ষতিপূরণ প্রদান করা হলো।
                   
                   @if($compensation->final_order && is_array($compensation->final_order) && count($compensation->final_order) > 0)
                   <br><br>
@@ -478,170 +530,91 @@
                       </thead>
                       <tbody>
                           @php
-                              // Get final order data for comparison
+                              // Prepare
                               $finalOrder = $compensation->final_order ?? [];
-                              $finalOrderLand = 0;
-                              $finalOrderLandCompensation = 0;
-                              $finalOrderTreeCompensation = 0;
-                              $finalOrderInfrastructureCompensation = 0;
-                              
-                              // Extract data from final_order structure
-                              if (isset($finalOrder['land']) && $finalOrder['land']['selected']) {
-                                  if (isset($finalOrder['land']['categories']) && is_array($finalOrder['land']['categories'])) {
-                                      foreach ($finalOrder['land']['categories'] as $category) {
-                                          $finalOrderLand += floatval($compensation->enDigits($category['acquired_land'] ?? 0));
-                                      }
-                                  } elseif (isset($finalOrder['land']['records']) && is_array($finalOrder['land']['records'])) {
-                                      foreach ($finalOrder['land']['records'] as $record) {
-                                          $finalOrderLand += floatval($compensation->enDigits($record['area'] ?? 0));
-                                      }
-                                  }
-                                  // Get land compensation from land_category total
-                                  if ($compensation->land_category && is_array($compensation->land_category)) {
-                                      $finalOrderLandCompensation = collect($compensation->land_category)->sum(function($category) {
-                                          return floatval($category['total_compensation'] ?? 0);
-                                      });
-                                  }
-                              }
-                              
-                              if (isset($finalOrder['trees_crops']) && $finalOrder['trees_crops']['selected']) {
-                                  $finalOrderTreeCompensation = floatval($compensation->enDigits($finalOrder['trees_crops']['amount'] ?? 0));
-                              }
-                              
-                              if (isset($finalOrder['infrastructure']) && $finalOrder['infrastructure']['selected']) {
-                                  $finalOrderInfrastructureCompensation = floatval($compensation->enDigits($finalOrder['infrastructure']['amount'] ?? 0));
-                              }
-                              
-                              // Get award data from রোয়েদাদের তথ্যঃ section
-                              $landAwardSerialNo = $compensation->land_award_serial_no ?? null;
-                              $treeAwardSerialNo = $compensation->tree_award_serial_no ?? null;
-                              $infrastructureAwardSerialNo = $compensation->infrastructure_award_serial_no ?? null;
-                              
-                              // Try to get award numbers from final order if main fields are empty
-                              if (empty($landAwardSerialNo) && isset($finalOrder['land']) && $finalOrder['land']['selected']) {
-                                  if (isset($finalOrder['land']['award_number']) && !empty($finalOrder['land']['award_number'])) {
-                                      $landAwardSerialNo = $finalOrder['land']['award_number'];
-                                  }
-                              }
-                              
-                              if (empty($treeAwardSerialNo) && isset($finalOrder['trees_crops']) && $finalOrder['trees_crops']['selected']) {
-                                  if (isset($finalOrder['trees_crops']['award_number']) && !empty($finalOrder['trees_crops']['award_number'])) {
-                                      $treeAwardSerialNo = $finalOrder['trees_crops']['award_number'];
-                                  }
-                              }
-                              
-                              if (empty($infrastructureAwardSerialNo) && isset($finalOrder['infrastructure']) && $finalOrder['infrastructure']['selected']) {
-                                  if (isset($finalOrder['infrastructure']['award_number']) && !empty($finalOrder['infrastructure']['award_number'])) {
-                                      $infrastructureAwardSerialNo = $finalOrder['infrastructure']['award_number'];
-                                  }
-                              }
-                              
-                              // Get land schedule data
-                              $landScheduleTotal = 0;
-                              $landTypes = [];
-                              if ($compensation->land_category && is_array($compensation->land_category)) {
-                                  $landScheduleTotal = collect($compensation->land_category)->sum(function($category) {
-                                      return floatval($category['total_land'] ?? 0);
-                                  });
-                                  $landTypes = collect($compensation->land_category)->pluck('land_type')->filter()->toArray();
-                              }
-                              
-                              // Resolve land type for display (prefer final order category name, then form land_category[0])
-                              $acquiredLandType = '';
-                              if (isset($finalOrder['land']) && $finalOrder['land']['selected']) {
-                                  if (isset($finalOrder['land']['categories']) && is_array($finalOrder['land']['categories']) && count($finalOrder['land']['categories']) > 0) {
-                                      $acquiredLandType = $finalOrder['land']['categories'][0]['category_name'] ?? '';
-                                  }
-                              }
-                              if (!$acquiredLandType && $compensation->land_category && is_array($compensation->land_category) && count($compensation->land_category) > 0) {
-                                  $acquiredLandType = $compensation->land_category[0]['land_type'] ?? '';
-                              }
-                              
-                              // Get compensation amounts from award section
-                              $landCompensation = 0;
-                              $treeCompensation = 0;
-                              $infrastructureCompensation = 0;
-                              
-                              // Calculate land compensation based on final order land amount
-                              if ($finalOrderLand > 0 && $landScheduleTotal > 0) {
-                                  // Calculate proportional compensation based on final order land amount
-                                  $landCompensation = ($finalOrderLand / $landScheduleTotal) * $finalOrderLandCompensation;
-                              }
-                              
-                              // Use final order compensation for trees and infrastructure
-                              $treeCompensation = $finalOrderTreeCompensation;
-                              $infrastructureCompensation = $finalOrderInfrastructureCompensation;
-                              
-                              // Calculate total compensation
-                              $totalCompensation = $landCompensation + $treeCompensation + $infrastructureCompensation;
-                              
-                              // Source tax is mandatory; compute directly from percentage
-                              $sourceTax = ($totalCompensation * floatval($compensation->source_tax_percentage)) / 100;
-                              
-                              // Final amount after tax deduction
-                              $finalAmount = $totalCompensation - $sourceTax;
-                              
-                              // Get plot and khatian numbers
+                              $totalCompensation = 0;
+                              // Common numbers
                               $plotNo = $compensation->bnDigits($compensation->plot_no ?? '……………………………');
-                              $khatianNo = $compensation->acquisition_record_basis === 'SA' ? 
-                                          $compensation->bnDigits($compensation->sa_khatian_no ?? '……………………………') : 
-                                          $compensation->bnDigits($compensation->rs_khatian_no ?? '……………………………');
-                              
-                              // Get award serial numbers - ensure they are properly retrieved
+                              $khatianNo = $compensation->acquisition_record_basis === 'SA' ? $compensation->bnDigits($compensation->sa_khatian_no ?? '……………………………') : $compensation->bnDigits($compensation->rs_khatian_no ?? '……………………………');
+                              $landAwardSerialNo = $compensation->land_award_serial_no ?? ($finalOrder['land']['award_number'] ?? null);
+                              $treeAwardSerialNo = $compensation->tree_award_serial_no ?? ($finalOrder['trees_crops']['award_number'] ?? null);
+                              $infrastructureAwardSerialNo = $compensation->infrastructure_award_serial_no ?? ($finalOrder['infrastructure']['award_number'] ?? null);
                               $landAwardNo = !empty($landAwardSerialNo) ? $compensation->bnDigits($landAwardSerialNo) : '……………………………';
                               $treeAwardNo = !empty($treeAwardSerialNo) ? $compensation->bnDigits($treeAwardSerialNo) : '……………………………';
                               $infrastructureAwardNo = !empty($infrastructureAwardSerialNo) ? $compensation->bnDigits($infrastructureAwardSerialNo) : '……………………………';
                           @endphp
                           
                           <!-- Land Compensation Row -->
-                          @if($landCompensation > 0 && isset($finalOrder['land']) && $finalOrder['land']['selected'] && in_array('জমি', $compensation->award_type ?? []))
-                          <tr>
-                              <td class="border border-black p-2 text-center">{{ $landAwardNo }}</td>
-                              <td class="border border-black p-2 text-center">{{ $khatianNo }}</td>
-                              <td class="border border-black p-2 text-center">{{ $plotNo }}</td>
-                              <td class="border border-black p-2 text-center">
-                                  {{ $compensation->bnDigits(number_format($finalOrderLand, 4)) }} একর @if(!empty($acquiredLandType)) ({{ $acquiredLandType }}) @endif
-                              </td>
-                              <td class="border border-black p-2 text-center">
-                                  @if($compensation->land_category && is_array($compensation->land_category))
-                                      @foreach($compensation->land_category as $index => $category)
-                                          @if($index == 0)
-                                              {{ $compensation->bnDigits(number_format(floatval($category['total_land'] ?? 0), 4)) }} একর @if(!empty($acquiredLandType)) ({{ $acquiredLandType }}) @endif
-                                          @endif
-                                      @endforeach
-                                  @else
-                                      {{ $compensation->bnDigits(number_format($finalOrderLand, 4)) }} একর
-                                  @endif
-                                  জমির ক্ষতিপূরণ বাবদ
-                              </td>
-                              <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($landCompensation, 2)) }}</td>
-                          </tr>
+                          @if(isset($finalOrder['land']) && $finalOrder['land']['selected'] && in_array('জমি', $compensation->award_type ?? []))
+                              @if(isset($finalOrder['land']['categories']) && is_array($finalOrder['land']['categories']) && count($finalOrder['land']['categories']) > 0)
+                                  @php $landTotalForTax = 0; @endphp
+                                  @foreach($finalOrder['land']['categories'] as $categoryIndex => $category)
+                                      @php
+                                          // Match category with land_category by name or index
+                                          $categoryName = $category['category_name'] ?? '';
+                                          $lc = null;
+                                          if ($compensation->land_category && is_array($compensation->land_category)) {
+                                              foreach ($compensation->land_category as $idx => $item) {
+                                                  if (isset($item['land_type']) && strtolower($item['land_type']) === strtolower($categoryName)) { $lc = $item; break; }
+                                              }
+                                              if (!$lc && isset($compensation->land_category[$categoryIndex])) { $lc = $compensation->land_category[$categoryIndex]; }
+                                          }
+                                          $totalLand = $lc ? floatval($lc['total_land'] ?? 0) : 0;
+                                          $totalComp = $lc ? floatval($lc['total_compensation'] ?? 0) : 0;
+                                          $acquired = floatval($compensation->enDigits($category['acquired_land'] ?? 0));
+                                          $displayAcquiredLand = $totalLand > 0 ? $totalLand : $acquired;
+                                          $displayClaimLand = $acquired;
+                                          $displayComp = ($totalLand > 0 && $acquired > 0) ? ($totalComp / $totalLand) * $acquired : 0;
+                                          $landTotalForTax += $displayComp;
+                                          $catAwardNo = $category['award_number'] ?? $landAwardSerialNo;
+                                          $catAwardNo = !empty($catAwardNo) ? $compensation->bnDigits($catAwardNo) : '……………………………';
+                                      @endphp
+                                      @if($displayClaimLand > 0)
+                                      <tr>
+                                          <td class="border border-black p-2 text-center">{{ $catAwardNo }}</td>
+                                          <td class="border border-black p-2 text-center">{{ $khatianNo }}</td>
+                                          <td class="border border-black p-2 text-center">{{ $plotNo }}</td>
+                                          <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($displayAcquiredLand, 4)) }} একর</td>
+                                          <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($displayClaimLand, 4)) }} একর @if(!empty($categoryName)) ({{ $categoryName }}) @endif জমির ক্ষতিপূরণ বাবদ</td>
+                                          <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($displayComp, 2)) }}</td>
+                                      </tr>
+                                      @endif
+                                  @endforeach
+                                  @php $totalCompensation += $landTotalForTax; @endphp
+                              @endif
                           @endif
                           
                           <!-- Tree/Crop Compensation Row -->
-                          @if($treeCompensation > 0 && isset($finalOrder['trees_crops']) && $finalOrder['trees_crops']['selected'] && in_array('গাছপালা/ফসল', $compensation->award_type ?? []))
-                          <tr>
-                              <td class="border border-black p-2 text-center">{{ $treeAwardNo }}</td>
-                              <td class="border border-black p-2 text-center">{{ $khatianNo }}</td>
-                              <td class="border border-black p-2 text-center">{{ $plotNo }}</td>
-                              <td class="border border-black p-2 text-center">-</td>
-                              <td class="border border-black p-2 text-center">গাছপালা/ফসলের ক্ষতিপূরণ বাবদ</td>
-                              <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($treeCompensation, 2)) }}</td>
-                          </tr>
+                          @if(isset($finalOrder['trees_crops']) && $finalOrder['trees_crops']['selected'] && in_array('গাছপালা/ফসল', $compensation->award_type ?? []))
+                              @php $treeCompensation = floatval($compensation->enDigits($finalOrder['trees_crops']['amount'] ?? 0)); if ($treeCompensation > 0) { $totalCompensation += $treeCompensation; } @endphp
+                              @if($treeCompensation > 0)
+                              <tr>
+                                  <td class="border border-black p-2 text-center">{{ $treeAwardNo }}</td>
+                                  <td class="border border-black p-2 text-center">{{ $khatianNo }}</td>
+                                  <td class="border border-black p-2 text-center">{{ $plotNo }}</td>
+                                  <td class="border border-black p-2 text-center">-</td>
+                                  <td class="border border-black p-2 text-center">গাছপালা/ফসলের ক্ষতিপূরণ বাবদ</td>
+                                  <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($treeCompensation, 2)) }}</td>
+                              </tr>
+                              @endif
                           @endif
                           
                           <!-- Infrastructure Compensation Row -->
-                          @if($infrastructureCompensation > 0 && isset($finalOrder['infrastructure']) && $finalOrder['infrastructure']['selected'] && in_array('অবকাঠামো', $compensation->award_type ?? []))
-                          <tr>
-                              <td class="border border-black p-2 text-center">{{ $infrastructureAwardNo }}</td>
-                              <td class="border border-black p-2 text-center">{{ $khatianNo }}</td>
-                              <td class="border border-black p-2 text-center">{{ $plotNo }}</td>
-                              <td class="border border-black p-2 text-center">-</td>
-                              <td class="border border-black p-2 text-center">অবকাঠামোর ক্ষতিপূরণ বাবদ</td>
-                              <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($infrastructureCompensation, 2)) }}</td>
-                          </tr>
+                          @if(isset($finalOrder['infrastructure']) && $finalOrder['infrastructure']['selected'] && in_array('অবকাঠামো', $compensation->award_type ?? []))
+                              @php $infrastructureCompensation = floatval($compensation->enDigits($finalOrder['infrastructure']['amount'] ?? 0)); if ($infrastructureCompensation > 0) { $totalCompensation += $infrastructureCompensation; } @endphp
+                              @if($infrastructureCompensation > 0)
+                              <tr>
+                                  <td class="border border-black p-2 text-center">{{ $infrastructureAwardNo }}</td>
+                                  <td class="border border-black p-2 text-center">{{ $khatianNo }}</td>
+                                  <td class="border border-black p-2 text-center">{{ $plotNo }}</td>
+                                  <td class="border border-black p-2 text-center">-</td>
+                                  <td class="border border-black p-2 text-center">অবকাঠামোর ক্ষতিপূরণ বাবদ</td>
+                                  <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($infrastructureCompensation, 2)) }}</td>
+                              </tr>
+                              @endif
                           @endif
                           
+                          @php $sourceTax = ($totalCompensation * floatval($compensation->source_tax_percentage)) / 100; $finalAmount = $totalCompensation - $sourceTax; @endphp
                           <!-- Total Row -->
                           <tr class="font-bold">
                               <td class="border border-black p-2 text-center" colspan="5">উৎস করসহ মোট প্রদেয় =</td>
