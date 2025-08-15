@@ -477,10 +477,6 @@
                                     <p class="text-gray-900">{{ $compensation->formatApplicationAreaString($deed) }}</p>
                                 </div>
                                 @endif
-                                <div>
-                                    <label class="font-semibold text-gray-700">দখল উল্লেখ করা আছে কিনা:</label>
-                                    <p class="text-gray-900">{{ isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
-                                </div>
                                 @if(isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes')
                                 <div>
                                     <label class="font-semibold text-gray-700">দখলের দাগ নম্বর:</label>
@@ -627,10 +623,6 @@
                                     <p class="text-gray-900">{{ $compensation->formatApplicationAreaString($deed) }}</p>
                                 </div>
                                 @endif
-                                <div>
-                                    <label class="font-semibold text-gray-700">দখল উল্লেখ করা আছে কিনা:</label>
-                                    <p class="text-gray-900">{{ isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
-                                </div>
                                 @if(isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes')
                                 <div>
                                     <label class="font-semibold text-gray-700">দখলের দাগ নম্বর:</label>
@@ -773,15 +765,13 @@
                             <p class="text-gray-900">{{ $compensation->formatApplicationAreaString($deed) }}</p>
                         </div>
                         @endif
-                        <div>
-                            <label class="font-semibold text-gray-700">দখল উল্লেখ করা আছে কিনা:</label>
-                            <p class="text-gray-900">{{ isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
-                        </div>
-                        @if(isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes')
+                        @if(isset($deed['possession_plot_no']))
                         <div>
                             <label class="font-semibold text-gray-700">দখলের দাগ নম্বর:</label>
                             <p class="text-gray-900">{{ $deed['possession_plot_no'] ?? '' }}</p>
                         </div>
+                        @endif
+                        @if(isset($deed['possession_description']))
                         <div class="md:col-span-2">
                             <label class="font-semibold text-gray-700">দখল এর বর্ণনা:</label>
                             <p class="text-gray-900">{{ $deed['possession_description'] ?? '' }}</p>
