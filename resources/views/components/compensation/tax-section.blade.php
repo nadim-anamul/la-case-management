@@ -5,6 +5,11 @@
     </h2>
     <div class="grid grid-cols-1 xl:grid-cols-4 md:grid-cols-3 gap-4 sm:gap-2 xs:gap-1">
         <div class="floating-label">
+            <input type="text" name="tax_info[paid_in_name]" value="{{ old('tax_info.paid_in_name', isset(
+                $compensation) ? $compensation->tax_info['paid_in_name'] ?? '' : '') }}" placeholder=" ">
+            <label>যার নামে প্রদানকৃত<span class="text-blue-500">*</span></label>
+        </div>
+        <div class="floating-label">
             <input type="text" name="tax_info[holding_no]" value="{{ old('tax_info.holding_no', isset(
                 $compensation) ? $compensation->tax_info['holding_no'] ?? '' : '') }}" placeholder=" ">
             <label>হোল্ডিং নম্বর<span class="text-blue-500">*</span></label>

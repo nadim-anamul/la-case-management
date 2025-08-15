@@ -463,6 +463,7 @@ class ModularCompensationSeeder extends Seeder
             ],
             'mutation_info' => [], // Added missing field
             'tax_info' => [
+                'paid_in_name' => 'মোছাঃ ফাতেমা খাতুন',
                 'holding_no' => '১০০১',
                 'paid_land_amount' => '২.৫০',
                 'english_year' => '2024',
@@ -585,6 +586,7 @@ class ModularCompensationSeeder extends Seeder
             ],
             'mutation_info' => [], // Added missing field
             'tax_info' => [
+                'paid_in_name' => 'মোছাঃ ফাতেমা খাতুন',
                 'holding_no' => '১০০২',
                 'paid_land_amount' => '২.২৫',
                 'english_year' => '2024',
@@ -711,6 +713,7 @@ class ModularCompensationSeeder extends Seeder
             ],
             'mutation_info' => [], // Added missing field
             'tax_info' => [
+                'paid_in_name' => 'মোঃ আলমগীর হোসেন',
                 'holding_no' => '1003',
                 'paid_land_amount' => '1.00',
                 'english_year' => '2024',
@@ -924,6 +927,7 @@ class ModularCompensationSeeder extends Seeder
                 'rs_record_disabled' => false
             ],
             'tax_info' => [
+                'paid_in_name' => 'দশমিক সংখ্যা টেস্ট',
                 'holding_no' => '১০০৫',
                 'paid_land_amount' => '৬৭.৮৯',
                 'english_year' => '2024',

@@ -20,22 +20,29 @@ class CompensationTaxInfoTest extends TestCase
                     'name' => 'Test Applicant',
                     'father_name' => 'Test Father',
                     'address' => 'Test Address',
-                    'nid' => '1234567890'
+                    'nid' => '1234567890',
+                    'mobile' => '01712345678'
                 ]
             ],
             'la_case_no' => 'LA-001',
-            'award_type' => 'জমি',
-            'award_serial_no' => 'AWD-001',
+            'award_type' => ['জমি'],
+            'land_award_serial_no' => 'AWD-001',
             'acquisition_record_basis' => 'SA',
             'sa_plot_no' => 'SA-PLOT-001',
             'plot_no' => 'PLOT-001',
             'award_holder_names' => [
-                ['name' => 'Test Award Holder']
+                [
+                    'name' => 'Test Award Holder',
+                    'father_name' => 'Test Father',
+                    'address' => 'Test Address'
+                ]
             ],
             'is_applicant_in_award' => true,
             'source_tax_percentage' => '3%',
             'applicant_acquired_land' => '1.00',
             'mouza_name' => 'Test Mouza',
+            'district' => 'Test District',
+            'upazila' => 'Test Upazila',
             'jl_no' => 'JL-001',
             'sa_khatian_no' => 'SA-001',
             'rs_khatian_no' => 'RS-001',
@@ -71,6 +78,7 @@ class CompensationTaxInfoTest extends TestCase
                 'rs_record_disabled' => false,
             ],
             'tax_info' => [
+                'paid_in_name' => 'Test Applicant',
                 'english_year' => '2024',
                 'bangla_year' => '১৪৩১'
             ],
@@ -106,22 +114,29 @@ class CompensationTaxInfoTest extends TestCase
                     'name' => 'Test Applicant',
                     'father_name' => 'Test Father',
                     'address' => 'Test Address',
-                    'nid' => '1234567890'
+                    'nid' => '1234567890',
+                    'mobile' => '01712345678'
                 ]
             ],
             'la_case_no' => 'LA-002',
-            'award_type' => 'জমি',
-            'award_serial_no' => 'AWD-002',
+            'award_type' => ['জমি'],
+            'land_award_serial_no' => 'AWD-002',
             'acquisition_record_basis' => 'SA',
             'sa_plot_no' => 'SA-PLOT-002',
             'plot_no' => 'PLOT-002',
             'award_holder_names' => [
-                ['name' => 'Test Award Holder']
+                [
+                    'name' => 'Test Award Holder',
+                    'father_name' => 'Test Father',
+                    'address' => 'Test Address'
+                ]
             ],
             'is_applicant_in_award' => true,
             'source_tax_percentage' => '3%',
             'applicant_acquired_land' => '1.00',
             'mouza_name' => 'Test Mouza',
+            'district' => 'Test District',
+            'upazila' => 'Test Upazila',
             'jl_no' => 'JL-002',
             'sa_khatian_no' => 'SA-002',
             'rs_khatian_no' => 'RS-002',
@@ -157,6 +172,7 @@ class CompensationTaxInfoTest extends TestCase
                 'rs_record_disabled' => false,
             ],
             'tax_info' => [
+                'paid_in_name' => 'Test Applicant',
                 'english_year' => '2024',
                 'bangla_year' => '১৪৩১'
             ],

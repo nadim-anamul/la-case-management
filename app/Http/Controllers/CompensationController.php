@@ -296,6 +296,7 @@ class CompensationController extends Controller
             
             // Tax Information
             'tax_info' => 'nullable|array',
+            'tax_info.paid_in_name' => 'nullable|string|max:255',
             'tax_info.english_year' => 'nullable|string|max:255',
             'tax_info.bangla_year' => 'nullable|string|max:255',
             'tax_info.holding_no' => 'nullable|string|max:255',
@@ -540,6 +541,9 @@ class CompensationController extends Controller
         
         // Process tax info numbers
         if (isset($data['tax_info']) && is_array($data['tax_info'])) {
+            if (isset($data['tax_info']['paid_in_name'])) {
+                // paid_in_name is a name field, no number conversion needed
+            }
             if (isset($data['tax_info']['holding_no'])) {
                 $data['tax_info']['holding_no'] = $this->enDigits($data['tax_info']['holding_no']);
             }

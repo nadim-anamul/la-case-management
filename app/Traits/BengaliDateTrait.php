@@ -214,7 +214,6 @@ trait BengaliDateTrait
         $dateFields = [
             'case_date',
             'ownership_details.deed_transfers.*.deed_date',
-            'ownership_details.inheritance_records.*.death_date',
             'ownership_details.applicant_info.kharij_date',
             'order_signature_date'
         ];

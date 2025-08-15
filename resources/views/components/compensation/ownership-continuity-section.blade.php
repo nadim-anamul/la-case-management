@@ -265,23 +265,23 @@
                     <div>
                         <template x-for="(donor, donorIdx) in deed.donor_names" :key="donorIdx">
                             <div class="flex items-center mb-2">
-                                <input type="text" :id="'deed_donor_name_' + index + '_' + donorIdx" x-model="donor.name" class="form-input flex-1" placeholder="দলিল দাতার নাম">
-                                <label :for="'deed_donor_name_' + index + '_' + donorIdx" class="ml-2">দলিল দাতার নাম</label>
+                                <input type="text" :id="'deed_donor_name_' + index + '_' + donorIdx" x-model="donor.name" class="form-input flex-1" placeholder="দলিলের দাতা ও পিতা/স্বামীর নাম">
+                                <label :for="'deed_donor_name_' + index + '_' + donorIdx" class="ml-2">দলিলের দাতা ও পিতা/স্বামীর নাম</label>
                                 <button type="button" @click="removeDeedDonor(index, donorIdx)" x-show="deed.donor_names.length > 1" class="btn-danger ml-2" title="দাতার নাম মুছুন">×</button>
                             </div>
                         </template>
-                        <button type="button" @click="addDeedDonor(index)" class="btn-success mt-2">+ দলিল দাতার নাম যোগ করুন</button>
+                        <button type="button" @click="addDeedDonor(index)" class="btn-success mt-2">+ দলিলের দাতা ও পিতা/স্বামীর নাম যোগ করুন</button>
                     </div>
                     <!-- Multiple Recipients -->
                     <div>
                         <template x-for="(recipient, recipientIdx) in deed.recipient_names" :key="recipientIdx">
                             <div class="flex items-center mb-2">
-                                <input type="text" :id="'deed_recipient_name_' + index + '_' + recipientIdx" x-model="recipient.name" class="form-input flex-1" placeholder="দলিল গ্রহীতার নাম">
-                                <label :for="'deed_recipient_name_' + index + '_' + recipientIdx" class="ml-2">দলিল গ্রহীতার নাম</label>
+                                <input type="text" :id="'deed_recipient_name_' + index + '_' + recipientIdx" x-model="recipient.name" class="form-input flex-1" placeholder="দলিলের গ্রহীতা ও পিতা/স্বামীর নাম">
+                                <label :for="'deed_recipient_name_' + index + '_' + recipientIdx" class="ml-2">দলিলের গ্রহীতা ও পিতা/স্বামীর নাম</label>
                                 <button type="button" @click="removeDeedRecipient(index, recipientIdx)" x-show="deed.recipient_names.length > 1" class="btn-danger ml-2" title="গ্রহীতার নাম মুছুন">×</button>
                             </div>
                         </template>
-                        <button type="button" @click="addDeedRecipient(index)" class="btn-success mt-2">+ দলিল গ্রহীতার নাম যোগ করুন</button>
+                        <button type="button" @click="addDeedRecipient(index)" class="btn-success mt-2">+ দলিলের গ্রহীতা ও পিতা/স্বামীর নাম যোগ করুন</button>
                     </div>
                     <div class="floating-label">
                         <input type="text" :id="'deed_number_' + index" x-model="deed.deed_number" placeholder=" ">
@@ -356,7 +356,7 @@
                         <label class="font-semibold text-gray-700 mb-2"> দখলের বর্ণনা:</label>
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">i) দলিলের বিবরণ ও হাতনকশায় দখল উল্লেখ রয়েছে কিনা?</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">i) দলিলের বিবরণ ও হাতনকশায় আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা?</label>
                                 <div class="radio-group">
                                                                     <label class="flex items-center">
                                     <input type="radio" value="yes" x-model="deed.possession_deed" class="mr-2">
@@ -368,19 +368,7 @@
                                 </label>
                                 </div>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">ii) আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা?</label>
-                                <div class="radio-group">
-                                                                    <label class="flex items-center">
-                                    <input type="radio" value="yes" x-model="deed.possession_application" class="mr-2">
-                                    <span>হ্যাঁ</span>
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="radio" value="no" x-model="deed.possession_application" class="mr-2">
-                                    <span>না</span>
-                                </label>
-                                </div>
-                            </div>
+
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">
                                     iii) যে সকল দাগে দখল উল্লেখ করা 
@@ -415,16 +403,13 @@
                         <input type="text" :id="'inheritance_previous_owner_name_' + index" x-model="inheritance.previous_owner_name" placeholder=" ">
                         <label :for="'inheritance_previous_owner_name_' + index">পূর্ববর্তী মালিকের নাম<span class="text-red-500">*</span></label>
                     </div>
-                    <div class="floating-label">
-                        <input type="text" :id="'inheritance_death_date_' + index" x-model="inheritance.death_date" placeholder="দিন/মাস/বছর">
-                        <label :for="'inheritance_death_date_' + index">মৃত্যুর তারিখ<span class="text-red-500">*</span></label>
-                    </div>
+
                     <div class="floating-label">
                         <select x-model="inheritance.has_death_cert">
                             <option value="yes">হ্যাঁ</option>
                             <option value="no">না</option>
                         </select>
-                        <label>মৃত্যু সনদ আছে কিনা</label>
+                        <label>ওয়ারিশান সনদ দাখিল করা হয়েছে কিনা</label>
                     </div>
                     <div class="floating-label md:col-span-2">
                         <textarea rows="3" x-model="inheritance.heirship_certificate_info" placeholder=" "></textarea>
@@ -956,7 +941,6 @@ document.addEventListener('alpine:init', () => {
                 application_total_area: '',
                 application_sell_area_other: '',
                 possession_deed: 'yes',
-                possession_application: 'yes',
                 mentioned_areas: '',
                 special_details: '',
                 tax_info: '',
@@ -977,7 +961,6 @@ document.addEventListener('alpine:init', () => {
             console.log('Adding inheritance record with creation order:', creationOrder);
             this.inheritance_records.push({
                 previous_owner_name: '',
-                death_date: '',
                 has_death_cert: 'yes',
                 heirship_certificate_info: '',
                 creationOrder: creationOrder

@@ -131,7 +131,6 @@ class FullCompensationFormTest extends TestCase
                 'inheritance_records' => [
                     [
                         'previous_owner_name' => 'Deceased Owner',
-                        'death_date' => '2023-12-01',
                         'has_death_cert' => 'yes',
                         'heirship_certificate_info' => 'Certificate number: HEIR-001'
                     ]
@@ -187,6 +186,7 @@ class FullCompensationFormTest extends TestCase
         $this->assertNotNull($compensation);
 
         // Verify Tax Information
+        $this->assertEquals('John Doe', $compensation->tax_info['paid_in_name']);
         $this->assertEquals('2024', $compensation->tax_info['english_year']);
         $this->assertEquals('১৪৩১', $compensation->tax_info['bangla_year']);
         $this->assertEquals('HLD-001', $compensation->tax_info['holding_no']);
@@ -244,7 +244,6 @@ class FullCompensationFormTest extends TestCase
 
         // Verify Inheritance Records
         $this->assertEquals('Deceased Owner', $ownershipDetails['inheritance_records'][0]['previous_owner_name']);
-        $this->assertEquals('2023-12-01', $ownershipDetails['inheritance_records'][0]['death_date']);
         $this->assertEquals('yes', $ownershipDetails['inheritance_records'][0]['has_death_cert']);
         $this->assertEquals('Certificate number: HEIR-001', $ownershipDetails['inheritance_records'][0]['heirship_certificate_info']);
 

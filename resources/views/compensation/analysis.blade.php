@@ -222,6 +222,10 @@
         <div class="bg-gray-50 p-4 rounded-lg">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
+                    <label class="font-semibold text-gray-700">যার নামে প্রদানকৃত:</label>
+                    <p class="text-gray-900">{{ $compensation->tax_info['paid_in_name'] ?? 'অনুপলব্ধ' }}</p>
+                </div>
+                <div>
                     <label class="font-semibold text-gray-700">হোল্ডিং নম্বর:</label>
                     <p class="text-gray-900">{{ $compensation->tax_info['holding_no'] ?? 'অনুপলব্ধ' }}</p>
                 </div>

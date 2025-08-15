@@ -56,6 +56,7 @@ class CompensationSeeder extends Seeder
                 'tree_compensation' => $awardType === 'গাছপালা/ফসল' ? fake()->numberBetween(25000, 75000) : null,
                 'infrastructure_compensation' => $awardType === 'অবকাঠামো' ? fake()->numberBetween(100000, 500000) : null,
                 'tax_info' => [
+                    'paid_in_name' => fake()->randomElement(['আবদুল করিম', 'মোহাম্মদ আলী', 'রশিদা খাতুন', 'ফাতেমা বেগম']),
                     'english_year' => '2024-25',
                     'bangla_year' => '১৪৩১-৩২',
                     'holding_no' => 'HOLD-' . fake()->numberBetween(100, 999),
@@ -261,6 +262,7 @@ class CompensationSeeder extends Seeder
                 'rs_record_disabled' => false
             ],
             'tax_info' => [
+                'paid_in_name' => 'মোঃ আব্দুর রহমান',
                 'holding_no' => '1002',
                 'paid_land_amount' => '২.২৫',
                 'english_year' => '2024',
@@ -463,6 +465,7 @@ class CompensationSeeder extends Seeder
                 'rs_record_disabled' => false
             ],
             'tax_info' => [
+                'paid_in_name' => 'মোছাঃ ফাতেমা খাতুন',
                 'holding_no' => '1001',
                 'paid_land_amount' => '2.50',
                 'english_year' => '2024',
@@ -572,6 +575,7 @@ class CompensationSeeder extends Seeder
                 'rs_record_disabled' => false
             ],
             'tax_info' => [
+                'paid_in_name' => 'মোঃ আলমগীর হোসেন',
                 'holding_no' => '1002',
                 'paid_land_amount' => '2.25',
                 'english_year' => '2024',
@@ -681,6 +685,7 @@ class CompensationSeeder extends Seeder
                 'rs_record_disabled' => true
             ],
             'tax_info' => [
+                'paid_in_name' => 'মোঃ আলমগীর হোসেন',
                 'holding_no' => '1003',
                 'paid_land_amount' => '1.00',
                 'english_year' => '2024',
@@ -885,6 +890,7 @@ class CompensationSeeder extends Seeder
                 'rs_record_disabled' => false
             ],
             'tax_info' => [
+                'paid_in_name' => 'দশমিক সংখ্যা টেস্ট',
                 'holding_no' => '1005',
                 'paid_land_amount' => '67.89',
                 'english_year' => '2024',

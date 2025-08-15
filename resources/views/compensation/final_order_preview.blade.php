@@ -397,6 +397,7 @@
                           $kharijDetails = $applicantInfo['kharij_details'] ?? '';
                           
                           // Tax information from tax_info field
+                          $paidInName = $compensation->tax_info && is_array($compensation->tax_info) ? ($compensation->tax_info['paid_in_name'] ?? '……………………………') : '……………………………';
                           $holdingNo = $compensation->tax_info && is_array($compensation->tax_info) ? ($compensation->tax_info['holding_no'] ?? '……………………………') : '……………………………';
                           $paidLandAmount = $compensation->tax_info && is_array($compensation->tax_info) ? ($compensation->tax_info['paid_land_amount'] ?? '……………………………') : '……………………………';
                           $englishYear = $compensation->tax_info && is_array($compensation->tax_info) ? ($compensation->tax_info['english_year'] ?? '……………………………') : '……………………………';
@@ -407,7 +408,7 @@
                       
                       <div class="ml-4 mt-2">
                           <strong>{{ $nextSectionNumber }}. নামজারী ও খাজনার বর্ণনাঃ</strong><br>
-                          আবেদনকারী {{ $applicantName }} প্রাপ্ত জমি {{ $compensation->bnDigits($kharijCaseNo) }} নং নামজারী কেসমূলে রেকর্ড সংশোধনপূর্বক {{ $compensation->bnDigits($kharijKhatianNo) }} নং নামজারী খতিয়ানে {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($kharijLandAmount) }} একর জমি নামজারী করেন। খাজনার রশিদ যাচাই করে দেখা যায়, {{ $compensation->bnDigits($holdingNo) }} নং হোল্ডিং এ {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($paidLandAmount) }} একর জমির বিপরীতে বাংলা {{ $compensation->bnDigits($banglaYear) }} সন পর্যন্ত ভূমি উন্নয়ন কর পরিশোধ অন্তে খাজনার রশিদ দাখিল করেছেন।
+                          আবেদনকারী {{ $applicantName }} প্রাপ্ত জমি {{ $compensation->bnDigits($kharijCaseNo) }} নং নামজারী কেসমূলে রেকর্ড সংশোধনপূর্বক {{ $compensation->bnDigits($kharijKhatianNo) }} নং নামজারী খতিয়ানে {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($kharijLandAmount) }} একর জমি নামজারী করেন। খাজনার রশিদ যাচাই করে দেখা যায়, {{ $paidInName }} নামে {{ $compensation->bnDigits($holdingNo) }} নং হোল্ডিং এ {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($paidLandAmount) }} একর জমির বিপরীতে বাংলা {{ $compensation->bnDigits($banglaYear) }} সন পর্যন্ত ভূমি উন্নয়ন কর পরিশোধ অন্তে খাজনার রশিদ দাখিল করেছেন।
                           
                           @if($kharijDetails)
                               <br><br>

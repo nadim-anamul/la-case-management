@@ -494,12 +494,8 @@
                                 
                                 <!-- New Possession Fields -->
                                 <div>
-                                    <label class="font-semibold text-gray-700">দলিলের বিবরণ ও হস্তান্তরের সময় দখল উল্লেখ রয়েছে কিনা:</label>
+                                    <label class="font-semibold text-gray-700">দলিলের বিবরণ ও হাতনকশায় আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা?</label>
                                     <p class="text-gray-900">{{ isset($deed['possession_deed']) && $deed['possession_deed'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
-                                </div>
-                                <div>
-                                    <label class="font-semibold text-gray-700">আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা:</label>
-                                    <p class="text-gray-900">{{ isset($deed['possession_application']) && $deed['possession_application'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
                                 </div>
                                 @if(isset($deed['mentioned_areas']) && $deed['mentioned_areas'])
                                 <div>
@@ -648,12 +644,8 @@
                                 
                                 <!-- New Possession Fields -->
                                 <div>
-                                    <label class="font-semibold text-gray-700">দলিলের বিবরণ ও হস্তান্তরের সময় দখল উল্লেখ রয়েছে কিনা:</label>
+                                    <label class="font-semibold text-gray-700">দলিলের বিবরণ ও হাতনকশায় আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা?</label>
                                     <p class="text-gray-900">{{ isset($deed['possession_deed']) && $deed['possession_deed'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
-                                </div>
-                                <div>
-                                    <label class="font-semibold text-gray-700">আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা:</label>
-                                    <p class="text-gray-900">{{ isset($deed['possession_application']) && $deed['possession_application'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
                                 </div>
                                 @if(isset($deed['mentioned_areas']) && $deed['mentioned_areas'])
                                 <div>
@@ -685,11 +677,7 @@
                                     <p class="text-gray-900">{{ $inheritance['previous_owner_name'] ?? '' }}</p>
                                 </div>
                                 <div>
-                                    <label class="font-semibold text-gray-700">মৃত্যুর তারিখ:</label>
-                                    <p class="text-gray-900">{{ $inheritance['death_date'] ?? '' }}</p>
-                                </div>
-                                <div>
-                                    <label class="font-semibold text-gray-700">মৃত্যু সনদ আছে কিনা:</label>
+                                    <label class="font-semibold text-gray-700">ওয়ারিশান সনদ দাখিল করা হয়েছে কিনা:</label>
                                     <p class="text-gray-900">{{ isset($inheritance['has_death_cert']) && $inheritance['has_death_cert'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
                                 </div>
                                 <div class="md:col-span-2">
@@ -802,12 +790,8 @@
                         
                         <!-- New Possession Fields -->
                         <div>
-                            <label class="font-semibold text-gray-700">দলিলের বিবরণ ও হস্তান্তরের সময় দখল উল্লেখ রয়েছে কিনা:</label>
+                            <label class="font-semibold text-gray-700">দলিলের বিবরণ ও হাতনকশায় আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা?</label>
                             <p class="text-gray-900">{{ isset($deed['possession_deed']) && $deed['possession_deed'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
-                        </div>
-                        <div>
-                            <label class="font-semibold text-gray-700">আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা:</label>
-                            <p class="text-gray-900">{{ isset($deed['possession_application']) && $deed['possession_application'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
                         </div>
                         @if(isset($deed['mentioned_areas']) && $deed['mentioned_areas'])
                         <div>
@@ -837,10 +821,6 @@
                         <div>
                             <label class="font-semibold text-gray-700">পূর্ববর্তী মালিকের নাম:</label>
                             <p class="text-gray-900">{{ $inheritance['previous_owner_name'] ?? '' }}</p>
-                        </div>
-                        <div>
-                            <label class="font-semibold text-gray-700">মৃত্যুর তারিখ:</label>
-                            <p class="text-gray-900">{{ $inheritance['death_date'] ?? '' }}</p>
                         </div>
                         <div>
                             <label class="font-semibold text-gray-700">মৃত্যু সনদ আছে কিনা:</label>
@@ -936,6 +916,14 @@
             খাজনার তথ্য
         </h2>
         <div class="info-grid">
+            <div class="info-item">
+                <label>যার নামে প্রদানকৃত:</label>
+                @if(!empty($compensation->tax_info['paid_in_name'] ?? ''))
+                    <span>{{ $compensation->tax_info['paid_in_name'] }}</span>
+                @else
+                    <span class="no-data">তথ্য নেই</span>
+                @endif
+            </div>
             <div class="info-item">
                 <label>হোল্ডিং নম্বর:</label>
                 @if(!empty($compensation->tax_info['holding_no'] ?? ''))
