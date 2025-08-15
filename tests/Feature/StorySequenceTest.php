@@ -115,6 +115,7 @@ class StorySequenceTest extends TestCase
                 ],
                 'applicant_info' => [
                     'applicant_name' => 'Test Applicant',
+                    'namejari_khatian_no' => 'NAMEJARI-001',
                     'kharij_land_amount' => '2.50'
                 ],
                 'currentStep' => 'applicant',

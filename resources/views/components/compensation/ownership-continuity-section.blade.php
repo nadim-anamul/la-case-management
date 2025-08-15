@@ -413,7 +413,7 @@
                     </div>
                     <div class="floating-label md:col-span-2">
                         <textarea rows="3" x-model="inheritance.heirship_certificate_info" placeholder=" "></textarea>
-                        <label>ওয়ারিশান সনদের বিবরণ</label>
+                        <label>ওয়ারিশান সনদের বিবরণ <span class="text-red-500">*</span></label>
                     </div>
                 </div>
             </div>
@@ -534,6 +534,9 @@
                     <div x-show="applicant_info.applicant_name">
                         <span class="font-medium">আবেদনকারীর নাম:</span> <span x-text="applicant_info.applicant_name"></span>
                     </div>
+                    <div x-show="applicant_info.namejari_khatian_no">
+                        <span class="font-medium">নামজারি খতিয়ান নং:</span> <span x-text="applicant_info.namejari_khatian_no"></span>
+                    </div>
                     <div x-show="applicant_info.kharij_case_no">
                         <span class="font-medium">খারিজ কেস নম্বর:</span> <span x-text="applicant_info.kharij_case_no"></span>
                     </div>
@@ -562,6 +565,12 @@
                 <div class="floating-label">
                     <input type="text" x-model="applicant_info.applicant_name" placeholder=" ">
                     <label>আবেদনকারীর নাম</label>
+                </div>
+                <div class="floating-label">
+                    <input type="text" x-model="applicant_info.namejari_khatian_no" placeholder=" " 
+                           @input="applicant_info.namejari_khatian_no = formatNumberInput($event.target.value)"
+                           pattern="[০-৯0-9]+" title="শুধুমাত্র সংখ্যা অনুমোদিত">
+                    <label>নামজারি খতিয়ান নং</label>
                 </div>
                 <div class="floating-label">
                     <input type="text" x-model="applicant_info.kharij_case_no" placeholder=" ">
@@ -653,6 +662,7 @@ document.addEventListener('alpine:init', () => {
         },
         applicant_info: {
             applicant_name: '',
+            namejari_khatian_no: '',
             kharij_case_no: '',
             kharij_plot_no: '',
             kharij_land_amount: '',

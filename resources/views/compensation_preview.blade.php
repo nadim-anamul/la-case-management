@@ -876,6 +876,10 @@
                     <p class="text-gray-900">{{ $compensation->ownership_details['applicant_info']['applicant_name'] ?? '' }}</p>
                 </div>
                 <div>
+                    <label class="font-semibold text-gray-700">নামজারি খতিয়ান নং:</label>
+                    <p class="text-gray-900">{{ $compensation->bnDigits($compensation->ownership_details['applicant_info']['namejari_khatian_no'] ?? '') }}</p>
+                </div>
+                <div>
                     <label class="font-semibold text-gray-700">খারিজ কেস নম্বর:</label>
                     <p class="text-gray-900">{{ $compensation->bnDigits($compensation->ownership_details['applicant_info']['kharij_case_no'] ?? '') }}</p>
                 </div>

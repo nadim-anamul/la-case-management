@@ -355,11 +355,11 @@
             <div class="info-grid">
                 <div class="info-item">
                     <label>SA দাগ নম্বর:</label>
-                    <span>{{ $compensation->ownership_details['sa_info']['sa_plot_no'] ?? '' }}</span>
+                    <span>{{ $compensation->bnDigits($compensation->ownership_details['sa_info']['sa_plot_no'] ?? '') }}</span>
                 </div>
                 <div class="info-item">
                     <label>SA খতিয়ান নম্বর:</label>
-                    <span>{{ $compensation->ownership_details['sa_info']['sa_khatian_no'] ?? '' }}</span>
+                    <span>{{ $compensation->bnDigits($compensation->ownership_details['sa_info']['sa_khatian_no'] ?? '') }}</span>
                 </div>
                 <div class="info-item">
                     <label>SA দাগে মোট জমি:</label>
@@ -388,11 +388,11 @@
             <div class="info-grid">
                 <div class="info-item">
                     <label>RS দাগ নম্বর:</label>
-                    <span>{{ $compensation->ownership_details['rs_info']['rs_plot_no'] ?? '' }}</span>
+                    <span>{{ $compensation->bnDigits($compensation->ownership_details['rs_info']['rs_plot_no'] ?? '') }}</span>
                 </div>
                 <div class="info-item">
                     <label>RS খতিয়ান নম্বর:</label>
-                    <span>{{ $compensation->ownership_details['rs_info']['rs_khatian_no'] ?? '' }}</span>
+                    <span>{{ $compensation->bnDigits($compensation->ownership_details['rs_info']['rs_khatian_no'] ?? '') }}</span>
                 </div>
                 <div class="info-item">
                     <label>RS দাগে মোট জমি:</label>
@@ -875,12 +875,16 @@
                     <p class="text-gray-900">{{ $compensation->ownership_details['applicant_info']['applicant_name'] ?? '' }}</p>
                 </div>
                 <div>
+                    <label class="font-semibold text-gray-700">নামজারি খতিয়ান নং:</label>
+                    <p class="text-gray-900">{{ $compensation->bnDigits($compensation->ownership_details['applicant_info']['namejari_khatian_no'] ?? '') }}</p>
+                </div>
+                <div>
                     <label class="font-semibold text-gray-700">খারিজ কেস নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['applicant_info']['kharij_case_no'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->bnDigits($compensation->ownership_details['applicant_info']['kharij_case_no'] ?? '') }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">খারিজ দাগ নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['applicant_info']['kharij_plot_no'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->bnDigits($compensation->ownership_details['applicant_info']['kharij_plot_no'] ?? '') }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">খারিজ জমির পরিমাণ:</label>
@@ -917,7 +921,7 @@
             <div class="info-item">
                 <label>হোল্ডিং নম্বর:</label>
                 @if(!empty($compensation->tax_info['holding_no'] ?? ''))
-                    <span>{{ $compensation->tax_info['holding_no'] }}</span>
+                    <span>{{ $compensation->bnDigits($compensation->tax_info['holding_no']) }}</span>
                 @else
                     <span class="no-data">তথ্য নেই</span>
                 @endif
@@ -933,7 +937,7 @@
             <div class="info-item">
                 <label>ইংরেজি বছর:</label>
                 @if(!empty($compensation->tax_info['english_year'] ?? ''))
-                    <span>{{ $compensation->tax_info['english_year'] }}</span>
+                    <span>{{ $compensation->bnDigits($compensation->tax_info['english_year']) }}</span>
                 @else
                     <span class="no-data">তথ্য নেই</span>
                 @endif
@@ -941,7 +945,7 @@
             <div class="info-item">
                 <label>বাংলা বছর:</label>
                 @if(!empty($compensation->tax_info['bangla_year'] ?? ''))
-                    <span>{{ $compensation->tax_info['bangla_year'] }}</span>
+                    <span>{{ $compensation->bnDigits($compensation->tax_info['bangla_year']) }}</span>
                 @else
                     <span class="no-data">তথ্য নেই</span>
                 @endif

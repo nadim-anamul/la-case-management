@@ -75,6 +75,7 @@ class CompensationTest extends TestCase
                 'rs_records' => [],
                 'applicant_info' => [
                     'applicant_name' => 'Test Applicant',
+                    'namejari_khatian_no' => 'NAMEJARI-001',
                     'kharij_land_amount' => '1.00'
                 ],
                 'storySequence' => [],

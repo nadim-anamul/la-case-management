@@ -227,7 +227,7 @@
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">হোল্ডিং নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->tax_info['holding_no'] ?? 'অনুপলব্ধ' }}</p>
+                    <p class="text-gray-900">{{ isset($compensation->tax_info['holding_no']) ? $compensation->bnDigits($compensation->tax_info['holding_no']) : 'অনুপলব্ধ' }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">খাজনা প্রদানকৃত জমির পরিমাণ:</label>
@@ -235,11 +235,11 @@
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">ইংরেজি বছর:</label>
-                    <p class="text-gray-900">{{ $compensation->tax_info['english_year'] ?? 'অনুপলব্ধ' }}</p>
+                    <p class="text-gray-900">{{ isset($compensation->tax_info['english_year']) ? $compensation->bnDigits($compensation->tax_info['english_year']) : 'অনুপলব্ধ' }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">বাংলা বছর:</label>
-                    <p class="text-gray-900">{{ $compensation->tax_info['bangla_year'] ?? 'অনুপলব্ধ' }}</p>
+                    <p class="text-gray-900">{{ isset($compensation->tax_info['bangla_year']) ? $compensation->bnDigits($compensation->tax_info['bangla_year']) : 'অনুপলব্ধ' }}</p>
                 </div>
                 <div class="md:col-span-2">
                     <label class="font-semibold text-gray-700">খাজনার বৈধতা:</label>

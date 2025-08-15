@@ -246,6 +246,7 @@ class CompensationSeeder extends Seeder
                 'rs_records' => [],
                 'applicant_info' => [
                     'applicant_name' => 'মোছাঃ ফাতেমা খাতুন',
+                    'namejari_khatian_no' => 'নামজারি-১০০২',
                     'kharij_land_amount' => '২.২৫'
                 ],
                 'storySequence' => [
@@ -449,6 +450,7 @@ class CompensationSeeder extends Seeder
                 'rs_records' => [],
                 'applicant_info' => [
                     'applicant_name' => 'মোঃ রহিম উদ্দিন',
+                    'namejari_khatian_no' => 'নামজারি-১০০১',
                     'kharij_land_amount' => '2.50'
                 ],
                 'storySequence' => [
@@ -559,6 +561,7 @@ class CompensationSeeder extends Seeder
                 'rs_records' => [],
                 'applicant_info' => [
                     'applicant_name' => 'মোছাঃ ফাতেমা খাতুন',
+                    'namejari_khatian_no' => 'নামজারি-১০০২',
                     'kharij_land_amount' => '2.25'
                 ],
                 'storySequence' => [
@@ -662,6 +665,7 @@ class CompensationSeeder extends Seeder
                 ],
                 'applicant_info' => [
                     'applicant_name' => 'মোঃ আলমগীর হোসেন',
+                    'namejari_khatian_no' => 'নামজারি-১০০৩',
                     'kharij_land_amount' => '1.00'
                 ],
                 'storySequence' => [
@@ -778,6 +782,7 @@ class CompensationSeeder extends Seeder
                 'rs_records' => [],
                 'applicant_info' => [
                     'applicant_name' => 'মোঃ আব্দুর রহমান',
+                    'namejari_khatian_no' => 'নামজারি-১০০৪',
                     'kharij_land_amount' => '2.00'
                 ],
                 'storySequence' => [
@@ -874,6 +879,7 @@ class CompensationSeeder extends Seeder
                 'rs_records' => [],
                 'applicant_info' => [
                     'applicant_name' => 'দশমিক সংখ্যা টেস্ট',
+                    'namejari_khatian_no' => 'নামজারি-১০০৫',
                     'kharij_land_amount' => '67.89'
                 ],
                 'storySequence' => [
