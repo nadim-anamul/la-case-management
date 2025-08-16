@@ -508,9 +508,11 @@
                       <div class="ml-4 mt-2">
                           <strong>{{ $compensation->bnDigits($nextSectionNumber) }}. নামজারী, খাজনা ও অন্যান্য বর্ণনা</strong><br><br>
                           
-                          <strong>নামজারীর বর্ণনা:</strong> আবেদনকারী {{ $applicantName }} তার প্রাপ্ত জমি {{ $compensation->bnDigits($kharijCaseNo) }} নং নামজারী কেসমূলে রেকর্ড সংশোধনপূর্বক {{ $compensation->bnDigits($namejariKhatianNo) }} নং নামজারী খতিয়ানে {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($kharijLandAmount) }} একর জমি নিজ নামে নামজারী করেন।<br><br>
+                          <strong>নামজারীর বর্ণনা:</strong> আবেদনকারী {{ $applicantName }}
+                          তার প্রাপ্ত জমি {{ $compensation->bnDigits($kharijCaseNo) }} নং নামজারী কেসমূলে রেকর্ড সংশোধনপূর্বক {{ $compensation->bnDigits($namejariKhatianNo) }} নং নামজারী খতিয়ানে {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($kharijLandAmount) }} একর জমি নিজ নামে নামজারী করেন।<br><br>
                           
-                          <strong>খাজনার বর্ণনা:</strong> দাখিলকৃত খাজনার রশিদ যাচাই করে দেখা যায়, {{ $paidInName }} নামে {{ $compensation->bnDigits($holdingNo) }} নং হোল্ডিং এ {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($paidLandAmount) }} একর জমির বিপরীতে বাংলা {{ $compensation->bnDigits($banglaYear) }} সন/ ইংরেজি {{ $compensation->bnDigits($englishYear) }} সাল পর্যন্ত ভূমি উন্নয়ন কর পরিশোধ অন্তে খাজনার রশিদ দাখিল করা হয়েছে।<br><br>
+                          <strong>খাজনার বর্ণনা:</strong> দাখিলকৃত খাজনার রশিদ যাচাই করে দেখা যায়, {{ $paidInName }}
+                          নামে {{ $compensation->bnDigits($holdingNo) }} নং হোল্ডিং এ {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($paidLandAmount) }} একর জমির বিপরীতে বাংলা {{ $compensation->bnDigits($banglaYear) }} সন/ ইংরেজি {{ $compensation->bnDigits($englishYear) }} সাল পর্যন্ত ভূমি উন্নয়ন কর পরিশোধ অন্তে খাজনার রশিদ দাখিল করা হয়েছে।<br><br>
                           
                           @if($kharijDetails)
                               <strong>না-দাবীর বর্ণনা:</strong> {{ $kharijDetails }}
