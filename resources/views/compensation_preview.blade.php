@@ -1092,17 +1092,28 @@
             </div>
 
             <!-- Mutation Status -->
+            @if(isset($compensation->ownership_details['applicant_info']['kharij_case_no']) && !empty($compensation->ownership_details['applicant_info']['kharij_case_no']))
             <div class="p-4 bg-gray-50 rounded-lg">
                 <p class="text-gray-800">
-                    আবেদনকারীর নামে উল্লিখিত দাগে খারিজ করা 
-                    @if($compensation->mutation_info && isset($compensation->mutation_info['has_mutation']) && $compensation->mutation_info['has_mutation'])
-                        আছে।
-                    @else
-                        নাই।
-                    @endif
+                    আবেদনকারীর নামে উল্লিখিত দাগে খারিজ করা আছে
                 </p>
             </div>
 
+            @else
+            <div class="p-4 bg-gray-50 rounded-lg">
+                <p class="text-gray-800">
+                    আবেদনকারীর নামে উল্লিখিত দাগে খারিজ করা নেই
+                </p>
+            </div>
+
+            @endif
+            @if( isset($compensation->tax_info['paid_in_name']) && !empty($compensation->tax_info['paid_in_name']))
+            <div class="p-4 bg-gray-50 rounded-lg">
+                <p class="text-gray-800">
+                    {{ $compensation->tax_info['paid_in_name'] }} নামে খাজনা প্রদান করা হয়েছে
+                </p>
+            </div>
+            @endif
             <!-- Tax Receipt Status -->
             <div class="p-4 bg-gray-50 rounded-lg">
                 <p class="text-gray-800">
@@ -1143,18 +1154,20 @@
             </div>
             @endif
 
-            <!-- Land Compensation Claim -->
-            @if($compensation->land_category && is_array($compensation->land_category))
-            @php
-                $total_land = number_format($compensation->total_land_amount, 6);
-                $applicant_acquired_land = number_format($compensation->applicant_acquired_land, 6);
-            @endphp
+            <!-- Land Compensation Claim Based on Land Categories -->
+            @if($compensation->land_category && is_array($compensation->land_category) && count($compensation->land_category) > 0)
             <div class="p-4 bg-gray-50 rounded-lg">
-                <p class="text-gray-800">
-                    আবেদনকারী উল্লিখিত দাগে অধিগ্রহণকৃত {{ $compensation->bnDigits($total_land) }} একর জমির মধ্যে {{ $compensation->bnDigits($applicant_acquired_land) }} একরের ক্ষতিপূরণ দাবী করেন।
-                </p>
+                @foreach($compensation->land_category as $index => $category)
+                    @if($category['total_land'] && $category['total_compensation'])
+                    <p class="text-gray-800 mb-2">
+                        আবেদনকারী উল্লিখিত দাগে <strong>{{ $compensation->bnDigits($category['category_name'] ?? '') }}</strong> জমি শ্রেণীর অধিগ্রহণকৃত {{ $compensation->bnDigits($category['total_land']) }} একর জমির মোট ক্ষতিপূরণ {{ $compensation->bnDigits($category['total_compensation']) }}
+                    </p>
+                    @endif
+                @endforeach
             </div>
             @endif
+
+
 
             <!-- Acquisition Record Basis -->
             <div class="p-4 bg-gray-50 rounded-lg">
@@ -1162,7 +1175,13 @@
                     {{ $compensation->acquisition_record_basis ?? 'এসএ/ আরএস' }} রেকর্ডমূলে অধিগ্রহণ।
                 </p>
             </div>
-            @if($compensation->acquisition_record_basis === 'SA' && (!$compensation->ownership_details || !isset($compensation->ownership_details['rs_record_info'])))
+            @if($compensation->acquisition_record_basis === 'SA' && $compensation->ownership_details && isset($compensation->ownership_details['rs_records']) && count($compensation->ownership_details['rs_records']) > 0)
+            <div class="p-4 bg-gray-50 rounded-lg">
+                <p class="text-gray-800">
+                        এস এ রেকর্ডমূলে অধিগ্রহন, আর এস এর তথ্যও দাখিল করা হএছে।
+                </p>
+            </div>
+            @elseif($compensation->acquisition_record_basis === 'SA' && (!$compensation->ownership_details || !isset($compensation->ownership_details['rs_records']) || count($compensation->ownership_details['rs_records']) == 0))
             <div class="p-4 bg-gray-50 rounded-lg">
                 <p class="text-gray-800">
                         এস এ রেকর্ডমূলে অধিগ্রহণ, কিন্তু আরএস রেকর্ডের তথ্য দাখিল করা হয়নি।
