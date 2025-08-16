@@ -181,10 +181,20 @@
                       @endif
                       একর জমির রোয়েদাদ 
                       @if($compensation->award_holder_names && is_array($compensation->award_holder_names))
-                          @foreach($compensation->award_holder_names as $index => $holder)
-                              @if($index > 0), @endif
-                              {{ $holder['name'] ?? '…………………………….' }}, পিং- {{ $holder['father_name'] ?? '…………………………….' }}
-                          @endforeach
+                          @if(count($compensation->award_holder_names) == 1)
+                              {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }}, পিতা: {{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
+                          @else
+                              @foreach($compensation->award_holder_names as $index => $holder)
+                                  @if($index > 0)
+                                      @if($index == count($compensation->award_holder_names) - 1)
+                                          এবং
+                                      @else
+                                          ,
+                                      @endif
+                                  @endif
+                                  {{ $compensation->bnDigits($index + 1) }}. {{ $holder['name'] ?? '…………………………….' }}, পিতা: {{ $holder['father_name'] ?? '…………………………….' }}
+                              @endforeach
+                          @endif
                       @else
                           ………………………….
                       @endif
@@ -273,9 +283,22 @@
                               @if($compensation->sa_khatian_no && $compensation->land_schedule_sa_plot_no)
                                   নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_sa_plot_no) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
                                   @if($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) > 0)
-                                      {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }} পিং-{{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
+                                      @if(count($compensation->award_holder_names) == 1)
+                                          {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }}, পিতা: {{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
+                                      @else
+                                          @foreach($compensation->award_holder_names as $index => $holder)
+                                              @if($index > 0)
+                                                  @if($index == count($compensation->award_holder_names) - 1)
+                                                      এবং
+                                                  @else
+                                                      ,
+                                                  @endif
+                                              @endif
+                                              {{ $compensation->bnDigits($index + 1) }}. {{ $holder['name'] ?? '…………………………….' }}, পিতা: {{ $holder['father_name'] ?? '…………………………….' }}
+                                          @endforeach
+                                      @endif
                                   @else
-                                      …………………………. পিং-…………………………….
+                                      …………………………. পিতা: ………………………….
                                   @endif
                                   নামে এসএ রেকর্ড প্রস্তুত হয়েছে।
                               @else
@@ -288,9 +311,22 @@
                           <strong>{{ $compensation->bnDigits(1) }}. আরএস রেকর্ডের বর্ণনাঃ</strong><br>
                           নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' ) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
                           @if($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) > 0)
-                              {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }} পিং-{{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
+                              @if(count($compensation->award_holder_names) == 1)
+                                  {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }}, পিতা: {{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
+                              @else
+                                  @foreach($compensation->award_holder_names as $index => $holder)
+                                      @if($index > 0)
+                                          @if($index == count($compensation->award_holder_names) - 1)
+                                              এবং
+                                          @else
+                                              ,
+                                          @endif
+                                      @endif
+                                      {{ $compensation->bnDigits($index + 1) }}. {{ $holder['name'] ?? '…………………………….' }}, পিতা: {{ $holder['father_name'] ?? '…………………………….' }}
+                                  @endforeach
+                              @endif
                           @else
-                              …………………………. পিং-…………………………….
+                              …………………………. পিতা: ………………………….
                           @endif
                           নামে আরএস রেকর্ড প্রস্তুত হয়েছে।
                       </div>
@@ -314,9 +350,22 @@
                                   <strong>{{ $compensation->bnDigits($sectionNumber) }}. আরএস রেকর্ডের বর্ণনাঃ</strong><br>
                                   নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' ) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
                                   @if($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) > 0)
-                                      {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }} পিং-{{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
+                                      @if(count($compensation->award_holder_names) == 1)
+                                          {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }}, পিতা: {{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
+                                      @else
+                                          @foreach($compensation->award_holder_names as $index => $holder)
+                                              @if($index > 0)
+                                                  @if($index == count($compensation->award_holder_names) - 1)
+                                                      এবং
+                                                  @else
+                                                      ,
+                                                  @endif
+                                              @endif
+                                              {{ $compensation->bnDigits($index + 1) }}. {{ $holder['name'] ?? '…………………………….' }}, পিতা: {{ $holder['father_name'] ?? '…………………………….' }}
+                                          @endforeach
+                                      @endif
                                   @else
-                                      …………………………. পিং-…………………………….
+                                      …………………………. পিতা: ………………………….
                                   @endif
                                   নামে আরএস রেকর্ড প্রস্তুত হয়েছে।
                               </div>
@@ -330,7 +379,7 @@
                                       
                                       if (isset($compensation->ownership_details['inheritance_records']) && is_array($compensation->ownership_details['inheritance_records']) && count($compensation->ownership_details['inheritance_records']) > 0) {
                                           // Find the inheritance record that corresponds to this story sequence item
-                                          $storyItemIndex = $storyItem['itemIndex'] ?? 0;
+                                          $storyItemIndex = $item['itemIndex'] ?? 0;
                                           if (isset($compensation->ownership_details['inheritance_records'][$storyItemIndex])) {
                                               $inheritance = $compensation->ownership_details['inheritance_records'][$storyItemIndex];
                                               $inheritanceDetails = $inheritance['heirship_certificate_info'] ?? '……………………………';
@@ -352,23 +401,59 @@
                                       // Find the specific deed that corresponds to this story sequence item
                                       $currentDeed = null;
                                       if ($compensation->ownership_details && is_array($compensation->ownership_details) && isset($compensation->ownership_details['deed_transfers']) && count($compensation->ownership_details['deed_transfers']) > 0) {
+                                          // Try to find the deed by matching the description or by index
+                                          $deedFound = false;
                                           foreach ($compensation->ownership_details['deed_transfers'] as $deedIndex => $deed) {
+                                              // Check if this deed matches the current story item
                                               if (isset($deed['deed_number']) && isset($deed['deed_date'])) {
+                                                  $deedIdentifier = $deed['deed_number'] . ' - ' . $deed['deed_date'];
                                                   if (str_contains($sectionDescription, $deed['deed_number']) || str_contains($sectionDescription, $deed['deed_date'])) {
                                                       $currentDeed = $deed;
+                                                      $deedFound = true;
                                                       break;
                                                   }
                                               }
                                           }
-                                          if (!$currentDeed && isset($compensation->ownership_details['deed_transfers'][0])) {
-                                              $currentDeed = $compensation->ownership_details['deed_transfers'][0];
+                                          
+                                          // If no match found by description, try to use the deed by story sequence index
+                                          if (!$deedFound && isset($compensation->ownership_details['deed_transfers'])) {
+                                              // Use the story sequence index to map to the corresponding deed
+                                              $storyIndex = $index; // This is the index from the storySequence loop
+                                              if (isset($compensation->ownership_details['deed_transfers'][$storyIndex])) {
+                                                  $currentDeed = $compensation->ownership_details['deed_transfers'][$storyIndex];
+                                              } elseif (isset($compensation->ownership_details['deed_transfers'][0])) {
+                                                  // Fallback to first deed only if no other mapping is possible
+                                                  $currentDeed = $compensation->ownership_details['deed_transfers'][0];
+                                              }
                                           }
                                       }
                                   @endphp
                                   @if($currentDeed && isset($currentDeed['donor_names']) && is_array($currentDeed['donor_names']) && count($currentDeed['donor_names']) > 0 && isset($currentDeed['recipient_names']) && is_array($currentDeed['recipient_names']) && count($currentDeed['recipient_names']) > 0)
                                       @php
-                                          $donorNames = collect($currentDeed['donor_names'])->pluck('name')->filter()->implode(', ');
-                                          $recipientNames = collect($currentDeed['recipient_names'])->pluck('name')->filter()->implode(', ');
+                                          // Format donor names with Bengali numbering
+                                          $donorNamesArray = collect($currentDeed['donor_names'])->pluck('name')->filter()->toArray();
+                                          $donorNames = '';
+                                          if (count($donorNamesArray) == 1) {
+                                              $donorNames = $donorNamesArray[0];
+                                          } elseif (count($donorNamesArray) > 1) {
+                                              $numberedDonorNames = [];
+                                              foreach ($donorNamesArray as $donorIndex => $name) {
+                                                  $numberedDonorNames[] = $compensation->bnDigits($donorIndex + 1) . '. ' . $name;
+                                              }
+                                              $donorNames = implode(', ', $numberedDonorNames);
+                                          }
+                                          // Format recipient names with Bengali numbering
+                                          $recipientNamesArray = collect($currentDeed['recipient_names'])->pluck('name')->filter()->toArray();
+                                          $recipientNames = '';
+                                          if (count($recipientNamesArray) == 1) {
+                                              $recipientNames = $recipientNamesArray[0];
+                                          } elseif (count($recipientNamesArray) > 1) {
+                                              $numberedRecipientNames = [];
+                                              foreach ($recipientNamesArray as $recipientIndex => $name) {
+                                                  $numberedRecipientNames[] = $compensation->bnDigits($recipientIndex + 1) . '. ' . $name;
+                                              }
+                                              $recipientNames = implode(', ', $numberedRecipientNames);
+                                          }
                                           $deedNumber = $currentDeed['deed_number'] ?? '……………………………';
                                           $deedDate = $currentDeed['deed_date'] ?? '……………………………';
                                           $deedType = $currentDeed['sale_type'] ?? '……………………………';
