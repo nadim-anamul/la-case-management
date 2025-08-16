@@ -1323,7 +1323,7 @@
                     @foreach($compensation->ownership_details['deed_transfers'] as $deed)
                         @if(isset($deed['deed_number']) && !empty($deed['deed_number']))
                             আবেদনকারীর দাখিলকৃত দলিল নং {{ $deed['deed_number'] }} তে উল্লিখিত দাগে দখল উল্লেখ করা 
-                            @if(isset($deed['possession_mentioned']) && $deed['possession_mentioned'])
+                            @if(isset($deed['possession_deed']) && $deed['possession_deed'] === 'yes')
                                 রয়েছে
                             @else
                                 নাই
