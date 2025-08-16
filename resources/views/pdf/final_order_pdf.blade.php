@@ -239,7 +239,7 @@
                   <!-- First Section: SA/RS Record Description -->
                   @if($compensation->acquisition_record_basis === 'SA')
                       <div class="ml-4 mt-2">
-                          <strong>১. এসএ রেকর্ডের বর্ণনাঃ</strong> 
+                          <strong>{{ $compensation->bnDigits(1) }}. এসএ রেকর্ডের বর্ণনাঃ</strong> 
                           @if($compensation->ownership_details && is_array($compensation->ownership_details) && isset($compensation->ownership_details['sa_info']))
                               @php
                                   $saInfo = $compensation->ownership_details['sa_info'];
@@ -274,42 +274,18 @@
                       </div>
                   @elseif($compensation->acquisition_record_basis === 'RS')
                       <div class="ml-4 mt-2">
-                          <strong>১. আরএস রেকর্ডের বর্ণনাঃ</strong> 
-                          @if($compensation->ownership_details && is_array($compensation->ownership_details) && isset($compensation->ownership_details['rs_info']))
-                              @php
-                                  $rsInfo = $compensation->ownership_details['rs_info'];
-                                  $rsKhatianNo = $rsInfo['rs_khatian_no'] ?? $compensation->rs_khatian_no ?? '……………………………';
-                                  $rsPlotNo = $rsInfo['rs_plot_no'] ?? $compensation->land_schedule_rs_plot_no ?? '……………………………';
-                                  $rsLandInKhatian = $rsInfo['rs_land_in_khatian'] ?? '……………………………';
-                                  $rsOwners = $compensation->ownership_details['rs_owners'] ?? [];
-                                  $ownerNames = [];
-                                  if (is_array($rsOwners) && count($rsOwners) > 0) {
-                                      foreach ($rsOwners as $owner) {
-                                          if (!empty($owner['name'])) {
-                                              $ownerNames[] = $owner['name'];
-                                          }
-                                      }
-                                  }
-                                  $ownerDisplay = count($ownerNames) > 0 ? implode(' ', $ownerNames) : '……………………………';
-                              @endphp
-                              আর এস {{ $compensation->bnDigits($rsKhatianNo) }} নং খতিয়ানে {{ $compensation->bnDigits($rsPlotNo) }} নং দাগে {{ $compensation->bnDigits($rsLandInKhatian) }} একর জমি {{ $ownerDisplay }} নামে আর এস রেকর্ড প্রস্তুত রয়েছে
+                          <strong>{{ $compensation->bnDigits(1) }}. আরএস রেকর্ডের বর্ণনাঃ</strong><br>
+                          নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' ) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
+                          @if($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) > 0)
+                              {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }} পিং-{{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
                           @else
-                              @if($compensation->rs_khatian_no && $compensation->land_schedule_rs_plot_no)
-                                  নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_rs_plot_no) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
-                                  @if($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) > 0)
-                                      {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }} পিং-{{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
-                                  @else
-                                      …………………………. পিং-…………………………….
-                                  @endif
-                                  নামে আরএস রেকর্ড প্রস্তুত হয়েছে।
-                              @else
-                                  ………………………….
-                              @endif
+                              …………………………. পিং-…………………………….
                           @endif
+                          নামে আরএস রেকর্ড প্রস্তুত হয়েছে।
                       </div>
                   @else
                       <div class="ml-4 mt-2">
-                          <strong>১. রেকর্ডের বর্ণনাঃ</strong> ………………………….
+                          <strong>{{ $compensation->bnDigits(1) }}. রেকর্ডের বর্ণনাঃ</strong> ………………………….
                       </div>
                   @endif
                   
@@ -324,28 +300,22 @@
                           
                           @if(str_contains($sectionType, 'আরএস রেকর্ড') || str_contains($sectionType, 'rs record'))
                               <div class="ml-4 mt-2">
-                                  <strong>{{ $sectionNumber }}. আর এস রেকর্ডের বর্ণনাঃ</strong><br>
+                                  <strong>{{ $compensation->bnDigits($sectionNumber) }}. আরএস রেকর্ডের বর্ণনাঃ</strong><br>
                                   নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' ) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
                                   @if($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) > 0)
                                       {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }} পিং-{{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
                                   @else
                                       …………………………. পিং-…………………………….
                                   @endif
-                                  নামে আর এস রেকর্ড প্রস্তুত হয়েছে।
+                                  নামে আরএস রেকর্ড প্রস্তুত হয়েছে।
                               </div>
                           @elseif(str_contains($sectionType, 'ওয়ারিশ') || str_contains($sectionType, 'inheritance'))
                               <div class="ml-4 mt-2">
-                                  <strong>{{ $sectionNumber }}. ওয়ারিশসূত্রে মালিকানার বর্ণনাঃ</strong><br>
+                                  <strong>{{ $compensation->bnDigits($sectionNumber) }}. ওয়ারিশসূত্রে মালিকানার বর্ণনাঃ</strong><br>
                                   @if($compensation->ownership_details && is_array($compensation->ownership_details) && isset($compensation->ownership_details['storySequence']) && count($compensation->ownership_details['storySequence']) > 0)
                                       @foreach($compensation->ownership_details['storySequence'] as $storyIndex => $storyItem)
                                           @if(str_contains(strtolower($storyItem['type'] ?? ''), 'ওয়ারিশ') || str_contains(strtolower($storyItem['type'] ?? ''), 'inheritance'))
-                                              @if($compensation->acquisition_record_basis === 'SA')
-                                                  এস এ রেকর্ডীয় মালিক {{ $storyItem['description'] ?? '…………………………….' }} মৃত্যুবরণ করায় তার ওয়ারিশ হিসেবে {{ $compensation->applicants && is_array($compensation->applicants) && count($compensation->applicants) > 0 ? $compensation->applicants[0]['name'] ?? '…………………………….' : '…………………………….' }} থাকে (দাখিলকৃত সংযুক্ত ওয়ারিশান সনদ মোতাবেক)।
-                                              @elseif($compensation->acquisition_record_basis === 'RS')
-                                                  আর এস রেকর্ডীয় মালিক {{ $storyItem['description'] ?? '…………………………….' }} মৃত্যুবরণ করায় তার ওয়ারিশ হিসেবে {{ $compensation->applicants && is_array($compensation->applicants) && count($compensation->applicants) > 0 ? $compensation->applicants[0]['name'] ?? '…………………………….' : '…………………………….' }} থাকে (দাখিলকৃত সংযুক্ত ওয়ারিশান সনদ মোতাবেক)।
-                                              @else
-                                                  {{ $storyItem['description'] ?? '…………………………….' }}
-                                              @endif
+                                              পূর্বোক্ত মালিক {{ $storyItem['description'] ?? '…………………………….' }} মৃত্যুবরণ করলে তার ওয়ারিশগণ নালিশী সম্পত্তি প্রাপ্ত হন। দাখিলকৃত ওয়ারিশান সনদ অনুযায়ী- {{ $storyItem['description'] ?? '…………………………….' }}।
                                           @endif
                                       @endforeach
                                   @else
@@ -354,7 +324,7 @@
                               </div>
                           @elseif(str_contains($sectionType, 'দলিল') || str_contains($sectionType, 'document') || str_contains($sectionType, 'transfer'))
                               <div class="ml-4 mt-2">
-                                  <strong>{{ $sectionNumber }}. দলিলমূলে হস্তান্তরের বর্ণনাঃ</strong><br>
+                                  <strong>{{ $compensation->bnDigits($sectionNumber) }}. দলিলমূলে হস্তান্তরের বর্ণনাঃ</strong><br>
                                   @php
                                       // Find the specific deed that corresponds to this story sequence item
                                       $currentDeed = null;
@@ -390,7 +360,7 @@
                                               $deedLandAmount = number_format($totalLand, 4);
                                           }
                                       @endphp
-                                      {{ $donorNames }}, গত {{ $compensation->bnDigits($deedDate) }} তারিখের {{ $compensation->bnDigits($deedNumber) }} নং {{ $deedType }} {{ $recipientNames }}, বরাবর নালিশী {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->land_schedule_sa_plot_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' )) }} দাগের {{ $compensation->bnDigits($deedLandAmount) }} একর জমি হস্তান্তর করেন।
+                                      {{ $donorNames }} গত {{ $compensation->bnDigits($deedDate) }} তারিখের {{ $compensation->bnDigits($deedNumber) }} নং {{ $deedType }} দলিলমূলে {{ $recipientNames }} বরাবর {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->land_schedule_sa_plot_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' )) }} দাগের {{ $compensation->bnDigits($deedLandAmount) }} একর জমি হস্তান্তর করেন। উক্ত দলিলে সুনির্দিষ্টভাবে {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->land_schedule_sa_plot_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' )) }} দাগে দখল উল্লেখ করে হস্তান্তর করা হয়।
                                   @elseif($currentDeed)
                                       দলিলের তথ্য অসম্পূর্ণ। দলিল নম্বর: {{ $compensation->bnDigits($currentDeed['deed_number'] ?? '……………………………') }}, তারিখ: {{ $compensation->bnDigits($currentDeed['deed_date'] ?? '……………………………') }}
                                   @else
@@ -399,7 +369,7 @@
                               </div>
                           @else
                               <div class="ml-4 mt-2">
-                                  <strong>{{ $sectionNumber }}. {{ $item['type'] ?? '…………………………….' }}ঃ</strong><br>
+                                  <strong>{{ $compensation->bnDigits($sectionNumber) }}. {{ $item['type'] ?? '…………………………….' }}ঃ</strong><br>
                                   {{ $sectionDescription }}
                               </div>
                           @endif
@@ -434,12 +404,14 @@
                       @endphp
                       
                       <div class="ml-4 mt-2">
-                          <strong>{{ $nextSectionNumber }}. নামজারী ও খাজনার বর্ণনাঃ</strong><br>
-                          আবেদনকারী {{ $applicantName }} প্রাপ্ত জমি {{ $compensation->bnDigits($kharijCaseNo) }} নং নামজারী কেসমূলে রেকর্ড সংশোধনপূর্বক {{ $compensation->bnDigits($namejariKhatianNo) }} নং নামজারী খতিয়ানে {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($kharijLandAmount) }} একর জমি নামজারী করেন। খাজনার রশিদ যাচাই করে দেখা যায়, {{ $paidInName }} নামে {{ $compensation->bnDigits($holdingNo) }} নং হোল্ডিং এ {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($paidLandAmount) }} একর জমির বিপরীতে বাংলা {{ $compensation->bnDigits($banglaYear) }} সন পর্যন্ত ভূমি উন্নয়ন কর পরিশোধ অন্তে খাজনার রশিদ দাখিল করেছেন।
+                          <strong>{{ $compensation->bnDigits($nextSectionNumber) }}. নামজারী, খাজনা ও অন্যান্য বর্ণনা</strong><br><br>
+                          
+                          <strong>নামজারীর বর্ণনা:</strong> আবেদনকারী {{ $applicantName }} তার প্রাপ্ত জমি {{ $compensation->bnDigits($kharijCaseNo) }} নং নামজারী কেসমূলে রেকর্ড সংশোধনপূর্বক {{ $compensation->bnDigits($namejariKhatianNo) }} নং নামজারী খতিয়ানে {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($kharijLandAmount) }} একর জমি নিজ নামে নামজারী করেন।<br><br>
+                          
+                          <strong>খাজনার বর্ণনা:</strong> দাখিলকৃত খাজনার রশিদ যাচাই করে দেখা যায়, {{ $paidInName }} নামে {{ $compensation->bnDigits($holdingNo) }} নং হোল্ডিং এ {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($paidLandAmount) }} একর জমির বিপরীতে বাংলা {{ $compensation->bnDigits($banglaYear) }} সন/ ইংরেজি {{ $compensation->bnDigits($englishYear) }} সাল পর্যন্ত ভূমি উন্নয়ন কর পরিশোধ অন্তে খাজনার রশিদ দাখিল করা হয়েছে।<br><br>
                           
                           @if($kharijDetails)
-                              <br><br>
-                              {{ $kharijDetails }}
+                              <strong>না-দাবীর বর্ণনা:</strong> {{ $kharijDetails }}
                           @endif
                       </div>
                   @endif
