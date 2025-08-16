@@ -16,25 +16,28 @@
         .page {
             background: white;
             display: block;
-            margin: 2rem auto;
-            padding: 2.5cm; /* Standard A4 padding */
+            margin: 1rem auto;
+            padding: 1.5cm; /* Reduced from 2.5cm for more compact layout */
             box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
             width: 21cm;
             /* height: 29.7cm; */ /* Height should be auto to allow content to flow */
         }
-        .header { text-align: center; }
-        .header h2 { margin: 0; font-weight: bold; text-decoration: underline; }
-        .case-info { text-align: center; margin-bottom: 20px; }
-        .content-table { width: 100%; border-collapse: collapse; margin-top: 20px; table-layout: fixed; }
-        .content-table th, .content-table td { border: 1px solid black; padding: 8px; text-align: left; vertical-align: top; }
+        .header { text-align: center; margin-bottom: 15px; }
+        .header h2 { margin: 0; font-weight: bold; text-decoration: underline; font-size: 16px; }
+        .header p { font-size: 12px; margin: 2px 0; }
+        .case-info { text-align: center; margin-bottom: 15px; }
+        .content-table { width: 100%; border-collapse: collapse; margin-top: 15px; table-layout: fixed; }
+        .content-table th, .content-table td { border: 1px solid black; padding: 6px; text-align: left; vertical-align: top; }
         .content-table th { font-weight: bold; text-align: center; }
-        .section-title { font-weight: bold; text-decoration: underline; margin-top: 15px; margin-bottom: 5px; font-size: 14px; }
-        .compensation-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; }
-        .compensation-table th, .compensation-table td { border: 1px solid black; padding: 5px; text-align: center; }
-        .signatures { margin-top: 100px; overflow: hidden; width: 100%; }
+        .section-title { font-weight: bold; text-decoration: underline; margin-top: 12px; margin-bottom: 4px; font-size: 14px; }
+        .compensation-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 12px; }
+        .compensation-table th, .compensation-table td { border: 1px solid black; padding: 4px; text-align: center; }
+        .signatures { margin-top: 60px; overflow: hidden; width: 100%; }
         .signature-left { float: left; width: 48%; text-align: center; }
         .signature-right { float: right; width: 48%; text-align: center; }
-        p { text-align: justify; }
+        p { text-align: justify; margin: 8px 0; }
+        br { line-height: 0.5; margin: 0; padding: 0; }
+        br + br { margin-top: 4px; }
 
         @media print {
             body {
@@ -42,6 +45,7 @@
             }
             .page {
                 margin: 0;
+                padding: 1.5cm; /* Maintain compact padding for print */
                 box-shadow: none;
                 width: auto;
                 height: auto;

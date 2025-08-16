@@ -256,10 +256,15 @@
             </div>
         </div>
 
+
+        
         <!-- Deed Transfer Forms -->
         <template x-for="(deed, index) in deed_transfers" :key="'deed_' + index">
             <div class="record-card mb-4">
                 <h5 x-text="'দলিল #' + (index + 1)" class="text-lg font-semibold mb-3"></h5>
+                
+
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Multiple Donors -->
                     <div>

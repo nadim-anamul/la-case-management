@@ -151,7 +151,7 @@
                 </div>
                 
                 <div class="text-justify leading-relaxed mt-4">
-                  রোয়েদাদের বর্ণনাঃ রোয়েদাদ বহি পর্যালোচনা করে দেখা যায়, 
+                  <strong>রোয়েদাদের বর্ণনাঃ</strong></br> রোয়েদাদ বহি পর্যালোচনা করে দেখা যায়, 
                   
                   @if($compensation->award_type && is_array($compensation->award_type) && in_array('জমি', $compensation->award_type))
                       জমির রোয়েদাদের 
@@ -249,7 +249,7 @@
                   <!-- First Section: SA/RS Record Description -->
                   @if($compensation->acquisition_record_basis === 'SA')
                       <div class="ml-4 mt-2">
-                          <strong>{{ $compensation->bnDigits(1) }}. এসএ রেকর্ডের বর্ণনাঃ</strong> 
+                          <strong>{{ $compensation->bnDigits(1) }}. এসএ রেকর্ডের বর্ণনাঃ</strong></br> 
                           @if($compensation->ownership_details && is_array($compensation->ownership_details) && isset($compensation->ownership_details['sa_info']))
                               @php
                                   $saInfo = $compensation->ownership_details['sa_info'];
@@ -278,7 +278,7 @@
                                       $ownerDisplay = '……………………………';
                                   }
                               @endphp
-                              এস এ {{ $compensation->bnDigits($saKhatianNo) }} নং খতিয়ানে {{ $compensation->bnDigits($saPlotNo) }} নং দাগে {{ $compensation->bnDigits($saLandInKhatian) }} একর জমি {{ $ownerDisplay }} নামে এস এ রেকর্ড প্রস্তুত রয়েছে
+                              এস এ {{ $compensation->bnDigits($saKhatianNo) }} নং খতিয়ানে {{ $compensation->bnDigits($saPlotNo) }} নং দাগে {{ $compensation->bnDigits($saLandInKhatian) }} একর জমি {{ $ownerDisplay }} নামে এস এ রেকর্ড প্রস্তুত রয়েছে।
                           @else
                               @if($compensation->sa_khatian_no && $compensation->land_schedule_sa_plot_no)
                                   নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_sa_plot_no) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
@@ -486,13 +486,54 @@
                   @if($compensation->ownership_details && is_array($compensation->ownership_details) && isset($compensation->ownership_details['applicant_info']))
                       @php
                           $applicantInfo = $compensation->ownership_details['applicant_info'];
-                          $applicantName = $applicantInfo['applicant_name'] ?? '……………………………';
-                          $namejariKhatianNo = $applicantInfo['namejari_khatian_no'] ?? '……………………………';
-                          $kharijCaseNo = $applicantInfo['kharij_case_no'] ?? '……………………………';
-                          $kharijKhatianNo = $applicantInfo['kharij_khatian_no'] ?? '……………………………';
-                          $kharijPlotNo = $applicantInfo['kharij_plot_no'] ?? '……………………………';
-                          $kharijLandAmount = $applicantInfo['kharij_land_amount'] ?? '……………………………';
-                          $kharijDate = $applicantInfo['kharij_date'] ?? '……………………………';
+                          
+                          // Check if there's meaningful namejari information
+                          $hasNamejariInfo = false;
+                          $applicantName = '';
+                          $namejariKhatianNo = '';
+                          $kharijCaseNo = '';
+                          $kharijKhatianNo = '';
+                          $kharijPlotNo = '';
+                          $kharijLandAmount = '';
+                          $kharijDate = '';
+                          $kharijDetails = '';
+                          
+                          // Check if any meaningful namejari data exists
+                          if (!empty($applicantInfo['applicant_name']) && $applicantInfo['applicant_name'] !== '……………………………') {
+                              $hasNamejariInfo = true;
+                              $applicantName = $applicantInfo['applicant_name'];
+                          } else {
+                              $applicantName = '……………………………';
+                          }
+                          
+                          if (!empty($applicantInfo['namejari_khatian_no']) && $applicantInfo['namejari_khatian_no'] !== '……………………………') {
+                              $hasNamejariInfo = true;
+                              $namejariKhatianNo = $applicantInfo['namejari_khatian_no'];
+                          } else {
+                              $namejariKhatianNo = '……………………………';
+                          }
+                          
+                          if (!empty($applicantInfo['kharij_case_no']) && $applicantInfo['kharij_case_no'] !== '……………………………') {
+                              $hasNamejariInfo = true;
+                              $kharijCaseNo = $applicantInfo['kharij_case_no'];
+                          } else {
+                              $kharijCaseNo = '……………………………';
+                          }
+                          
+                          if (!empty($applicantInfo['kharij_plot_no']) && $applicantInfo['kharij_plot_no'] !== '……………………………') {
+                              $hasNamejariInfo = true;
+                              $kharijPlotNo = $applicantInfo['kharij_plot_no'];
+                          } else {
+                              $kharijPlotNo = '……………………………';
+                          }
+                          
+                          if (!empty($applicantInfo['kharij_land_amount']) && $applicantInfo['kharij_land_amount'] !== '……………………………') {
+                              $hasNamejariInfo = true;
+                              $kharijLandAmount = $applicantInfo['kharij_land_amount'];
+                          } else {
+                              $kharijLandAmount = '……………………………';
+                          }
+                          
                           $kharijDetails = $applicantInfo['kharij_details'] ?? '';
                           
                           // Tax information from tax_info field
@@ -505,19 +546,52 @@
                           $nextSectionNumber = ($compensation->ownership_details && is_array($compensation->ownership_details) && isset($compensation->ownership_details['storySequence']) ? count($compensation->ownership_details['storySequence']) : 0) + 2;
                       @endphp
                       
-                      <div class="ml-4 mt-2">
-                          <strong>{{ $compensation->bnDigits($nextSectionNumber) }}. নামজারী, খাজনা ও অন্যান্য বর্ণনা</strong><br><br>
+                      @if($hasNamejariInfo)
+                          <div class="ml-4 mt-2">
+                              <strong>{{ $compensation->bnDigits($nextSectionNumber) }}.নামজারীর বর্ণনা:</strong></br> আবেদনকারী {{ $applicantName }}
+                              তার প্রাপ্ত জমি {{ $compensation->bnDigits($kharijCaseNo) }} নং নামজারী কেসমূলে রেকর্ড সংশোধনপূর্বক {{ $compensation->bnDigits($namejariKhatianNo) }} নং নামজারী খতিয়ানে {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($kharijLandAmount) }} একর জমি নিজ নামে নামজারী করেন।<br><br>
+                          </div>
+                      @endif
+                      
+                      <!-- Tax Description Section (Independent) -->
+                      @php
+                          // Check if there's meaningful tax information
+                          $hasTaxInfo = false;
+                          if (!empty($paidInName) && $paidInName !== '……………………………') {
+                              $hasTaxInfo = true;
+                          }
+                          if (!empty($holdingNo) && $holdingNo !== '……………………………') {
+                              $hasTaxInfo = true;
+                          }
+                          if (!empty($paidLandAmount) && $paidLandAmount !== '……………………………') {
+                              $hasTaxInfo = true;
+                          }
+                          if (!empty($englishYear) && $englishYear !== '……………………………') {
+                              $hasTaxInfo = true;
+                          }
+                          if (!empty($banglaYear) && $banglaYear !== '……………………………') {
+                              $hasTaxInfo = true;
+                          }
                           
-                          <strong>নামজারীর বর্ণনা:</strong> আবেদনকারী {{ $applicantName }}
-                          তার প্রাপ্ত জমি {{ $compensation->bnDigits($kharijCaseNo) }} নং নামজারী কেসমূলে রেকর্ড সংশোধনপূর্বক {{ $compensation->bnDigits($namejariKhatianNo) }} নং নামজারী খতিয়ানে {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($kharijLandAmount) }} একর জমি নিজ নামে নামজারী করেন।<br><br>
-                          
-                          <strong>খাজনার বর্ণনা:</strong> দাখিলকৃত খাজনার রশিদ যাচাই করে দেখা যায়, {{ $paidInName }}
-                          নামে {{ $compensation->bnDigits($holdingNo) }} নং হোল্ডিং এ {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($paidLandAmount) }} একর জমির বিপরীতে বাংলা {{ $compensation->bnDigits($banglaYear) }} সন/ ইংরেজি {{ $compensation->bnDigits($englishYear) }} সাল পর্যন্ত ভূমি উন্নয়ন কর পরিশোধ অন্তে খাজনার রশিদ দাখিল করা হয়েছে।<br><br>
-                          
-                          @if($kharijDetails)
-                              <strong>না-দাবীর বর্ণনা:</strong> {{ $kharijDetails }}
-                          @endif
-                      </div>
+                          // Calculate section numbers dynamically
+                          $namejariSectionNumber = $nextSectionNumber;
+                          $taxSectionNumber = $namejariSectionNumber + ($hasNamejariInfo ? 1 : 0);
+                          $noClaimSectionNumber = $taxSectionNumber + ($hasTaxInfo ? 1 : 0);
+                      @endphp
+                      
+                      @if($hasTaxInfo)
+                          <div class="ml-4 mt-2">                 
+                              <strong>{{ $compensation->bnDigits($taxSectionNumber) }}. খাজনার বর্ণনা:</strong></br> দাখিলকৃত খাজনার রশিদ যাচাই করে দেখা যায়, {{ $paidInName }}
+                              নামে {{ $compensation->bnDigits($holdingNo) }} নং হোল্ডিং এ {{ $compensation->bnDigits($paidLandAmount) }} একর জমির বিপরীতে বাংলা {{ $compensation->bnDigits($banglaYear) }} সন/ ইংরেজি {{ $compensation->bnDigits($englishYear) }} সাল পর্যন্ত ভূমি উন্নয়ন কর পরিশোধ অন্তে খাজনার রশিদ দাখিল করা হয়েছে।<br><br>
+                          </div>
+                      @endif
+                      
+                      <!-- No-Claim Description Section (Independent) -->
+                      @if($kharijDetails)
+                          <div class="ml-4 mt-2">
+                              <strong>{{ $compensation->bnDigits($noClaimSectionNumber) }}. না-দাবীর বর্ণনা</strong></br>{{ $kharijDetails }}
+                          </div>
+                      @endif
                   @endif
                   
                   <br><br>
@@ -525,19 +599,19 @@
                       @foreach($compensation->additional_documents_info['selected_types'] as $docType)
                           @if($docType === 'আপস- বন্টননামা')
                               @if(isset($compensation->additional_documents_info['details'][$docType]) && $compensation->additional_documents_info['details'][$docType])
-                                  <strong>আপস- বন্টননামা বর্ণনাঃ</strong> {{ $compensation->additional_documents_info['details'][$docType] }}
+                                  <strong>আপস- বন্টননামা বর্ণনাঃ</strong></br> {{ $compensation->additional_documents_info['details'][$docType] }}
                               @endif
                           @elseif($docType === 'না-দাবি')
                               @if(isset($compensation->additional_documents_info['details'][$docType]) && $compensation->additional_documents_info['details'][$docType])
-                                  <strong>না-দাবীনামা বর্ণনাঃ</strong> {{ $compensation->additional_documents_info['details'][$docType] }}
+                                  <strong>না-দাবীনামা বর্ণনাঃ</strong></br> {{ $compensation->additional_documents_info['details'][$docType] }}
                               @endif
                           @elseif($docType === 'সরেজমিন তদন্ত')
                               @if(isset($compensation->additional_documents_info['details'][$docType]) && $compensation->additional_documents_info['details'][$docType])
-                                  <strong>সরেজমিন তদন্ত প্রতিবেদন বর্ণনাঃ</strong> {{ $compensation->additional_documents_info['details'][$docType] }}
+                                  <strong>সরেজমিন তদন্ত প্রতিবেদন বর্ণনাঃ</strong></br> {{ $compensation->additional_documents_info['details'][$docType] }}
                               @endif
                           @elseif($docType === 'এফিডেভিট')
                               @if(isset($compensation->additional_documents_info['details'][$docType]) && $compensation->additional_documents_info['details'][$docType])
-                                  <strong>এফিডেভিট বর্ণনাঃ</strong> {{ $compensation->additional_documents_info['details'][$docType] }}
+                                  <strong>এফিডেভিট বর্ণনাঃ</strong></br> {{ $compensation->additional_documents_info['details'][$docType] }}
                               @endif
                           @else
                               @if(isset($compensation->additional_documents_info['details'][$docType]) && $compensation->additional_documents_info['details'][$docType])
@@ -553,9 +627,9 @@
                   @endif
                   
                   <br><br>
-                  <strong>কানুনগো ও সার্ভেয়ারের মতামতঃ</strong> দাখিলকৃত কাগজপত্র যাচাইপূর্বক কানুনু
+                  <strong>কানুনগো ও সার্ভেয়ারের মতামতঃ</strong></br> দাখিলকৃত কাগজপত্র যাচাইপূর্বক কানুনগো ও সার্ভেয়ারগণের দাখিলকৃত প্রতিবেদনে উল্লেখ করা হয় যে আবেদনকারী মালিকানার দাবীর স্বপক্ষে কাগজপত্রের ধারাবাহিকতা আছে।
                   
-                  <br><br>
+                  <br>
                   
                   সার্বিক কাগজপত্রাদি পর্যালোচনা ও শুনানি অন্তে  প্রতীয়মান হয় যে আবেদনকারী 
                   @if($compensation->applicants && is_array($compensation->applicants) && count($compensation->applicants) > 0)
@@ -578,7 +652,7 @@
                   @endif
                   উক্ত ক্ষতিপূরণের প্রাপ্য অর্থের হকদার।
                   
-                  <br><br>
+                  <br></br>
                   <strong>অতএব আদেশ হয় যে,</strong> কানুনগো ও সার্ভেয়ারের দাখিলকৃত যৌথ প্রতিবেদন ও আবেদনকারীর কাগজপত্র পর্যালোচনা করে দেখা যায় আবেদিত সম্পত্তি প্রার্থীর ভোগ-দখলীয় সম্পত্তি, মালিকানাস্বত্বের কাগজপত্র সঠিক থাকায় 
                   @if($compensation->applicants && is_array($compensation->applicants) && count($compensation->applicants) > 0)
                       @if(count($compensation->applicants) == 1)
@@ -601,7 +675,7 @@
                   কে {{ $compensation->mouza_name ?? '…………………………….' }}/{{ $compensation->bnDigits($compensation->jl_no ?? '……………………………') }} মৌজার নিম্নে উল্লিখিত তফসিল বর্ণিত সম্পত্তির ক্ষতিপূরণ প্রদান করা হলো।
                   
                   @if($compensation->final_order && is_array($compensation->final_order) && count($compensation->final_order) > 0)
-                  <br><br>
+                  <br>
                   
                   <!-- Compensation Details Table -->
                   <table class="calc-table w-full border border-black border-collapse mb-4">
@@ -730,17 +804,17 @@
                       </tbody>
                   </table>
                   
-                  <br><br>
+                  <br>
                   
                   <!-- Additional Instructions -->
                   <div class="text-justify leading-relaxed">
                       মোট ক্ষতিপূরণ বাবদ প্রদেয় = {{ $compensation->formatAmountBangla($totalCompensation) }} ({{ $compensation->amountToBengaliWords($totalCompensation) }} মাত্র) টাকার এল.এ চেক আবেদনকারীর নামে প্রয়োজনীয় অঙ্গীকারনামা গ্রহণপূর্বক ইস্যু করা হোক।
                       
-                      <br><br>
+                      <br>
                       
                       উক্ত টাকা হতে বিল ও চালানের মাধ্যমে {{ $compensation->bnDigits($compensation->source_tax_percentage) }}% উৎস কর কর্তন বাদে {{ $compensation->formatAmountBangla($finalAmount) }} ({{ $compensation->amountToBengaliWords($finalAmount) }} মাত্র) টাকার MICR চেক প্রদান করার লক্ষ্যে বিল ভাউচারসহ উৎস করের চালানের কপি প্রস্তুতপূর্বক জেলা হিসাবরক্ষণ অফিসে প্রেরণ করা হোক।
                       
-                      <br><br>
+                      <br>
                       
                       সেই সাথে সিসি প্রস্তুতের জন্য সংশ্লিষ্ট সহকারীকে বলা হলো।
                   </div>

@@ -25,34 +25,34 @@
             width: 21cm;
             height: 29.7cm;
             margin: 0 auto;
-            padding: 15mm;
+            padding: 10mm; /* Reduced from 15mm for more compact layout */
             background: white;
             box-sizing: border-box;
         }
         .notice-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* Reduced from 20px */
         }
         .notice-title {
             text-align: center;
             font-weight: bold;
             text-decoration: underline;
-            margin: 20px 0;
-            font-size: 18px;
+            margin: 10px 0; /* Reduced from 20px 0 */
+            font-size: 14px; /* Reduced from 18px */
         }
         .notice-content {
             font-size: 14px;
-            line-height: 1.6;
+            line-height: 1.5; /* Reduced from 1.6 */
         }
         .notice-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 15px 0;
+            margin: 12px 0; /* Reduced from 15px 0 */
         }
         .notice-table th,
         .notice-table td {
             border: 1px solid black;
-            padding: 8px;
+            padding: 6px; /* Reduced from 8px */
             text-align: left;
         }
         .notice-table th {
@@ -60,17 +60,19 @@
             font-weight: bold;
         }
         .notice-signature {
-            margin-top: 40px;
+            margin-top: 30px; /* Reduced from 40px */
             text-align: right;
             font-weight: bold;
         }
+        br { line-height: 0.5; margin: 0; padding: 0; }
+        br + br { margin-top: 4px; }
         @media print {
             body { margin: 0; }
             .notice-page { 
                 width: 21cm; 
                 height: 29.7cm; 
                 margin: 0; 
-                padding: 15mm;
+                padding: 10mm; /* Maintain compact padding for print */
                 box-shadow: none;
             }
         }
@@ -79,10 +81,10 @@
 <body>
     <div class="notice-page">
         <div class="notice-header">
-            <h1 style="font-size: 20px; font-weight: bold; margin: 0;">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</h1>
-            <h2 style="font-size: 18px; font-weight: bold; margin: 5px 0;">জেলা প্রশাসকের কার্যালয়</h2>
-            <h2 style="font-size: 18px; font-weight: bold; margin: 5px 0;">বগুড়া</h2>
-            <h3 style="font-size: 16px; margin: 5px 0;">(ভূমি অধিগ্রহণ শাখা)</h3>
+            <h1 style="font-size: 16px; font-weight: bold; margin: 0;">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</h1>
+            <h2 style="font-size: 14px; font-weight: bold; margin: 3px 0;">জেলা প্রশাসকের কার্যালয়</h2>
+            <h2 style="font-size: 14px; font-weight: bold; margin: 3px 0;">বগুড়া</h2>
+            <h3 style="font-size: 13px; margin: 3px 0;">(ভূমি অধিগ্রহণ শাখা)</h3>
         </div>
 
         <div class="notice-title">নোটিশ</div>
@@ -111,7 +113,7 @@
                         <td style="vertical-align: top;">
                             @if($compensation->applicants && is_array($compensation->applicants))
                                 @foreach($compensation->applicants as $index => $applicant)
-                                    @if($index > 0)<br><br>@endif
+                                    @if($index > 0)<br>@endif
                                     <strong>#{{ $index + 1 }}:</strong><br>
                                     {{ $applicant['name'] ?? 'N/A' }}<br>
                                     পিতার নাম- {{ $applicant['father_name'] ?? 'N/A' }}<br>
@@ -124,7 +126,7 @@
                         <td style="vertical-align: top;">
                             @if($compensation->award_holder_names && is_array($compensation->award_holder_names))
                                 @foreach($compensation->award_holder_names as $index => $holder)
-                                    @if($index > 0)<br><br>@endif
+                                    @if($index > 0)<br>@endif
                                     <strong>#{{ $index + 1 }}:</strong><br>
                                     {{ $holder['name'] ?? 'N/A' }}<br>
                                     @if(isset($holder['father_name']) && $holder['father_name'])পিতার নাম- {{ $holder['father_name'] }}<br>@endif
@@ -138,17 +140,17 @@
                 </tbody>
             </table>
 
-            <p style="margin: 20px 0; text-align: justify;">
+            <p style="margin: 10px 0; text-align: justify;">
                 এতদ্বারা জানানো যাচ্ছে যে, নিম্ন তফসিল বর্ণিত সম্পত্তির ক্ষতিপূরণের বিষয়টি নিষ্পত্তির লক্ষ্যে শুনানীর জন্য আগামী <strong>............................</strong> ইং তারিখ দিন ধার্য করা হয়েছে। ধার্য তারিখে বেলা ৯.৩০ ঘটিকায় ক্ষতিপূরণ প্রাপ্তির স্বপক্ষে যাবতীয় প্রমাণাদির মূল কপিসহ শুনানীতে উপস্থিত হওয়ার জন্য বলা হলো।
             </p>
-            <p style="margin: 10px 0; text-align: justify;">
+            <p style="margin: 5px 0; text-align: justify;">
                 অন্যথায় বিধি মোতাবেক পরবর্তী আইনগত ব্যবস্থা গ্রহণ করা হবে।
             </p>
 
-            <p style="margin: 20px 0; font-weight: bold;">তফসিলঃ</p>
-            <p style="margin: 5px 0;">জেলা: {{ $compensation->district ?? 'তথ্য নেই' }}</p>
-            <p style="margin: 5px 0;">উপজেলা: {{ $compensation->upazila ?? 'তথ্য নেই' }}</p>
-            <p style="margin: 5px 0;">মৌজা: {{ $compensation->mouza_name ?? 'তথ্য নেই' }}</p>
+            <p style="margin: 3px 0; font-weight: bold;">তফসিলঃ</p>
+            <p style="margin: 3px 0;">জেলা: {{ $compensation->district ?? 'তথ্য নেই' }}</p>
+            <p style="margin: 3px 0;">উপজেলা: {{ $compensation->upazila ?? 'তথ্য নেই' }}</p>
+            <p style="margin: 3px 0;">মৌজা: {{ $compensation->mouza_name ?? 'তথ্য নেই' }}</p>
 
             <table class="w-full border border-black mt-4">
                 <thead class="bg-gray-100">

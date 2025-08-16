@@ -72,7 +72,7 @@ class Compensation extends Model
             if (isset($deed['application_specific_area']) && $deed['application_specific_area']) {
                 $specificArea = $deed['application_specific_area'] ?? '';
                 $sellArea = $deed['application_sell_area'] ?? '';
-                return "আবেদনকৃত {$specificArea} দাগের সুনির্দিষ্টভাবে {$this->bnDigits($sellArea)} একর বিক্রয়";
+                return "আবেদনকৃত {$specificArea} দাগে সুনির্দিষ্টভাবে {$this->bnDigits($sellArea)} একর বিক্রয়";
             } elseif (isset($deed['application_other_areas']) && $deed['application_other_areas']) {
                 $otherAreas = $deed['application_other_areas'] ?? '';
                 $totalArea = $deed['application_total_area'] ?? '';
@@ -85,7 +85,7 @@ class Compensation extends Model
         if ($deed['application_type'] === 'specific') {
             $specificArea = $deed['application_specific_area'] ?? '';
             $sellArea = $deed['application_sell_area'] ?? '';
-            return "আবেদনকৃত {$specificArea} দাগের সুনির্দিষ্টভাবে {$this->bnDigits($sellArea)} একর বিক্রয়";
+            return "আবেদনকৃত {$specificArea} দাগে সুনির্দিষ্টভাবে {$this->bnDigits($sellArea)} একর বিক্রয়";
         } elseif ($deed['application_type'] === 'multiple') {
             $otherAreas = $deed['application_other_areas'] ?? '';
             $totalArea = $deed['application_total_area'] ?? '';

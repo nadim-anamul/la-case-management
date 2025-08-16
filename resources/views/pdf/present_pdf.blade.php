@@ -25,20 +25,22 @@
       width: 210mm;
       height: 297mm;
       margin: 0 auto;
-      padding: 20mm;
+      padding: 12mm; /* Reduced from 20mm for more compact layout */
       background: white;
       box-sizing: border-box;
     }
     table {
       table-layout: fixed;
     }
+    br { line-height: 0.5; margin: 0; padding: 0; }
+    br + br { margin-top: 4px; }
     @media print {
       body { margin: 0; }
       .a4 { 
         width: 210mm; 
         height: 297mm; 
         margin: 0; 
-        padding: 20mm;
+        padding: 12mm; /* Maintain compact padding for print */
         box-shadow: none;
       }
     }
@@ -47,8 +49,8 @@
 <body>
   <div class="a4">
     <!-- Title -->
-    <h1 class="text-center text-lg font-bold">আদেশ পত্র</h1>
-    <p class="text-center text-sm mb-1">( ১৯১৭ সালের রেকর্ড ম্যানুয়েলের ১২৯ নং বিধি )</p>
+    <h1 class="text-center text-base font-bold">আদেশ পত্র</h1>
+    <p class="text-center text-xs mb-1">( ১৯১৭ সালের রেকর্ড ম্যানুয়েলের ১২৯ নং বিধি )</p>
 
     <!-- Date Row -->
     <div class="flex justify-between mb-1">
@@ -91,13 +93,9 @@
                 <p class="text-sm">পিতা- (পিতার নাম), সাং- (ঠিকানা)</p>
                 <p class="text-sm">উপজেলা- (উপজেলার নাম), জেলা: বগুড়া</p> 
             @endif
-            <br>
             <p>নিম্ন তফসিল বর্ণিত সম্পত্তির ক্ষতিপূরণ দাবী করে আবেদন দাখিল করেছেন</p>
-            <br>
-            <p>উপজেলা: {{ $compensation->upazila ?? 'N/A' }}</p>
-            <p>মৌজা: {{ $compensation->mouza_name ?? 'N/A' }}</p>
-            <p>জেএল নং: {{ $compensation->getBengaliValue('jl_no') ?? 'N/A' }}</p>
-            <p>খতিয়ান নং: {{ $compensation->getBengaliValue('sa_khatian_no') ?? $compensation->getBengaliValue('rs_khatian_no') ?? 'N/A' }}</p>
+            <p>উপজেলা: {{ $compensation->upazila ?? 'N/A' }}, মৌজা: {{ $compensation->mouza_name ?? 'N/A' }}</p>
+            <p>জেএল নং: {{ $compensation->getBengaliValue('jl_no') ?? 'N/A' }}, খতিয়ান নং: {{ $compensation->getBengaliValue('sa_khatian_no') ?? $compensation->getBengaliValue('rs_khatian_no') ?? 'N/A' }}</p>
             <p>দাগ নং: {{ $compensation->getBengaliValue('plot_no') ?? 'N/A' }}</p>
             <p>আবেদনকৃত ক্ষতিপূরণের ধরণ: 
                 @if($compensation->award_type && is_array($compensation->award_type))

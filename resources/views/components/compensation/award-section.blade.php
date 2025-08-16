@@ -135,7 +135,7 @@
             </div>
         </div>
         <div class="floating-label">
-            <input type="text" name="source_tax_percentage" value="{{ old('source_tax_percentage', isset($compensation) ? $compensation->source_tax_percentage : '') }}" placeholder=" " required pattern="[০-৯0-9\.]+" @input="formatNumberInput($event.target.value, $event.target)">
+            <input type="text" name="source_tax_percentage" value="{{ old('source_tax_percentage', isset($compensation) ? $compensation->getBengaliValue('source_tax_percentage') : '') }}" placeholder=" " required pattern="[০-৯0-9\.]+" @input="formatNumberInput($event.target.value, $event.target)">
             <label>উৎস কর %<span class="text-red-500">*</span></label>
         </div>
         <div>
@@ -156,7 +156,7 @@
                 </div>
                 
                 <div class="floating-label">
-                    <input type="text" name="land_award_serial_no" value="{{ old('land_award_serial_no', isset($compensation) ? $compensation->land_award_serial_no : '') }}" placeholder=" " required>
+                    <input type="text" name="land_award_serial_no" value="{{ old('land_award_serial_no', isset($compensation) ? $compensation->getBengaliValue('land_award_serial_no') : '') }}" placeholder=" " required>
                     <label>জমির রোয়েদাদ নং<span class="text-red-500">*</span></label>
                 </div>
                 

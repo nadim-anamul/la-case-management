@@ -66,13 +66,13 @@ trait BengaliDateTrait
     }
 
     /**
-     * Format a money amount using Bengali digits and fraction as "/xx"
-     * Example: 287734.59 -> ২,৮৭,৭৩৪/৫৯
+     * Format a money amount using Bengali digits with decimal point
+     * Example: 287734.59 -> ২,৮৭,৭৩৪.৫৯
      */
     public function formatAmountBangla($amount): string
     {
         $formatted = number_format((float)$amount, 2, '.', ',');
-        $formatted = str_replace('.', '/', $formatted);
+        // Keep decimal point as . instead of converting to /
         return $this->convertToBengaliNumerals($formatted);
     }
 

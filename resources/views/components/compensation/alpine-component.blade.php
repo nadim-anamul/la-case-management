@@ -1,6 +1,20 @@
 <script defer>
     document.addEventListener('alpine:init', () => {
         window.compensationForm = () => ({
+            caseNumber: '',
+            caseDate: '',
+            isApplicantInAward: '',
+            sourceTaxPercentage: '',
+            landAwardSerialNo: '',
+            objectorDetails: '',
+            district: '',
+            upazila: '',
+            mouzaName: '',
+            jlNo: '',
+            saKhatianNo: '',
+            landScheduleSaPlotNo: '',
+            rsKhatianNo: '',
+            landScheduleRsPlotNo: '',
             applicants: [],
             is_sa_owner: 'yes',
             is_rs_owner: 'yes',
@@ -40,6 +54,20 @@
                 
                 if (hasOldData) {
                     // Handle validation errors - use old form data
+                    this.caseNumber = old.case_number || '';
+                    this.caseDate = old.case_date || '';
+                    this.isApplicantInAward = old.is_applicant_in_award || '';
+                    this.sourceTaxPercentage = old.source_tax_percentage || '';
+                    this.landAwardSerialNo = old.land_award_serial_no || '';
+                    this.objectorDetails = old.objector_details || '';
+                    this.district = old.district || '';
+                    this.upazila = old.upazila || '';
+                    this.mouzaName = old.mouza_name || '';
+                    this.jlNo = old.jl_no || '';
+                    this.saKhatianNo = old.sa_khatian_no || '';
+                    this.landScheduleSaPlotNo = old.land_schedule_sa_plot_no || '';
+                    this.rsKhatianNo = old.rs_khatian_no || '';
+                    this.landScheduleRsPlotNo = old.land_schedule_rs_plot_no || '';
                     this.applicants = old.applicants || [{ name: '', father_name: '', address: '', nid: '', mobile: '' }];
                     this.is_sa_owner = old.ownership_details?.is_applicant_sa_owner || 'yes';
                     this.is_rs_owner = old.ownership_details?.is_applicant_rs_owner || 'yes';
@@ -80,6 +108,20 @@
                     // Handle edit mode - use compensation data
                     const data = JSON.parse(compensationData);
                     
+                    this.caseNumber = data.case_number || '';
+                    this.caseDate = data.case_date_bengali || data.case_date || '';
+                    this.isApplicantInAward = data.is_applicant_in_award ? '1' : '0';
+                    this.sourceTaxPercentage = data.source_tax_percentage || '';
+                    this.landAwardSerialNo = data.land_award_serial_no || '';
+                    this.objectorDetails = data.objector_details || '';
+                    this.district = data.district || '';
+                    this.upazila = data.upazila || '';
+                    this.mouzaName = data.mouza_name || '';
+                    this.jlNo = data.jl_no || '';
+                    this.saKhatianNo = data.sa_khatian_no || '';
+                    this.landScheduleSaPlotNo = data.land_schedule_sa_plot_no || '';
+                    this.rsKhatianNo = data.rs_khatian_no || '';
+                    this.landScheduleRsPlotNo = data.land_schedule_rs_plot_no || '';
                     this.applicants = data.applicants || [{ name: '', father_name: '', address: '', nid: '', mobile: '' }];
                     this.is_sa_owner = data.is_applicant_sa_owner ? 'yes' : 'no';
                     this.is_rs_owner = data.ownership_details?.is_applicant_rs_owner ?? 'yes';
@@ -93,6 +135,8 @@
                         possession_description: '', mutation_case_no: '', mutation_plot_no: '', 
                         mutation_land_amount: '' 
                     }];
+                    
+
                     this.inheritance_records = data.ownership_details?.inheritance_records || [{
                         is_heir_applicant: 'yes',
                         has_death_cert: 'yes',
@@ -116,6 +160,8 @@
                         total_compensation: '', 
                         applicant_land: '' 
                     }];
+                    
+
                 } else {
                     // Handle new form - use default values
                     this.applicants = [{ name: '', father_name: '', address: '', nid: '', mobile: '' }];
