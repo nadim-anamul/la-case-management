@@ -401,28 +401,22 @@
                                       // Find the specific deed that corresponds to this story sequence item
                                       $currentDeed = null;
                                       if ($compensation->ownership_details && is_array($compensation->ownership_details) && isset($compensation->ownership_details['deed_transfers']) && count($compensation->ownership_details['deed_transfers']) > 0) {
-                                          // Try to find the deed by matching the description or by index
-                                          $deedFound = false;
-                                          foreach ($compensation->ownership_details['deed_transfers'] as $deedIndex => $deed) {
-                                              // Check if this deed matches the current story item
-                                              if (isset($deed['deed_number']) && isset($deed['deed_date'])) {
-                                                  $deedIdentifier = $deed['deed_number'] . ' - ' . $deed['deed_date'];
-                                                  if (str_contains($sectionDescription, $deed['deed_number']) || str_contains($sectionDescription, $deed['deed_date'])) {
-                                                      $currentDeed = $deed;
-                                                      $deedFound = true;
-                                                      break;
+                                          // Use the itemIndex from the story sequence item to map to the correct deed
+                                          if (isset($item['itemIndex']) && isset($compensation->ownership_details['deed_transfers'][$item['itemIndex']])) {
+                                              $currentDeed = $compensation->ownership_details['deed_transfers'][$item['itemIndex']];
+                                          } else {
+                                              // Fallback: try to find by description matching
+                                              foreach ($compensation->ownership_details['deed_transfers'] as $deedIndex => $deed) {
+                                                  if (isset($deed['deed_number']) && isset($deed['deed_date'])) {
+                                                      if (str_contains($sectionDescription, $deed['deed_number']) || str_contains($sectionDescription, $deed['deed_date'])) {
+                                                          $currentDeed = $deed;
+                                                          break;
+                                                      }
                                                   }
                                               }
-                                          }
-                                          
-                                          // If no match found by description, try to use the deed by story sequence index
-                                          if (!$deedFound && isset($compensation->ownership_details['deed_transfers'])) {
-                                              // Use the story sequence index to map to the corresponding deed
-                                              $storyIndex = $index; // This is the index from the storySequence loop
-                                              if (isset($compensation->ownership_details['deed_transfers'][$storyIndex])) {
-                                                  $currentDeed = $compensation->ownership_details['deed_transfers'][$storyIndex];
-                                              } elseif (isset($compensation->ownership_details['deed_transfers'][0])) {
-                                                  // Fallback to first deed only if no other mapping is possible
+                                              
+                                              // If still no match, use the first available deed as last resort
+                                              if (!$currentDeed && isset($compensation->ownership_details['deed_transfers'][0])) {
                                                   $currentDeed = $compensation->ownership_details['deed_transfers'][0];
                                               }
                                           }
@@ -592,18 +586,22 @@
                   <br><br>
                   <strong>অতএব আদেশ হয় যে,</strong> কানুনগো ও সার্ভেয়ারের দাখিলকৃত যৌথ প্রতিবেদন ও আবেদনকারীর কাগজপত্র পর্যালোচনা করে দেখা যায় আবেদিত সম্পত্তি প্রার্থীর ভোগ-দখলীয় সম্পত্তি, মালিকানাস্বত্বের কাগজপত্র সঠিক থাকায় 
                   @if($compensation->applicants && is_array($compensation->applicants) && count($compensation->applicants) > 0)
-                      @foreach($compensation->applicants as $applicantIndex => $applicant)
-                          @if($applicantIndex > 0)
-                              @if($applicantIndex == count($compensation->applicants) - 1)
-                                  এবং
-                              @else
-                                  ,
+                      @if(count($compensation->applicants) == 1)
+                          {{ $compensation->applicants[0]['name'] ?? '…………………………….' }}, পিতা: {{ $compensation->applicants[0]['father_name'] ?? '…………………………….' }}, সাং: {{ $compensation->applicants[0]['address'] ?? '…………………………….' }}, উপজেলা: {{ $compensation->upazila ?? '…………………………….' }}, জেলা: {{ $compensation->district ?? '…………………………….' }}
+                      @else
+                          @foreach($compensation->applicants as $applicantIndex => $applicant)
+                              @if($applicantIndex > 0)
+                                  @if($applicantIndex == count($compensation->applicants) - 1)
+                                      এবং
+                                  @else
+                                      ,
+                                  @endif
                               @endif
-                          @endif
-                          {{ $applicant['name'] ?? '…………………………….' }}, পিং {{ $applicant['father_name'] ?? '…………………………….' }}, সাং: {{ $applicant['address'] ?? '…………………………….' }}, উপজেলা: {{ $compensation->upazila ?? '…………………………….' }}, জেলা: {{ $compensation->district ?? '…………………………….' }}
-                      @endforeach
+                              {{ $compensation->bnDigits($applicantIndex + 1) }}. {{ $applicant['name'] ?? '…………………………….' }}, পিতা: {{ $applicant['father_name'] ?? '…………………………….' }}, সাং: {{ $applicant['address'] ?? '…………………………….' }}, উপজেলা: {{ $compensation->upazila ?? '…………………………….' }}, জেলা: {{ $compensation->district ?? '…………………………….' }}
+                          @endforeach
+                      @endif
                   @else
-                      …………………………., পিং …………………………., সাং: …………………………., উপজেলা: …………………………., জেলা: ………………………….
+                      …………………………., পিতা: …………………………., সাং: …………………………., উপজেলা: …………………………., জেলা: ………………………….
                   @endif
                   কে {{ $compensation->mouza_name ?? '…………………………….' }}/{{ $compensation->bnDigits($compensation->jl_no ?? '……………………………') }} মৌজার নিম্নে উল্লিখিত তফসিল বর্ণিত সম্পত্তির ক্ষতিপূরণ প্রদান করা হলো।
                   
