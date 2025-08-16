@@ -111,30 +111,25 @@
                 
                 <br>
                 <p>আবেদিত জমি {{ $compensation->bnDigits($compensation->la_case_no ?? 'N/A') }} নং এল.এ কেসে অধিগ্রহণ করা হয়েছে। উক্ত জমির ক্ষতিপূরণ বাবদ 
-                    @if($compensation->award_type && is_array($compensation->award_type))
-                        @if(in_array('জমি', $compensation->award_type) && in_array('গাছপালা/ফসল', $compensation->award_type))
-                            @if($compensation->land_award_serial_no && $compensation->tree_award_serial_no)
-                                জমির রোয়েদাদ নং {{ $compensation->bnDigits($compensation->land_award_serial_no) }} এবং গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->bnDigits($compensation->tree_award_serial_no) }}
-                            @elseif($compensation->land_award_serial_no)
-                                জমির রোয়েদাদ নং {{ $compensation->bnDigits($compensation->land_award_serial_no) }}
-                            @elseif($compensation->tree_award_serial_no)
-                                গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->bnDigits($compensation->tree_award_serial_no) }}
-                            @else
-                                N/A
-                            @endif
-                        @elseif(in_array('জমি', $compensation->award_type) && $compensation->land_award_serial_no)
-                            জমির রোয়েদাদ নং {{ $compensation->bnDigits($compensation->land_award_serial_no) }}
-                        @elseif(in_array('গাছপালা/ফসল', $compensation->award_type) && $compensation->tree_award_serial_no)
-                            গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->bnDigits($compensation->tree_award_serial_no) }}
-                        @elseif(in_array('অবকাঠামো', $compensation->award_type) && $compensation->infrastructure_award_serial_no)
-                            অবকাঠামোর রোয়েদাদ নং {{ $compensation->bnDigits($compensation->infrastructure_award_serial_no) }}
-                        @else
-                            N/A
-                        @endif
-                    @else
-                        N/A
-                    @endif
-                    নং এওয়ার্ড প্রার্থীর নামে আছে/নাই। আবেদনকারীকে নোটিশ প্রদান করা হোক। শুনানির জন্য পরবর্তী তারিখঃ  ............... </p>
+                    @php
+                        $awardNumbers = [];
+                        if ($compensation->land_award_serial_no) {
+                            $awardNumbers[] = $compensation->bnDigits($compensation->land_award_serial_no);
+                        }
+                        if ($compensation->tree_award_serial_no) {
+                            $awardNumbers[] = $compensation->bnDigits($compensation->tree_award_serial_no);
+                        }
+                        if ($compensation->infrastructure_award_serial_no) {
+                            $awardNumbers[] = $compensation->bnDigits($compensation->infrastructure_award_serial_no);
+                        }
+                        
+                        if (count($awardNumbers) > 0) {
+                            echo 'রোয়েদাদ নং- ' . implode(', ', $awardNumbers);
+                        } else {
+                            echo 'N/A';
+                        }
+                    @endphp
+                    প্রার্থীর নামে আছে/নাই। আবেদনকারীকে নোটিশ প্রদান করা হোক। শুনানির জন্য পরবর্তী তারিখঃ  ............... </p>
                 <br><br>
                 <div class="text-right font-bold">
                   ভূমি অধিগ্রহণ কর্মকর্তা <br>

@@ -441,7 +441,7 @@
                                     </div>
                                     <div>
                                         <label class="font-semibold text-gray-700">দলিলের তারিখ:</label>
-                                        <p class="text-gray-900">{{ $deed['deed_date'] ?? 'তথ্য নেই' }}</p>
+                                        <p class="text-gray-900">{{ $compensation->bnDigits($deed['deed_date'] ?? 'তথ্য নেই') }}</p>
                                     </div>
                                     <div>
                                         <label class="font-semibold text-gray-700">দলিলের ধরন:</label>

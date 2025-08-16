@@ -109,7 +109,6 @@
                     <th class="border border-black p-2">দাগ নং</th>
                     <th class="border border-black p-2">রোয়েদাদের ধরন</th>
                     <th class="border border-black p-2">পরিমাণ (একরে)</th>
-                    <th class="border border-black p-2">ক্ষতিপূরণের পরিমাণ (টাকা)</th>
                 </tr>
             </thead>
             <tbody>
@@ -122,7 +121,6 @@
                             <td class="border border-black p-2">{{ $compensation->bnDigits($compensation->plot_no ?? 'N/A') }}</td>
                             <td class="border border-black p-2">জমির রোয়েদাদ ({{ $category['category_name'] ?? 'N/A' }})</td>
                             <td class="border border-black p-2">{{ $compensation->bnDigits(number_format($category['total_land'] ?? 0, 4)) }}</td>
-                            <td class="border border-black p-2">{{ $compensation->bnDigits(number_format($category['total_compensation'] ?? 0, 2)) }}</td>
                         </tr>
                         @endforeach
                     @endif
@@ -134,7 +132,6 @@
                         <td class="border border-black p-2">{{ $compensation->bnDigits($compensation->plot_no ?? 'N/A') }}</td>
                         <td class="border border-black p-2">গাছপালা/ফসলের রোয়েদাদ</td>
                         <td class="border border-black p-2">-</td>
-                        <td class="border border-black p-2">{{ $compensation->bnDigits(number_format($compensation->tree_compensation, 2)) }}</td>
                     </tr>
                     @endif
                     
@@ -145,7 +142,6 @@
                         <td class="border border-black p-2">{{ $compensation->bnDigits($compensation->plot_no ?? 'N/A') }}</td>
                         <td class="border border-black p-2">অবকাঠামোর রোয়েদাদ</td>
                         <td class="border border-black p-2">-</td>
-                        <td class="border border-black p-2">{{ $compensation->bnDigits(number_format($compensation->infrastructure_compensation, 2)) }}</td>
                     </tr>
                     @endif
                 @else

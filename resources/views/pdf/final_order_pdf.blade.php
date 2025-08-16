@@ -156,7 +156,7 @@
                   @if($compensation->award_type && is_array($compensation->award_type) && in_array('জমি', $compensation->award_type))
                       জমির রোয়েদাদের 
                       @if($compensation->land_award_serial_no)
-                          {{ str_pad((string)$compensation->bnDigits($compensation->land_award_serial_no ?? ''), 6, '0', STR_PAD_LEFT) }} নং ক্রমিকে
+                          {{ $compensation->bnDigits($compensation->land_award_serial_no) }} নং ক্রমিকে
                       @else
                           …………………………. নং ক্রমিকে
                       @endif
@@ -183,7 +183,7 @@
                       @if($compensation->award_holder_names && is_array($compensation->award_holder_names))
                           @foreach($compensation->award_holder_names as $index => $holder)
                               @if($index > 0), @endif
-                              {{ $holder['name'] ?? '…………………………….' }} ({{ $holder['father_name'] ?? '…………………………….' }})
+                              {{ $holder['name'] ?? '…………………………….' }}, পিং- {{ $holder['father_name'] ?? '…………………………….' }}
                           @endforeach
                       @else
                           ………………………….
@@ -197,12 +197,12 @@
                   @if($compensation->award_type && is_array($compensation->award_type) && in_array('গাছপালা/ফসল', $compensation->award_type))
                       গাছপালার/ফসলের রোয়েদাদের 
                       @if($compensation->tree_award_serial_no)
-                          {{ str_pad((string)$compensation->bnDigits($compensation->tree_award_serial_no ?? ''), 6, '0', STR_PAD_LEFT) }} নং ক্রমিকে
+                          {{ $compensation->bnDigits($compensation->tree_award_serial_no) }} নং ক্রমিকে
                       @else
                           …………………………. নং ক্রমিকে
                       @endif
                       @if($compensation->tree_compensation)
-                          {{ $compensation->bnDigits(str_pad((string)number_format($compensation->tree_compensation, 0), 6, '0', STR_PAD_LEFT)) }}
+                          {{ $compensation->bnDigits(number_format($compensation->tree_compensation, 0)) }}
                       @else
                           ………………………….
                       @endif
@@ -215,12 +215,12 @@
                   @if($compensation->award_type && is_array($compensation->award_type) && in_array('অবকাঠামো', $compensation->award_type))
                       অবকাঠামোর রোয়েদাদের 
                       @if($compensation->infrastructure_award_serial_no)
-                          {{ str_pad((string)$compensation->bnDigits($compensation->infrastructure_award_serial_no ?? ''), 6, '0', STR_PAD_LEFT) }} নং ক্রমিকে
+                          {{ $compensation->bnDigits($compensation->infrastructure_award_serial_no) }} নং ক্রমিকে
                       @else
                           …………………………. নং ক্রমিকে
                       @endif
                       @if($compensation->infrastructure_compensation)
-                          {{ $compensation->bnDigits(str_pad((string)number_format($compensation->infrastructure_compensation, 0), 6, '0', STR_PAD_LEFT)) }}
+                          {{ $compensation->bnDigits(number_format($compensation->infrastructure_compensation, 0)) }}
                       @else
                           ………………………….
                       @endif
@@ -255,7 +255,18 @@
                                           }
                                       }
                                   }
-                                  $ownerDisplay = count($ownerNames) > 0 ? implode(' ', $ownerNames) : '……………………………';
+                                  $ownerDisplay = '';
+                                  if (count($ownerNames) == 1) {
+                                      $ownerDisplay = $ownerNames[0];
+                                  } elseif (count($ownerNames) > 1) {
+                                      $numberedNames = [];
+                                      foreach ($ownerNames as $index => $name) {
+                                          $numberedNames[] = $compensation->bnDigits($index + 1) . '. ' . $name;
+                                      }
+                                      $ownerDisplay = implode(', ', $numberedNames);
+                                  } else {
+                                      $ownerDisplay = '……………………………';
+                                  }
                               @endphp
                               এস এ {{ $compensation->bnDigits($saKhatianNo) }} নং খতিয়ানে {{ $compensation->bnDigits($saPlotNo) }} নং দাগে {{ $compensation->bnDigits($saLandInKhatian) }} একর জমি {{ $ownerDisplay }} নামে এস এ রেকর্ড প্রস্তুত রয়েছে
                           @else
@@ -312,15 +323,27 @@
                           @elseif(str_contains($sectionType, 'ওয়ারিশ') || str_contains($sectionType, 'inheritance'))
                               <div class="ml-4 mt-2">
                                   <strong>{{ $compensation->bnDigits($sectionNumber) }}. ওয়ারিশসূত্রে মালিকানার বর্ণনাঃ</strong><br>
-                                  @if($compensation->ownership_details && is_array($compensation->ownership_details) && isset($compensation->ownership_details['storySequence']) && count($compensation->ownership_details['storySequence']) > 0)
-                                      @foreach($compensation->ownership_details['storySequence'] as $storyIndex => $storyItem)
-                                          @if(str_contains(strtolower($storyItem['type'] ?? ''), 'ওয়ারিশ') || str_contains(strtolower($storyItem['type'] ?? ''), 'inheritance'))
-                                              পূর্বোক্ত মালিক {{ $storyItem['description'] ?? '…………………………….' }} মৃত্যুবরণ করলে তার ওয়ারিশগণ নালিশী সম্পত্তি প্রাপ্ত হন। দাখিলকৃত ওয়ারিশান সনদ অনুযায়ী- {{ $storyItem['description'] ?? '…………………………….' }}।
-                                          @endif
-                                      @endforeach
-                                  @else
-                                      {{ $sectionDescription }}
-                                  @endif
+                                  @php
+                                      // Get inheritance certificate details from inheritance_records based on story sequence
+                                      $inheritanceDetails = '';
+                                      $deceasedPerson = '';
+                                      
+                                      if (isset($compensation->ownership_details['inheritance_records']) && is_array($compensation->ownership_details['inheritance_records']) && count($compensation->ownership_details['inheritance_records']) > 0) {
+                                          // Find the inheritance record that corresponds to this story sequence item
+                                          $storyItemIndex = $storyItem['itemIndex'] ?? 0;
+                                          if (isset($compensation->ownership_details['inheritance_records'][$storyItemIndex])) {
+                                              $inheritance = $compensation->ownership_details['inheritance_records'][$storyItemIndex];
+                                              $inheritanceDetails = $inheritance['heirship_certificate_info'] ?? '……………………………';
+                                              $deceasedPerson = $inheritance['previous_owner_name'] ?? '……………………………';
+                                          } else {
+                                              // Fallback to first inheritance record if index doesn't match
+                                              $inheritance = $compensation->ownership_details['inheritance_records'][0];
+                                              $inheritanceDetails = $inheritance['heirship_certificate_info'] ?? '……………………………';
+                                              $deceasedPerson = $inheritance['previous_owner_name'] ?? '……………………………';
+                                          }
+                                      }
+                                  @endphp
+                                  পূর্বোক্ত মালিক {{ $deceasedPerson }} মৃত্যুবরণ করলে তার ওয়ারিশগণ নালিশী সম্পত্তি প্রাপ্ত হন। দাখিলকৃত ওয়ারিশান সনদ অনুযায়ী- {{ $inheritanceDetails }}।
                               </div>
                           @elseif(str_contains($sectionType, 'দলিল') || str_contains($sectionType, 'document') || str_contains($sectionType, 'transfer'))
                               <div class="ml-4 mt-2">
@@ -360,7 +383,7 @@
                                               $deedLandAmount = number_format($totalLand, 4);
                                           }
                                       @endphp
-                                      {{ $donorNames }} গত {{ $compensation->bnDigits($deedDate) }} তারিখের {{ $compensation->bnDigits($deedNumber) }} নং {{ $deedType }} দলিলমূলে {{ $recipientNames }} বরাবর {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->land_schedule_sa_plot_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' )) }} দাগের {{ $compensation->bnDigits($deedLandAmount) }} একর জমি হস্তান্তর করেন। উক্ত দলিলে সুনির্দিষ্টভাবে {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->land_schedule_sa_plot_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' )) }} দাগে দখল উল্লেখ করে হস্তান্তর করা হয়।
+                                      {{ $donorNames }} গত {{ $compensation->bnDigits($deedDate) }} তারিখের {{ $compensation->bnDigits($deedNumber) }} নং {{ $deedType }} দলিলমূলে {{ $recipientNames }} বরাবর {{ $compensation->formatApplicationAreaString($currentDeed) }} জমি হস্তান্তর করেন। উক্ত দলিলে সুনির্দিষ্টভাবে {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->land_schedule_sa_plot_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' )) }} দাগে দখল উল্লেখ করে হস্তান্তর করা হয়।
                                   @elseif($currentDeed)
                                       দলিলের তথ্য অসম্পূর্ণ। দলিল নম্বর: {{ $compensation->bnDigits($currentDeed['deed_number'] ?? '……………………………') }}, তারিখ: {{ $compensation->bnDigits($currentDeed['deed_date'] ?? '……………………………') }}
                                   @else
@@ -421,19 +444,19 @@
                       @foreach($compensation->additional_documents_info['selected_types'] as $docType)
                           @if($docType === 'আপস- বন্টননামা')
                               @if(isset($compensation->additional_documents_info['details'][$docType]) && $compensation->additional_documents_info['details'][$docType])
-                                  আপস- বন্টননামা বর্ণনাঃ {{ $compensation->additional_documents_info['details'][$docType] }}
+                                  <strong>আপস- বন্টননামা বর্ণনাঃ</strong> {{ $compensation->additional_documents_info['details'][$docType] }}
                               @endif
                           @elseif($docType === 'না-দাবি')
                               @if(isset($compensation->additional_documents_info['details'][$docType]) && $compensation->additional_documents_info['details'][$docType])
-                                  না-দাবীনামা বর্ণনাঃ {{ $compensation->additional_documents_info['details'][$docType] }}
+                                  <strong>না-দাবীনামা বর্ণনাঃ</strong> {{ $compensation->additional_documents_info['details'][$docType] }}
                               @endif
                           @elseif($docType === 'সরেজমিন তদন্ত')
                               @if(isset($compensation->additional_documents_info['details'][$docType]) && $compensation->additional_documents_info['details'][$docType])
-                                  সরেজমিন তদন্ত প্রতিবেদন বর্ণনাঃ {{ $compensation->additional_documents_info['details'][$docType] }}
+                                  <strong>সরেজমিন তদন্ত প্রতিবেদন বর্ণনাঃ</strong> {{ $compensation->additional_documents_info['details'][$docType] }}
                               @endif
                           @elseif($docType === 'এফিডেভিট')
                               @if(isset($compensation->additional_documents_info['details'][$docType]) && $compensation->additional_documents_info['details'][$docType])
-                                  এফিডেভিট বর্ণনাঃ {{ $compensation->additional_documents_info['details'][$docType] }}
+                                  <strong>এফিডেভিট বর্ণনাঃ</strong> {{ $compensation->additional_documents_info['details'][$docType] }}
                               @endif
                           @else
                               @if(isset($compensation->additional_documents_info['details'][$docType]) && $compensation->additional_documents_info['details'][$docType])
@@ -449,20 +472,33 @@
                   @endif
                   
                   <br><br>
-                  কানুনগো ও সার্ভেয়ারের মতামতঃ দাখিলকৃত কাগজপত্র যাচাইপূর্বক কানুনুনগো ও সার্ভেয়ারগণের দাখিলকৃত প্রতিবেদনে উল্লেখ করা হয় যে আবেদনকারী মালিকানার দাবীর স্বপক্ষে কাগজপত্রের ধারাবাহিকতা আছে।
+                  <strong>কানুনগো ও সার্ভেয়ারের মতামতঃ</strong> দাখিলকৃত কাগজপত্র যাচাইপূর্বক কানুনু
                   
                   <br><br>
                   
                   সার্বিক কাগজপত্রাদি পর্যালোচনা ও শুনানি অন্তে  প্রতীয়মান হয় যে আবেদনকারী 
                   @if($compensation->applicants && is_array($compensation->applicants) && count($compensation->applicants) > 0)
-                      {{ collect($compensation->applicants)->pluck('name')->filter()->implode(', ') }}
+                      @if(count($compensation->applicants) == 1)
+                          {{ $compensation->applicants[0]['name'] ?? '…………………………….' }}, পিতা: {{ $compensation->applicants[0]['father_name'] ?? '…………………………….' }}
+                      @else
+                          @foreach($compensation->applicants as $applicantIndex => $applicant)
+                              @if($applicantIndex > 0)
+                                  @if($applicantIndex == count($compensation->applicants) - 1)
+                                      এবং
+                                  @else
+                                      ,
+                                  @endif
+                              @endif
+                              {{ $compensation->bnDigits($applicantIndex + 1) }}. {{ $applicant['name'] ?? '…………………………….' }}, পিতা: {{ $applicant['father_name'] ?? '…………………………….' }}
+                          @endforeach
+                      @endif
                   @else
                       ………………………….
                   @endif
                   উক্ত ক্ষতিপূরণের প্রাপ্য অর্থের হকদার।
                   
                   <br><br>
-                  অতএব আদেশ হয় যে, কানুনগো ও সার্ভেয়ারের দাখিলকৃত যৌথ প্রতিবেদন ও আবেদনকারীর কাগজপত্র পর্যালোচনা করে দেখা যায় আবেদিত সম্পত্তি প্রার্থীর ভোগ-দখলীয় সম্পত্তি, মালিকানাস্বত্বের কাগজপত্র সঠিক থাকায় 
+                  <strong>অতএব আদেশ হয় যে,</strong> কানুনগো ও সার্ভেয়ারের দাখিলকৃত যৌথ প্রতিবেদন ও আবেদনকারীর কাগজপত্র পর্যালোচনা করে দেখা যায় আবেদিত সম্পত্তি প্রার্থীর ভোগ-দখলীয় সম্পত্তি, মালিকানাস্বত্বের কাগজপত্র সঠিক থাকায় 
                   @if($compensation->applicants && is_array($compensation->applicants) && count($compensation->applicants) > 0)
                       @foreach($compensation->applicants as $applicantIndex => $applicant)
                           @if($applicantIndex > 0)
