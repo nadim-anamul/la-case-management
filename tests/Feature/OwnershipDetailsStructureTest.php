@@ -98,6 +98,7 @@ class OwnershipDetailsStructureTest extends TestCase
                 'rs_record_disabled' => true,
                 'applicant_info' => [
                     'applicant_name' => 'Test Applicant',
+                    'namejari_khatian_no' => 'NAMEJARI-001',
                     'kharij_case_no' => 'KHARIJ-001',
                     'kharij_plot_no' => 'KHARIJ-PLOT-001',
                     'kharij_land_amount' => '2 acres',

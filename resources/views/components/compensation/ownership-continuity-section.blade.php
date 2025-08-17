@@ -9,6 +9,7 @@
         <input type="hidden" name="ownership_details[currentStep]" :value="currentStep">
         <input type="hidden" name="ownership_details[completedSteps]" :value="JSON.stringify(completedSteps)">
         <input type="hidden" name="ownership_details[rs_record_disabled]" :value="rs_record_disabled">
+        <input type="hidden" name="ownership_details[nextCreationOrder]" :value="nextCreationOrder">
         
         <!-- Hidden fields for arrays to ensure data persistence -->
         <input type="hidden" name="ownership_details[sa_owners]" :value="JSON.stringify(sa_owners)">
@@ -157,11 +158,11 @@
                         <label for="ownership_sa_khatian_no">SA খতিয়ান নম্বর</label>
                     </div>
                     <div class="floating-label">
-                        <input type="number" id="ownership_sa_total_land_in_plot" x-model="sa_info.sa_total_land_in_plot" placeholder=" " min="0" step="0.000001">
+                        <input type="text" id="ownership_sa_total_land_in_plot" x-model="sa_info.sa_total_land_in_plot" placeholder=" " pattern="[০-৯0-9\.]+" @input="formatNumberInput($event.target.value, $event.target)">
                         <label for="ownership_sa_plot_no">SA দাগে মোট জমি (একর)</label>
                     </div>
                     <div class="floating-label">
-                        <input type="number" id="ownership_sa_land_in_khatian" x-model="sa_info.sa_land_in_khatian" placeholder=" " min="0" step="0.000001">
+                        <input type="text" id="ownership_sa_land_in_khatian" x-model="sa_info.sa_land_in_khatian" placeholder=" " pattern="[০-৯0-9\.]+" @input="formatNumberInput($event.target.value, $event.target)">
                         <label for="ownership_sa_land_in_khatian">উক্ত SA খতিয়ানে জমির পরিমাণ (একর)</label>
                     </div>
                 </div>
@@ -192,11 +193,11 @@
                         <label for="ownership_rs_khatian_no">RS খতিয়ান নম্বর</label>
                     </div>
                     <div class="floating-label">
-                        <input type="number" id="ownership_rs_total_land_in_plot" x-model="rs_info.rs_total_land_in_plot" placeholder=" " min="0" step="0.000001">
+                        <input type="text" id="ownership_rs_total_land_in_plot" x-model="rs_info.rs_total_land_in_plot" placeholder=" " pattern="[০-৯0-9\.]+" @input="formatNumberInput($event.target.value, $event.target)">
                         <label for="ownership_rs_total_land_in_plot">RS দাগে মোট জমি (একর)</label>
                     </div>
                     <div class="floating-label">
-                        <input type="number" id="ownership_rs_land_in_khatian" x-model="rs_info.rs_land_in_khatian" placeholder=" " min="0" step="0.000001">
+                        <input type="text" id="ownership_rs_land_in_khatian" x-model="rs_info.rs_land_in_khatian" placeholder=" " pattern="[০-৯0-9\.]+" @input="formatNumberInput($event.target.value, $event.target)">
                         <label for="ownership_rs_land_in_khatian">উক্ত দাগে RS খতিয়ানের হিস্যানুযায়ী জমির পরিমাণ (একর)</label>
 
                     </div>
@@ -255,32 +256,37 @@
             </div>
         </div>
 
+
+        
         <!-- Deed Transfer Forms -->
         <template x-for="(deed, index) in deed_transfers" :key="'deed_' + index">
             <div class="record-card mb-4">
                 <h5 x-text="'দলিল #' + (index + 1)" class="text-lg font-semibold mb-3"></h5>
+                
+
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Multiple Donors -->
                     <div>
                         <template x-for="(donor, donorIdx) in deed.donor_names" :key="donorIdx">
                             <div class="flex items-center mb-2">
-                                <input type="text" :id="'deed_donor_name_' + index + '_' + donorIdx" x-model="donor.name" class="form-input flex-1" placeholder="দলিল দাতার নাম">
-                                <label :for="'deed_donor_name_' + index + '_' + donorIdx" class="ml-2">দলিল দাতার নাম</label>
+                                <input type="text" :id="'deed_donor_name_' + index + '_' + donorIdx" x-model="donor.name" class="form-input flex-1" placeholder="দলিলের দাতা ও পিতা/স্বামীর নাম">
+                                <label :for="'deed_donor_name_' + index + '_' + donorIdx" class="ml-2">দলিলের দাতা ও পিতা/স্বামীর নাম</label>
                                 <button type="button" @click="removeDeedDonor(index, donorIdx)" x-show="deed.donor_names.length > 1" class="btn-danger ml-2" title="দাতার নাম মুছুন">×</button>
                             </div>
                         </template>
-                        <button type="button" @click="addDeedDonor(index)" class="btn-success mt-2">+ দলিল দাতার নাম যোগ করুন</button>
+                        <button type="button" @click="addDeedDonor(index)" class="btn-success mt-2">+ দলিলের দাতা ও পিতা/স্বামীর নাম যোগ করুন</button>
                     </div>
                     <!-- Multiple Recipients -->
                     <div>
                         <template x-for="(recipient, recipientIdx) in deed.recipient_names" :key="recipientIdx">
                             <div class="flex items-center mb-2">
-                                <input type="text" :id="'deed_recipient_name_' + index + '_' + recipientIdx" x-model="recipient.name" class="form-input flex-1" placeholder="দলিল গ্রহীতার নাম">
-                                <label :for="'deed_recipient_name_' + index + '_' + recipientIdx" class="ml-2">দলিল গ্রহীতার নাম</label>
+                                <input type="text" :id="'deed_recipient_name_' + index + '_' + recipientIdx" x-model="recipient.name" class="form-input flex-1" placeholder="দলিলের গ্রহীতা ও পিতা/স্বামীর নাম">
+                                <label :for="'deed_recipient_name_' + index + '_' + recipientIdx" class="ml-2">দলিলের গ্রহীতা ও পিতা/স্বামীর নাম</label>
                                 <button type="button" @click="removeDeedRecipient(index, recipientIdx)" x-show="deed.recipient_names.length > 1" class="btn-danger ml-2" title="গ্রহীতার নাম মুছুন">×</button>
                             </div>
                         </template>
-                        <button type="button" @click="addDeedRecipient(index)" class="btn-success mt-2">+ দলিল গ্রহীতার নাম যোগ করুন</button>
+                        <button type="button" @click="addDeedRecipient(index)" class="btn-success mt-2">+ দলিলের গ্রহীতা ও পিতা/স্বামীর নাম যোগ করুন</button>
                     </div>
                     <div class="floating-label">
                         <input type="text" :id="'deed_number_' + index" x-model="deed.deed_number" placeholder=" ">
@@ -355,7 +361,7 @@
                         <label class="font-semibold text-gray-700 mb-2"> দখলের বর্ণনা:</label>
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">i) দলিলের বিবরণ ও হাতনকশায় দখল উল্লেখ রয়েছে কিনা?</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">i) দলিলের বিবরণ ও হাতনকশায় আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা?</label>
                                 <div class="radio-group">
                                                                     <label class="flex items-center">
                                     <input type="radio" value="yes" x-model="deed.possession_deed" class="mr-2">
@@ -367,19 +373,7 @@
                                 </label>
                                 </div>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">ii) আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা?</label>
-                                <div class="radio-group">
-                                                                    <label class="flex items-center">
-                                    <input type="radio" value="yes" x-model="deed.possession_application" class="mr-2">
-                                    <span>হ্যাঁ</span>
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="radio" value="no" x-model="deed.possession_application" class="mr-2">
-                                    <span>না</span>
-                                </label>
-                                </div>
-                            </div>
+
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">
                                     iii) যে সকল দাগে দখল উল্লেখ করা 
@@ -392,13 +386,13 @@
                     <!-- Special Details Section -->
                     <div class="form-section md:col-span-2">
                         <label class="font-semibold text-gray-700 mb-2">প্রযোজ্যক্ষেত্রে দলিলের বিশেষ বিবরণ:</label>
-                        <textarea x-model="deed.special_details" rows="4" class="form-input w-full" placeholder=" "></textarea>
+                        <textarea x-model="deed.special_details" rows="4" class="form-input w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical" placeholder="বিশেষ বিবরণ লিখুন..."></textarea>
                     </div>
                     
                     <!-- Tax Information Section -->
                     <div class="form-section md:col-span-2">
                         <label class="font-semibold text-gray-700 mb-2">খারিজের তথ্য:</label>
-                        <textarea x-model="deed.tax_info" rows="4" class="form-input w-full"></textarea>
+                        <textarea x-model="deed.tax_info" rows="4" class="form-input w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical" placeholder="খারিজের তথ্য লিখুন..."></textarea>
                     </div>
 
                 </div>
@@ -414,20 +408,17 @@
                         <input type="text" :id="'inheritance_previous_owner_name_' + index" x-model="inheritance.previous_owner_name" placeholder=" ">
                         <label :for="'inheritance_previous_owner_name_' + index">পূর্ববর্তী মালিকের নাম<span class="text-red-500">*</span></label>
                     </div>
-                    <div class="floating-label">
-                        <input type="text" :id="'inheritance_death_date_' + index" x-model="inheritance.death_date" placeholder="দিন/মাস/বছর">
-                        <label :for="'inheritance_death_date_' + index">মৃত্যুর তারিখ<span class="text-red-500">*</span></label>
-                    </div>
+
                     <div class="floating-label">
                         <select x-model="inheritance.has_death_cert">
                             <option value="yes">হ্যাঁ</option>
                             <option value="no">না</option>
                         </select>
-                        <label>মৃত্যু সনদ আছে কিনা</label>
+                        <label>ওয়ারিশান সনদ দাখিল করা হয়েছে কিনা</label>
                     </div>
                     <div class="floating-label md:col-span-2">
-                        <textarea rows="3" x-model="inheritance.heirship_certificate_info" placeholder=" "></textarea>
-                        <label>ওয়ারিশান সনদের বিবরণ</label>
+                        <textarea rows="3" x-model="inheritance.heirship_certificate_info" class="form-input w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical" placeholder="ওয়ারিশ সনদের বিবরণ লিখুন..."></textarea>
+                        <label>ওয়ারিশান সনদের বিবরণ <span class="text-red-500">*</span></label>
                     </div>
                 </div>
             </div>
@@ -457,7 +448,9 @@
                         <label :for="'rs_record_khatian_no_' + index">আরএস খতিয়ান নম্বর</label>
                     </div>
                     <div class="floating-label">
-                        <input type="number" :id="'rs_record_land_amount_' + index" x-model="rs.land_amount" placeholder=" " min="0" step="0.000001">
+                        <input type="text" :id="'rs_record_land_amount_' + index" x-model="rs.land_amount" placeholder=" " 
+                               @input="rs.land_amount = $parent.formatNumberInput($event.target.value)"
+                               pattern="[০-৯0-9\.]+" title="শুধুমাত্র সংখ্যা এবং দশমিক বিন্দু অনুমোদিত">
                         <label :for="'rs_record_land_amount_' + index">আরএস দাগে জমির পরিমাণ (একর)</label>
                     </div>
                     <div class="flex items-center space-x-2">
@@ -546,6 +539,9 @@
                     <div x-show="applicant_info.applicant_name">
                         <span class="font-medium">আবেদনকারীর নাম:</span> <span x-text="applicant_info.applicant_name"></span>
                     </div>
+                    <div x-show="applicant_info.namejari_khatian_no">
+                        <span class="font-medium">নামজারি খতিয়ান নং:</span> <span x-text="applicant_info.namejari_khatian_no"></span>
+                    </div>
                     <div x-show="applicant_info.kharij_case_no">
                         <span class="font-medium">খারিজ কেস নম্বর:</span> <span x-text="applicant_info.kharij_case_no"></span>
                     </div>
@@ -576,6 +572,12 @@
                     <label>আবেদনকারীর নাম</label>
                 </div>
                 <div class="floating-label">
+                    <input type="text" x-model="applicant_info.namejari_khatian_no" placeholder=" " 
+                           @input="applicant_info.namejari_khatian_no = formatNumberInput($event.target.value)"
+                           pattern="[০-৯0-9]+" title="শুধুমাত্র সংখ্যা অনুমোদিত">
+                    <label>নামজারি খতিয়ান নং</label>
+                </div>
+                <div class="floating-label">
                     <input type="text" x-model="applicant_info.kharij_case_no" placeholder=" ">
                     <label>খারিজ কেস নম্বর</label>
                 </div>
@@ -584,7 +586,9 @@
                     <label>খারিজ দাগ নম্বর</label>
                 </div>
                 <div class="floating-label">
-                    <input type="number" x-model="applicant_info.kharij_land_amount" placeholder=" " min="0" step="0.000001">
+                    <input type="text" x-model="applicant_info.kharij_land_amount" placeholder=" " 
+                           @input="applicant_info.kharij_land_amount = formatNumberInput($event.target.value)"
+                           pattern="[০-৯0-9\.]+" title="শুধুমাত্র সংখ্যা এবং দশমিক বিন্দু অনুমোদিত">
                     <label>উক্ত দাগে খারিজকৃত জমির পরিমাণ (একর)</label>
                 </div>
                                     <div class="floating-label">
@@ -592,7 +596,7 @@
                         <label>খারিজের তারিখ</label>
                     </div>
                 <div class="floating-label md:col-span-2">
-                    <textarea rows="3" x-model="applicant_info.kharij_details" placeholder=" "></textarea>
+                    <textarea rows="3" x-model="applicant_info.kharij_details" class="form-input w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical" placeholder="খারিজের বিস্তারিত বিবরণ লিখুন..."></textarea>
                     <label>খারিজের বিস্তারিত বিবরণ</label>
                 </div>
             </div>
@@ -663,6 +667,7 @@ document.addEventListener('alpine:init', () => {
         },
         applicant_info: {
             applicant_name: '',
+            namejari_khatian_no: '',
             kharij_case_no: '',
             kharij_plot_no: '',
             kharij_land_amount: '',
@@ -680,6 +685,7 @@ document.addEventListener('alpine:init', () => {
         completedSteps: [],
         currentStep: 'info',
         rs_record_disabled: false,
+        nextCreationOrder: 1,
         
         // Alert system
         alert: {
@@ -698,6 +704,9 @@ document.addEventListener('alpine:init', () => {
             if (this.deed_transfers.length === 0) this.deed_transfers = [];
             if (this.inheritance_records.length === 0) this.inheritance_records = [];
             if (this.rs_records.length === 0) this.rs_records = [];
+            
+            // Ensure all existing items have creation orders
+            this.ensureCreationOrders();
             
             // Generate story sequence if empty
             if (this.storySequence.length === 0) {
@@ -790,6 +799,10 @@ document.addEventListener('alpine:init', () => {
             if (data.completedSteps) this.completedSteps = [...data.completedSteps];
             if (data.rs_record_disabled !== undefined) this.rs_record_disabled = data.rs_record_disabled;
             if (data.acquisition_record_basis) this.acquisition_record_basis = data.acquisition_record_basis;
+            if (data.nextCreationOrder) this.nextCreationOrder = data.nextCreationOrder;
+            
+            // Ensure all existing items have creation orders
+            this.ensureCreationOrders();
             
             // Always regenerate story sequence from actual data instead of using stored story sequence
             // This ensures the correct information is displayed
@@ -813,6 +826,10 @@ document.addEventListener('alpine:init', () => {
             if (data.completedSteps) this.completedSteps = [...data.completedSteps];
             if (data.rs_record_disabled !== undefined) this.rs_record_disabled = data.rs_record_disabled;
             if (data.acquisition_record_basis) this.acquisition_record_basis = data.acquisition_record_basis;
+            if (data.nextCreationOrder) this.nextCreationOrder = data.nextCreationOrder;
+            
+            // Ensure all existing items have creation orders
+            this.ensureCreationOrders();
             
             // Always regenerate story sequence from actual data instead of using stored story sequence
             // This ensures the correct information is displayed
@@ -826,49 +843,93 @@ document.addEventListener('alpine:init', () => {
         generateStorySequence() {
             this.storySequence = [];
             
-            // Add deed transfers
+            // Create a combined array with all items and their creation order
+            const allItems = [];
+            
+            // Add deed transfers with their creation order
             this.deed_transfers.forEach((deed, index) => {
-                // Helper function to check if a value is meaningful
                 const hasValue = (value) => value && value.toString().trim() !== '';
-                
                 const deedNumber = hasValue(deed.deed_number) ? deed.deed_number : 'অনির্ধারিত';
                 const deedDate = hasValue(deed.deed_date) ? deed.deed_date : 'অনির্ধারিত';
                 
-                this.storySequence.push({
+                allItems.push({
                     type: 'দলিলমূলে মালিকানা হস্তান্তর',
                     description: `দলিল নম্বর: ${deedNumber}, তারিখ: ${deedDate}`,
                     itemType: 'deed',
                     itemIndex: index,
-                    sequenceIndex: index
+                    creationOrder: deed.creationOrder || 0
                 });
             });
             
-            // Add inheritance records
+            // Add inheritance records with their creation order
             this.inheritance_records.forEach((inheritance, index) => {
                 const hasValue = (value) => value && value.toString().trim() !== '';
                 const previousOwner = hasValue(inheritance.previous_owner_name) ? inheritance.previous_owner_name : 'অনির্ধারিত';
                 
-                this.storySequence.push({
+                allItems.push({
                     type: 'ওয়ারিশমূলে হস্তান্তর',
                     description: `পূর্ববর্তী মালিক: ${previousOwner}`,
                     itemType: 'inheritance',
                     itemIndex: index,
-                    sequenceIndex: this.storySequence.length
+                    creationOrder: inheritance.creationOrder || 0
                 });
             });
             
-            // Add RS records
+            // Add RS records with their creation order
             this.rs_records.forEach((rs, index) => {
                 const hasValue = (value) => value && value.toString().trim() !== '';
                 const plotNo = hasValue(rs.plot_no) ? rs.plot_no : 'অনির্ধারিত';
                 
-                this.storySequence.push({
+                allItems.push({
                     type: 'আরএস রেকর্ড যোগ',
                     description: `দাগ নম্বর: ${plotNo}`,
                     itemType: 'rs',
                     itemIndex: index,
-                    sequenceIndex: this.storySequence.length
+                    creationOrder: rs.creationOrder || 0
                 });
+            });
+            
+            // Sort by creation order to maintain the sequence in which items were added
+            allItems.sort((a, b) => a.creationOrder - b.creationOrder);
+            
+            // Add sequence index for display
+            allItems.forEach((item, index) => {
+                item.sequenceIndex = index;
+            });
+            
+            // Debug logging
+            console.log('Generated story sequence:', this.storySequence);
+            console.log('All items before sorting:', allItems);
+            
+            this.storySequence = allItems;
+        },
+        
+        // Get next creation order number
+        getNextCreationOrder() {
+            return this.nextCreationOrder++;
+        },
+        
+        // Ensure all existing items have creation orders
+        ensureCreationOrders() {
+            // Assign creation orders to deed transfers if they don't have them
+            this.deed_transfers.forEach((deed, index) => {
+                if (deed.creationOrder === undefined) {
+                    deed.creationOrder = this.getNextCreationOrder();
+                }
+            });
+            
+            // Assign creation orders to inheritance records if they don't have them
+            this.inheritance_records.forEach((inheritance, index) => {
+                if (inheritance.creationOrder === undefined) {
+                    inheritance.creationOrder = this.getNextCreationOrder();
+                }
+            });
+            
+            // Assign creation orders to RS records if they don't have them
+            this.rs_records.forEach((rs, index) => {
+                if (rs.creationOrder === undefined) {
+                    rs.creationOrder = this.getNextCreationOrder();
+                }
             });
         },
         
@@ -880,6 +941,8 @@ document.addEventListener('alpine:init', () => {
         
         // Add new deed transfer
         addDeedTransfer() {
+            const creationOrder = this.getNextCreationOrder();
+            console.log('Adding deed transfer with creation order:', creationOrder);
             this.deed_transfers.push({
                 donor_names: [{'name': ''}],
                 recipient_names: [{'name': ''}],
@@ -893,10 +956,10 @@ document.addEventListener('alpine:init', () => {
                 application_total_area: '',
                 application_sell_area_other: '',
                 possession_deed: 'yes',
-                possession_application: 'yes',
                 mentioned_areas: '',
                 special_details: '',
-                tax_info: ''
+                tax_info: '',
+                creationOrder: creationOrder
             });
             this.updateStorySequence();
         },
@@ -909,11 +972,13 @@ document.addEventListener('alpine:init', () => {
         
         // Add new inheritance record
         addInheritanceRecord() {
+            const creationOrder = this.getNextCreationOrder();
+            console.log('Adding inheritance record with creation order:', creationOrder);
             this.inheritance_records.push({
                 previous_owner_name: '',
-                death_date: '',
                 has_death_cert: 'yes',
-                heirship_certificate_info: ''
+                heirship_certificate_info: '',
+                creationOrder: creationOrder
             });
             this.updateStorySequence();
         },
@@ -926,12 +991,15 @@ document.addEventListener('alpine:init', () => {
         
         // Add new RS record
         addRsRecord() {
+            const creationOrder = this.getNextCreationOrder();
+            console.log('Adding RS record with creation order:', creationOrder);
             this.rs_records.push({
                 owner_names: [{'name': ''}],
                 plot_no: '',
                 khatian_no: '',
                 land_amount: '',
-                dp_khatian: false
+                dp_khatian: false,
+                creationOrder: creationOrder
             });
             this.updateStorySequence();
         },
@@ -1144,7 +1212,7 @@ document.addEventListener('alpine:init', () => {
                 // Remove from story sequence
                 this.storySequence.splice(index, 1);
                 
-                // Regenerate story sequence to update indices
+                // Regenerate story sequence to update indices and maintain order
                 this.generateStorySequence();
                 
                 // Update completed steps
@@ -1208,7 +1276,8 @@ document.addEventListener('alpine:init', () => {
                 storySequence: this.storySequence,
                 currentStep: this.currentStep,
                 completedSteps: this.completedSteps,
-                rs_record_disabled: this.rs_record_disabled
+                rs_record_disabled: this.rs_record_disabled,
+                nextCreationOrder: this.nextCreationOrder
             }));
             
             this.showAlert('success', 'বর্তমান ধাপের তথ্য সংরক্ষণ করা হয়েছে');
@@ -1229,7 +1298,8 @@ document.addEventListener('alpine:init', () => {
                 storySequence: this.storySequence,
                 currentStep: this.currentStep,
                 completedSteps: this.completedSteps,
-                rs_record_disabled: this.rs_record_disabled
+                rs_record_disabled: this.rs_record_disabled,
+                nextCreationOrder: this.nextCreationOrder
             }));
             
             this.showAlert('success', 'সব তথ্য সফলভাবে সংরক্ষণ করা হয়েছে');
@@ -1267,4 +1337,5 @@ document.addEventListener('alpine:init', () => {
     .btn-success, .btn-danger { min-width: 36px; min-height: 36px; font-size: 0.95rem; }
     .stepper-step { width: 28px !important; height: 28px !important; font-size: 0.95rem !important; }
 }
+</style>
 </style>

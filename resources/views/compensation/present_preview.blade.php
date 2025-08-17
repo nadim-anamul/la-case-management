@@ -48,8 +48,8 @@
 
         <!-- Case Info -->
         <div class="flex justify-between mb-1">
-          <span>মামলার ধরন: ক্ষতিপূরণ কেস নং: {{ $compensation->case_number ?? 'N/A' }}</span> 
-          <span>এল.এ কেস: {{ $compensation->la_case_no ?? 'N/A' }}</span>
+          <span>মামলার ধরন: ক্ষতিপূরণ কেস নং: {{ $compensation->bnDigits($compensation->case_number ?? 'N/A') }}</span> 
+          <span>এল.এ কেস: {{ $compensation->bnDigits($compensation->la_case_no ?? 'N/A') }}</span>
         </div>
 
         <!-- Orders Table with wide second column -->
@@ -80,9 +80,9 @@
                 <br>
                 <p>উপজেলা: {{ $compensation->upazila ?? 'N/A' }}</p>
                 <p>মৌজা: {{ $compensation->mouza_name ?? 'N/A' }}</p>
-                <p>জেএল নং: {{ $compensation->jl_no ?? 'N/A' }}</p>
-                <p>খতিয়ান নং: {{ $compensation->sa_khatian_no ?? $compensation->rs_khatian_no ?? 'N/A' }}</p>
-                <p>দাগ নং: {{ $compensation->plot_no ?? 'N/A' }}</p>
+                <p>জেএল নং: {{ $compensation->bnDigits($compensation->jl_no ?? 'N/A') }}</p>
+                <p>খতিয়ান নং: {{ $compensation->bnDigits($compensation->sa_khatian_no ?? $compensation->rs_khatian_no ?? 'N/A') }}</p>
+                <p>দাগ নং: {{ $compensation->bnDigits($compensation->plot_no ?? 'N/A') }}</p>
                 <p>আবেদনকৃত ক্ষতিপূরণের ধরণ: 
                     @if($compensation->award_type && is_array($compensation->award_type))
                         {{ implode(', ', $compensation->award_type) }}
@@ -90,39 +90,46 @@
                         {{ $compensation->award_type ?? 'N/A' }}
                     @endif
                 </p>
-                @php
-                    $total_land = isset($compensation->total_land_amount) ? $compensation->total_land_amount : 'N/A';
-                    $applicant_acquired_land = isset($compensation->applicant_acquired_land) ? $compensation->applicant_acquired_land : 'N/A';
-                @endphp
-                <p>অধিগ্রহণকৃত জমির পরিমাণ (একরে): {{ $total_land }}</p>
-                <p>দাবীকৃত জমির পরিমাণ (একরে): {{ $applicant_acquired_land }}</p>
+                
+                @if($compensation->award_type && is_array($compensation->award_type))
+                    @if(in_array('জমি', $compensation->award_type) && $compensation->land_category && is_array($compensation->land_category))
+                        @foreach($compensation->land_category as $index => $category)
+                            <p class="ml-4">• জমির রোয়েদাদ নং {{ $compensation->bnDigits($compensation->land_award_serial_no ?? 'N/A') }}: {{ $category['category_name'] ?? 'N/A' }} - {{ $compensation->bnDigits(number_format($category['total_land'] ?? 0, 4)) }} একর জমি, ক্ষতিপূরণ: {{ $compensation->bnDigits(number_format($category['total_compensation'] ?? 0, 2)) }} টাকা</p>
+                        @endforeach
+                    @endif
+                    
+                    @if(in_array('গাছপালা/ফসল', $compensation->award_type) && $compensation->tree_compensation)
+                        <p class="ml-4">• গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->bnDigits($compensation->tree_award_serial_no ?? 'N/A') }}: ক্ষতিপূরণ {{ $compensation->bnDigits(number_format($compensation->tree_compensation, 2)) }} টাকা</p>
+                    @endif
+                    
+                    @if(in_array('অবকাঠামো', $compensation->award_type) && $compensation->infrastructure_compensation)
+                        <p class="ml-4">• অবকাঠামোর রোয়েদাদ নং {{ $compensation->bnDigits($compensation->infrastructure_award_serial_no ?? 'N/A') }}: ক্ষতিপূরণ {{ $compensation->bnDigits(number_format($compensation->infrastructure_compensation, 2)) }} টাকা</p>
+                    @endif
+                @else
+                    <p class="ml-4">কোন রোয়েদাদ পাওয়া যায়নি</p>
+                @endif
                 
                 <br>
-                <p>আবেদিত জমি {{ $compensation->la_case_no ?? 'N/A' }} নং এল.এ কেসে অধিগ্রহণ করা হয়েছে। উক্ত জমির ক্ষতিপূরণ বাবদ 
-                    @if($compensation->award_type && is_array($compensation->award_type))
-                        @if(in_array('জমি', $compensation->award_type) && in_array('গাছপালা/ফসল', $compensation->award_type))
-                            @if($compensation->land_award_serial_no && $compensation->tree_award_serial_no)
-                                জমির রোয়েদাদ নং {{ $compensation->land_award_serial_no }} এবং গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->tree_award_serial_no }}
-                            @elseif($compensation->land_award_serial_no)
-                                জমির রোয়েদাদ নং {{ $compensation->land_award_serial_no }}
-                            @elseif($compensation->tree_award_serial_no)
-                                গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->tree_award_serial_no }}
-                            @else
-                                N/A
-                            @endif
-                        @elseif(in_array('জমি', $compensation->award_type) && $compensation->land_award_serial_no)
-                            জমির রোয়েদাদ নং {{ $compensation->land_award_serial_no }}
-                        @elseif(in_array('গাছপালা/ফসল', $compensation->award_type) && $compensation->tree_award_serial_no)
-                            গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->tree_award_serial_no }}
-                        @elseif(in_array('অবকাঠামো', $compensation->award_type) && $compensation->infrastructure_award_serial_no)
-                            অবকাঠামোর রোয়েদাদ নং {{ $compensation->infrastructure_award_serial_no }}
-                        @else
-                            N/A
-                        @endif
-                    @else
-                        N/A
-                    @endif
-                    নং এওয়ার্ড প্রার্থীর নামে আছে/নাই। আবেদনকারীকে নোটিশ প্রদান করা হোক। শুনানির জন্য পরবর্তী তারিখঃ  ............... </p>
+                <p>আবেদিত জমি {{ $compensation->bnDigits($compensation->la_case_no ?? 'N/A') }} নং এল.এ কেসে অধিগ্রহণ করা হয়েছে। উক্ত জমির ক্ষতিপূরণ বাবদ 
+                    @php
+                        $awardNumbers = [];
+                        if ($compensation->land_award_serial_no) {
+                            $awardNumbers[] = $compensation->bnDigits($compensation->land_award_serial_no);
+                        }
+                        if ($compensation->tree_award_serial_no) {
+                            $awardNumbers[] = $compensation->bnDigits($compensation->tree_award_serial_no);
+                        }
+                        if ($compensation->infrastructure_award_serial_no) {
+                            $awardNumbers[] = $compensation->bnDigits($compensation->infrastructure_award_serial_no);
+                        }
+                        
+                        if (count($awardNumbers) > 0) {
+                            echo 'রোয়েদাদ নং- ' . implode(', ', $awardNumbers);
+                        } else {
+                            echo 'N/A';
+                        }
+                    @endphp
+                    প্রার্থীর নামে আছে/নাই। আবেদনকারীকে নোটিশ প্রদান করা হোক। শুনানির জন্য পরবর্তী তারিখঃ  ............... </p>
                 <br><br>
                 <div class="text-right font-bold">
                   ভূমি অধিগ্রহণ কর্মকর্তা <br>

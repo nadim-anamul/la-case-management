@@ -4,13 +4,21 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-6 max-w-7xl">
-    <div class="mb-4 flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-gray-800">ক্ষতিপূরণ তথ্য প্রিভিউ</h1>
-        <div class="space-x-3">
-            <a href="{{ route('compensation.edit', $compensation->id) }}" class="btn-primary">
+    <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+        <h1 class="text-3xl font-bold text-gray-800">ক্ষতিপূরণ কেস প্রিভিউ</h1>
+        <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+            <a href="{{ route('compensation.edit', $compensation->id) }}" 
+               class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold text-base rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
                 সম্পাদনা করুন
             </a>
-            <a href="{{ route('compensation.index') }}" class="btn-secondary">
+            <a href="{{ route('compensation.index') }}" 
+               class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold text-base rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-0">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
                 তালিকায় ফিরে যান
             </a>
         </div>
@@ -24,21 +32,21 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             <div>
                 <label class="font-semibold text-gray-700">মামলা নম্বর:</label>
-                <p class="text-gray-900">{{ $compensation->case_number }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('case_number') }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">মামলার তারিখ:</label>
-                <p class="text-gray-900">{{ $compensation->case_date }}</p>
+                <p class="text-gray-900">{{ $compensation->case_date_bengali }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">এলএ কেস নং:</label>
-                <p class="text-gray-900">{{ $compensation->la_case_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('la_case_no') }}</p>
             </div>
             @if($compensation->award_type && is_array($compensation->award_type) && in_array('জমি', $compensation->award_type))
                 @if($compensation->land_award_serial_no)
                 <div>
                     <label class="font-semibold text-gray-700">জমির রোয়েদাদ নং:</label>
-                    <p class="text-gray-900">{{ $compensation->land_award_serial_no }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliValue('land_award_serial_no') }}</p>
                 </div>
                 @endif
             @endif
@@ -46,7 +54,7 @@
                 @if($compensation->tree_award_serial_no)
                 <div>
                     <label class="font-semibold text-gray-700">গাছপালা/ফসলের রোয়েদাদ নং:</label>
-                    <p class="text-gray-900">{{ $compensation->tree_award_serial_no }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliValue('tree_award_serial_no') }}</p>
                 </div>
                 @endif
             @endif
@@ -54,7 +62,7 @@
                 @if($compensation->infrastructure_award_serial_no)
                 <div>
                     <label class="font-semibold text-gray-700">অবকাঠামোর রোয়েদাদ নং:</label>
-                    <p class="text-gray-900">{{ $compensation->infrastructure_award_serial_no }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliValue('infrastructure_award_serial_no') }}</p>
                 </div>
                 @endif
             @endif
@@ -64,7 +72,7 @@
             </div>
             <div>
                 <label class="font-semibold text-gray-700">দাগ নং:</label>
-                <p class="text-gray-900">{{ $compensation->plot_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('plot_no') }}</p>
             </div>
         </div>
     </div>
@@ -92,12 +100,12 @@
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">এন আই ডি:</label>
-                    <p class="text-gray-900">{{ $applicant['nid'] }}</p>
+                    <p class="text-gray-900">{{ $compensation->bnDigits($applicant['nid']) }}</p>
                 </div>
                 @if(isset($applicant['mobile']) && $applicant['mobile'])
                 <div>
                     <label class="font-semibold text-gray-700">মোবাইল নং:</label>
-                    <p class="text-gray-900">{{ $applicant['mobile'] }}</p>
+                    <p class="text-gray-900">{{ $compensation->bnDigits($applicant['mobile']) }}</p>
                 </div>
                 @endif
             </div>
@@ -143,56 +151,42 @@
                 <label class="font-semibold text-gray-700">আবেদনকারীর নাম রোয়েদাদে আছে কিনা:</label>
                 <p class="text-gray-900">{{ $compensation->is_applicant_in_award ? 'হ্যাঁ' : 'না' }}</p>
             </div>
-            <div>
-                <label class="font-semibold text-gray-700">অধিগ্রহণকৃত মোট জমির পরিমাণ:</label>
-                <p class="text-gray-900">
-                    @php
-                        $totalLand = 0;
-                        if($compensation->land_category && is_array($compensation->land_category)) {
-                            foreach($compensation->land_category as $category) {
-                                $totalLand += floatval($category['total_land'] ?? 0);
-                            }
-                        }
-                        echo number_format($totalLand, 6) . ' একর';
-                    @endphp
-                </p>
-            </div>
-            <div>
-                <label class="font-semibold text-gray-700">অধিগ্রহণকৃত জমির মোট ক্ষতিপূরণ:</label>
-                <p class="text-gray-900">
-                    @php
-                        $totalCompensation = 0;
-                        if($compensation->land_category && is_array($compensation->land_category)) {
-                            foreach($compensation->land_category as $category) {
-                                $totalCompensation += floatval($category['total_compensation'] ?? 0);
-                            }
-                        }
-                        echo number_format($totalCompensation, 2) . ' টাকা';
-                    @endphp
-                </p>
-            </div>
+            
             <div>
                 <label class="font-semibold text-gray-700">উৎস কর %:</label>
-                <p class="text-gray-900">{{ $compensation->source_tax_percentage }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('source_tax_percentage') }}</p>
             </div>
+            @if($compensation->tree_award_serial_no)
+            <div>
+                <label class="font-semibold text-gray-700">গাছপালা/ফসলের রোয়েদাদ নং</label>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('tree_award_serial_no') }}</p>
+            </div>
+            @endif
             @if($compensation->tree_compensation)
             <div>
                 <label class="font-semibold text-gray-700">গাছপালার মোট ক্ষতিপূরণ:</label>
-                <p class="text-gray-900">{{ $compensation->tree_compensation }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('tree_compensation') }}</p>
+            </div>
+            @endif
+            @if($compensation->infrastructure_award_serial_no)
+            <div>
+                <label class="font-semibold text-gray-700">অবকাঠামোর রোয়েদাদ নং:</label>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('infrastructure_award_serial_no') }}</p>
             </div>
             @endif
             @if($compensation->infrastructure_compensation)
             <div>
                 <label class="font-semibold text-gray-700">অবকাঠামোর মোট ক্ষতিপূরণ:</label>
-                <p class="text-gray-900">{{ $compensation->infrastructure_compensation }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('infrastructure_compensation') }}</p>
             </div>
             @endif
-            @if($compensation->applicant_acquired_land)
+            @if($compensation->land_award_serial_no)
             <div>
-                <label class="font-semibold text-gray-700">আবেদনকারীর অধিগ্রহণকৃত জমির পরিমাণ:</label>
-                <p class="text-gray-900">{{ $compensation->applicant_acquired_land }}</p>
+                <label class="font-semibold text-gray-700">জমির রোয়েদাদ নং:</label>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('land_award_serial_no') }}</p>
             </div>
             @endif
+
             @if($compensation->land_category && count($compensation->land_category) > 0)
             <div class="md:col-span-2 lg:col-span-3">
                 <label class="font-semibold text-gray-700">অধিগ্রহণকৃত জমির শ্রেণী:</label>
@@ -206,15 +200,15 @@
                             </div>
                             <div>
                                 <span class="font-medium text-gray-600">মোট জমির পরিমাণ:</span>
-                                <span class="text-gray-900">{{ $category['total_land'] ?? '' }} একর</span>
+                                <span class="text-gray-900">{{ $compensation->bnDigits($category['total_land'] ?? '') }} একর</span>
                             </div>
                             <div>
                                 <span class="font-medium text-gray-600">মোট ক্ষতিপূরণ:</span>
-                                <span class="text-gray-900">{{ $category['total_compensation'] ?? '' }}</span>
+                                <span class="text-gray-900">{{ $compensation->bnDigits($category['total_compensation'] ?? '') }}</span>
                             </div>
                             <div>
                                 <span class="font-medium text-gray-600">আবেদনকারীর অধিগ্রহণকৃত জমি:</span>
-                                <span class="text-gray-900">{{ $category['applicant_land'] ? $category['applicant_land'] . ' একর' : 'তথ্য নেই' }}</span>
+                                <span class="text-gray-900">{{ $category['applicant_land'] ? $compensation->bnDigits($category['applicant_land']) . ' একর' : 'তথ্য নেই' }}</span>
                             </div>
                         </div>
                     </div>
@@ -231,21 +225,21 @@
             @if($compensation->acquisition_record_basis === 'SA')
             <div>
                 <label class="font-semibold text-gray-700">SA দাগ নং:</label>
-                <p class="text-gray-900">{{ $compensation->sa_plot_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('sa_plot_no') }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">SA খতিয়ান নং:</label>
-                <p class="text-gray-900">{{ $compensation->sa_khatian_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('sa_khatian_no') }}</p>
             </div>
             @endif
             @if($compensation->acquisition_record_basis === 'RS')
             <div>
                 <label class="font-semibold text-gray-700">RS দাগ নং:</label>
-                <p class="text-gray-900">{{ $compensation->rs_plot_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('rs_plot_no') }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">RS খতিয়ান নং:</label>
-                <p class="text-gray-900">{{ $compensation->rs_khatian_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('rs_khatian_no') }}</p>
             </div>
             @endif
             @if($compensation->objector_details)
@@ -277,33 +271,34 @@
             </div>
             <div>
                 <label class="font-semibold text-gray-700">জেএল নং:</label>
-                <p class="text-gray-900">{{ $compensation->jl_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('jl_no') }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">এসএ খতিয়ান নং:</label>
-                <p class="text-gray-900">{{ $compensation->sa_khatian_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('sa_khatian_no') }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">SA দাগ নং:</label>
-                <p class="text-gray-900">{{ $compensation->land_schedule_sa_plot_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('land_schedule_sa_plot_no') }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">আর এস খতিয়ান নং:</label>
-                <p class="text-gray-900">{{ $compensation->rs_khatian_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('rs_khatian_no') }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">RS দাগ নং:</label>
-                <p class="text-gray-900">{{ $compensation->land_schedule_rs_plot_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('land_schedule_rs_plot_no') }}</p>
             </div>
         </div>
     </div>
 
     <!-- Ownership Continuity -->
-    @if($compensation->ownership_details)
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
         <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
             মালিকানার ধারাবাহিকতার বর্ণনা
         </h2>
+        
+        @if($compensation->ownership_details)
         
         <!-- Story Sequence Display - Show First -->
         @if(isset($compensation->ownership_details['storySequence']) && count($compensation->ownership_details['storySequence']) > 0)
@@ -333,19 +328,19 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                     <label class="font-semibold text-gray-700">SA দাগ নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['sa_info']['sa_plot_no'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.sa_info.sa_plot_no') ?? '' }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">SA খতিয়ান নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['sa_info']['sa_khatian_no'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.sa_info.sa_khatian_no') ?? '' }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">SA দাগে মোট জমি:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['sa_info']['sa_total_land_in_plot'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.sa_info.sa_total_land_in_plot') ?? '' }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">SA উক্ত খতিয়ানে জমির পরিমাণ:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['sa_info']['sa_land_in_khatian'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.sa_info.sa_land_in_khatian') ?? '' }}</p>
                 </div>
             </div>
             
@@ -366,19 +361,19 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                     <label class="font-semibold text-gray-700">RS দাগ নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['rs_info']['rs_plot_no'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.rs_info.rs_plot_no') ?? '' }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">RS খতিয়ান নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['rs_info']['rs_khatian_no'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.rs_info.rs_khatian_no') ?? '' }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">RS দাগে মোট জমি:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['rs_info']['rs_total_land_in_plot'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.rs_info.rs_total_land_in_plot') ?? '' }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">RS খতিয়ানে মোট জমির পরিমাণ:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['rs_info']['rs_land_in_khatian'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.rs_info.rs_land_in_khatian') ?? '' }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">ডিপি খতিয়ান:</label>
@@ -450,11 +445,11 @@
                                     </div>
                                     <div>
                                         <label class="font-semibold text-gray-700">দলিল নম্বর:</label>
-                                        <p class="text-gray-900">{{ $deed['deed_number'] ?? 'তথ্য নেই' }}</p>
+                                        <p class="text-gray-900">{{ $compensation->bnDigits($deed['deed_number'] ?? 'তথ্য নেই') }}</p>
                                     </div>
                                     <div>
                                         <label class="font-semibold text-gray-700">দলিলের তারিখ:</label>
-                                        <p class="text-gray-900">{{ $deed['deed_date'] ?? 'তথ্য নেই' }}</p>
+                                        <p class="text-gray-900">{{ $compensation->bnDigits($deed['deed_date'] ?? 'তথ্য নেই') }}</p>
                                     </div>
                                     <div>
                                         <label class="font-semibold text-gray-700">দলিলের ধরন:</label>
@@ -464,19 +459,15 @@
                                     <!-- Application Area Fields -->
                                     @if(isset($deed['application_type']) && $deed['application_type'])
                                     <div>
-                                        <label class="font-semibold text-gray-700">আবেদনকৃত দাগের সুনির্দিষ্টভাবে বিক্রয়:</label>
+                                        <label class="font-semibold text-gray-700">আবেদনকৃত দাগে সুনির্দিষ্টভাবে বিক্রয়:</label>
                                         <p class="text-gray-900">{{ $compensation->formatApplicationAreaString($deed) }}</p>
                                     </div>
                                     @endif
-                                    <div>
-                                        <label class="font-semibold text-gray-700">দখল উল্লেখ করা আছে কিনা:</label>
-                                        <p class="text-gray-900">{{ isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
-                                    </div>
                                     @if(isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes')
-                                    <div>
-                                        <label class="font-semibold text-gray-700">দখলের দাগ নম্বর:</label>
-                                        <p class="text-gray-900">{{ $deed['possession_plot_no'] ?? '' }}</p>
-                                    </div>
+                                                                    <div>
+                                    <label class="font-semibold text-gray-700">দখলের দাগ নম্বর:</label>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($deed['possession_plot_no'] ?? '') }}</p>
+                                </div>
                                     <div class="md:col-span-2">
                                         <label class="font-semibold text-gray-700">দখল এর বর্ণনা:</label>
                                         <p class="text-gray-900">{{ $deed['possession_description'] ?? '' }}</p>
@@ -485,19 +476,16 @@
                                     
                                     <!-- New Possession Fields -->
                                     <div>
-                                        <label class="font-semibold text-gray-700">দলিলের বিবরণ ও হস্তান্তরের সময় দখল উল্লেখ রয়েছে কিনা:</label>
+                                        <label class="font-semibold text-gray-700">দলিলের বিবরণ ও হাতনকশায় আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা?</label>
                                         <p class="text-gray-900">{{ isset($deed['possession_deed']) && $deed['possession_deed'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
                                     </div>
-                                    <div>
-                                        <label class="font-semibold text-gray-700">আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা:</label>
-                                        <p class="text-gray-900">{{ isset($deed['possession_application']) && $deed['possession_application'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
-                                    </div>
-                                    @if(isset($deed['mentioned_areas']) && $deed['mentioned_areas'])
-                                    <div>
-                                        <label class="font-semibold text-gray-700">যে সকল দাগে দখল উল্লেখ করা:</label>
-                                        <p class="text-gray-900">{{ $deed['mentioned_areas'] }}</p>
-                                    </div>
-                                    @endif
+
+                                                                    @if(isset($deed['mentioned_areas']) && $deed['mentioned_areas'])
+                                <div>
+                                    <label class="font-semibold text-gray-700">যে সকল দাগে দখল উল্লেখ করা:</label>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($deed['mentioned_areas']) }}</p>
+                                </div>
+                                @endif
                                     @if(isset($deed['special_details']) && $deed['special_details'])
                                     <div class="md:col-span-2">
                                         <label class="font-semibold text-gray-700">প্রযোজ্যক্ষেত্রে দলিলের বিশেষ বিবরণ:</label>
@@ -549,15 +537,15 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="font-semibold text-gray-700">আরএস দাগ নম্বর:</label>
-                                    <p class="text-gray-900">{{ $rs['plot_no'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($rs['plot_no'] ?? '') }}</p>
                                 </div>
                                 <div>
                                     <label class="font-semibold text-gray-700">আরএস খতিয়ান নম্বর:</label>
-                                    <p class="text-gray-900">{{ $rs['khatian_no'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($rs['khatian_no'] ?? '') }}</p>
                                 </div>
                                 <div>
                                     <label class="font-semibold text-gray-700">আরএস জমির পরিমাণ:</label>
-                                    <p class="text-gray-900">{{ $rs['land_amount'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($rs['land_amount'] ?? '') }}</p>
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="font-semibold text-gray-700">আরএস মালিকের নাম:</label>
@@ -624,7 +612,7 @@
                                 </div>
                                 <div>
                                     <label class="font-semibold text-gray-700">দলিল নম্বর:</label>
-                                    <p class="text-gray-900">{{ $deed['deed_number'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($deed['deed_number'] ?? '') }}</p>
                                 </div>
                                 <div>
                                     <label class="font-semibold text-gray-700">দলিলের তারিখ:</label>
@@ -638,18 +626,14 @@
                                 <!-- Application Area Fields -->
                                 @if(isset($deed['application_type']) && $deed['application_type'])
                                 <div>
-                                    <label class="font-semibold text-gray-700">আবেদনকৃত দাগের সুনির্দিষ্টভাবে বিক্রয়:</label>
+                                    <label class="font-semibold text-gray-700">আবেদনকৃত দাগে সুনির্দিষ্টভাবে বিক্রয়:</label>
                                     <p class="text-gray-900">{{ $compensation->formatApplicationAreaString($deed) }}</p>
                                 </div>
                                 @endif
-                                <div>
-                                    <label class="font-semibold text-gray-700">দখল উল্লেখ করা আছে কিনা:</label>
-                                    <p class="text-gray-900">{{ isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
-                                </div>
                                 @if(isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes')
                                 <div>
                                     <label class="font-semibold text-gray-700">দখলের দাগ নম্বর:</label>
-                                    <p class="text-gray-900">{{ $deed['possession_plot_no'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($deed['possession_plot_no'] ?? '') }}</p>
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="font-semibold text-gray-700">দখল এর বর্ণনা:</label>
@@ -659,17 +643,14 @@
                                 
                                 <!-- New Possession Fields -->
                                 <div>
-                                    <label class="font-semibold text-gray-700">দলিলের বিবরণ ও হস্তান্তরের সময় দখল উল্লেখ রয়েছে কিনা:</label>
+                                    <label class="font-semibold text-gray-700">দলিলের বিবরণ ও হাতনকশায় আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা?</label>
                                     <p class="text-gray-900">{{ isset($deed['possession_deed']) && $deed['possession_deed'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
                                 </div>
-                                <div>
-                                    <label class="font-semibold text-gray-700">আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা:</label>
-                                    <p class="text-gray-900">{{ isset($deed['possession_application']) && $deed['possession_application'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
-                                </div>
+
                                 @if(isset($deed['mentioned_areas']) && $deed['mentioned_areas'])
                                 <div>
                                     <label class="font-semibold text-gray-700">যে সকল দাগে দখল উল্লেখ করা:</label>
-                                    <p class="text-gray-900">{{ $deed['mentioned_areas'] }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($deed['mentioned_areas']) }}</p>
                                 </div>
                                 @endif
                                 @if(isset($deed['special_details']) && $deed['special_details'])
@@ -696,11 +677,7 @@
                                     <p class="text-gray-900">{{ $inheritance['previous_owner_name'] ?? '' }}</p>
                                 </div>
                                 <div>
-                                    <label class="font-semibold text-gray-700">মৃত্যুর তারিখ:</label>
-                                    <p class="text-gray-900">{{ $inheritance['death_date'] ?? '' }}</p>
-                                </div>
-                                <div>
-                                    <label class="font-semibold text-gray-700">মৃত্যু সনদ আছে কিনা:</label>
+                                    <label class="font-semibold text-gray-700">ওয়ারিশান সনদ দাখিল করা হয়েছে কিনা:</label>
                                     <p class="text-gray-900">{{ isset($inheritance['has_death_cert']) && $inheritance['has_death_cert'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
                                 </div>
                                 <div class="md:col-span-2">
@@ -722,15 +699,15 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="font-semibold text-gray-700">আরএস দাগ নম্বর:</label>
-                                    <p class="text-gray-900">{{ $rs['plot_no'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($rs['plot_no'] ?? '') }}</p>
                                 </div>
                                 <div>
                                     <label class="font-semibold text-gray-700">আরএস খতিয়ান নম্বর:</label>
-                                    <p class="text-gray-900">{{ $rs['khatian_no'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($rs['khatian_no'] ?? '') }}</p>
                                 </div>
                                 <div>
                                     <label class="font-semibold text-gray-700">আরএস জমির পরিমাণ:</label>
-                                    <p class="text-gray-900">{{ $rs['land_amount'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($rs['land_amount'] ?? '') }}</p>
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="font-semibold text-gray-700">আরএস মালিকের নাম:</label>
@@ -778,7 +755,7 @@
                         </div>
                         <div>
                             <label class="font-semibold text-gray-700">দলিল নম্বর:</label>
-                            <p class="text-gray-900">{{ $deed['deed_number'] ?? '' }}</p>
+                            <p class="text-gray-900">{{ $compensation->bnDigits($deed['deed_number'] ?? '') }}</p>
                         </div>
                         <div>
                             <label class="font-semibold text-gray-700">দলিলের তারিখ:</label>
@@ -796,15 +773,13 @@
                         <p class="text-gray-900">{{ $compensation->formatApplicationAreaString($deed) }}</p>
                         </div>
                         @endif
-                        <div>
-                            <label class="font-semibold text-gray-700">দখল উল্লেখ করা আছে কিনা:</label>
-                            <p class="text-gray-900">{{ isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
-                        </div>
-                        @if(isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes')
+                        @if(isset($deed['possession_plot_no']))
                         <div>
                             <label class="font-semibold text-gray-700">দখলের দাগ নম্বর:</label>
-                            <p class="text-gray-900">{{ $deed['possession_plot_no'] ?? '' }}</p>
+                            <p class="text-gray-900">{{ $compensation->bnDigits($deed['possession_plot_no'] ?? '') }}</p>
                         </div>
+                        @endif
+                        @if(isset($deed['possession_description']))
                         <div class="md:col-span-2">
                             <label class="font-semibold text-gray-700">দখল এর বর্ণনা:</label>
                             <p class="text-gray-900">{{ $deed['possession_description'] ?? '' }}</p>
@@ -813,17 +788,14 @@
                         
                         <!-- New Possession Fields -->
                         <div>
-                            <label class="font-semibold text-gray-700">দলিলের বিবরণ ও হস্তান্তরের সময় দখল উল্লেখ রয়েছে কিনা:</label>
+                            <label class="font-semibold text-gray-700">দলিলের বিবরণ ও হাতনকশায় আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা?</label>
                             <p class="text-gray-900">{{ isset($deed['possession_deed']) && $deed['possession_deed'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
                         </div>
-                        <div>
-                            <label class="font-semibold text-gray-700">আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা:</label>
-                            <p class="text-gray-900">{{ isset($deed['possession_application']) && $deed['possession_application'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
-                        </div>
+
                         @if(isset($deed['mentioned_areas']) && $deed['mentioned_areas'])
                         <div>
                             <label class="font-semibold text-gray-700">যে সকল দাগে দখল উল্লেখ করা:</label>
-                            <p class="text-gray-900">{{ $deed['mentioned_areas'] }}</p>
+                            <p class="text-gray-900">{{ $compensation->bnDigits($deed['mentioned_areas']) }}</p>
                         </div>
                         @endif
                         @if(isset($deed['special_details']) && $deed['special_details'])
@@ -850,10 +822,6 @@
                             <p class="text-gray-900">{{ $inheritance['previous_owner_name'] ?? '' }}</p>
                         </div>
                         <div>
-                            <label class="font-semibold text-gray-700">মৃত্যুর তারিখ:</label>
-                            <p class="text-gray-900">{{ $inheritance['death_date'] ?? '' }}</p>
-                        </div>
-                        <div>
                             <label class="font-semibold text-gray-700">মৃত্যু সনদ আছে কিনা:</label>
                             <p class="text-gray-900">{{ isset($inheritance['has_death_cert']) && $inheritance['has_death_cert'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
                         </div>
@@ -876,15 +844,15 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="font-semibold text-gray-700">আরএস দাগ নম্বর:</label>
-                            <p class="text-gray-900">{{ $rs['plot_no'] ?? '' }}</p>
+                            <p class="text-gray-900">{{ $compensation->bnDigits($rs['plot_no'] ?? '') }}</p>
                         </div>
                         <div>
                             <label class="font-semibold text-gray-700">আরএস খতিয়ান নম্বর:</label>
-                            <p class="text-gray-900">{{ $rs['khatian_no'] ?? '' }}</p>
+                            <p class="text-gray-900">{{ $compensation->bnDigits($rs['khatian_no'] ?? '') }}</p>
                         </div>
                         <div>
                             <label class="font-semibold text-gray-700">আরএস জমির পরিমাণ:</label>
-                            <p class="text-gray-900">{{ $rs['land_amount'] ?? '' }}</p>
+                            <p class="text-gray-900">{{ $compensation->bnDigits($rs['land_amount'] ?? '') }}</p>
                         </div>
                         <div class="md:col-span-2">
                             <label class="font-semibold text-gray-700">আরএস মালিকের নাম:</label>
@@ -916,16 +884,20 @@
                     <p class="text-gray-900">{{ $compensation->ownership_details['applicant_info']['applicant_name'] ?? '' }}</p>
                 </div>
                 <div>
+                    <label class="font-semibold text-gray-700">নামজারি খতিয়ান নং:</label>
+                    <p class="text-gray-900">{{ $compensation->bnDigits($compensation->ownership_details['applicant_info']['namejari_khatian_no'] ?? '') }}</p>
+                </div>
+                <div>
                     <label class="font-semibold text-gray-700">খারিজ কেস নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['applicant_info']['kharij_case_no'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->bnDigits($compensation->ownership_details['applicant_info']['kharij_case_no'] ?? '') }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">খারিজ দাগ নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['applicant_info']['kharij_plot_no'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->bnDigits($compensation->ownership_details['applicant_info']['kharij_plot_no'] ?? '') }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">খারিজ জমির পরিমাণ:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['applicant_info']['kharij_land_amount'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->bnDigits($compensation->ownership_details['applicant_info']['kharij_land_amount'] ?? '') }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">খারিজের তারিখ:</label>
@@ -939,6 +911,14 @@
         </div>
         @endif
     </div>
+    
+    @else
+    <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <p class="text-yellow-800">
+            <strong>Debug:</strong> ownership_details is null or empty. 
+            <br>Value: {{ var_export($compensation->ownership_details, true) }}
+        </p>
+    </div>
     @endif
 
 
@@ -950,9 +930,17 @@
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
+                <label class="font-semibold text-gray-700">যার নামে প্রদানকৃত:</label>
+                @if(!empty($compensation->tax_info['paid_in_name'] ?? ''))
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('tax_info.paid_in_name') }}</p>
+                @else
+                    <p class="text-red-500 italic">তথ্য নেই</p>
+                @endif
+            </div>
+            <div>
                 <label class="font-semibold text-gray-700">হোল্ডিং নম্বর:</label>
                 @if(!empty($compensation->tax_info['holding_no'] ?? ''))
-                    <p class="text-gray-900">{{ $compensation->tax_info['holding_no'] }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('tax_info.holding_no') }}</p>
                 @else
                     <p class="text-red-500 italic">তথ্য নেই</p>
                 @endif
@@ -960,7 +948,7 @@
             <div>
                 <label class="font-semibold text-gray-700">আবেদনকৃত দাগে খাজনা প্রদানকৃত জমির পরিমান (একরে)</label>
                 @if(!empty($compensation->tax_info['paid_land_amount'] ?? ''))
-                    <p class="text-gray-900">{{ $compensation->tax_info['paid_land_amount'] }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('tax_info.paid_land_amount') }}</p>
                 @else
                     <p class="text-red-500 italic">তথ্য নেই</p>
                 @endif
@@ -968,7 +956,7 @@
             <div>
                 <label class="font-semibold text-gray-700">ইংরেজি বছর:</label>
                 @if(!empty($compensation->tax_info['english_year'] ?? ''))
-                    <p class="text-gray-900">{{ $compensation->tax_info['english_year'] }}</p>
+                                                <p class="text-gray-900">{{ $compensation->bnDigits($compensation->tax_info['english_year']) }}</p>
                 @else
                     <p class="text-red-500 italic">তথ্য নেই</p>
                 @endif
@@ -976,7 +964,7 @@
             <div>
                 <label class="font-semibold text-gray-700">বাংলা বছর:</label>
                 @if(!empty($compensation->tax_info['bangla_year'] ?? ''))
-                    <p class="text-gray-900">{{ $compensation->tax_info['bangla_year'] }}</p>
+                                                <p class="text-gray-900">{{ $compensation->bnDigits($compensation->tax_info['bangla_year']) }}</p>
                 @else
                     <p class="text-red-500 italic">তথ্য নেই</p>
                 @endif
@@ -1023,25 +1011,6 @@
         </div>
         @endif
     </div>
-
-    <!-- Kanungo Opinion -->
-    @if($compensation->kanungo_opinion)
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
-            কানুনগো/সার্ভেয়ারের মতামত
-        </h2>
-        <div class="grid grid-cols-1 gap-4">
-            <div>
-                <label class="font-semibold text-gray-700">মালিকানার ধারাবাহিকতা আছে কিনা:</label>
-                                        <p class="text-gray-900">{{ isset($compensation->kanungo_opinion['has_ownership_continuity']) && $compensation->kanungo_opinion['has_ownership_continuity'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
-            </div>
-            <div>
-                <label class="font-semibold text-gray-700">মতামতের বিবরণ:</label>
-                <p class="text-gray-900">{{ $compensation->kanungo_opinion['opinion_details'] ?? '' }}</p>
-            </div>
-        </div>
-    </div>
-    @endif
 
     <!-- Application Analysis -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
@@ -1131,17 +1100,28 @@
             </div>
 
             <!-- Mutation Status -->
+            @if(isset($compensation->ownership_details['applicant_info']['kharij_case_no']) && !empty($compensation->ownership_details['applicant_info']['kharij_case_no']))
             <div class="p-4 bg-gray-50 rounded-lg">
                 <p class="text-gray-800">
-                    আবেদনকারীর নামে উল্লিখিত দাগে খারিজ করা 
-                    @if($compensation->mutation_info && isset($compensation->mutation_info['has_mutation']) && $compensation->mutation_info['has_mutation'])
-                        আছে।
-                    @else
-                        নাই।
-                    @endif
+                    আবেদনকারীর নামে উল্লিখিত দাগে খারিজ করা আছে
                 </p>
             </div>
 
+            @else
+            <div class="p-4 bg-gray-50 rounded-lg">
+                <p class="text-gray-800">
+                    আবেদনকারীর নামে উল্লিখিত দাগে খারিজ করা নেই
+                </p>
+            </div>
+
+            @endif
+            @if( isset($compensation->tax_info['paid_in_name']) && !empty($compensation->tax_info['paid_in_name']))
+            <div class="p-4 bg-gray-50 rounded-lg">
+                <p class="text-gray-800">
+                    {{ $compensation->tax_info['paid_in_name'] }} নামে খাজনা প্রদান করা হয়েছে
+                </p>
+            </div>
+            @endif
             <!-- Tax Receipt Status -->
             <div class="p-4 bg-gray-50 rounded-lg">
                 <p class="text-gray-800">
@@ -1156,7 +1136,7 @@
                     @endphp
                     
                     @if($hasTaxInfo)
-                        ইংরেজি {{ $compensation->tax_info['english_year'] }} এবং বাংলা {{ $compensation->tax_info['bangla_year'] }} সন পর্যন্ত {{ $compensation->tax_info['paid_land_amount'] }} একর জমির খাজনা পরিশোধ করা হয়েছে।
+                        ইংরেজি {{ $compensation->bnDigits($compensation->tax_info['english_year']) }} এবং বাংলা {{ $compensation->bnDigits($compensation->tax_info['bangla_year']) }} সন পর্যন্ত {{ $compensation->bnDigits($compensation->tax_info['paid_land_amount']) }} একর জমির খাজনা পরিশোধ করা হয়েছে।
                     @else
                         উল্লিখিত দাগে খাজনার রশিদ দাখিল করা হয়নাই
                     @endif
@@ -1169,8 +1149,8 @@
                 <p class="text-gray-800">
                     @foreach($compensation->ownership_details['deed_transfers'] as $deed)
                         @if(isset($deed['deed_number']) && !empty($deed['deed_number']))
-                            আবেদনকারীর দাখিলকৃত দলিল নং {{ $deed['deed_number'] }} তে উল্লিখিত দাগে দখল উল্লেখ করা 
-                            @if(isset($deed['possession_mentioned']) && $deed['possession_mentioned'])
+                            আবেদনকারীর দাখিলকৃত দলিল নং {{ $compensation->bnDigits($deed['deed_number']) }} তে উল্লিখিত দাগে দখল উল্লেখ করা 
+                            @if(isset($deed['possession_deed']) && $deed['possession_deed'] === 'yes')
                                 রয়েছে
                             @else
                                 নাই
@@ -1182,18 +1162,20 @@
             </div>
             @endif
 
-            <!-- Land Compensation Claim -->
-            @if($compensation->land_category && is_array($compensation->land_category))
-            @php
-                $total_land = number_format($compensation->total_land_amount, 6);
-                $applicant_acquired_land = number_format($compensation->applicant_acquired_land, 6);
-            @endphp
+            <!-- Land Compensation Claim Based on Land Categories -->
+            @if($compensation->land_category && is_array($compensation->land_category) && count($compensation->land_category) > 0)
             <div class="p-4 bg-gray-50 rounded-lg">
-                <p class="text-gray-800">
-                    আবেদনকারী উল্লিখিত দাগে অধিগ্রহণকৃত {{ $total_land }} একর জমির মধ্যে {{ $applicant_acquired_land }} একরের ক্ষতিপূরণ দাবী করেন।
-                </p>
+                @foreach($compensation->land_category as $index => $category)
+                    @if($category['total_land'] && $category['total_compensation'])
+                    <p class="text-gray-800 mb-2">
+                        আবেদনকারী উল্লিখিত দাগে <strong>{{ $compensation->bnDigits($category['category_name'] ?? '') }}</strong> জমি শ্রেণীর অধিগ্রহণকৃত {{ $compensation->bnDigits($category['total_land']) }} একর জমির মোট ক্ষতিপূরণ {{ $compensation->bnDigits($category['total_compensation']) }}
+                    </p>
+                    @endif
+                @endforeach
             </div>
             @endif
+
+
 
             <!-- Acquisition Record Basis -->
             <div class="p-4 bg-gray-50 rounded-lg">
@@ -1201,7 +1183,13 @@
                     {{ $compensation->acquisition_record_basis ?? 'এসএ/ আরএস' }} রেকর্ডমূলে অধিগ্রহণ।
                 </p>
             </div>
-            @if($compensation->acquisition_record_basis === 'SA' && (!$compensation->ownership_details || !isset($compensation->ownership_details['rs_record_info'])))
+            @if($compensation->acquisition_record_basis === 'SA' && $compensation->ownership_details && isset($compensation->ownership_details['rs_records']) && count($compensation->ownership_details['rs_records']) > 0)
+            <div class="p-4 bg-gray-50 rounded-lg">
+                <p class="text-gray-800">
+                        এস এ রেকর্ডমূলে অধিগ্রহন, আর এস এর তথ্যও দাখিল করা হএছে।
+                </p>
+            </div>
+            @elseif($compensation->acquisition_record_basis === 'SA' && (!$compensation->ownership_details || !isset($compensation->ownership_details['rs_records']) || count($compensation->ownership_details['rs_records']) == 0))
             <div class="p-4 bg-gray-50 rounded-lg">
                 <p class="text-gray-800">
                         এস এ রেকর্ডমূলে অধিগ্রহণ, কিন্তু আরএস রেকর্ডের তথ্য দাখিল করা হয়নি।
@@ -1222,6 +1210,61 @@
         </div>
     </div>
 
+
+    <!-- Action Buttons -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
+        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
+            পরবর্তী কার্যক্রম
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            <a href="{{ route('compensation.present.preview', $compensation->id) }}" target="_blank" class="action-card bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="text-white font-bold text-base">ক্ষতিপূরণ কেসে উপস্থাপন</span>
+                </div>
+            </a>
+            
+            <a href="{{ route('compensation.notice.preview', $compensation->id) }}" class="action-card bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    <span class="text-white font-bold text-base">সকল পক্ষকে নোটিশ করুন</span>
+                </div>
+            </a>
+            
+            <a target="_blank" href="{{ route('compensation.preview.pdf', $compensation->id) }}" class="action-card bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="text-white font-bold text-base">ক্ষতিপূরণ কেস প্রিভিউ PDF</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Kanungo Opinion -->
+    @if($compensation->kanungo_opinion)
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-xl font-semibold mb-4 text-blue-600 border-b pb-2">
+            কানুনগো/সার্ভেয়ারের মতামত
+        </h2>
+        <div class="grid grid-cols-1 gap-4">
+            <div>
+                <label class="font-semibold text-gray-700">মালিকানার ধারাবাহিকতা আছে কিনা:</label>
+                                        <p class="text-gray-900">{{ isset($compensation->kanungo_opinion['has_ownership_continuity']) && $compensation->kanungo_opinion['has_ownership_continuity'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
+            </div>
+            <div>
+                <label class="font-semibold text-gray-700">মতামতের বিবরণ:</label>
+                <p class="text-gray-900">{{ $compensation->kanungo_opinion['opinion_details'] ?? '' }}</p>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <!-- Final Order Information -->
     @if($compensation->final_order)
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
@@ -1229,8 +1272,11 @@
             <h2 class="text-lg font-semibold text-blue-600 border-b border-blue-200 pb-2">
                 চূড়ান্ত আদেশ
             </h2>
-            <a href="{{ route('compensation.final-order.preview', $compensation->id) }}" target="_blank" class="bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold text-base py-2 px-4 rounded">
-                চূড়ান্ত আদেশ প্রিভিউ দেখুন
+            <a href="{{ route('compensation.final-order.preview', $compensation->id) }}" target="_blank" class="action-card bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span class="text-white font-bold text-base">চূড়ান্ত আদেশ প্রিভিউ দেখুন</span>
             </a>
         </div>
         
@@ -1248,7 +1294,7 @@
                             </div>
                             <div>
                                 <label class="font-semibold text-gray-700">অধিগ্রহণকৃত জমি (একর):</label>
-                                <p class="text-gray-900">{{ $category['acquired_land'] ?? '' }}</p>
+                                <p class="text-gray-900">{{ $compensation->bnDigits($category['acquired_land'] ?? '') }}</p>
                             </div>
                         </div>
                     </div>
@@ -1260,11 +1306,11 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div>
                                 <label class="font-semibold text-gray-700">দাগ নম্বর:</label>
-                                <p class="text-gray-900">{{ $record['plot_no'] ?? '' }}</p>
+                                <p class="text-gray-900">{{ $compensation->bnDigits($record['plot_no'] ?? '') }}</p>
                             </div>
                             <div>
                                 <label class="font-semibold text-gray-700">জমির পরিমাণ:</label>
-                                <p class="text-gray-900">{{ $record['area'] ?? '' }}</p>
+                                <p class="text-gray-900">{{ $compensation->bnDigits($record['area'] ?? '') }}</p>
                             </div>
                         </div>
                     </div>
@@ -1285,7 +1331,7 @@
                     </div>
                     <div>
                         <label class="font-semibold text-gray-700">ক্ষতিপূরণের পরিমাণ:</label>
-                        <p class="text-gray-900">{{ $compensation->final_order['trees_crops']['amount'] ?? '' }}</p>
+                        <p class="text-gray-900">{{ $compensation->bnDigits($compensation->final_order['trees_crops']['amount'] ?? '') }}</p>
                     </div>
                 </div>
             </div>
@@ -1303,7 +1349,7 @@
                     </div>
                     <div>
                         <label class="font-semibold text-gray-700">ক্ষতিপূরণের পরিমাণ:</label>
-                        <p class="text-gray-900">{{ $compensation->final_order['infrastructure']['amount'] ?? '' }}</p>
+                        <p class="text-gray-900">{{ $compensation->bnDigits($compensation->final_order['infrastructure']['amount'] ?? '') }}</p>
                     </div>
                 </div>
             </div>
@@ -1339,41 +1385,6 @@
     </div>
     @endif
 
-    <!-- Action Buttons -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
-        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
-            পরবর্তী কার্যক্রম
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            <a href="{{ route('compensation.present.preview', $compensation->id) }}" target="_blank" class="action-card bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700">
-                <div class="flex items-center justify-center space-x-2">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <span class="text-white font-bold text-base">ক্ষতিপূরণ কেসে উপস্থাপন</span>
-                </div>
-            </a>
-            
-            <a href="{{ route('compensation.notice.preview', $compensation->id) }}" class="action-card bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700">
-                <div class="flex items-center justify-center space-x-2">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                    </svg>
-                    <span class="text-white font-bold text-base">সকল পক্ষকে নোটিশ করুন</span>
-                </div>
-            </a>
-            
-            <a target="_blank" href="{{ route('compensation.preview.pdf', $compensation->id) }}" class="action-card bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700">
-                <div class="flex items-center justify-center space-x-2">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <span class="text-white font-bold text-base">আবেদনপত্র প্রিভিউ PDF</span>
-                </div>
-            </a>
-        </div>
-    </div>
-
     <!-- Required Actions Section -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
         <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
@@ -1397,10 +1408,10 @@
                 </div>
             </button>
 
-            <button type="button" onclick="openOrderModal({{ $compensation->id }})" class="action-card bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
+            <button type="button" onclick="openOrderModal({{ $compensation->id }})" class="action-card bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700">
                 <div class="flex items-center justify-center space-x-2">
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     <span class="text-white font-bold text-base">কেস নিষ্পত্তি করুন</span>
                 </div>
@@ -1410,6 +1421,8 @@
 
         </div>
     </div>
+
+    
 
 </div>
 

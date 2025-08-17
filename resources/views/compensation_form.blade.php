@@ -516,6 +516,20 @@
 <script>
     // Pass old form data to Alpine.js for validation error handling
     window.oldFormData = {
+        case_number: @json(old('case_number', '')),
+        case_date: @json(old('case_date', '')),
+        is_applicant_in_award: @json(old('is_applicant_in_award', '')),
+        source_tax_percentage: @json(old('source_tax_percentage', '')),
+        land_award_serial_no: @json(old('land_award_serial_no', '')),
+        objector_details: @json(old('objector_details', '')),
+        district: @json(old('district', '')),
+        upazila: @json(old('upazila', '')),
+        mouza_name: @json(old('mouza_name', '')),
+        jl_no: @json(old('jl_no', '')),
+        sa_khatian_no: @json(old('sa_khatian_no', '')),
+        land_schedule_sa_plot_no: @json(old('land_schedule_sa_plot_no', '')),
+        rs_khatian_no: @json(old('rs_khatian_no', '')),
+        land_schedule_rs_plot_no: @json(old('land_schedule_rs_plot_no', '')),
         applicants: @json(old('applicants', [])),
         acquisition_record_basis: @json(old('acquisition_record_basis', '')),
         award_type: @json(old('award_type', '')),
@@ -554,7 +568,7 @@
     @endif
 
     <form action="{{ isset($compensation) ? route('compensation.update', $compensation->id) : route('compensation.store') }}" method="POST" class="form-container p-8" x-data="compensationForm()" 
-          data-compensation="{{ isset($compensation) ? $compensation->toJson() : 'null' }}">
+          data-compensation="{{ isset($compensation) ? json_encode($compensation->toBengaliDisplayArray()) : 'null' }}">
         @csrf
         @if(isset($compensation))
             @method('PUT')
@@ -571,9 +585,12 @@
         <!-- Compensation Case Filing Section -->
         <div class="form-section mb-6">
             <div class="form-section-title">ক্ষতিপূরণ কেস দায়ের</div>
+            
+
+            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="floating-label">
-                    <input type="text" name="case_number" id="compensation_case_number" class="form-input" placeholder=" " value="{{ old('case_number', $compensation->case_number ?? '') }}" required aria-required="true">
+                    <input type="text" name="case_number" id="compensation_case_number" class="form-input" placeholder=" " value="{{ old('case_number', isset($compensation) ? $compensation->getBengaliValue('case_number') : '') }}" required aria-required="true">
                     <label for="compensation_case_number">ক্ষতিপূরণ কেস নং<span class="text-red-500">*</span></label>
                 </div>
                 <div class="floating-label">
