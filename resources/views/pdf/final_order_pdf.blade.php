@@ -122,7 +122,7 @@
                   @else
                       প্রার্থী …………………………., পিং …………………………., সাং: ………………………….
                   @endif
-                  , উপজেলা: {{ $compensation->upazila ?? '…………………………….' }}, জেলা: {{ $compensation->district ?? '…………………………….' }}, {{ $compensation->getBengaliValue('la_case_no') ?? '…………………………….' }} নং এল.এ কেসে অধিগ্রহণকৃত {{ $compensation->mouza_name ?? '…………………………….' }}/{{ $compensation->getBengaliValue('jl_no') ?? '…………………………….' }} মৌজার 
+                  , {{ $compensation->getBengaliValue('la_case_no') ?? '…………………………….' }} নং এল.এ কেসে অধিগ্রহণকৃত {{ $compensation->mouza_name ?? '…………………………….' }}/{{ $compensation->getBengaliValue('jl_no') ?? '…………………………….' }} মৌজার 
                   @if($compensation->acquisition_record_basis === 'SA')
                       এসএ রেকর্ডমূলে অধিগ্রহণ
                   @elseif($compensation->acquisition_record_basis === 'RS')
@@ -666,11 +666,11 @@
                                       ,
                                   @endif
                               @endif
-                              {{ $compensation->bnDigits($applicantIndex + 1) }}. {{ $applicant['name'] ?? '…………………………….' }}, পিতা: {{ $applicant['father_name'] ?? '…………………………….' }}, সাং: {{ $applicant['address'] ?? '…………………………….' }}, উপজেলা: {{ $compensation->upazila ?? '…………………………….' }}, জেলা: {{ $compensation->district ?? '…………………………….' }}
+                              {{ $compensation->bnDigits($applicantIndex + 1) }}. {{ $applicant['name'] ?? '…………………………….' }}, পিতা: {{ $applicant['father_name'] ?? '…………………………….' }}, সাং: {{ $applicant['address'] ?? '…………………………….' }}
                           @endforeach
                       @endif
                   @else
-                      …………………………., পিতা: …………………………., সাং: …………………………., উপজেলা: …………………………., জেলা: ………………………….
+                      …………………………., পিতা: …………………………., সাং: ………………………….
                   @endif
                   কে {{ $compensation->mouza_name ?? '…………………………….' }}/{{ $compensation->bnDigits($compensation->jl_no ?? '……………………………') }} মৌজার নিম্নে উল্লিখিত তফসিল বর্ণিত সম্পত্তির ক্ষতিপূরণ প্রদান করা হলো।
                   
@@ -808,15 +808,7 @@
                   
                   <!-- Additional Instructions -->
                   <div class="text-justify leading-relaxed">
-                      মোট ক্ষতিপূরণ বাবদ প্রদেয় = {{ $compensation->formatAmountBangla($totalCompensation) }} ({{ $compensation->amountToBengaliWords($totalCompensation) }} মাত্র) টাকার এল.এ চেক আবেদনকারীর নামে প্রয়োজনীয় অঙ্গীকারনামা গ্রহণপূর্বক ইস্যু করা হোক।
-                      
-                      <br>
-                      
-                      উক্ত টাকা হতে বিল ও চালানের মাধ্যমে {{ $compensation->bnDigits($compensation->source_tax_percentage) }}% উৎস কর কর্তন বাদে {{ $compensation->formatAmountBangla($finalAmount) }} ({{ $compensation->amountToBengaliWords($finalAmount) }} মাত্র) টাকার MICR চেক প্রদান করার লক্ষ্যে বিল ভাউচারসহ উৎস করের চালানের কপি প্রস্তুতপূর্বক জেলা হিসাবরক্ষণ অফিসে প্রেরণ করা হোক।
-                      
-                      <br>
-                      
-                      সেই সাথে সিসি প্রস্তুতের জন্য সংশ্লিষ্ট সহকারীকে বলা হলো।
+                    মোট ক্ষতিপূরণ বাবদ উৎস কর বাদে প্রদেয় = {{ $compensation->formatAmountBangla($finalAmount) }} ({{ $compensation->amountToBengaliWords($finalAmount) }} মাত্র) টাকার এল.এ চেক আবেদনকারীর নামে প্রয়োজনীয় বন্ড ও অঙ্গীকারনামা গ্রহণপূর্বক ইস্যু অন্তে জেলা হিসাবরক্ষণ অফিসে প্রেরণ করা হোক। সেই সাথে সিসি প্রস্তুতের জন্য সংশ্লিষ্ট সহকারীকে বলা হলো।
                   </div>
                   @endif
                 </div>
