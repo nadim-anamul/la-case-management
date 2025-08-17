@@ -656,7 +656,7 @@
                   <strong>অতএব আদেশ হয় যে,</strong> কানুনগো ও সার্ভেয়ারের দাখিলকৃত যৌথ প্রতিবেদন ও আবেদনকারীর কাগজপত্র পর্যালোচনা করে দেখা যায় আবেদিত সম্পত্তি প্রার্থীর ভোগ-দখলীয় সম্পত্তি, মালিকানাস্বত্বের কাগজপত্র সঠিক থাকায় 
                   @if($compensation->applicants && is_array($compensation->applicants) && count($compensation->applicants) > 0)
                       @if(count($compensation->applicants) == 1)
-                          {{ $compensation->applicants[0]['name'] ?? '…………………………….' }}, পিতা: {{ $compensation->applicants[0]['father_name'] ?? '…………………………….' }}, সাং: {{ $compensation->applicants[0]['address'] ?? '…………………………….' }}, উপজেলা: {{ $compensation->upazila ?? '…………………………….' }}, জেলা: {{ $compensation->district ?? '…………………………….' }}
+                          {{ $compensation->applicants[0]['name'] ?? '…………………………….' }}, পিতা: {{ $compensation->applicants[0]['father_name'] ?? '…………………………….' }}, সাং: {{ $compensation->applicants[0]['address'] ?? '…………………………….' }}
                       @else
                           @foreach($compensation->applicants as $applicantIndex => $applicant)
                               @if($applicantIndex > 0)
