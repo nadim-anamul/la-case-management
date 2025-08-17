@@ -386,13 +386,13 @@
                     <!-- Special Details Section -->
                     <div class="form-section md:col-span-2">
                         <label class="font-semibold text-gray-700 mb-2">প্রযোজ্যক্ষেত্রে দলিলের বিশেষ বিবরণ:</label>
-                        <textarea x-model="deed.special_details" rows="4" class="form-input w-full" placeholder=" "></textarea>
+                        <textarea x-model="deed.special_details" rows="4" class="form-input w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical" placeholder="বিশেষ বিবরণ লিখুন..."></textarea>
                     </div>
                     
                     <!-- Tax Information Section -->
                     <div class="form-section md:col-span-2">
                         <label class="font-semibold text-gray-700 mb-2">খারিজের তথ্য:</label>
-                        <textarea x-model="deed.tax_info" rows="4" class="form-input w-full"></textarea>
+                        <textarea x-model="deed.tax_info" rows="4" class="form-input w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical" placeholder="খারিজের তথ্য লিখুন..."></textarea>
                     </div>
 
                 </div>
@@ -417,7 +417,7 @@
                         <label>ওয়ারিশান সনদ দাখিল করা হয়েছে কিনা</label>
                     </div>
                     <div class="floating-label md:col-span-2">
-                        <textarea rows="3" x-model="inheritance.heirship_certificate_info" placeholder=" "></textarea>
+                        <textarea rows="3" x-model="inheritance.heirship_certificate_info" class="form-input w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical" placeholder="ওয়ারিশ সনদের বিবরণ লিখুন..."></textarea>
                         <label>ওয়ারিশান সনদের বিবরণ <span class="text-red-500">*</span></label>
                     </div>
                 </div>
@@ -596,7 +596,7 @@
                         <label>খারিজের তারিখ</label>
                     </div>
                 <div class="floating-label md:col-span-2">
-                    <textarea rows="3" x-model="applicant_info.kharij_details" placeholder=" "></textarea>
+                    <textarea rows="3" x-model="applicant_info.kharij_details" class="form-input w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical" placeholder="খারিজের বিস্তারিত বিবরণ লিখুন..."></textarea>
                     <label>খারিজের বিস্তারিত বিবরণ</label>
                 </div>
             </div>
