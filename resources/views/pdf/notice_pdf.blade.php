@@ -7,19 +7,14 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap" rel="stylesheet">
     
     <!-- Embedded Noto Serif Bengali font -->
     <style>
-        @font-face {
-            font-family: 'Noto Serif Bengali';
-            font-style: normal;
-            font-weight: 400;
-            src: url('https://fonts.gstatic.com/s/notoserifbengali/v1/yYLrQh9-fIXkJvOfkYQ2bL3XYPFvqA.woff2') format('woff2');
-        }
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Noto Serif Bengali', serif;
+            font-family: 'Tiro Bangla', serif;
         }
         .notice-page {
             width: 21cm;
@@ -117,7 +112,7 @@
                                     <strong>#{{ $index + 1 }}:</strong><br>
                                     {{ $applicant['name'] ?? 'N/A' }}<br>
                                     পিতার নাম- {{ $applicant['father_name'] ?? 'N/A' }}<br>
-                                    সাং- {{ $applicant['address'] ?? 'N/A' }}@if(isset($applicant['mobile']) && $applicant['mobile'])<br>মোবাইল- {{ $applicant['mobile'] }}@endif
+                                    সাং- {{ $applicant['address'] ?? 'N/A' }}@if(isset($applicant['mobile']) && $applicant['mobile'])<br>মোবাইল- {{$compensation->bnDigits($applicant['mobile']) }}@endif
                                 @endforeach
                             @else
                                 <span style="color: #6b7280;">কোন আবেদনকারী নেই</span>

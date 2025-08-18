@@ -7,6 +7,7 @@
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap" rel="stylesheet">
 
   <!-- Embedded Noto Serif Bengali font -->
   <style>
@@ -14,16 +15,19 @@
       size: A4;
       margin: 10mm 10mm 15mm 10mm;
     }
-    @font-face {
+    /* @font-face {
       font-family: 'Noto Serif Bengali';
       font-style: normal;
       font-weight: 400;
-      src: url('https://fonts.gstatic.com/s/notoserifbengali/v1/yYLrQh9-fIXkJvOfkYQ2bL3XYPFvqA.woff2') format('woff2');
-    }
+      src: url('https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap') format('woff2');
+    } */
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Noto Serif Bengali', serif;
+      font-family: 'Tiro Bangla', serif;
+    }
+    p {
+      font-size: 14px;
     }
     .a4 {
       width: 210mm;
@@ -97,9 +101,9 @@
         <table class="w-full border border-black border-collapse mb-6">
           <thead>
             <tr>
-              <th class="border border-black p-2 w-[25mm]">আদেশের ক্রমিক নং ও তারিখ</th>
-              <th class="border border-black p-2">আদেশ ও অফিসারের স্বাক্ষর</th>
-              <th class="border border-black p-2 w-[25mm]">আদেশের উপর গৃহীত ব্যবস্থা</th>
+              <th class="border border-black p-2 w-[25mm] text-sm">আদেশের ক্রমিক নং ও তারিখ</th>
+              <th class="border border-black p-2 text-sm">আদেশ ও অফিসারের স্বাক্ষর</th>
+              <th class="border border-black p-2 w-[25mm] text-sm">আদেশের উপর গৃহীত ব্যবস্থা</th>
             </tr>
           </thead>
           <tbody>
@@ -812,6 +816,8 @@
                   </div>
                   @endif
                 </div>
+                <br>
+                <br>
                 
                 <div class="text-right font-bold mt-6">
                   ভূমি অধিগ্রহণ কর্মকর্তা <br>

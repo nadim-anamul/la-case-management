@@ -7,19 +7,14 @@
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap" rel="stylesheet">
 
   <!-- Embedded Noto Serif Bengali font -->
   <style>
-    @font-face {
-      font-family: 'Noto Serif Bengali';
-      font-style: normal;
-      font-weight: 400;
-      src: url('https://fonts.gstatic.com/s/notoserifbengali/v1/yYLrQh9-fIXkJvOfkYQ2bL3XYPFvqA.woff2') format('woff2');
-    }
     body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Noto Serif Bengali', serif;
+        margin: 0;
+        padding: 0;
+        font-family: 'Tiro Bangla', serif;
     }
     .a4 {
       width: 210mm;
@@ -28,6 +23,9 @@
       padding: 12mm; /* Reduced from 20mm for more compact layout */
       background: white;
       box-sizing: border-box;
+    }
+    p {
+      font-size: 14px;
     }
     table {
       table-layout: fixed;
@@ -49,8 +47,8 @@
 <body>
   <div class="a4">
     <!-- Title -->
-    <h1 class="text-center text-base font-bold">আদেশ পত্র</h1>
-    <p class="text-center text-xs mb-1">( ১৯১৭ সালের রেকর্ড ম্যানুয়েলের ১২৯ নং বিধি )</p>
+    <h1 class="text-center text-lg font-bold">আদেশ পত্র</h1>
+    <p class="text-center text-sm mb-1">( ১৯১৭ সালের রেকর্ড ম্যানুয়েলের ১২৯ নং বিধি )</p>
 
     <!-- Date Row -->
     <div class="flex justify-between mb-1">
@@ -74,9 +72,9 @@
     <table class="w-full border border-black border-collapse mb-6">
       <thead>
         <tr>
-          <th class="border border-black p-2 w-[25mm]">আদেশের ক্রমিক নং ও তারিখ</th>
-          <th class="border border-black p-2">আদেশ ও অফিসারের স্বাক্ষর</th>
-          <th class="border border-black p-2 w-[25mm]">আদেশের উপর গৃহীত ব্যবস্থা</th>
+          <th class="border border-black p-2 w-[25mm] text-sm">আদেশের ক্রমিক নং ও তারিখ</th>
+          <th class="border border-black p-2 text-sm">আদেশ ও অফিসারের স্বাক্ষর</th>
+          <th class="border border-black p-2 w-[25mm] text-sm">আদেশের উপর গৃহীত ব্যবস্থা</th>
         </tr>
       </thead>
       <tbody>
@@ -85,13 +83,13 @@
           <td class="border border-black p-4">
             @if($compensation->applicants && is_array($compensation->applicants) && count($compensation->applicants) > 0)
                 @php $applicant = $compensation->applicants[0]; @endphp
-                <p class="text-sm">{{ $applicant['name'] ?? 'N/A' }}</p>
-                <p class="text-sm">পিতা- {{ $applicant['father_name'] ?? 'N/A' }}, সাং- {{ $applicant['address'] ?? 'N/A' }}</p>
-                <p class="text-sm">উপজেলা- {{ $compensation->upazila ?? 'N/A' }}, জেলা: বগুড়া</p> 
+                <p>{{ $applicant['name'] ?? 'N/A' }}</p>
+                <p>পিতা- {{ $applicant['father_name'] ?? 'N/A' }}, সাং- {{ $applicant['address'] ?? 'N/A' }}</p>
+                <p>উপজেলা- {{ $compensation->upazila ?? 'N/A' }}, জেলা: বগুড়া</p> 
             @else
-                <p class="text-sm">(আবেদনকারীর নাম)</p>
-                <p class="text-sm">পিতা- (পিতার নাম), সাং- (ঠিকানা)</p>
-                <p class="text-sm">উপজেলা- (উপজেলার নাম), জেলা: বগুড়া</p> 
+                <p>(আবেদনকারীর নাম)</p>
+                <p>পিতা- (পিতার নাম), সাং- (ঠিকানা)</p>
+                <p>উপজেলা- (উপজেলার নাম), জেলা: বগুড়া</p> 
             @endif
             <p>নিম্ন তফসিল বর্ণিত সম্পত্তির ক্ষতিপূরণ দাবী করে আবেদন দাখিল করেছেন</p>
             <p>উপজেলা: {{ $compensation->upazila ?? 'N/A' }}, মৌজা: {{ $compensation->mouza_name ?? 'N/A' }}</p>
@@ -123,7 +121,7 @@
           @endif
             
             <br>
-            <p>আবেদিত জমি {{ $compensation->la_case_no ?? 'N/A' }} নং এল.এ কেসে অধিগ্রহণ করা হয়েছে। উক্ত জমির ক্ষতিপূরণ বাবদ 
+            <p>আবেদিত জমি {{ $compensation->bnDigits($compensation->la_case_no) ?? 'N/A' }} নং এল.এ কেসে অধিগ্রহণ করা হয়েছে। উক্ত জমির ক্ষতিপূরণ বাবদ 
                 @php
                     $awardNumbers = [];
                     if ($compensation->land_award_serial_no) {
@@ -137,7 +135,7 @@
                     }
                     
                     if (count($awardNumbers) > 0) {
-                        echo 'রোয়েদাদ নং- ' . implode(', ', $awardNumbers);
+                        echo 'রোয়েদাদ নং- ' . $compensation->bnDigits(implode(', ', $awardNumbers));
                     } else {
                         echo 'N/A';
                     }
