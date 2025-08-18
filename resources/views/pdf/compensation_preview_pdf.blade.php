@@ -353,7 +353,7 @@
                                     <label class="font-semibold text-gray-700">দলিল নম্বর: {{ $deed['deed_number'] ?? '' }}</label>
                                 </div>
                                 <div>
-                                    <label class="font-semibold text-gray-700">দলিলের তারিখ: {{ $deed['deed_date'] ?? '' }}</label>
+                                    <label class="font-semibold text-gray-700">দলিলের তারিখ: {{ $compensation->bnDigits($deed['deed_date']) ?? '' }}</label>
                                 </div>
                                 <div>
                                     <label class="font-semibold text-gray-700">দলিলের ধরন: {{ $deed['sale_type'] ?? '' }}</label>
@@ -802,7 +802,7 @@
                     
                     @if(!empty($applicantInfo['kharij_date'] ?? ''))
                     <div>
-                        <label class="font-semibold text-gray-700">খারিজের তারিখ: {{ $applicantInfo['kharij_date'] }}</label>
+                        <label class="font-semibold text-gray-700">খারিজের তারিখ: {{ $compensation->bnDigits($applicantInfo['kharij_date']) }}</label>
                     </div>
                     @endif
                     

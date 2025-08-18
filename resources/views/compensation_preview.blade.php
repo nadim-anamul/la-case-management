@@ -514,10 +514,6 @@
                                     <p class="text-gray-900">{{ $inheritance['previous_owner_name'] ?? '' }}</p>
                                 </div>
                                 <div>
-                                    <label class="font-semibold text-gray-700">মৃত্যুর তারিখ:</label>
-                                    <p class="text-gray-900">{{ $inheritance['death_date'] ?? '' }}</p>
-                                </div>
-                                <div>
                                     <label class="font-semibold text-gray-700">মৃত্যু সনদ আছে কিনা:</label>
                                     <p class="text-gray-900">{{ isset($inheritance['has_death_cert']) && $inheritance['has_death_cert'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
                                 </div>
@@ -901,7 +897,7 @@
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">খারিজের তারিখ:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['applicant_info']['kharij_date'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->bnDigits($compensation->ownership_details['applicant_info']['kharij_date']) ?? '' }}</p>
                 </div>
                 <div class="md:col-span-2">
                     <label class="font-semibold text-gray-700">খারিজের বিবরণ:</label>

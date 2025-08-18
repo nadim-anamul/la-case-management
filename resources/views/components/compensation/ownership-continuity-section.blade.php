@@ -572,9 +572,7 @@
                     <label>আবেদনকারীর নাম</label>
                 </div>
                 <div class="floating-label">
-                    <input type="text" x-model="applicant_info.namejari_khatian_no" placeholder=" " 
-                           @input="applicant_info.namejari_khatian_no = formatNumberInput($event.target.value)"
-                           pattern="[০-৯0-9]+" title="শুধুমাত্র সংখ্যা অনুমোদিত">
+                    <input type="text" x-model="applicant_info.namejari_khatian_no" placeholder=" " >
                     <label>নামজারি খতিয়ান নং</label>
                 </div>
                 <div class="floating-label">
