@@ -11,20 +11,20 @@
             <label>যার নামে প্রদানকৃত<span class="text-blue-500">*</span></label>
         </div>
         <div class="floating-label">
-            <input type="text" name="tax_info[holding_no]" value="{{ old('tax_info.holding_no', isset($compensation) ? ($compensation->tax_info['holding_no'] ?? '') : '') }}" placeholder=" ">
+            <input type="text" name="tax_info[holding_no]" value="{{ old('tax_info.holding_no', isset($compensation) ? ($compensation->bnDigits($compensation->tax_info['holding_no']) ?? '') : '') }}" placeholder=" ">
             <label>হোল্ডিং নম্বর<span class="text-blue-500">*</span></label>
         </div>
         <div class="floating-label">
-            <input type="text" name="tax_info[paid_land_amount]" value="{{ old('tax_info.paid_land_amount', isset($compensation) ? ($compensation->tax_info['paid_land_amount'] ?? '') : '') }}" 
+            <input type="text" name="tax_info[paid_land_amount]" value="{{ old('tax_info.paid_land_amount', isset($compensation) ? ($compensation->bnDigits($compensation->tax_info['paid_land_amount']) ?? '') : '') }}" 
                    placeholder=" " pattern="[০-৯0-9\.]+" title="শুধুমাত্র সংখ্যা এবং দশমিক বিন্দু অনুমোদিত">
             <label>আবেদনকৃত দাগে খাজনা প্রদানকৃত জমির পরিমান (একর)<span class="text-blue-500">*</span></label>
         </div>
         <div class="floating-label">
-            <input type="text" name="tax_info[english_year]" value="{{ old('tax_info.english_year', isset($compensation) ? $compensation->tax_info['english_year'] ?? '' : '') }}" placeholder=" ">
+            <input type="text" name="tax_info[english_year]" value="{{ old('tax_info.english_year', isset($compensation) ? $compensation->bnDigits($compensation->tax_info['english_year']) ?? '' : '') }}" placeholder=" ">
             <label>ইংরেজি সাল পর্যন্ত<span class="text-blue-500">*</span></label>
         </div>
         <div class="floating-label">
-            <input type="text" name="tax_info[bangla_year]" value="{{ old('tax_info.bangla_year', isset($compensation) ? $compensation->tax_info['bangla_year'] ?? '' : '') }}" placeholder=" ">
+            <input type="text" name="tax_info[bangla_year]" value="{{ old('tax_info.bangla_year', isset($compensation) ? $compensation->bnDigits($compensation->tax_info['bangla_year']) ?? '' : '') }}" placeholder=" ">
             <label>বাংলা সাল পর্যন্ত<span class="text-blue-500">*</span></label>
         </div>
         
