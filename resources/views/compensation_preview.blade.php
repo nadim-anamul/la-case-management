@@ -897,7 +897,7 @@
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">খারিজের তারিখ:</label>
-                    <p class="text-gray-900">{{ $compensation->bnDigits($compensation->ownership_details['applicant_info']['kharij_date']) ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->bnDigits($compensation->ownership_details['applicant_info']['kharij_date'] ?? '') ?? '' }}</p>
                 </div>
                 <div class="md:col-span-2">
                     <label class="font-semibold text-gray-700">খারিজের বিবরণ:</label>
