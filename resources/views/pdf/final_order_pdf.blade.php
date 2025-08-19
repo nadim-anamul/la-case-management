@@ -595,10 +595,11 @@
                           <div class="ml-4 mt-2">
                               <strong>{{ $compensation->bnDigits($noClaimSectionNumber) }}. না-দাবীর বর্ণনা</strong></br>{{ $kharijDetails }}
                           </div>
+                          <br><br>
                       @endif
                   @endif
                   
-                  <br><br>
+                  
                   @if($compensation->additional_documents_info && is_array($compensation->additional_documents_info) && isset($compensation->additional_documents_info['selected_types']) && count($compensation->additional_documents_info['selected_types']) > 0)
                       @foreach($compensation->additional_documents_info['selected_types'] as $docType)
                           @if($docType === 'আপস- বন্টননামা')
