@@ -25,7 +25,7 @@
       box-sizing: border-box;
     }
     p {
-      font-size: 12px;
+      font-size: 14px;
     }
     table {
       table-layout: fixed;
@@ -86,10 +86,6 @@
                 <p>{{ $applicant['name'] ?? 'N/A' }}</p>
                 <p>পিতা- {{ $applicant['father_name'] ?? 'N/A' }}, সাং- {{ $applicant['address'] ?? 'N/A' }}</p>
                 <p>উপজেলা- {{ $compensation->upazila ?? 'N/A' }}, জেলা: বগুড়া</p> 
-            @else
-                <p>(আবেদনকারীর নাম)</p>
-                <p>পিতা- (পিতার নাম), সাং- (ঠিকানা)</p>
-                <p>উপজেলা- (উপজেলার নাম), জেলা: বগুড়া</p> 
             @endif
             <p>নিম্ন তফসিল বর্ণিত সম্পত্তির ক্ষতিপূরণ দাবী করে আবেদন দাখিল করেছেন</p>
             <p>উপজেলা: {{ $compensation->upazila ?? 'N/A' }}, মৌজা: {{ $compensation->mouza_name ?? 'N/A' }}</p>
