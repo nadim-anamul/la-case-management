@@ -25,7 +25,7 @@
       box-sizing: border-box;
     }
     p {
-      font-size: 14px;
+      font-size: 12px;
     }
     table {
       table-layout: fixed;

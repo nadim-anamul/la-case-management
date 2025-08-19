@@ -27,7 +27,7 @@
       font-family: 'Tiro Bangla', serif;
     }
     p {
-      font-size: 14px;
+      font-size: 12px;
     }
     .a4 {
       width: 210mm;
