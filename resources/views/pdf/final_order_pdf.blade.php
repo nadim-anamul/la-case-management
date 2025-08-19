@@ -25,9 +25,10 @@
       margin: 0;
       padding: 0;
       font-family: 'Tiro Bangla', serif;
+      line-height: 1.4;
     }
     p {
-      font-size: 11px;
+      font-size: 10px;
     }
     .a4 {
       width: 210mm;
@@ -71,7 +72,7 @@
         box-shadow: none;
       }
       p {
-        font-size: 11px;
+        font-size: 10px;
       }
     }
   </style>
@@ -484,7 +485,6 @@
                           @endif
                           
                           @if($index < count($compensation->ownership_details['storySequence']) - 1)
-                              <br>
                           @endif
                       @endforeach
                   @endif
@@ -556,7 +556,7 @@
                       @if($hasNamejariInfo)
                           <div class="ml-4 mt-2">
                               <strong>{{ $compensation->bnDigits($nextSectionNumber) }}.নামজারীর বর্ণনা:</strong></br> আবেদনকারী {{ $applicantName }}
-                              তার প্রাপ্ত জমি {{ $compensation->bnDigits($kharijCaseNo) }} নং নামজারী কেসমূলে রেকর্ড সংশোধনপূর্বক {{ $compensation->bnDigits($namejariKhatianNo) }} নং নামজারী খতিয়ানে {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($kharijLandAmount) }} একর জমি নিজ নামে নামজারী করেন।<br><br>
+                              তার প্রাপ্ত জমি {{ $compensation->bnDigits($kharijCaseNo) }} নং নামজারী কেসমূলে রেকর্ড সংশোধনপূর্বক {{ $compensation->bnDigits($namejariKhatianNo) }} নং নামজারী খতিয়ানে {{ $compensation->bnDigits($kharijPlotNo) }} নং দাগে {{ $compensation->bnDigits($kharijLandAmount) }} একর জমি নিজ নামে নামজারী করেন।<br>
                           </div>
                       @endif
                       
@@ -589,7 +589,7 @@
                       @if($hasTaxInfo)
                           <div class="ml-4 mt-2">                 
                               <strong>{{ $compensation->bnDigits($taxSectionNumber) }}. খাজনার বর্ণনা:</strong></br> দাখিলকৃত খাজনার রশিদ যাচাই করে দেখা যায়, {{ $paidInName }}
-                              নামে {{ $compensation->bnDigits($holdingNo) }} নং হোল্ডিং এ {{ $compensation->bnDigits($paidLandAmount) }} একর জমির বিপরীতে বাংলা {{ $compensation->bnDigits($banglaYear) }} সন/ ইংরেজি {{ $compensation->bnDigits($englishYear) }} সাল পর্যন্ত ভূমি উন্নয়ন কর পরিশোধ অন্তে খাজনার রশিদ দাখিল করা হয়েছে।<br><br>
+                              নামে {{ $compensation->bnDigits($holdingNo) }} নং হোল্ডিং এ {{ $compensation->bnDigits($paidLandAmount) }} একর জমির বিপরীতে বাংলা {{ $compensation->bnDigits($banglaYear) }} সন/ ইংরেজি {{ $compensation->bnDigits($englishYear) }} সাল পর্যন্ত ভূমি উন্নয়ন কর পরিশোধ অন্তে খাজনার রশিদ দাখিল করা হয়েছে।
                           </div>
                       @endif
                       
@@ -598,7 +598,6 @@
                           <div class="ml-4 mt-2">
                               <strong>{{ $compensation->bnDigits($noClaimSectionNumber) }}. না-দাবীর বর্ণনা</strong></br>{{ $kharijDetails }}
                           </div>
-                          <br><br>
                       @endif
                   @endif
                   
