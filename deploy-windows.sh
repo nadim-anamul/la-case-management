@@ -21,6 +21,9 @@ DB_PORT=3307
 SKIP_CHECKS=false
 FORCE_INSTALL=false
 
+# Global variable to track Chocolatey failures
+CHOCO_FAILURE_COUNT=0
+
 # Function to print colored output
 print_status() {
     echo -e "${CYAN}🚀 Laravel PDF Generator - Windows Deployment Script${NC}"
@@ -101,6 +104,92 @@ install_chocolatey() {
     fi
 }
 
+# Function to perform aggressive Chocolatey cleanup
+aggressive_chocolatey_cleanup() {
+    print_yellow "🧹 Performing aggressive Chocolatey cleanup..."
+    
+    if is_windows; then
+        # Stop any running Chocolatey processes
+        print_info "Stopping Chocolatey processes..."
+        cmd //c "taskkill /f /im choco.exe" 2>/dev/null || true
+        cmd //c "taskkill /f /im nuget.exe" 2>/dev/null || true
+        
+        # Wait for processes to stop
+        sleep 5
+        
+        # Clean lock files with elevated permissions
+        print_info "Cleaning lock files with elevated permissions..."
+        
+        # Try to use PowerShell with elevated permissions
+        if command_exists powershell; then
+            powershell.exe -Command "Start-Process powershell -ArgumentList '-Command \"Remove-Item -Path C:\ProgramData\chocolatey\lib-bad -Recurse -Force -ErrorAction SilentlyContinue; Remove-Item -Path C:\ProgramData\chocolatey\lib\f7305e8da17e94357fea6af6fcda055f18a81cef -Force -ErrorAction SilentlyContinue; Remove-Item -Path C:\ProgramData\chocolatey\lib\*.lock -Force -ErrorAction SilentlyContinue\"' -Verb RunAs -WindowStyle Hidden"
+            sleep 3
+        fi
+        
+        # Also try direct Windows commands
+        cmd //c "rmdir /s /q C:\ProgramData\chocolatey\lib-bad" 2>/dev/null || true
+        cmd //c "del /f /q C:\ProgramData\chocolatey\lib\f7305e8da17e94357fea6af6fcda055f18a81cef" 2>/dev/null || true
+        cmd //c "del /f /q C:\ProgramData\chocolatey\lib\*.lock" 2>/dev/null || true
+        
+        print_success "Aggressive cleanup completed"
+    else
+        print_warning "Aggressive cleanup only available on Windows"
+        return 1
+    fi
+}
+
+# Function to clean Chocolatey lock files
+clean_chocolatey_locks() {
+    print_yellow "🧹 Cleaning Chocolatey lock files..."
+    
+    if is_windows; then
+        # Try to use Windows commands if available
+        if command_exists cmd; then
+            print_info "Using Windows commands to clean lock files..."
+            
+            # Remove lib-bad directory
+            cmd //c "rmdir /s /q C:\ProgramData\chocolatey\lib-bad" 2>/dev/null || true
+            
+            # Remove specific lock file
+            cmd //c "del /f /q C:\ProgramData\chocolatey\lib\f7305e8da17e94357fea6af6fcda055f18a81cef" 2>/dev/null || true
+            
+            # Remove all lock files
+            cmd //c "del /f /q C:\ProgramData\chocolatey\lib\*.lock" 2>/dev/null || true
+            
+            print_success "Chocolatey lock files cleaned using Windows commands"
+        else
+            # Fallback to bash commands
+            print_info "Using bash commands to clean lock files..."
+            
+            # Remove lock files and bad directories
+            if [ -d "/c/ProgramData/chocolatey/lib-bad" ]; then
+                rm -rf "/c/ProgramData/chocolatey/lib-bad" 2>/dev/null || true
+                print_success "Removed lib-bad directory"
+            fi
+            
+            # Find and remove lock files
+            find "/c/ProgramData/chocolatey" -name "*.lock" -type f -delete 2>/dev/null || true
+            find "/c/ProgramData/chocolatey" -name "*f7305e8da17e94357fea6af6fcda055f18a81cef*" -type f -delete 2>/dev/null || true
+            
+            print_success "Chocolatey lock files cleaned using bash commands"
+        fi
+    elif is_wsl; then
+        # For WSL, we need to use Windows commands
+        print_warning "Running in WSL. Please run these commands in Windows Command Prompt as Administrator:"
+        echo ""
+        echo "1. Open Command Prompt as Administrator"
+        echo "2. Run: rmdir /s /q C:\ProgramData\chocolatey\lib-bad"
+        echo "3. Run: del /f /q C:\ProgramData\chocolatey\lib\f7305e8da17e94357fea6af6fcda055f18a81cef"
+        echo "4. Run: del /f /q C:\ProgramData\chocolatey\lib\*.lock"
+        echo ""
+        echo "Then run this script again."
+        return 1
+    else
+        print_warning "Not running on Windows. This script is for Windows systems."
+        return 1
+    fi
+}
+
 # Function to install Docker Desktop using Chocolatey
 install_docker_desktop() {
     print_yellow "🐳 Installing Docker Desktop..."
@@ -115,15 +204,50 @@ install_docker_desktop() {
         return 1
     fi
     
-    # Install Docker Desktop
-    choco install docker-desktop -y
+    # Clean any existing lock files first
+    clean_chocolatey_locks
     
-    if command_exists docker; then
+    # Wait a moment for any processes to finish
+    sleep 5
+    
+    # Try to install Docker Desktop
+    if choco install docker-desktop -y; then
         print_success "Docker Desktop installed successfully!"
         return 0
     else
         print_error "Docker Desktop installation failed!"
-        return 1
+        print_warning "This might be due to lock file issues. Trying to clean and retry..."
+        
+        # Clean lock files again and retry
+        clean_chocolatey_locks
+        sleep 3
+        
+        if choco install docker-desktop -y --force; then
+            print_success "Docker Desktop installed successfully on retry!"
+            return 0
+        else
+            print_error "Docker Desktop installation failed even after cleanup!"
+            print_warning "Trying aggressive cleanup and final attempt..."
+            
+            # Try aggressive cleanup
+            aggressive_chocolatey_cleanup
+            
+            # Final attempt with longer wait
+            sleep 10
+            
+                            if choco install docker-desktop -y --force; then
+                    print_success "Docker Desktop installed successfully after aggressive cleanup!"
+                    return 0
+                else
+                    print_error "Docker Desktop installation failed even after aggressive cleanup!"
+                    track_chocolatey_failure
+                    print_warning "You may need to install Docker Desktop manually:"
+                    echo "1. Download from: https://www.docker.com/products/docker-desktop/"
+                    echo "2. Run as Administrator"
+                    echo "3. Restart your computer"
+                    return 1
+                fi
+        fi
     fi
 }
 
@@ -132,7 +256,48 @@ install_git() {
     print_yellow "📚 Installing Git..."
     
     if is_windows && command_exists choco; then
-        choco install git -y
+        # Clean any existing lock files first
+        clean_chocolatey_locks
+        
+        # Wait a moment for any processes to finish
+        sleep 5
+        
+        # Try to install Git
+        if choco install git -y; then
+            print_success "Git installed successfully!"
+            return 0
+        else
+            print_error "Git installation failed!"
+            print_warning "This might be due to lock file issues. Trying to clean and retry..."
+            
+            # Clean lock files again and retry
+            clean_chocolatey_locks
+            sleep 3
+            
+            if choco install git -y --force; then
+                print_success "Git installed successfully on retry!"
+                return 0
+            else
+                print_error "Git installation failed even after cleanup!"
+                print_warning "Trying aggressive cleanup and final attempt..."
+                
+                # Try aggressive cleanup
+                aggressive_chocolatey_cleanup
+                
+                # Final attempt with longer wait
+                sleep 10
+                
+                if choco install git -y --force; then
+                    print_success "Git installed successfully after aggressive cleanup!"
+                    return 0
+                else
+                    print_error "Git installation failed even after aggressive cleanup!"
+                    track_chocolatey_failure
+                    print_warning "You may need to install Git manually or use alternative methods."
+                    return 1
+                fi
+            fi
+        fi
     elif is_wsl; then
         sudo apt-get update
         sudo apt-get install -y git
@@ -155,7 +320,48 @@ install_nodejs() {
     print_yellow "🟢 Installing Node.js..."
     
     if is_windows && command_exists choco; then
-        choco install nodejs -y
+        # Clean any existing lock files first
+        clean_chocolatey_locks
+        
+        # Wait a moment for any processes to finish
+        sleep 5
+        
+        # Try to install Node.js
+        if choco install nodejs -y; then
+            print_success "Node.js installed successfully!"
+            return 0
+        else
+            print_error "Node.js installation failed!"
+            print_warning "This might be due to lock file issues. Trying to clean and retry..."
+            
+            # Clean lock files again and retry
+            clean_chocolatey_locks
+            sleep 3
+            
+            if choco install nodejs -y --force; then
+                print_success "Node.js installed successfully on retry!"
+                return 0
+            else
+                print_error "Node.js installation failed even after cleanup!"
+                print_warning "Trying aggressive cleanup and final attempt..."
+                
+                # Try aggressive cleanup
+                aggressive_chocolatey_cleanup
+                
+                # Final attempt with longer wait
+                sleep 10
+                
+                if choco install nodejs -y --force; then
+                    print_success "Node.js installed successfully after aggressive cleanup!"
+                    return 0
+                else
+                    print_error "Node.js installation failed even after aggressive cleanup!"
+                    track_chocolatey_failure
+                    print_warning "You may need to install Node.js manually or use alternative methods."
+                    return 1
+                fi
+            fi
+        fi
     elif is_wsl; then
         curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
         sudo apt-get install -y nodejs
@@ -178,7 +384,48 @@ install_composer() {
     print_yellow "🎼 Installing Composer..."
     
     if is_windows && command_exists choco; then
-        choco install composer -y
+        # Clean any existing lock files first
+        clean_chocolatey_locks
+        
+        # Wait a moment for any processes to finish
+        sleep 5
+        
+        # Try to install Composer
+        if choco install composer -y; then
+            print_success "Composer installed successfully!"
+            return 0
+        else
+            print_error "Composer installation failed!"
+            print_warning "This might be due to lock file issues. Trying to clean and retry..."
+            
+            # Clean lock files again and retry
+            clean_chocolatey_locks
+            sleep 3
+            
+            if choco install composer -y --force; then
+                print_success "Composer installed successfully on retry!"
+                return 0
+            else
+                print_error "Composer installation failed even after cleanup!"
+                print_warning "Trying aggressive cleanup and final attempt..."
+                
+                # Try aggressive cleanup
+                aggressive_chocolatey_cleanup
+                
+                # Final attempt with longer wait
+                sleep 10
+                
+                if choco install composer -y --force; then
+                    print_success "Composer installed successfully after aggressive cleanup!"
+                    return 0
+                else
+                    print_error "Composer installation failed even after aggressive cleanup!"
+                    track_chocolatey_failure
+                    print_warning "You may need to install Composer manually or use alternative methods."
+                    return 1
+                fi
+            fi
+        fi
     elif is_wsl; then
         curl -sS https://getcomposer.org/installer | php
         sudo mv composer.phar /usr/local/bin/composer
@@ -193,6 +440,70 @@ install_composer() {
         return 0
     else
         print_error "Composer installation failed!"
+        return 1
+    fi
+}
+
+# Function to install PHP
+install_php() {
+    print_yellow "🐘 Installing PHP..."
+    
+    if is_windows && command_exists choco; then
+        # Clean any existing lock files first
+        clean_chocolatey_locks
+        
+        # Wait a moment for any processes to finish
+        sleep 5
+        
+        # Try to install PHP
+        if choco install php -y; then
+            print_success "PHP installed successfully!"
+            return 0
+        else
+            print_error "PHP installation failed!"
+            print_warning "This might be due to lock file issues. Trying to clean and retry..."
+            
+            # Clean lock files again and retry
+            clean_chocolatey_locks
+            sleep 3
+            
+            if choco install php -y --force; then
+                print_success "PHP installed successfully on retry!"
+                return 0
+            else
+                print_error "PHP installation failed even after cleanup!"
+                print_warning "Trying aggressive cleanup and final attempt..."
+                
+                # Try aggressive cleanup
+                aggressive_chocolatey_cleanup
+                
+                # Final attempt with longer wait
+                sleep 10
+                
+                if choco install php -y --force; then
+                    print_success "PHP installed successfully after aggressive cleanup!"
+                    return 0
+                else
+                    print_error "PHP installation failed even after aggressive cleanup!"
+                    track_chocolatey_failure
+                    print_warning "You may need to install PHP manually or use alternative methods."
+                    return 1
+                fi
+            fi
+        fi
+    elif is_wsl; then
+        sudo apt-get update
+        sudo apt-get install -y php
+    else
+        print_warning "Please install PHP manually for your system."
+        return 1
+    fi
+    
+    if command_exists php; then
+        print_success "PHP installed successfully!"
+        return 0
+    else
+        print_error "PHP installation failed!"
         return 1
     fi
 }
@@ -217,6 +528,112 @@ wait_docker_ready() {
     
     print_error "Docker failed to start within expected time!"
     return 1
+}
+
+# Function to track Chocolatey failures and suggest alternatives
+track_chocolatey_failure() {
+    CHOCO_FAILURE_COUNT=$((CHOCO_FAILURE_COUNT + 1))
+    
+    if [ $CHOCO_FAILURE_COUNT -ge 3 ]; then
+        print_warning "⚠️  Multiple Chocolatey installations have failed. This suggests a systemic issue."
+        echo ""
+        show_alternative_installations
+        echo ""
+        print_warning "💡 Consider using the alternative installation methods above instead of continuing with Chocolatey."
+        echo ""
+        read -p "Do you want to continue trying with Chocolatey? (y/N): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            print_info "Exiting to allow manual installation of packages."
+            exit 0
+        fi
+    fi
+}
+
+# Function to show alternative installation methods
+show_alternative_installations() {
+    print_warning "🔄 Alternative Installation Methods"
+    echo ""
+    echo "Since Chocolatey is experiencing persistent lock file issues, here are alternative ways to install the required packages:"
+    echo ""
+    echo "📦 **Option 1: Use winget (Windows Package Manager)**"
+    echo "Open PowerShell as Administrator and run:"
+    echo "  winget install Git.Git"
+    echo "  winget install OpenJS.NodeJS"
+    echo "  winget install TheComposer.Composer"
+    echo "  winget install PHP.PHP"
+    echo "  winget install Docker.DockerDesktop"
+    echo ""
+    echo "📦 **Option 2: Manual Downloads**"
+    echo "1. Git: https://git-scm.com/download/win"
+    echo "2. Node.js: https://nodejs.org/en/download/"
+    echo "3. Composer: https://getcomposer.org/download/"
+    echo "4. PHP: https://windows.php.net/download/"
+    echo "5. Docker Desktop: https://www.docker.com/products/docker-desktop/"
+    echo ""
+    echo "📦 **Option 3: Use WSL2 for Development**"
+    echo "1. Install WSL2: wsl --install"
+    echo "2. Use Ubuntu/Debian package manager instead of Chocolatey"
+    echo "3. Run your Laravel project in WSL2 environment"
+    echo ""
+    print_info "💡 **Recommendation**: Try winget first, as it's Microsoft's official package manager and usually more reliable than Chocolatey."
+}
+
+# Function to provide comprehensive troubleshooting steps
+show_comprehensive_troubleshooting() {
+    print_warning "🔧 Comprehensive Troubleshooting Steps"
+    echo ""
+    echo "The Chocolatey lock file issue persists. Here are the steps to resolve it:"
+    echo ""
+    echo "📋 **Step 1: Manual Lock File Cleanup (Run as Administrator)**"
+    echo "1. Open Command Prompt as Administrator"
+    echo "2. Run these commands one by one:"
+    echo ""
+    echo "   rmdir /s /q C:\ProgramData\chocolatey\lib-bad"
+    echo "   del /f /q C:\ProgramData\chocolatey\lib\f7305e8da17e94357fea6af6fcda055f18a81cef"
+    echo "   del /f /q C:\ProgramData\chocolatey\lib\*.lock"
+    echo "   del /f /q C:\ProgramData\chocolatey\*.lock"
+    echo ""
+    echo "📋 **Step 2: Restart Chocolatey Service**"
+    echo "1. Open PowerShell as Administrator"
+    echo "2. Run: Restart-Service -Name 'Chocolatey' -Force"
+    echo ""
+    echo "📋 **Step 3: Alternative Installation Methods**"
+    echo "Option A: Manual Docker Desktop Installation"
+    echo "1. Download from: https://www.docker.com/products/docker-desktop/"
+    echo "2. Run installer as Administrator"
+    echo "3. Restart computer"
+    echo ""
+    echo "Option B: Use winget (Windows Package Manager)"
+    echo "1. Open PowerShell as Administrator"
+    echo "2. Run: winget install Docker.DockerDesktop"
+    echo "3. Restart computer"
+    echo ""
+    echo "📋 **Step 4: If Still Having Issues**"
+    echo "1. Restart your computer"
+    echo "2. Try running the deployment script again"
+    echo "3. Consider using WSL2 for development instead"
+    echo ""
+    print_info "💡 **Pro Tip**: Sometimes a simple computer restart can resolve Chocolatey lock issues."
+}
+
+# Function to provide manual lock file cleanup instructions
+show_manual_lock_cleanup() {
+    print_warning "🔧 Manual Lock File Cleanup Required"
+    echo ""
+    echo "To fix the Chocolatey lock file issue, please run these commands in Windows Command Prompt as Administrator:"
+    echo ""
+    echo "1. Open Command Prompt as Administrator (right-click Command Prompt → Run as Administrator)"
+    echo "2. Run these commands one by one:"
+    echo ""
+    echo "   rmdir /s /q C:\ProgramData\chocolatey\lib-bad"
+    echo "   del /f /q C:\ProgramData\chocolatey\lib\f7305e8da17e94357fea6af6fcda055f18a81cef"
+    echo "   del /f /q C:\ProgramData\chocolatey\lib\*.lock"
+    echo ""
+    echo "3. Close Command Prompt"
+    echo "4. Run this deployment script again"
+    echo ""
+    print_info "💡 Alternative: You can also restart your computer to clear any locked processes."
 }
 
 # Function to check and create .env file
@@ -373,6 +790,8 @@ main() {
             print_info "🐳 Docker not found. Installing Docker Desktop..."
             if ! install_docker_desktop; then
                 print_error "Failed to install Docker Desktop"
+                echo ""
+                show_comprehensive_troubleshooting
                 exit 1
             fi
             

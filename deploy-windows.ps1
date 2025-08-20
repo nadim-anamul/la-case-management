@@ -378,7 +378,7 @@ try {
     Write-Host "   Run tests: docker-compose exec app php artisan test" -ForegroundColor White
     Write-Host ""
     
-}
+} # End of try block
 catch {
     Write-Host ""
     Write-Host "❌ Deployment failed: $($_.Exception.Message)" -ForegroundColor Red
