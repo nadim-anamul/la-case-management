@@ -33,6 +33,19 @@ class CompensationController extends Controller
     }
 
     /**
+     * Display the compensation register page.
+     */
+    public function register(Request $request)
+    {
+        // For register view we load all records and rely on client-side pagination/print via DataTables
+        $compensations = Compensation::query()
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return view('compensation_register', compact('compensations'));
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()

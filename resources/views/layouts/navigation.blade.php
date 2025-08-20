@@ -20,15 +20,18 @@
             <!-- Enhanced Navigation Menu with Elegant Animations -->
             <div class="flex space-x-6">
                 <a href="{{ route('compensation.index') }}" 
-                   class="group relative px-6 py-3 rounded-xl text-base font-semibold transition-all duration-300 {{ request()->routeIs('compensation.*') 
+                   class="group relative px-6 py-3 rounded-xl text-base font-semibold transition-all duration-300 {{ request()->routeIs('compensation.index') 
                        ? 'bg-blue-600 text-white shadow-lg' 
                        : 'text-slate-700 bg-white hover:bg-blue-50 hover:text-blue-700 hover:shadow-lg border border-slate-200' }}">
-                    <!-- Subtle Glow Effect -->
                     <div class="absolute inset-0 rounded-xl bg-blue-400/10 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                    
-                    <span class="relative z-10 transition-all duration-300 group-hover:translate-x-1 group-hover:font-bold">
-                        ক্ষতিপূরণ কেস
-                    </span>
+                    <span class="relative z-10 transition-all duration-300 group-hover:translate-x-1 group-hover:font-bold">ক্ষতিপূরণ কেস</span>
+                </a>
+                <a href="{{ route('compensation.register') }}" 
+                   class="group relative px-6 py-3 rounded-xl text-base font-semibold transition-all duration-300 {{ request()->routeIs('compensation.register') 
+                       ? 'bg-blue-600 text-white shadow-lg' 
+                       : 'text-slate-700 bg-white hover:bg-blue-50 hover:text-blue-700 hover:shadow-lg border border-slate-200' }}">
+                    <div class="absolute inset-0 rounded-xl bg-blue-400/10 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                    <span class="relative z-10 transition-all duration-300 group-hover:translate-x-1 group-hover:font-bold">ক্ষতিপূরণ কেস রেজিস্টার</span>
                 </a>
             </div>
         </div>
