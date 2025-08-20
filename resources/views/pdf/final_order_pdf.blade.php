@@ -27,8 +27,11 @@
       font-family: 'Tiro Bangla', serif;
       line-height: 1.4;
     }
+    td >div{
+      font-size: 14px;
+    }
     p {
-      font-size: 10px;
+        font-size: 14px;
     }
     .a4 {
       width: 210mm;
@@ -71,8 +74,8 @@
         padding: 10mm;
         box-shadow: none;
       }
-      p {
-        font-size: 10px;
+      td > div {
+        font-size: 14px;
       }
     }
   </style>
@@ -105,9 +108,9 @@
         <table class="w-full border border-black border-collapse mb-6">
           <thead>
             <tr>
-              <th class="border border-black p-2 w-[25mm]">আদেশের ক্রমিক নং ও তারিখ</th>
-              <th class="border border-black p-2">আদেশ ও অফিসারের স্বাক্ষর</th>
-              <th class="border border-black p-2 w-[25mm]">আদেশের উপর গৃহীত ব্যবস্থা</th>
+              <th class="border border-black p-2 text-sm w-[25mm]">আদেশের ক্রমিক নং ও তারিখ</th>
+              <th class="border border-black p-2 text-sm">আদেশ ও অফিসারের স্বাক্ষর</th>
+              <th class="border border-black p-2 text-sm w-[25mm]">আদেশের উপর গৃহীত ব্যবস্থা</th>
             </tr>
           </thead>
           <tbody>

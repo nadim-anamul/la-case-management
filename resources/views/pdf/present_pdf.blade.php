@@ -27,6 +27,9 @@
     p {
       font-size: 14px;
     }
+    div >span {
+      font-size: 14px;
+    }
     table {
       table-layout: fixed;
     }
@@ -69,7 +72,7 @@
     </div>
 
     <!-- Orders Table with wide second column -->
-    <table class="w-full border border-black border-collapse mb-6">
+    <table class="w-full border border-black border-collapse mb-6 h-[220mm]">
       <thead>
         <tr>
           <th class="border border-black p-2 w-[25mm] text-sm">আদেশের ক্রমিক নং ও তারিখ</th>
