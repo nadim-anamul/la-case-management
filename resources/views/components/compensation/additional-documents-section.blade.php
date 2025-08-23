@@ -1,6 +1,5 @@
 <div class="form-section">
     <h2 class="form-section-title">
-        <span class="section-icon">৫</span>
         বণ্টন / না-দাবি / আপসনামা / এফিডেভিটের তথ্য
     </h2>
     <div class="sub-section">

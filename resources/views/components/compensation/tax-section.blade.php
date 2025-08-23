@@ -1,6 +1,5 @@
 <div class="form-section">
     <h2 class="form-section-title">
-        <span class="section-icon">৪</span>
         খাজনার তথ্য
     </h2>
     

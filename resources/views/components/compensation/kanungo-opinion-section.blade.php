@@ -1,6 +1,5 @@
 <div class="form-section">
     <h2 class="form-section-title">
-        <span class="section-icon">৮</span>
         কানুনগো/সার্ভেয়ারের মতামতঃ
     </h2>
     <div class="space-y-6">

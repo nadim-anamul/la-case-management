@@ -1,6 +1,5 @@
 <div class="form-section" x-data="ownershipContinuity()">
     <h2 class="form-section-title">
-        <span class="section-icon">৪</span>
         মালিকানার ধারাবাহিকতার বর্ণনাঃ
     </h2>
 

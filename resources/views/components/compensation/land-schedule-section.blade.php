@@ -1,6 +1,5 @@
 <div class="form-section">
     <h2 class="form-section-title">
-        <span class="section-icon">৩</span>
         আবেদনকৃত জমির তফসিলঃ
     </h2>
     <div class="grid grid-cols-1 xl:grid-cols-4 md:grid-cols-3 gap-6 sm:gap-4 xs:gap-2">

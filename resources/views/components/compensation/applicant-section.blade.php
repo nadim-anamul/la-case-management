@@ -1,6 +1,5 @@
 <div class="form-section">
     <h2 class="form-section-title">
-        <span class="section-icon">১</span>
         আবেদনকারীর তথ্যঃ
     </h2>
     <template x-for="(applicant, index) in applicants" :key="index">
