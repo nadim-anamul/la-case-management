@@ -224,7 +224,9 @@
                             const css = 'body{ font-family:"Tiro Bangla", serif; }\n'
                                 + '#registerTable{ border-collapse: collapse; width:100%; }\n'
                                 + '#registerTable th, #registerTable td{ border:1px solid #e5e7eb; padding:6px; vertical-align: top; }\n'
-                                + '#registerTable thead th{ background:#f8fafc; }';
+                                + '#registerTable thead th{ background:#f8fafc; }\n'
+                                + '#registerTable tbody tr{ page-break-inside: avoid; break-inside: avoid; }\n'
+                                + '#registerTable tbody td{ page-break-inside: avoid; break-inside: avoid; }';
                             const head = win.document.head || win.document.getElementsByTagName('head')[0];
                             const style = win.document.createElement('style');
                             style.type = 'text/css';

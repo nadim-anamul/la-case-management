@@ -24,7 +24,7 @@ class Compensation extends Model
         'land_schedule_sa_plot_no', 'rs_khatian_no', 'land_schedule_rs_plot_no', 
         'ownership_details', 'mutation_info', 'tax_info', 
         'additional_documents_info', 'kanungo_opinion',
-        'order_signature_date', 'signing_officer_name', 'status', 'final_order'
+        'order_signature_date', 'signing_officer_name', 'order_comment', 'case_information', 'status', 'final_order'
     ];
 
     /**
@@ -375,7 +375,10 @@ class Compensation extends Model
               ->orWhere('plot_no', 'like', "%{$search}%")
               ->orWhere('land_schedule_sa_plot_no', 'like', "%{$search}%")
               ->orWhere('land_schedule_rs_plot_no', 'like', "%{$search}%")
-              ->orWhereRaw("JSON_SEARCH(applicants, 'one', ?, null, '$[*].name')", ["%{$search}%"]);
+              ->orWhereRaw("JSON_SEARCH(applicants, 'one', ?, null, '$[*].name')", ["%{$search}%"])
+              ->orWhereRaw("JSON_SEARCH(applicants, 'one', ?, null, '$[*].nid')", ["%{$search}%"]);
         });
     }
+
+
 }

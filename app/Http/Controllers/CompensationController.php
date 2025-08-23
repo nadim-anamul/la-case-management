@@ -204,6 +204,7 @@ class CompensationController extends Controller
             $validatedData = $request->validate([
                 'order_signature_date' => 'required|string',
                 'signing_officer_name' => 'required|string|max:255',
+                'order_comment' => 'nullable|string',
             ]);
             
             // Process Bengali dates before saving
@@ -230,6 +231,7 @@ class CompensationController extends Controller
             $compensation->update([
                 'order_signature_date' => $validatedData['order_signature_date'],
                 'signing_officer_name' => $validatedData['signing_officer_name'],
+                'order_comment' => $validatedData['order_comment'],
                 'status' => 'done'
             ]);
             
@@ -323,6 +325,9 @@ class CompensationController extends Controller
             'additional_documents_info.selected_types' => 'nullable|array',
             'additional_documents_info.details' => 'nullable|array',
             'additional_documents_info.details.*' => 'nullable|string',
+            
+            // Case Information
+            'case_information' => 'nullable|string',
         ]);
     }
 

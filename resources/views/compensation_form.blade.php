@@ -538,6 +538,7 @@
         ownership_details: @json(old('ownership_details', [])),
         additional_documents_info: @json(old('additional_documents_info', [])),
         tax_info: @json(old('tax_info', [])),
+        case_information: @json(old('case_information', '')),
     };
 </script>
 @endsection
@@ -612,6 +613,17 @@
         @include('components.compensation.tax-section')
         <!-- Additional Documents Section -->
         @include('components.compensation.additional-documents-section')
+        
+        <!-- Case Information Section -->
+        <div class="form-section mb-6">
+            <div class="form-section-title">মামলার তথ্য</div>
+            
+            <div class="floating-label">
+                <textarea name="case_information" id="case_information" class="form-input" placeholder="আবেদনকৃত দাগ তফশিলে উল্লেখপূর্বক কোন মামলা চলমান থাকলে মামলার তথ্য লিখুন" rows="4">{{ old('case_information', isset($compensation) ? $compensation->case_information : '') }}</textarea>
+                <label for="case_information">মামলার তথ্য</label>
+            </div>
+        </div>
+        
         <div class="form-footer">
             <button type="submit" class="btn-primary">
                 জমা দিন

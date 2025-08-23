@@ -1206,6 +1206,17 @@
         </div>
     </div>
 
+    <!-- Case Information Section -->
+    @if($compensation->case_information && !empty($compensation->case_information))
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
+        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
+            মামলার তথ্য
+        </h2>
+        <div class="p-4 bg-gray-50 rounded-md border border-gray-200">
+            <p class="text-gray-900">{{ $compensation->case_information }}</p>
+        </div>
+    </div>
+    @endif
 
     <!-- Action Buttons -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
@@ -1378,6 +1389,13 @@
                 <p class="text-gray-900">{{ $compensation->signing_officer_name ?? 'তথ্য নেই' }}</p>
             </div>
         </div>
+        
+        @if($compensation->order_comment && !empty($compensation->order_comment))
+        <div class="mt-4">
+            <label class="font-semibold text-gray-700">মন্তব্য:</label>
+            <p class="text-gray-900 bg-gray-50 p-3 rounded-md border border-gray-200">{{ $compensation->order_comment }}</p>
+        </div>
+        @endif
     </div>
     @endif
 
@@ -1499,6 +1517,11 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">স্বাক্ষরকারী কর্মকর্তার নাম<span class="text-red-500">*</span></label>
                         <input type="text" name="signing_officer_name" value="{{ $compensation->signing_officer_name ?? '' }}" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="কর্মকর্তার নাম লিখুন..." required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">মন্তব্য (ঐচ্ছিক)</label>
+                        <textarea name="order_comment" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="আপনার মন্তব্য লিখুন...">{{ $compensation->order_comment ?? '' }}</textarea>
                     </div>
                 </div>
                 
@@ -1634,6 +1657,12 @@
                         </div>
                     </div>
                     @endif
+                    
+                    <!-- Comment Section -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">মন্তব্য (ঐচ্ছিক)</label>
+                        <textarea name="final_order[summary]" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="আপনার মন্তব্য লিখুন..."></textarea>
+                    </div>
                 </div>
                 
                 <div class="flex justify-end space-x-3 mt-6">
@@ -1870,8 +1899,10 @@ p {
           const order = data.order;
           const dateInput = document.querySelector('input[name="order_signature_date"]');
           const nameInput = document.querySelector('input[name="signing_officer_name"]');
+          const commentInput = document.querySelector('textarea[name="order_comment"]');
           if (dateInput) dateInput.value = order.order_signature_date || dateInput.value || '';
           if (nameInput) nameInput.value = order.signing_officer_name || nameInput.value || '';
+          if (commentInput) commentInput.value = order.order_comment || '';
         }
       })
       .catch(() => {});
@@ -1980,6 +2011,12 @@ p {
               if (amountInput) amountInput.value = finalOrder.infrastructure.amount || '';
             }
           }
+          
+          // Handle comment field
+          const commentTextarea = document.querySelector('textarea[name="final_order[summary]"]');
+          if (commentTextarea && finalOrder.summary) {
+            commentTextarea.value = finalOrder.summary;
+          }
         }
       })
       .catch(() => {});
@@ -2026,7 +2063,8 @@ p {
           selected: formData.get('final_order[infrastructure][selected]') === '1',
           compensation_type: formData.get('final_order[infrastructure][compensation_type]'),
           amount: formData.get('final_order[infrastructure][amount]')
-        }
+        },
+        summary: formData.get('final_order[summary]') || ''
       };
 
       console.log('Form data processing:', {

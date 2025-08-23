@@ -953,6 +953,13 @@
                 <span>{{ $compensation->signing_officer_name ?? 'তথ্য নেই' }}</span>
             </div>
         </div>
+        
+        @if($compensation->order_comment && !empty($compensation->order_comment))
+        <div class="info-item full-width">
+            <label>মন্তব্য:</label>
+            <span class="comment-text">{{ $compensation->order_comment }}</span>
+        </div>
+        @endif
     </div>
     @endif
 
@@ -1206,6 +1213,18 @@
             </div>
         </div>
     </div>
+
+    <!-- Case Information Section -->
+    @if($compensation->case_information && !empty($compensation->case_information))
+    <h2 class="section-header">
+        মামলার তথ্য
+    </h2>
+    <div class="analysis-item">
+        <p class="analysis-text">
+            {{ $compensation->case_information }}
+        </p>
+    </div>
+    @endif
 
     
 </div>
