@@ -259,13 +259,15 @@
                                 + '#registerTable{ border-collapse: collapse; width:100%; }\n'
                                 + '#registerTable th, #registerTable td{ border:1px solid #e5e7eb; padding:6px; vertical-align: top; }\n'
                                 + '#registerTable thead th{ background:#f8fafc; }\n'
-                                + '#registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; display: block !important; }\n'
-                                + '#registerTable tbody td{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
                                 + '@media print {\n'
-                                + '  #registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; display: block !important; }\n'
+                                + '  #registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
                                 + '  #registerTable tbody td{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
                                 + '  .dataTables_wrapper{ page-break-inside: avoid !important; }\n'
-                                + '  #registerTable{ page-break-inside: auto !important; }\n'
+                                + '  /* Force each row to be a complete unit */\n'
+                                + '  #registerTable tbody tr{ display: block !important; }\n'
+                                + '  #registerTable tbody td{ display: block !important; }\n'
+                                + '  /* Prevent any content from breaking */\n'
+                                + '  #registerTable tbody tr *{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
                                 + '}';
                             const head = win.document.head || win.document.getElementsByTagName('head')[0];
                             const style = win.document.createElement('style');
@@ -289,13 +291,15 @@
                                 + '#registerTable{ border-collapse: collapse; width:100%; }\n'
                                 + '#registerTable th, #registerTable td{ border:1px solid #e5e7eb; padding:6px; vertical-align: top; }\n'
                                 + '#registerTable thead th{ background:#f8fafc; }\n'
-                                + '#registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; display: block !important; }\n'
-                                + '#registerTable tbody td{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
                                 + '@media print {\n'
-                                + '  #registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; display: block !important; }\n'
+                                + '  #registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
                                 + '  #registerTable tbody td{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
                                 + '  .dataTables_wrapper{ page-break-inside: avoid !important; }\n'
-                                + '  #registerTable{ page-break-inside: auto !important; }\n'
+                                + '  /* Force each row to be a complete unit */\n'
+                                + '  #registerTable tbody tr{ display: block !important; }\n'
+                                + '  #registerTable tbody td{ display: block !important; }\n'
+                                + '  /* Prevent any content from breaking */\n'
+                                + '  #registerTable tbody tr *{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
                                 + '}';
                             const head = win.document.head || win.document.getElementsByTagName('head')[0];
                             const style = win.document.createElement('style');
