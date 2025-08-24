@@ -73,6 +73,21 @@
             box-shadow: 0 0 0 3px rgba(59,130,246,0.35), 0 8px 20px rgba(37, 99, 235, 0.25);
         }
         .dt-print-icon { margin-right: 0.4rem; }
+        
+        /* Print-specific styles for better page break control */
+        @media print {
+            #registerTable tbody tr {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            #registerTable tbody td {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            .dataTables_wrapper {
+                page-break-inside: avoid !important;
+            }
+        }
     </style>
 @endsection
 
@@ -217,7 +232,7 @@
                 buttons: [
                     {
                         extend: 'print',
-                        text: '<span class="dt-print-icon" aria-hidden="true">🖨️</span><span>প্রিন্ট</span>',
+                        text: '<span class="dt-print-icon" aria-hidden="true">🖨️</span><span>প্রিন্ট (Portrait)</span>',
                         title: 'ক্ষতিপূরণ কেস রেজিস্টার',
                         exportOptions: { columns: ':visible', modifier: { page: 'all' } },
                         customize: function (win) {
@@ -225,8 +240,42 @@
                                 + '#registerTable{ border-collapse: collapse; width:100%; }\n'
                                 + '#registerTable th, #registerTable td{ border:1px solid #e5e7eb; padding:6px; vertical-align: top; }\n'
                                 + '#registerTable thead th{ background:#f8fafc; }\n'
-                                + '#registerTable tbody tr{ page-break-inside: avoid; break-inside: avoid; }\n'
-                                + '#registerTable tbody td{ page-break-inside: avoid; break-inside: avoid; }';
+                                + '#registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
+                                + '#registerTable tbody td{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
+                                + '@media print {\n'
+                                + '  #registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
+                                + '  #registerTable tbody td{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
+                                + '  .dataTables_wrapper{ page-break-inside: avoid !important; }\n'
+                                + '}';
+                            const head = win.document.head || win.document.getElementsByTagName('head')[0];
+                            const style = win.document.createElement('style');
+                            style.type = 'text/css';
+                            style.appendChild(win.document.createTextNode(css));
+                            head.appendChild(style);
+                            const link = win.document.createElement('link');
+                            link.rel = 'stylesheet';
+                            link.href = 'https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap';
+                            head.appendChild(link);
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: '<span class="dt-print-icon" aria-hidden="true">🖨️</span><span>প্রিন্ট (Landscape)</span>',
+                        title: 'ক্ষতিপূরণ কেস রেজিস্টার',
+                        exportOptions: { columns: ':visible', modifier: { page: 'all' } },
+                        customize: function (win) {
+                            const css = 'body{ font-family:"Tiro Bangla", serif; }\n'
+                                + '@page { size: landscape; }\n'
+                                + '#registerTable{ border-collapse: collapse; width:100%; }\n'
+                                + '#registerTable th, #registerTable td{ border:1px solid #e5e7eb; padding:6px; vertical-align: top; }\n'
+                                + '#registerTable thead th{ background:#f8fafc; }\n'
+                                + '#registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
+                                + '#registerTable tbody td{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
+                                + '@media print {\n'
+                                + '  #registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
+                                + '  #registerTable tbody td{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
+                                + '  .dataTables_wrapper{ page-break-inside: avoid !important; }\n'
+                                + '}';
                             const head = win.document.head || win.document.getElementsByTagName('head')[0];
                             const style = win.document.createElement('style');
                             style.type = 'text/css';
