@@ -51,6 +51,12 @@
         }
         #registerTable tbody td:last-child { border-right: none; }
         #registerTable tbody tr:nth-child(even) { background-color: #fafafa; }
+        
+        /* Critical: Force each row to be a complete unit for printing */
+        #registerTable tbody tr {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
 
         /* Enhanced print button styling */
         .dt-buttons { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
@@ -79,13 +85,26 @@
             #registerTable tbody tr {
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
+                page-break-before: auto !important;
+                page-break-after: auto !important;
             }
             #registerTable tbody td {
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
+                overflow: hidden !important;
             }
             .dataTables_wrapper {
                 page-break-inside: avoid !important;
+            }
+            /* Force table to respect page breaks */
+            #registerTable {
+                page-break-inside: auto !important;
+            }
+            /* Ensure each row is treated as a block */
+            #registerTable tbody tr {
+                display: block !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
             }
         }
     </style>
@@ -240,12 +259,13 @@
                                 + '#registerTable{ border-collapse: collapse; width:100%; }\n'
                                 + '#registerTable th, #registerTable td{ border:1px solid #e5e7eb; padding:6px; vertical-align: top; }\n'
                                 + '#registerTable thead th{ background:#f8fafc; }\n'
-                                + '#registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
+                                + '#registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; display: block !important; }\n'
                                 + '#registerTable tbody td{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
                                 + '@media print {\n'
-                                + '  #registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
+                                + '  #registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; display: block !important; }\n'
                                 + '  #registerTable tbody td{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
                                 + '  .dataTables_wrapper{ page-break-inside: avoid !important; }\n'
+                                + '  #registerTable{ page-break-inside: auto !important; }\n'
                                 + '}';
                             const head = win.document.head || win.document.getElementsByTagName('head')[0];
                             const style = win.document.createElement('style');
@@ -269,12 +289,13 @@
                                 + '#registerTable{ border-collapse: collapse; width:100%; }\n'
                                 + '#registerTable th, #registerTable td{ border:1px solid #e5e7eb; padding:6px; vertical-align: top; }\n'
                                 + '#registerTable thead th{ background:#f8fafc; }\n'
-                                + '#registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
+                                + '#registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; display: block !important; }\n'
                                 + '#registerTable tbody td{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
                                 + '@media print {\n'
-                                + '  #registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
+                                + '  #registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; display: block !important; }\n'
                                 + '  #registerTable tbody td{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
                                 + '  .dataTables_wrapper{ page-break-inside: avoid !important; }\n'
+                                + '  #registerTable{ page-break-inside: auto !important; }\n'
                                 + '}';
                             const head = win.document.head || win.document.getElementsByTagName('head')[0];
                             const style = win.document.createElement('style');
