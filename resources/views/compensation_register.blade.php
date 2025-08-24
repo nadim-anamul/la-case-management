@@ -80,6 +80,30 @@
         }
         .dt-print-icon { margin-right: 0.4rem; }
         
+        /* Critical print styles to prevent row breaks */
+        @media print {
+            #registerTable tbody tr {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                display: block !important;
+                orphans: 1 !important;
+                widows: 1 !important;
+            }
+            #registerTable tbody td {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            /* Override DataTables default behavior */
+            .dataTables_wrapper {
+                page-break-inside: auto !important;
+            }
+            /* Force each row to be a complete unit */
+            #registerTable tbody tr * {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+        }
+        
         /* Print-specific styles for better page break control */
         @media print {
             #registerTable tbody tr {
@@ -255,25 +279,97 @@
                         title: 'ক্ষতিপূরণ কেস রেজিস্টার',
                         exportOptions: { columns: ':visible', modifier: { page: 'all' } },
                         customize: function (win) {
-                            const css = 'body{ font-family:"Tiro Bangla", serif; }\n'
-                                + '#registerTable{ border-collapse: collapse; width:100%; }\n'
-                                + '#registerTable th, #registerTable td{ border:1px solid #e5e7eb; padding:6px; vertical-align: top; }\n'
-                                + '#registerTable thead th{ background:#f8fafc; }\n'
-                                + '@media print {\n'
-                                + '  #registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
-                                + '  #registerTable tbody td{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
-                                + '  .dataTables_wrapper{ page-break-inside: avoid !important; }\n'
-                                + '  /* Force each row to be a complete unit */\n'
-                                + '  #registerTable tbody tr{ display: block !important; }\n'
-                                + '  #registerTable tbody td{ display: block !important; }\n'
-                                + '  /* Prevent any content from breaking */\n'
-                                + '  #registerTable tbody tr *{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
-                                + '}';
+                            // Get data from the original table in the parent window
+                            const originalTable = document.getElementById('registerTable');
+                            const tbody = originalTable.querySelector('tbody');
+                            const rows = tbody.querySelectorAll('tr');
+                            
+                            // Clear the print window body
+                            win.document.body.innerHTML = '';
+                            
+                            // Add title
+                            const title = win.document.createElement('h1');
+                            title.textContent = 'ক্ষতিপূরণ কেস রেজিস্টার';
+                            title.style.cssText = 'text-align: center; margin-bottom: 30px; font-size: 24px; font-weight: bold;';
+                            win.document.body.appendChild(title);
+                            
+                            // Create cards for each row
+                            rows.forEach((row, index) => {
+                                const cells = row.querySelectorAll('td');
+                                if (cells.length >= 8) {
+                                    const caseCard = win.document.createElement('div');
+                                    caseCard.className = 'case-card';
+                                    caseCard.style.cssText = 'border: 2px solid #000; margin-bottom: 30px; padding: 15px; page-break-inside: avoid !important; break-inside: avoid !important; background: white;';
+                                    
+                                    const caseNo = cells[0].textContent.trim();
+                                    const laCaseNo = cells[1].textContent.trim();
+                                    const applicant = cells[2].textContent.trim();
+                                    const roedad = cells[3].textContent.trim();
+                                    const property = cells[4].textContent.trim();
+                                    const entryDate = cells[5].textContent.trim();
+                                    const settlementDate = cells[6].textContent.trim();
+                                    const orderSummary = cells[7].textContent.trim();
+                                    
+                                    caseCard.innerHTML = `
+                                        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                                            <thead>
+                                                <tr>
+                                                    <th style="border: 1px solid #000; padding: 8px; font-weight: bold; background-color: #f5f5f5; text-align: center;">ক্ষতিপূরণ কেস নং</th>
+                                                    <th style="border: 1px solid #000; padding: 8px; font-weight: bold; background-color: #f5f5f5; text-align: center;">সংশ্লিষ্ট এল.এ কেস নং</th>
+                                                    <th style="border: 1px solid #000; padding: 8px; font-weight: bold; background-color: #f5f5f5; text-align: center;">আবেদনকারীর নাম ও ঠিকানা</th>
+                                                    <th style="border: 1px solid #000; padding: 8px; font-weight: bold; background-color: #f5f5f5; text-align: center;">রোয়েদাদ নং</th>
+                                                    <th style="border: 1px solid #000; padding: 8px; font-weight: bold; background-color: #f5f5f5; text-align: center;">সম্পত্তির তফসিলের বর্ণনা</th>
+                                                    <th style="border: 1px solid #000; padding: 8px; font-weight: bold; background-color: #f5f5f5; text-align: center;">কেস এন্ট্রির তারিখ</th>
+                                                    <th style="border: 1px solid #000; padding: 8px; font-weight: bold; background-color: #f5f5f5; text-align: center;">কেস নিষ্পত্তির তারিখ</th>
+                                                    <th style="border: 1px solid #000; padding: 8px; font-weight: bold; background-color: #f5f5f5; text-align: center;">আদেশের সার-সংক্ষেপ ও অফিসারের স্বাক্ষর</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="border: 1px solid #000; padding: 8px; white-space: pre-line; vertical-align: top;">${caseNo}</td>
+                                                    <td style="border: 1px solid #000; padding: 8px; white-space: pre-line; vertical-align: top;">${laCaseNo}</td>
+                                                    <td style="border: 1px solid #000; padding: 8px; white-space: pre-line; vertical-align: top;">${applicant}</td>
+                                                    <td style="border: 1px solid #000; padding: 8px; white-space: pre-line; vertical-align: top;">${roedad}</td>
+                                                    <td style="border: 1px solid #000; padding: 8px; white-space: pre-line; vertical-align: top;">${property}</td>
+                                                    <td style="border: 1px solid #000; padding: 8px; white-space: pre-line; vertical-align: top;">${entryDate}</td>
+                                                    <td style="border: 1px solid #000; padding: 8px; white-space: pre-line; vertical-align: top;">${settlementDate}</td>
+                                                    <td style="border: 1px solid #000; padding: 8px; white-space: pre-line; vertical-align: top;">${orderSummary}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    `;
+                                    
+                                    win.document.body.appendChild(caseCard);
+                                }
+                            });
+                            
+                            // Add CSS for print
+                            const css = `
+                                body { 
+                                    font-family: "Tiro Bangla", serif; 
+                                    margin: 20px; 
+                                    line-height: 1.6;
+                                }
+                                .case-card { 
+                                    page-break-inside: avoid !important; 
+                                    break-inside: avoid !important; 
+                                    display: block !important;
+                                }
+                                @media print {
+                                    .case-card { 
+                                        page-break-inside: avoid !important; 
+                                        break-inside: avoid !important; 
+                                    }
+                                    body { margin: 0; }
+                                }
+                            `;
                             const head = win.document.head || win.document.getElementsByTagName('head')[0];
                             const style = win.document.createElement('style');
                             style.type = 'text/css';
                             style.appendChild(win.document.createTextNode(css));
                             head.appendChild(style);
+                            
+                            // Add Bengali font
                             const link = win.document.createElement('link');
                             link.rel = 'stylesheet';
                             link.href = 'https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap';
@@ -286,26 +382,98 @@
                         title: 'ক্ষতিপূরণ কেস রেজিস্টার',
                         exportOptions: { columns: ':visible', modifier: { page: 'all' } },
                         customize: function (win) {
-                            const css = 'body{ font-family:"Tiro Bangla", serif; }\n'
-                                + '@page { size: landscape; }\n'
-                                + '#registerTable{ border-collapse: collapse; width:100%; }\n'
-                                + '#registerTable th, #registerTable td{ border:1px solid #e5e7eb; padding:6px; vertical-align: top; }\n'
-                                + '#registerTable thead th{ background:#f8fafc; }\n'
-                                + '@media print {\n'
-                                + '  #registerTable tbody tr{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
-                                + '  #registerTable tbody td{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
-                                + '  .dataTables_wrapper{ page-break-inside: avoid !important; }\n'
-                                + '  /* Force each row to be a complete unit */\n'
-                                + '  #registerTable tbody tr{ display: block !important; }\n'
-                                + '  #registerTable tbody td{ display: block !important; }\n'
-                                + '  /* Prevent any content from breaking */\n'
-                                + '  #registerTable tbody tr *{ page-break-inside: avoid !important; break-inside: avoid !important; }\n'
-                                + '}';
+                            // Get data from the original table in the parent window
+                            const originalTable = document.getElementById('registerTable');
+                            const tbody = originalTable.querySelector('tbody');
+                            const rows = tbody.querySelectorAll('tr');
+                            
+                            // Clear the print window body
+                            win.document.body.innerHTML = '';
+                            
+                            // Add title
+                            const title = win.document.createElement('h1');
+                            title.textContent = 'ক্ষতিপূরণ কেস রেজিস্টার';
+                            title.style.cssText = 'text-align: center; margin-bottom: 30px; font-size: 24px; font-weight: bold;';
+                            win.document.body.appendChild(title);
+                            
+                            // Create cards for each row
+                            rows.forEach((row, index) => {
+                                const cells = row.querySelectorAll('td');
+                                if (cells.length >= 8) {
+                                    const caseCard = win.document.createElement('div');
+                                    caseCard.className = 'case-card';
+                                    caseCard.style.cssText = 'border: 2px solid #000; margin-bottom: 30px; padding: 15px; page-break-inside: avoid !important; break-inside: avoid !important; background: white;';
+                                    
+                                    const caseNo = cells[0].textContent.trim();
+                                    const laCaseNo = cells[1].textContent.trim();
+                                    const applicant = cells[2].textContent.trim();
+                                    const roedad = cells[3].textContent.trim();
+                                    const property = cells[4].textContent.trim();
+                                    const entryDate = cells[5].textContent.trim();
+                                    const settlementDate = cells[6].textContent.trim();
+                                    const orderSummary = cells[7].textContent.trim();
+                                    
+                                    caseCard.innerHTML = `
+                                        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                                            <thead>
+                                                <tr>
+                                                    <th style="border: 1px solid #000; padding: 8px; font-weight: bold; background-color: #f5f5f5; text-align: center;">ক্ষতিপূরণ কেস নং</th>
+                                                    <th style="border: 1px solid #000; padding: 8px; font-weight: bold; background-color: #f5f5f5; text-align: center;">সংশ্লিষ্ট এল.এ কেস নং</th>
+                                                    <th style="border: 1px solid #000; padding: 8px; font-weight: bold; background-color: #f5f5f5; text-align: center;">আবেদনকারীর নাম ও ঠিকানা</th>
+                                                    <th style="border: 1px solid #000; padding: 8px; font-weight: bold; background-color: #f5f5f5; text-align: center;">রোয়েদাদ নং</th>
+                                                    <th style="border: 1px solid #000; padding: 8px; font-weight: bold; background-color: #f5f5f5; text-align: center;">সম্পত্তির তফসিলের বর্ণনা</th>
+                                                    <th style="border: 1px solid #000; padding: 8px; font-weight: bold; background-color: #f5f5f5; text-align: center;">কেস এন্ট্রির তারিখ</th>
+                                                    <th style="border: 1px solid #000; padding: 8px; font-weight: bold; background-color: #f5f5f5; text-align: center;">কেস নিষ্পত্তির তারিখ</th>
+                                                    <th style="border: 1px solid #000; padding: 8px; font-weight: bold; background-color: #f5f5f5; text-align: center;">আদেশের সার-সংক্ষেপ ও অফিসারের স্বাক্ষর</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="border: 1px solid #000; padding: 8px; white-space: pre-line; vertical-align: top;">${caseNo}</td>
+                                                    <td style="border: 1px solid #000; padding: 8px; white-space: pre-line; vertical-align: top;">${laCaseNo}</td>
+                                                    <td style="border: 1px solid #000; padding: 8px; white-space: pre-line; vertical-align: top;">${applicant}</td>
+                                                    <td style="border: 1px solid #000; padding: 8px; white-space: pre-line; vertical-align: top;">${roedad}</td>
+                                                    <td style="border: 1px solid #000; padding: 8px; white-space: pre-line; vertical-align: top;">${property}</td>
+                                                    <td style="border: 1px solid #000; padding: 8px; white-space: pre-line; vertical-align: top;">${entryDate}</td>
+                                                    <td style="border: 1px solid #000; padding: 8px; white-space: pre-line; vertical-align: top;">${settlementDate}</td>
+                                                    <td style="border: 1px solid #000; padding: 8px; white-space: pre-line; vertical-align: top;">${orderSummary}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    `;
+                                    
+                                    win.document.body.appendChild(caseCard);
+                                }
+                            });
+                            
+                            // Add CSS for landscape print
+                            const css = `
+                                body { 
+                                    font-family: "Tiro Bangla", serif; 
+                                    margin: 20px; 
+                                    line-height: 1.6;
+                                }
+                                @page { size: landscape; }
+                                .case-card { 
+                                    page-break-inside: avoid !important; 
+                                    break-inside: avoid !important; 
+                                    display: block !important;
+                                }
+                                @media print {
+                                    .case-card { 
+                                        page-break-inside: avoid !important; 
+                                        break-inside: avoid !important; 
+                                    }
+                                    body { margin: 0; }
+                                }
+                            `;
                             const head = win.document.head || win.document.getElementsByTagName('head')[0];
                             const style = win.document.createElement('style');
                             style.type = 'text/css';
                             style.appendChild(win.document.createTextNode(css));
                             head.appendChild(style);
+                            
+                            // Add Bengali font
                             const link = win.document.createElement('link');
                             link.rel = 'stylesheet';
                             link.href = 'https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap';
