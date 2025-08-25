@@ -19,7 +19,7 @@
         <!-- Login Form -->
         <div class="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
             @if (session('success'))
-                <div class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+                <div id="successMessage" class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg transition-all duration-300">
                     {{ session('success') }}
                 </div>
             @endif
@@ -131,4 +131,24 @@
     animation: float 3s ease-in-out infinite;
 }
 </style>
+
+<script>
+// Auto-dismiss success messages after 5 seconds
+function autoDismissMessages() {
+    const successMessage = document.getElementById('successMessage');
+    
+    if (successMessage) {
+        setTimeout(() => {
+            successMessage.style.opacity = '0';
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 300);
+        }, 5000);
+    }
+}
+
+// Run auto-dismiss when page loads
+document.addEventListener('DOMContentLoaded', autoDismissMessages);
+</script>
+
 @endsection

@@ -44,7 +44,7 @@
         </div>
 
         @if (session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <div id="successMessage" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 transition-all duration-300" role="alert">
                 <span class="block sm:inline">{!! session('success') !!}</span>
             </div>
         @endif
@@ -495,6 +495,23 @@
                 // Form submission handling can be added here if needed
             });
         }
+
+        // Auto-dismiss success messages after 5 seconds
+        function autoDismissMessages() {
+            const successMessage = document.getElementById('successMessage');
+            
+            if (successMessage) {
+                setTimeout(() => {
+                    successMessage.style.opacity = '0';
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 300);
+                }, 5000);
+            }
+        }
+
+        // Run auto-dismiss when page loads
+        document.addEventListener('DOMContentLoaded', autoDismissMessages);
     </script>
 
     <!-- Delete Confirmation Modal -->
