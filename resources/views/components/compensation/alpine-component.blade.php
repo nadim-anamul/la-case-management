@@ -15,6 +15,7 @@
             landScheduleSaPlotNo: '',
             rsKhatianNo: '',
             landScheduleRsPlotNo: '',
+            plotNo: '',
             applicants: [],
             is_sa_owner: 'yes',
             is_rs_owner: 'yes',
@@ -68,6 +69,7 @@
                     this.landScheduleSaPlotNo = old.land_schedule_sa_plot_no || '';
                     this.rsKhatianNo = old.rs_khatian_no || '';
                     this.landScheduleRsPlotNo = old.land_schedule_rs_plot_no || '';
+                    this.plotNo = old.plot_no || '';
                     this.applicants = old.applicants || [{ name: '', father_name: '', address: '', nid: '', mobile: '' }];
                     this.is_sa_owner = old.ownership_details?.is_applicant_sa_owner || 'yes';
                     this.is_rs_owner = old.ownership_details?.is_applicant_rs_owner || 'yes';
@@ -105,11 +107,12 @@
                         applicant_land: '' 
                     }];
                 } else if (hasCompensationData) {
-                    // Handle edit mode - use compensation data
+                    // Handle edit mode - use raw compensation data (English values)
                     const data = JSON.parse(compensationData);
                     
+                    // Use raw English values - Bengali conversion will be handled in templates
                     this.caseNumber = data.case_number || '';
-                    this.caseDate = data.case_date_bengali || data.case_date || '';
+                    this.caseDate = data.case_date || '';
                     this.isApplicantInAward = data.is_applicant_in_award ? '1' : '0';
                     this.sourceTaxPercentage = data.source_tax_percentage || '';
                     this.landAwardSerialNo = data.land_award_serial_no || '';
@@ -122,6 +125,8 @@
                     this.landScheduleSaPlotNo = data.land_schedule_sa_plot_no || '';
                     this.rsKhatianNo = data.rs_khatian_no || '';
                     this.landScheduleRsPlotNo = data.land_schedule_rs_plot_no || '';
+                    // Convert plot_no to Bengali for display
+                    this.plotNo = this.toBengali(data.plot_no || '');
                     this.applicants = data.applicants || [{ name: '', father_name: '', address: '', nid: '', mobile: '' }];
                     this.is_sa_owner = data.is_applicant_sa_owner ? 'yes' : 'no';
                     this.is_rs_owner = data.ownership_details?.is_applicant_rs_owner ?? 'yes';
@@ -296,6 +301,42 @@
                 if (!value) return '';
                 // Remove any invalid characters
                 return value.replace(/[^০-৯0-9\.]/g, '');
+            },
+            
+            // Convert English numerals to Bengali numerals for display
+            toBengali(value) {
+                if (!value) return '';
+                const englishNumerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+                const bengaliNumerals = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+                let result = String(value);
+                englishNumerals.forEach((eng, index) => {
+                    result = result.replace(new RegExp(eng, 'g'), bengaliNumerals[index]);
+                });
+                return result;
+            },
+            
+            // Convert Bengali numerals to English numerals for form submission
+            toEnglish(value) {
+                if (!value) return '';
+                const bengaliNumerals = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+                const englishNumerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+                let result = String(value);
+                bengaliNumerals.forEach((ben, index) => {
+                    result = result.replace(new RegExp(ben, 'g'), englishNumerals[index]);
+                });
+                return result;
+            },
+            
+            // Convert Bengali values to English before form submission
+            convertToEnglishBeforeSubmit(event) {
+                // Convert plot_no to English
+                const plotNoField = event.target.querySelector('input[name="plot_no"]');
+                if (plotNoField && plotNoField.value) {
+                    plotNoField.value = this.toEnglish(plotNoField.value);
+                }
+                
+                // Add more field conversions as needed
+                // This ensures the form submits English values to the server
             }
         });
     });

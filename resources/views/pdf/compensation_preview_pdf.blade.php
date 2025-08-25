@@ -30,7 +30,8 @@
         <span class="info-item-compact">অবকাঠামোর রোয়েদাদ নং: {{ $compensation->getBengaliValue('infrastructure_award_serial_no') }}</span>
         @endif
         <span class="info-item-compact">রেকর্ড মূলে অধিগ্রহণ: {{ $compensation->acquisition_record_basis }}</span>
-        <span class="info-item-compact">দাগ নং: {{ $compensation->getBengaliValue('plot_no') }}</span>
+        <span class="info-item-compact">দাগ নং: {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->sa_plot_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->rs_plot_no ?? '…………………………….' )) }}</span>
+        <span class="info-item-compact">খতিয়ান নং: {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }}</span>
     </div>
 
     <!-- Applicant Information -->

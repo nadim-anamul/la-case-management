@@ -340,10 +340,16 @@ class Compensation extends Model
     }
 
     /**
-     * Get the plot number based on acquisition record basis
+     * Get the plot number - use actual database field if exists, otherwise compute based on acquisition record basis
      */
-    public function getPlotNoAttribute()
+    public function getPlotNoAttribute($value)
     {
+        // If the actual plot_no field has a value, use it
+        if (!empty($value)) {
+            return $value;
+        }
+        
+        // Otherwise, fall back to the computed logic for backward compatibility
         if ($this->acquisition_record_basis === 'SA') {
             return $this->land_schedule_sa_plot_no;
         } elseif ($this->acquisition_record_basis === 'RS') {

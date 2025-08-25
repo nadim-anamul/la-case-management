@@ -530,6 +530,7 @@
         land_schedule_sa_plot_no: @json(old('land_schedule_sa_plot_no', '')),
         rs_khatian_no: @json(old('rs_khatian_no', '')),
         land_schedule_rs_plot_no: @json(old('land_schedule_rs_plot_no', '')),
+        plot_no: @json(old('plot_no', '')),
         applicants: @json(old('applicants', [])),
         acquisition_record_basis: @json(old('acquisition_record_basis', '')),
         award_type: @json(old('award_type', '')),
@@ -570,7 +571,8 @@
     @endif
 
     <form action="{{ isset($compensation) ? route('compensation.update', $compensation->id) : route('compensation.store') }}" method="POST" class="form-container p-8" x-data="compensationForm()" 
-          data-compensation="{{ isset($compensation) ? json_encode($compensation->toBengaliDisplayArray()) : 'null' }}">
+          data-compensation="{{ isset($compensation) ? json_encode($compensation->toArray()) : 'null' }}"
+          @submit="convertToEnglishBeforeSubmit($event)">
         @csrf
         @if(isset($compensation))
             @method('PUT')

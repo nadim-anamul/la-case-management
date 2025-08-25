@@ -72,7 +72,11 @@
             </div>
             <div>
                 <label class="font-semibold text-gray-700">দাগ নং:</label>
-                <p class="text-gray-900">{{ $compensation->getBengaliValue('plot_no') }}</p>
+                <p class="text-gray-900">{{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->sa_plot_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->rs_plot_no ?? '…………………………….' )) }}</p>
+            </div>
+            <div>
+                <label class="font-semibold text-gray-700">খতিয়ান নং:</label>
+                <p class="text-gray-900">{{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }}</p>
             </div>
         </div>
     </div>
