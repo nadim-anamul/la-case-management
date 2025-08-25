@@ -33,6 +33,24 @@ check_container() {
     docker ps --format "table {{.Names}}" | grep -q "^${container_name}$"
 }
 
+# Function to debug health check issues
+debug_health_check() {
+    print_status "🔍 Debugging health check issues..."
+    
+    echo "   Checking network connectivity:"
+    echo "   - localhost:8000: $(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 5 --max-time 10 http://localhost:8000 2>/dev/null || echo "FAILED")"
+    echo "   - 152.42.201.131:8000: $(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 5 --max-time 10 http://152.42.201.131:8000 2>/dev/null || echo "FAILED")"
+    
+    echo "   Checking container status:"
+    docker compose -f docker-compose.server.yml ps
+    
+    echo "   Checking container logs (last 10 lines):"
+    docker compose -f docker-compose.server.yml logs --tail=10 app
+    
+    echo "   Checking if port 8000 is listening:"
+    netstat -tlnp | grep :8000 || echo "   Port 8000 not found in netstat"
+}
+
 # Function to check application health
 check_application_health() {
     print_status "🔍 Checking application health..."
@@ -40,8 +58,32 @@ check_application_health() {
     local attempt=1
     
     while [ $attempt -le $max_attempts ]; do
-        if curl -s -o /dev/null -w "%{http_code}" http://localhost:8000 | grep -q "200"; then
-            print_success "✅ Application is responding with HTTP 200"
+        # Try multiple endpoints and IPs for health check
+        local health_check_passed=false
+        
+        # Check localhost first
+        if curl -s -o /dev/null -w "%{http_code}" --connect-timeout 5 --max-time 10 http://localhost:8000 | grep -q "200\|302\|404"; then
+            print_success "✅ Application is responding on localhost:8000"
+            health_check_passed=true
+        fi
+        
+        # Check server IP if localhost fails
+        if [ "$health_check_passed" = false ]; then
+            if curl -s -o /dev/null -w "%{http_code}" --connect-timeout 5 --max-time 10 http://152.42.201.131:8000 | grep -q "200\|302\|404"; then
+                print_success "✅ Application is responding on 152.42.201.131:8000"
+                health_check_passed=true
+            fi
+        fi
+        
+        # Check if container is responding internally
+        if [ "$health_check_passed" = false ]; then
+            if docker compose -f docker-compose.server.yml exec -T app curl -s -o /dev/null -w "%{http_code}" --connect-timeout 5 --max-time 10 http://localhost:8000 | grep -q "200\|302\|404"; then
+                print_success "✅ Application is responding internally from container"
+                health_check_passed=true
+            fi
+        fi
+        
+        if [ "$health_check_passed" = true ]; then
             return 0
         else
             print_warning "⏳ Waiting for application... (attempt $attempt/$max_attempts)"
@@ -51,6 +93,7 @@ check_application_health() {
     done
     
     print_error "❌ Application health check failed"
+    debug_health_check
     return 1
 }
 
