@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserManagementController extends Controller
 {
@@ -44,13 +45,18 @@ class UserManagementController extends Controller
             return back()->with('error', 'এই ইউজার ইতিমধ্যে অনুমোদিত।');
         }
 
-        $user->update([
+        // Use database transaction to ensure consistency
+        $updateData = [
             'is_approved' => true,
             'approved_at' => now(),
             'approved_by' => Auth::id(),
-        ]);
+        ];
+        
+        DB::transaction(function () use ($user, $updateData) {
+            $user->update($updateData);
+        });
 
-        return back()->with('success', "ইউজার '{$user->name}' সফলভাবে অনুমোদিত হয়েছে।");
+        return redirect()->route('admin.users.index')->with('success', "ইউজার '{$user->name}' সফলভাবে অনুমোদিত হয়েছে।");
     }
 
     /**
@@ -70,7 +76,7 @@ class UserManagementController extends Controller
         $userName = $user->name;
         $user->delete();
 
-        return back()->with('success', "ইউজার '{$userName}' প্রত্যাখ্যান করা হয়েছে এবং ডিলিট করা হয়েছে।");
+        return redirect()->route('admin.users.index')->with('success', "ইউজার '{$userName}' প্রত্যাখ্যান করা হয়েছে এবং ডিলিট করা হয়েছে।");
     }
 
     /**
@@ -97,7 +103,7 @@ class UserManagementController extends Controller
             'approved_by' => null,
         ]);
 
-        return back()->with('success', "ইউজার '{$user->name}' এর অনুমোদন বাতিল করা হয়েছে।");
+        return redirect()->route('admin.users.index')->with('success', "ইউজার '{$user->name}' এর অনুমোদন বাতিল করা হয়েছে।");
     }
 
     /**
@@ -122,7 +128,7 @@ class UserManagementController extends Controller
             'is_super_user' => true,
         ]);
 
-        return back()->with('success', "ইউজার '{$user->name}' কে সুপার ইউজার বানানো হয়েছে।");
+        return redirect()->route('admin.users.index')->with('success', "ইউজার '{$user->name}' কে সুপার ইউজার বানানো হয়েছে।");
     }
 
     /**
@@ -148,6 +154,6 @@ class UserManagementController extends Controller
             'is_super_user' => false,
         ]);
 
-        return back()->with('success', "ইউজার '{$user->name}' এর সুপার ইউজার স্ট্যাটাস সরানো হয়েছে।");
+        return redirect()->route('admin.users.index')->with('success', "ইউজার '{$user->name}' এর সুপার ইউজার স্ট্যাটাস সরানো হয়েছে।");
     }
 }

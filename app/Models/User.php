@@ -22,6 +22,14 @@ class User extends Authenticatable
         'email',
         'password',
         'registration_note',
+        'is_approved',
+        'is_super_user',
+        'approved_at',
+        'approved_by',
+        'must_change_password',
+        'password_changed_at',
+        'password_reset_by',
+        'password_reset_reason',
     ];
 
     /**
