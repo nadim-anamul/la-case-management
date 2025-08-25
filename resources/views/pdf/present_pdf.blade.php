@@ -94,7 +94,7 @@
             <br>
             <p>নিম্ন তফসিল বর্ণিত সম্পত্তির ক্ষতিপূরণ দাবী করে আবেদন দাখিল করেছেন</p>
             <p>উপজেলা: {{ $compensation->upazila ?? 'N/A' }}, মৌজা: {{ $compensation->mouza_name ?? 'N/A' }}</p>
-            <p>জেএল নং: {{ $compensation->getBengaliValue('jl_no') ?? 'N/A' }}, খতিয়ান নং: {{ $compensation->getBengaliValue('plot_no') ?? 'N/A' }}</p>
+            <p>জেএল নং: {{ $compensation->getBengaliValue('jl_no') ?? 'N/A' }}, খতিয়ান নং: {{ $compensation->bnDigits($compensation->plot_no ?? 'N/A') }}</p>
             <p>দাগ নং: @if($compensation->acquisition_record_basis == 'SA'){{ $compensation->getBengaliValue('sa_plot_no') ?? 'N/A' }}@else{{ $compensation->getBengaliValue('rs_plot_no') ?? 'N/A' }}@endif</p>
             <p>আবেদনকৃত ক্ষতিপূরণের ধরণ: 
                 @if($compensation->award_type && is_array($compensation->award_type))
