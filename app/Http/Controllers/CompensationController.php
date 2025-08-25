@@ -838,14 +838,16 @@ class CompensationController extends Controller
         if (isset($ownershipDetails['rs_records']) && is_array($ownershipDetails['rs_records'])) {
             foreach ($ownershipDetails['rs_records'] as &$rsRecord) {
                 if (isset($rsRecord['dp_khatian'])) {
-                    $rsRecord['dp_khatian'] = in_array($rsRecord['dp_khatian'], ['on', '1', 'true'], true);
+                    // Use filter_var for more robust boolean conversion
+                    $rsRecord['dp_khatian'] = filter_var($rsRecord['dp_khatian'], FILTER_VALIDATE_BOOLEAN);
                 }
             }
         }
         
         // Convert rs_info dp_khatian checkbox value to boolean
         if (isset($ownershipDetails['rs_info']) && isset($ownershipDetails['rs_info']['dp_khatian'])) {
-            $ownershipDetails['rs_info']['dp_khatian'] = in_array($ownershipDetails['rs_info']['dp_khatian'], ['on', '1', 'true'], true);
+            // Use filter_var for more robust boolean conversion
+            $ownershipDetails['rs_info']['dp_khatian'] = filter_var($ownershipDetails['rs_info']['dp_khatian'], FILTER_VALIDATE_BOOLEAN);
         }
 
         // Debug: Log the processed ownership details
@@ -1268,4 +1270,8 @@ class CompensationController extends Controller
                 ->with('error', 'চূড়ান্ত আদেশ প্রিভিউ দেখানো সম্ভব নয়: ' . $e->getMessage());
         }
     }
+
+
+
+
 }
