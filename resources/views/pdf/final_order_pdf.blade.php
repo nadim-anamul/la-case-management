@@ -173,9 +173,9 @@
                       @endif
                       {{ $compensation->mouza_name ?? '…………………………….' }}/{{ $compensation->bnDigits($compensation->jl_no ?? '……………………………') }} মৌজার 
                       @if($compensation->acquisition_record_basis === 'SA')
-                          {{ $compensation->bnDigits($compensation->land_schedule_sa_plot_no ?? '……………………………') }}
+                          {{ $compensation->bnDigits($compensation->sa_plot_no ?? '……………………………') }}
                       @elseif($compensation->acquisition_record_basis === 'RS')
-                          {{ $compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '……………………………') }}
+                          {{ $compensation->bnDigits($compensation->rs_plot_no ?? '……………………………') }}
                       @else
                           {{ $compensation->bnDigits($compensation->plot_no ?? '……………………………') }}
                       @endif
