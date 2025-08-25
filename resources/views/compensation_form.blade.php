@@ -539,6 +539,7 @@
         additional_documents_info: @json(old('additional_documents_info', [])),
         tax_info: @json(old('tax_info', [])),
         case_information: @json(old('case_information', '')),
+        general_comments: @json(old('general_comments', '')),
     };
 </script>
 @endsection
@@ -621,6 +622,16 @@
             <div class="floating-label">
                 <textarea name="case_information" id="case_information" class="form-input" placeholder="আবেদনকৃত দাগ তফশিলে উল্লেখপূর্বক কোন মামলা চলমান থাকলে মামলার তথ্য লিখুন" rows="4">{{ old('case_information', isset($compensation) ? $compensation->case_information : '') }}</textarea>
                 <label for="case_information">মামলার তথ্য</label>
+            </div>
+        </div>
+        
+        <!-- General Comments Section -->
+        <div class="form-section mb-6">
+            <div class="form-section-title">মন্তব্য</div>
+            
+            <div class="floating-label">
+                <textarea name="general_comments" id="general_comments" class="form-input" placeholder="আপনার মন্তব্য লিখুন" rows="4">{{ old('general_comments', isset($compensation) ? $compensation->general_comments : '') }}</textarea>
+                <label for="general_comments">মন্তব্য</label>
             </div>
         </div>
         

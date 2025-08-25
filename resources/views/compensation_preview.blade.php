@@ -1218,6 +1218,18 @@
     </div>
     @endif
 
+    <!-- General Comments Section -->
+    @if($compensation->general_comments && !empty($compensation->general_comments))
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
+        <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
+            মন্তব্য
+        </h2>
+        <div class="p-4 bg-gray-50 rounded-md border border-gray-200">
+            <p class="text-gray-900">{{ $compensation->general_comments }}</p>
+        </div>
+    </div>
+    @endif
+
     <!-- Action Buttons -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
         <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">

@@ -1226,6 +1226,18 @@
     </div>
     @endif
 
+    <!-- General Comments Section -->
+    @if($compensation->general_comments && !empty($compensation->general_comments))
+    <h2 class="section-header">
+        মন্তব্য
+    </h2>
+    <div class="analysis-item">
+        <p class="analysis-text">
+            {{ $compensation->general_comments }}
+        </p>
+    </div>
+    @endif
+
     
 </div>
 

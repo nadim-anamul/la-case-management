@@ -24,7 +24,7 @@ class Compensation extends Model
         'land_schedule_sa_plot_no', 'rs_khatian_no', 'land_schedule_rs_plot_no', 
         'ownership_details', 'mutation_info', 'tax_info', 
         'additional_documents_info', 'kanungo_opinion',
-        'order_signature_date', 'signing_officer_name', 'order_comment', 'case_information', 'status', 'final_order'
+        'order_signature_date', 'signing_officer_name', 'order_comment', 'case_information', 'general_comments', 'status', 'final_order'
     ];
 
     /**

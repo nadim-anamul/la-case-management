@@ -328,6 +328,9 @@ class CompensationController extends Controller
             
             // Case Information
             'case_information' => 'nullable|string',
+            
+            // General Comments
+            'general_comments' => 'nullable|string',
         ]);
     }
 
