@@ -302,7 +302,14 @@
                                       $ownerDisplay = '…………………………… পিং-……………………………';
                                   }
                               @endphp
-                              আরএস {{ $compensation->bnDigits($rsKhatianNo) }} নং খতিয়ানে {{ $compensation->bnDigits($rsPlotNo) }} নং দাগে {{ $compensation->bnDigits($rsLandInKhatian) }} একর জমি {{ $ownerDisplay }} নামে আরএস চুড়ান্ত/ ডিপি রেকর্ড প্রস্তুত রয়েছে
+                              আরএস @if(isset($rsInfo['dp_khatian']) && $rsInfo['dp_khatian'])
+                                ডিপি
+                              @endif {{ $compensation->bnDigits($rsKhatianNo) }}  নং খতিয়ানে {{ $compensation->bnDigits($rsPlotNo) }} নং দাগে {{ $compensation->bnDigits($rsLandInKhatian) }} একর জমি {{ $ownerDisplay }} নামে 
+                              @if(isset($rsInfo['dp_khatian']) && $rsInfo['dp_khatian'])
+                                আরএস ডিপি রেকর্ড প্রস্তুত রয়েছে।
+                              @else
+                                আরএস চুড়ান্ত রেকর্ড প্রস্তুত রয়েছে
+                              @endif
                           @else
                               @if($compensation->rs_khatian_no && $compensation->land_schedule_rs_plot_no)
                                   নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_rs_plot_no) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 

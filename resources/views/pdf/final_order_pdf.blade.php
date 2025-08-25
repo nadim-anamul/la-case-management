@@ -320,26 +320,66 @@
                   @elseif($compensation->acquisition_record_basis === 'RS')
                       <div class="ml-4 mt-2">
                           <strong>{{ $compensation->bnDigits(1) }}. আরএস রেকর্ডের বর্ণনাঃ</strong><br>
-                          নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' ) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
-                          @if($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) > 0)
-                              @if(count($compensation->award_holder_names) == 1)
-                                  {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }}, পিতা: {{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
+                          @if($compensation->ownership_details && is_array($compensation->ownership_details) && isset($compensation->ownership_details['rs_info']))
+                              @php
+                                  $rsInfo = $compensation->ownership_details['rs_info'];
+                                  $rsKhatianNo = $rsInfo['rs_khatian_no'] ?? $compensation->rs_khatian_no ?? '……………………………';
+                                  $rsPlotNo = $rsInfo['rs_plot_no'] ?? $compensation->land_schedule_rs_plot_no ?? '……………………………';
+                                  $rsLandInKhatian = $rsInfo['rs_land_in_khatian'] ?? '……………………………';
+                                  
+                                  // Get RS owners from ownership details
+                                  $rsOwners = $compensation->ownership_details['rs_owners'] ?? [];
+                                  $ownerNames = [];
+                                  if (is_array($rsOwners) && count($rsOwners) > 0) {
+                                      foreach ($rsOwners as $owner) {
+                                          if (!empty($owner['name'])) {
+                                              $ownerNames[] = $owner['name'];
+                                          }
+                                      }
+                                  }
+                                  $ownerDisplay = '';
+                                  if (count($ownerNames) == 1) {
+                                      $ownerDisplay = $ownerNames[0];
+                                  } elseif (count($ownerNames) > 1) {
+                                      $numberedNames = [];
+                                      foreach ($ownerNames as $index => $name) {
+                                          $numberedNames[] = $compensation->bnDigits($index + 1) . '. ' . $name;
+                                      }
+                                      $ownerDisplay = implode(', ', $numberedNames);
+                                  } else {
+                                      $ownerDisplay = '…………………………… পিং-……………………………';
+                                  }
+                              @endphp
+                              আরএস  @if(isset($rsInfo['dp_khatian']) && $rsInfo['dp_khatian'])
+                                ডিপি
+                              @endif {{ $compensation->bnDigits($rsKhatianNo) }} নং খতিয়ানে {{ $compensation->bnDigits($rsPlotNo) }} নং দাগে {{ $compensation->bnDigits($rsLandInKhatian) }} একর জমি {{ $ownerDisplay }} নামে 
+                              @if(isset($rsInfo['dp_khatian']) && $rsInfo['dp_khatian'])
+                                আরএস ডিপি রেকর্ড প্রস্তুত রয়েছে।
                               @else
-                                  @foreach($compensation->award_holder_names as $index => $holder)
-                                      @if($index > 0)
-                                          @if($index == count($compensation->award_holder_names) - 1)
-                                              এবং
-                                          @else
-                                              ,
-                                          @endif
-                                      @endif
-                                      {{ $compensation->bnDigits($index + 1) }}. {{ $holder['name'] ?? '…………………………….' }}, পিতা: {{ $holder['father_name'] ?? '…………………………….' }}
-                                  @endforeach
+                                  আরএস চুড়ান্ত রেকর্ড প্রস্তুত রয়েছে
                               @endif
                           @else
-                              …………………………. পিতা: ………………………….
+                              নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' ) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
+                              @if($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) > 0)
+                                  @if(count($compensation->award_holder_names) == 1)
+                                      {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }}, পিতা: {{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
+                                  @else
+                                      @foreach($compensation->award_holder_names as $index => $holder)
+                                          @if($index > 0)
+                                              @if($index == count($compensation->award_holder_names) - 1)
+                                                  এবং
+                                              @else
+                                                  ,
+                                              @endif
+                                          @endif
+                                          {{ $compensation->bnDigits($index + 1) }}. {{ $holder['name'] ?? '…………………………….' }}, পিতা: {{ $holder['father_name'] ?? '…………………………….' }}
+                                      @endforeach
+                                  @endif
+                              @else
+                                  …………………………. পিতা: ………………………….
+                              @endif
+                              নামে আরএস রেকর্ড প্রস্তুত হয়েছে।
                           @endif
-                          নামে আরএস রেকর্ড প্রস্তুত হয়েছে।
                       </div>
                   @else
                       <div class="ml-4 mt-2">
