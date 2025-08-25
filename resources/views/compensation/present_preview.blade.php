@@ -66,14 +66,14 @@
               <td class="border border-black p-4 h-[90mm]"></td>
               <td class="border border-black p-4">
                 @if($compensation->applicants && is_array($compensation->applicants) && count($compensation->applicants) > 0)
-                    @php $applicant = $compensation->applicants[0]; @endphp
-                    <p class="text-sm">{{ $applicant['name'] ?? 'N/A' }}</p>
-                    <p class="text-sm">পিতা- {{ $applicant['father_name'] ?? 'N/A' }}, সাং- {{ $applicant['address'] ?? 'N/A' }}</p>
-                    <p class="text-sm">উপজেলা- {{ $compensation->upazila ?? 'N/A' }}, জেলা: বগুড়া</p> 
+                    @foreach($compensation->applicants as $applicant)
+                        <p class="text-sm">@if(count($compensation->applicants) > 1){{ $compensation->bnDigits($loop->iteration) }}। @endif{{ $applicant['name'] ?? 'N/A' }}</p>
+                        <p class="text-sm">পিতা- {{ $applicant['father_name'] ?? 'N/A' }}, সাং- {{ $applicant['address'] ?? 'N/A' }}</p>
+                        @if(!$loop->last)@endif
+                    @endforeach
                 @else
                     <p class="text-sm">(আবেদনকারীর নাম)</p>
                     <p class="text-sm">পিতা- (পিতার নাম), সাং- (ঠিকানা)</p>
-                    <p class="text-sm">উপজেলা- (উপজেলার নাম), জেলা: বগুড়া</p> 
                 @endif
                 <br>
                 <p>নিম্ন তফসিল বর্ণিত সম্পত্তির ক্ষতিপূরণ দাবী করে আবেদন দাখিল করেছেন</p>
@@ -81,8 +81,8 @@
                 <p>উপজেলা: {{ $compensation->upazila ?? 'N/A' }}</p>
                 <p>মৌজা: {{ $compensation->mouza_name ?? 'N/A' }}</p>
                 <p>জেএল নং: {{ $compensation->bnDigits($compensation->jl_no ?? 'N/A') }}</p>
-                <p>খতিয়ান নং: {{ $compensation->bnDigits($compensation->sa_khatian_no ?? $compensation->rs_khatian_no ?? 'N/A') }}</p>
-                <p>দাগ নং: {{ $compensation->bnDigits($compensation->plot_no ?? 'N/A') }}</p>
+                <p>খতিয়ান নং: {{ $compensation->bnDigits($compensation->plot_no ?? 'N/A') }}</p>
+                <p>দাগ নং: @if($compensation->acquisition_record_basis == 'SA'){{ $compensation->bnDigits($compensation->sa_plot_no ?? 'N/A') }}@else{{ $compensation->bnDigits($compensation->rs_plot_no ?? 'N/A') }}@endif</p>
                 <p>আবেদনকৃত ক্ষতিপূরণের ধরণ: 
                     @if($compensation->award_type && is_array($compensation->award_type))
                         {{ implode(', ', $compensation->award_type) }}
@@ -129,7 +129,12 @@
                             echo 'N/A';
                         }
                     @endphp
-                    প্রার্থীর নামে আছে/নাই। আবেদনকারীকে নোটিশ প্রদান করা হোক। শুনানির জন্য পরবর্তী তারিখঃ  ............... </p>
+                    @if($compensation->is_applicant_in_award == 'yes')
+                        প্রার্থীর নামে আছে।
+                    @else
+                        প্রার্থীর নামে নাই।
+                    @endif
+                    আবেদনকারীকে নোটিশ প্রদান করা হোক। শুনানির জন্য পরবর্তী তারিখঃ  ............... </p>
                 <br><br>
                 <div class="text-right font-bold">
                   ভূমি অধিগ্রহণ কর্মকর্তা <br>
