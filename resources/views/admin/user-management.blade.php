@@ -122,11 +122,21 @@
 
         <!-- No Pending Registrations Message -->
         @if($pendingUsers->count() == 0)
-            <div class="bg-green-50 border border-green-200 rounded-xl mb-8 p-8 text-center">
-                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                    </svg>
+            <div class="bg-green-50 border border-green-200 rounded-xl mb-8 p-8 text-center" id="noPendingRegistrationsSection">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                        <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <button type="button" 
+                            onclick="toggleSection('noPendingRegistrationsSection')"
+                            class="text-green-600 hover:text-green-800 transition-colors duration-200"
+                            title="সেকশন বন্ধ করুন">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
                 </div>
                 <h3 class="text-lg font-semibold text-green-800 mb-2">সব রেজিস্ট্রেশন অনুমোদিত!</h3>
                 <p class="text-green-600">এখন কোনো অপেক্ষমাণ রেজিস্ট্রেশন নেই। সব নতুন ইউজার অনুমোদিত হয়ে গেছে।</p>
@@ -360,6 +370,14 @@ document.getElementById('passwordResetModal').addEventListener('click', function
         closePasswordResetModal();
     }
 });
+
+// Hide section
+function toggleSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.style.display = 'none';
+    }
+}
 </script>
 
 @endsection
