@@ -381,7 +381,9 @@
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">ডিপি খতিয়ান:</label>
-                    <p class="text-gray-900">{{ isset($compensation->ownership_details['rs_info']['dp_khatian']) && $compensation->ownership_details['rs_info']['dp_khatian'] ? 'হ্যাঁ' : 'না' }}</p>
+                    <p class="text-gray-900">
+                        {{ isset($compensation->ownership_details['rs_info']['dp_khatian']) && $compensation->ownership_details['rs_info']['dp_khatian'] ? 'হ্যাঁ' : 'না' }}
+                    </p>
                 </div>
             </div>
             

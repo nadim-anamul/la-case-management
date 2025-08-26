@@ -325,6 +325,7 @@
                                   $rsInfo = $compensation->ownership_details['rs_info'];
                                   $rsKhatianNo = $rsInfo['rs_khatian_no'] ?? $compensation->rs_khatian_no ?? '……………………………';
                                   $rsPlotNo = $rsInfo['rs_plot_no'] ?? $compensation->land_schedule_rs_plot_no ?? '……………………………';
+                                  $rsTotalLand = $rsInfo['rs_total_land_in_plot'] ?? '……………………………';
                                   $rsLandInKhatian = $rsInfo['rs_land_in_khatian'] ?? '……………………………';
                                   
                                   // Get RS owners from ownership details
@@ -350,56 +351,17 @@
                                       $ownerDisplay = '…………………………… পিং-……………………………';
                                   }
                               @endphp
-                              আরএস  @if(isset($rsInfo['dp_khatian']) && $rsInfo['dp_khatian'])
+                              আরএস @if(isset($rsInfo['dp_khatian']) && $rsInfo['dp_khatian'])
                                 ডিপি
-                              @endif {{ $compensation->bnDigits($rsKhatianNo) }} নং খতিয়ানে {{ $compensation->bnDigits($rsPlotNo) }} নং দাগে {{ $compensation->bnDigits($rsLandInKhatian) }} একর জমি {{ $ownerDisplay }} নামে 
+                              @endif {{ $compensation->bnDigits($rsKhatianNo) }}  নং খতিয়ানে {{ $compensation->bnDigits($rsPlotNo) }} নং দাগে {{ $compensation->bnDigits($rsLandInKhatian) }} একর জমি {{ $ownerDisplay }} নামে 
                               @if(isset($rsInfo['dp_khatian']) && $rsInfo['dp_khatian'])
                                 আরএস ডিপি রেকর্ড প্রস্তুত রয়েছে।
                               @else
-                                  আরএস চুড়ান্ত রেকর্ড প্রস্তুত রয়েছে
+                                আরএস চুড়ান্ত রেকর্ড প্রস্তুত রয়েছে
                               @endif
                           @else
-                              নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' ) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
-                              @if($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) > 0)
-                                  @if(count($compensation->award_holder_names) == 1)
-                                      {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }}, পিতা: {{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
-                                  @else
-                                      @foreach($compensation->award_holder_names as $index => $holder)
-                                          @if($index > 0)
-                                              @if($index == count($compensation->award_holder_names) - 1)
-                                                  এবং
-                                              @else
-                                                  ,
-                                              @endif
-                                          @endif
-                                          {{ $compensation->bnDigits($index + 1) }}. {{ $holder['name'] ?? '…………………………….' }}, পিতা: {{ $holder['father_name'] ?? '…………………………….' }}
-                                      @endforeach
-                                  @endif
-                              @else
-                                  …………………………. পিতা: ………………………….
-                              @endif
-                              নামে আরএস রেকর্ড প্রস্তুত হয়েছে।
-                          @endif
-                      </div>
-                  @else
-                      <div class="ml-4 mt-2">
-                          <strong>{{ $compensation->bnDigits(1) }}. রেকর্ডের বর্ণনাঃ</strong> ………………………….
-                      </div>
-                  @endif
-                  
-                  <!-- Dynamic Sections Based on Ownership Continuity Sequence -->
-                  @if($compensation->ownership_details && is_array($compensation->ownership_details) && isset($compensation->ownership_details['storySequence']) && count($compensation->ownership_details['storySequence']) > 0)
-                      @foreach($compensation->ownership_details['storySequence'] as $index => $item)
-                          @php
-                              $sectionType = strtolower($item['type'] ?? '');
-                              $sectionDescription = $item['description'] ?? '……………………………';
-                              $sectionNumber = (int)$index + 2; // Start from 2 since 1 is used for SA/RS record
-                          @endphp
-                          
-                          @if(str_contains($sectionType, 'আরএস রেকর্ড') || str_contains($sectionType, 'rs record'))
-                              <div class="ml-4 mt-2">
-                                  <strong>{{ $compensation->bnDigits($sectionNumber) }}. আরএস রেকর্ডের বর্ণনাঃ</strong><br>
-                                  নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' ) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
+                              @if($compensation->rs_khatian_no && $compensation->land_schedule_rs_plot_no)
+                                  নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_rs_plot_no) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
                                   @if($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) > 0)
                                       @if(count($compensation->award_holder_names) == 1)
                                           {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }}, পিতা: {{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
@@ -419,6 +381,79 @@
                                       …………………………. পিতা: ………………………….
                                   @endif
                                   নামে আরএস রেকর্ড প্রস্তুত হয়েছে।
+                              @else
+                                  ………………………….
+                              @endif
+                          @endif
+                      </div>
+                  @else
+                      <div class="ml-4 mt-2">
+                          <strong>{{ $compensation->bnDigits(1) }}. রেকর্ডের বর্ণনাঃ</strong> ………………………….
+                      </div>
+                  @endif
+                  
+                  <!-- Dynamic Sections Based on Ownership Continuity Sequence -->
+                  @if($compensation->ownership_details && is_array($compensation->ownership_details) && isset($compensation->ownership_details['storySequence']) && count($compensation->ownership_details['storySequence']) > 0)
+                      @foreach($compensation->ownership_details['storySequence'] as $index => $item)
+                          @php
+                              $sectionType = strtolower($item['type'] ?? '');
+                              $sectionDescription = $item['description'] ?? '……………………………';
+                              $sectionNumber = (int)$index + 2; // Start from 2 since 1 is used for SA/RS record
+                          @endphp
+                          
+                          @if(str_contains($sectionType, 'আরএস রেকর্ড') || str_contains($sectionType, 'rs record'))
+                            @php
+                                // Find the correct RS record from ownership_details['rs_records'] using itemIndex or creationOrder
+                                $rsRecord = null;
+                                if (
+                                    isset($compensation->ownership_details['rs_records']) &&
+                                    is_array($compensation->ownership_details['rs_records']) &&
+                                    count($compensation->ownership_details['rs_records']) > 0
+                                ) {
+                                    // Try to use itemIndex if available
+                                    if (isset($item['itemIndex']) && isset($compensation->ownership_details['rs_records'][$item['itemIndex']])) {
+                                        $rsRecord = $compensation->ownership_details['rs_records'][$item['itemIndex']];
+                                    } else {
+                                        // Try to match by creationOrder if available
+                                        if (isset($item['creationOrder'])) {
+                                            foreach ($compensation->ownership_details['rs_records'] as $record) {
+                                                if (isset($record['creationOrder']) && $record['creationOrder'] == $item['creationOrder']) {
+                                                    $rsRecord = $record;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        // Fallback to first record
+                                        if (!$rsRecord) {
+                                            $rsRecord = $compensation->ownership_details['rs_records'][0];
+                                        }
+                                    }
+                                }
+                                $rsKhatianNo = $rsRecord['khatian_no'] ?? '……………………………';
+                                $rsPlotNo = $rsRecord['plot_no'] ?? '……………………………';
+                                $rsLandAmount = $rsRecord['land_amount'] ?? '……………………………';
+                                $rsDpKhatian = $rsRecord['dp_khatian'] ?? false;
+                                $rsOwnerNames = $rsRecord['owner_names'] ?? [];
+                            @endphp
+                              <div class="ml-4 mt-2">
+                                  <strong>{{ $compensation->bnDigits($sectionNumber) }}. আর এস রেকর্ডের বর্ণনাঃ</strong><br>
+                                  আরএস @if($rsDpKhatian) ডিপি @endif
+                                  {{ $compensation->bnDigits($rsKhatianNo) }} নং খতিয়ানে
+                                  {{ $compensation->bnDigits($rsPlotNo) }} নং দাগে
+                                  {{ $compensation->bnDigits($rsLandAmount) }} একর জমি
+                                  @if(is_array($rsOwnerNames) && count($rsOwnerNames) > 0)
+                                      @foreach($rsOwnerNames as $idx => $owner)
+                                          {{ $compensation->bnDigits($idx + 1) }}. {{ $owner['name'] ?? '……………………………' }}@if($idx < count($rsOwnerNames) - 1), @endif
+                                      @endforeach
+                                      নামে
+                                  @else
+                                      …………………………. নামে
+                                  @endif
+                                  @if($rsDpKhatian)
+                                      আরএস ডিপি রেকর্ড প্রস্তুত রয়েছে।
+                                  @else
+                                      আরএস চুড়ান্ত রেকর্ড প্রস্তুত রয়েছে
+                                  @endif
                               </div>
                           @elseif(str_contains($sectionType, 'ওয়ারিশ') || str_contains($sectionType, 'inheritance'))
                               <div class="ml-4 mt-2">

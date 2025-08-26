@@ -4,7 +4,7 @@
     </h2>
 
     <!-- Hidden form fields for story sequence -->
-            <input type="hidden" name="ownership_details[storySequence]" :value="JSON.stringify(storySequence)">
+        <input type="hidden" name="ownership_details[storySequence]" :value="JSON.stringify(storySequence)">
         <input type="hidden" name="ownership_details[currentStep]" :value="currentStep">
         <input type="hidden" name="ownership_details[completedSteps]" :value="JSON.stringify(completedSteps)">
         <input type="hidden" name="ownership_details[rs_record_disabled]" :value="rs_record_disabled">
@@ -171,7 +171,16 @@
         <!-- RS Flow -->
         <template x-if="acquisition_record_basis === 'RS'">
             <div>
-                <h4 class="font-bold mb-4">RS রেকর্ডের তথ্য:</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <h4 class="font-bold mb-4">RS রেকর্ডের তথ্য:</h4>
+                    <div class="flex items-center space-x-2">
+                        <label for="ownership_rs_dp_khatian">
+                            <input type="checkbox" id="ownership_rs_dp_khatian" x-model="rs_info.dp_khatian" class="form-checkbox mr-2">
+                            ডিপি খতিয়ান
+                        </label>
+                    </div>
+                </div>
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <template x-for="(owner, index) in rs_owners" :key="index">
@@ -200,12 +209,7 @@
                         <label for="ownership_rs_land_in_khatian">উক্ত দাগে RS খতিয়ানের হিস্যানুযায়ী জমির পরিমাণ (একর)</label>
 
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <label for="ownership_rs_dp_khatian">
-                            <input type="checkbox" id="ownership_rs_dp_khatian" x-model="rs_info.dp_khatian" class="form-checkbox mr-2">
-                            ডিপি খতিয়ান
-                        </label>
-                    </div>
+                    
                 </div>
             </div>
         </template>
@@ -426,7 +430,16 @@
         <!-- RS Record Form -->
         <template x-for="(rs, index) in rs_records" :key="'rs_' + index">
             <div class="record-card mb-4">
-                <h5 x-text="'আরএস রেকর্ড #' + (index + 1)" class="text-lg font-semibold mb-3"></h5>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <h5 x-text="'আরএস রেকর্ড #' + (index + 1)" class="text-lg font-semibold mb-3"></h5>
+                    <div class="flex items-center space-x-2">
+                        <label for="">
+                            <input type="checkbox" :id="'rs_record_dp_khatian_' + index" x-model="rs.dp_khatian" class="form-checkbox mr-2">
+                            ডিপি খতিয়ান
+                        </label>
+                    </div>
+                </div>
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <template x-for="(owner, ownerIdx) in rs.owner_names" :key="ownerIdx">
@@ -452,12 +465,7 @@
                                pattern="[০-৯0-9\.]+" title="শুধুমাত্র সংখ্যা এবং দশমিক বিন্দু অনুমোদিত">
                         <label :for="'rs_record_land_amount_' + index">আরএস দাগে জমির পরিমাণ (একর)</label>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <label for="">
-                            <input type="checkbox" :id="'rs_record_dp_khatian_' + index" x-model="rs.dp_khatian" class="form-checkbox mr-2">
-                            ডিপি খতিয়ান
-                        </label>
-                    </div>
+                    
                     
                 </div>
             </div>
@@ -695,6 +703,8 @@ document.addEventListener('alpine:init', () => {
             // Load existing data if available
             this.loadExistingData();
             
+
+            
             // Ensure we have at least one item in each array
             if (this.sa_owners.length === 0) this.sa_owners = [{'name': ''}];
             if (this.rs_owners.length === 0) this.rs_owners = [{'name': ''}];
@@ -715,6 +725,7 @@ document.addEventListener('alpine:init', () => {
             
             // Watch for changes in acquisition_record_basis
             this.watchAcquisitionRecordBasis();
+
         },
         
         // Simple method to load existing data
@@ -785,13 +796,27 @@ document.addEventListener('alpine:init', () => {
         // Load data from old form (validation errors)
         loadDataFromOldForm(data) {
             if (data.sa_info) this.sa_info = { ...this.sa_info, ...data.sa_info };
-            if (data.rs_info) this.rs_info = { ...this.rs_info, ...data.rs_info };
+            if (data.rs_info) {
+                this.rs_info = { ...this.rs_info, ...data.rs_info };
+                // Ensure dp_khatian is properly converted to boolean
+                if (this.rs_info.dp_khatian !== undefined) {
+                    this.rs_info.dp_khatian = Boolean(this.rs_info.dp_khatian);
+                }
+            }
             if (data.applicant_info) this.applicant_info = { ...this.applicant_info, ...data.applicant_info };
             if (data.sa_owners) this.sa_owners = [...data.sa_owners];
             if (data.rs_owners) this.rs_owners = [...data.rs_owners];
             if (data.deed_transfers) this.deed_transfers = [...data.deed_transfers];
             if (data.inheritance_records) this.inheritance_records = [...data.inheritance_records];
-            if (data.rs_records) this.rs_records = [...data.rs_records];
+            if (data.rs_records) {
+                this.rs_records = [...data.rs_records];
+                // Ensure dp_khatian is properly converted to boolean for each RS record
+                this.rs_records.forEach(rs => {
+                    if (rs.dp_khatian !== undefined) {
+                        rs.dp_khatian = Boolean(rs.dp_khatian);
+                    }
+                });
+            }
             if (data.currentStep) this.currentStep = data.currentStep;
             if (data.completedSteps) this.completedSteps = [...data.completedSteps];
             if (data.rs_record_disabled !== undefined) this.rs_record_disabled = data.rs_record_disabled;
@@ -812,13 +837,27 @@ document.addEventListener('alpine:init', () => {
         // Load data from compensation record (edit mode)
         loadDataFromCompensation(data) {
             if (data.sa_info) this.sa_info = { ...this.sa_info, ...data.sa_info };
-            if (data.rs_info) this.rs_info = { ...this.rs_info, ...data.rs_info };
+            if (data.rs_info) {
+                this.rs_info = { ...this.rs_info, ...data.rs_info };
+                // Ensure dp_khatian is properly converted to boolean
+                if (this.rs_info.dp_khatian !== undefined) {
+                    this.rs_info.dp_khatian = Boolean(this.rs_info.dp_khatian);
+                }
+            }
             if (data.applicant_info) this.applicant_info = { ...this.applicant_info, ...data.applicant_info };
             if (data.sa_owners) this.sa_owners = [...data.sa_owners];
             if (data.rs_owners) this.rs_owners = [...data.rs_owners];
             if (data.deed_transfers) this.deed_transfers = [...data.deed_transfers];
             if (data.inheritance_records) this.inheritance_records = [...data.inheritance_records];
-            if (data.rs_records) this.rs_records = [...data.rs_records];
+            if (data.rs_records) {
+                this.rs_records = [...data.rs_records];
+                // Ensure dp_khatian is properly converted to boolean for each RS record
+                this.rs_records.forEach(rs => {
+                    if (rs.dp_khatian !== undefined) {
+                        rs.dp_khatian = Boolean(rs.dp_khatian);
+                    }
+                });
+            }
             if (data.currentStep) this.currentStep = data.currentStep;
             if (data.completedSteps) this.completedSteps = [...data.completedSteps];
             if (data.rs_record_disabled !== undefined) this.rs_record_disabled = data.rs_record_disabled;
@@ -893,10 +932,6 @@ document.addEventListener('alpine:init', () => {
             allItems.forEach((item, index) => {
                 item.sequenceIndex = index;
             });
-            
-            // Debug logging
-            console.log('Generated story sequence:', this.storySequence);
-            console.log('All items before sorting:', allItems);
             
             this.storySequence = allItems;
         },
