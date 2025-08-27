@@ -698,7 +698,7 @@
                       <thead>
                           <tr>
                               <th class="border border-black p-2 text-center">রোয়েদাদ নং</th>
-                              <th class="border border-black p-2 text-center">খতিয়া নং</th>
+                              <th class="border border-black p-2 text-center">খতিয়ান নং</th>
                               <th class="border border-black p-2 text-center">দাগ নং</th>
                               <th class="border border-black p-2 text-center">অধিগ্রহণকৃত জমি</th>
                               <th class="border border-black p-2 text-center">দাবির বিবরণ</th>
@@ -738,10 +738,10 @@
                               $totalCompensation = 0;
                               
                               // Get plot and khatian numbers
-                              $plotNo = $compensation->bnDigits($compensation->plot_no ?? '……………………………');
-                              $khatianNo = $compensation->acquisition_record_basis === 'SA' ? 
-                                          $compensation->bnDigits($compensation->sa_khatian_no ?? '……………………………') : 
-                                          $compensation->bnDigits($compensation->rs_khatian_no ?? '……………………………');
+                              $khatianNo = $compensation->bnDigits($compensation->plot_no ?? '……………………………');
+                              $plotNo = $compensation->acquisition_record_basis === 'SA' ? 
+                                          $compensation->bnDigits($compensation->sa_plot_no ?? '……………………………') : 
+                                          $compensation->bnDigits($compensation->rs_plot_no ?? '……………………………');
                               
                               // Get award serial numbers - ensure they are properly retrieved
                               $landAwardNo = !empty($landAwardSerialNo) ? $compensation->bnDigits($landAwardSerialNo) : '……………………………';

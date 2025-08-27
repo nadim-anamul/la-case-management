@@ -775,7 +775,7 @@
                       <thead>
                           <tr>
                               <th class="border border-black p-2 text-center">রোয়েদাদ নং</th>
-                              <th class="border border-black p-2 text-center">খতিয়া নং</th>
+                              <th class="border border-black p-2 text-center">খতিয়ান নং</th>
                               <th class="border border-black p-2 text-center">দাগ নং</th>
                               <th class="border border-black p-2 text-center">অধিগ্রহণকৃত জমি</th>
                               <th class="border border-black p-2 text-center">দাবির বিবরণ</th>
@@ -788,8 +788,11 @@
                               $finalOrder = $compensation->final_order ?? [];
                               $totalCompensation = 0;
                               // Common numbers
-                              $plotNo = $compensation->bnDigits($compensation->plot_no ?? '……………………………');
-                              $khatianNo = $compensation->acquisition_record_basis === 'SA' ? $compensation->bnDigits($compensation->sa_khatian_no ?? '……………………………') : $compensation->bnDigits($compensation->rs_khatian_no ?? '……………………………');
+                              // Get plot and khatian numbers
+                              $khatianNo = $compensation->bnDigits($compensation->plot_no ?? '……………………………');
+                              $plotNo = $compensation->acquisition_record_basis === 'SA' ? 
+                                          $compensation->bnDigits($compensation->sa_plot_no ?? '……………………………') : 
+                                          $compensation->bnDigits($compensation->rs_plot_no ?? '……………………………');
                               $landAwardSerialNo = $compensation->land_award_serial_no ?? ($finalOrder['land']['award_number'] ?? null);
                               $treeAwardSerialNo = $compensation->tree_award_serial_no ?? ($finalOrder['trees_crops']['award_number'] ?? null);
                               $infrastructureAwardSerialNo = $compensation->infrastructure_award_serial_no ?? ($finalOrder['infrastructure']['award_number'] ?? null);
