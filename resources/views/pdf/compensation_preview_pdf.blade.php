@@ -81,6 +81,11 @@
             <h3 class="subsection-title">অতিরিক্ত ক্ষতিপূরণের তথ্য</h3>
             <div class="compensation-grid">
                 @if($compensation->tree_award_serial_no)
+                    <div>
+                        <label class="font-semibold text-gray-700">উৎস কর %: {{ $compensation->getBengaliValue('source_tax_percentage') }}</label>
+                    </div>
+                @endif
+                @if($compensation->tree_award_serial_no)
                 <div>
                     <label class="font-semibold text-gray-700">গাছপালা/ফসলের রোয়েদাদ নং: {{ $compensation->getBengaliValue('tree_award_serial_no') }}</label>
                 </div>
@@ -155,7 +160,7 @@
                         <label>SA দাগ নং: {{ $compensation->getBengaliValue('sa_plot_no') }}</label>
                     </div>
                     <div class="info-col">
-                        <label>SA খতিয়ান নং: {{ $compensation->getBengaliValue('sa_khatian_no') }}</label>
+                        <label>SA খতিয়ান নং: {{ $compensation->getBengaliValue('plot_no') }}</label>
                     </div>
                 </div>
             </div>
@@ -169,7 +174,7 @@
                         <label>RS দাগ নং: {{ $compensation->getBengaliValue('rs_plot_no') }}</label>
                     </div>
                     <div class="info-col">
-                        <label>RS খতিয়ান নং: {{ $compensation->getBengaliValue('rs_khatian_no') }}</label>
+                        <label>RS খতিয়ান নং: {{ $compensation->getBengaliValue('plot_no') }}</label>
                     </div>
                 </div>
             </div>

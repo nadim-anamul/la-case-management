@@ -13,7 +13,7 @@
   <style>
     @page {
       size: A4;
-      margin: 10mm 10mm 15mm 10mm;
+      margin: 6mm 6mm 12mm 6mm;
     }
     /* @font-face {
       font-family: 'Noto Serif Bengali';
@@ -37,7 +37,7 @@
       width: 210mm;
       min-height: 297mm;
       margin: 0 auto;
-      padding: 10mm;
+      padding: 6mm;
       background: white;
       box-sizing: border-box;
     }
@@ -71,7 +71,7 @@
         width: 210mm; 
         min-height: 297mm; 
         margin: 0; 
-        padding: 10mm;
+        padding: 6mm;
         box-shadow: none;
       }
       td > div {
@@ -141,8 +141,8 @@
                   @else
                       ………………………….
                   @endif
-                                  {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->sa_khatian_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->rs_khatian_no ?? '…………………………….' )) }} নং খতিয়ানের
-                {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->land_schedule_sa_plot_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' )) }} নং দাগের 
+                  {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং খতিয়ানের 
+                  {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->sa_plot_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->rs_plot_no ?? '…………………………….' )) }} নং দাগের 
                   @if($compensation->award_type && is_array($compensation->award_type) && count($compensation->award_type) > 0)
                       @foreach($compensation->award_type as $index => $type)
                           @if($index > 0)
@@ -765,12 +765,12 @@
                   <!-- Compensation Details Table -->
                   <table class="calc-table w-full border border-black border-collapse mb-4">
                       <colgroup>
-                          <col style="width:16%">
+                          <col style="width:13%">
                           <col style="width:12%">
                           <col style="width:12%">
-                          <col style="width:16%">
-                          <col style="width:22%">
-                          <col style="width:22%">
+                          <col style="width:12%">
+                          <col style="width:20%">
+                          <col style="width:25%">
                       </colgroup>
                       <thead>
                           <tr>

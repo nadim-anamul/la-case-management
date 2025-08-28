@@ -89,8 +89,8 @@
                   @else
                       ………………………….
                   @endif
-                  {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->sa_khatian_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->rs_khatian_no ?? '…………………………….' )) }} নং খতিয়ানের 
-                  {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->land_schedule_sa_plot_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' )) }} নং দাগের 
+                  {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং খতিয়ানের 
+                  {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->sa_plot_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->rs_plot_no ?? '…………………………….' )) }} নং দাগের 
                   @if($compensation->award_type && is_array($compensation->award_type) && count($compensation->award_type) > 0)
                       @foreach($compensation->award_type as $index => $type)
                           @if($index > 0)

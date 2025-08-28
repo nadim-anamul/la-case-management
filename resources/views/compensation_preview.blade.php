@@ -233,7 +233,7 @@
             </div>
             <div>
                 <label class="font-semibold text-gray-700">SA খতিয়ান নং:</label>
-                <p class="text-gray-900">{{ $compensation->getBengaliValue('sa_khatian_no') }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('plot_no') }}</p>
             </div>
             @endif
             @if($compensation->acquisition_record_basis === 'RS')
@@ -243,7 +243,7 @@
             </div>
             <div>
                 <label class="font-semibold text-gray-700">RS খতিয়ান নং:</label>
-                <p class="text-gray-900">{{ $compensation->getBengaliValue('rs_khatian_no') }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('plot_no') }}</p>
             </div>
             @endif
             @if($compensation->objector_details)
