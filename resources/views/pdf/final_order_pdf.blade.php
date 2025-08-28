@@ -13,7 +13,7 @@
   <style>
     @page {
       size: A4;
-      margin: 6mm 6mm 12mm 6mm;
+      margin: 6mm 6mm 0mm 6mm;
     }
     /* @font-face {
       font-family: 'Noto Serif Bengali';
@@ -900,6 +900,7 @@
                   </div>
                   @endif
                 </div>
+                <br>
                 <br>
                 <br>
                 

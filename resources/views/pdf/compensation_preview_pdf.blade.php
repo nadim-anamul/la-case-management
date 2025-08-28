@@ -1182,7 +1182,7 @@
             @if($compensation->acquisition_record_basis === 'SA' && $compensation->ownership_details && isset($compensation->ownership_details['rs_records']) && count($compensation->ownership_details['rs_records']) > 0)
             <div class="analysis-item">
                 <p class="analysis-text">
-                        এস এ রেকর্ডমূলে অধিগ্রহন, আর এস এর তথ্যও দাখিল করা হএছে।
+                        এস এ রেকর্ডমূলে অধিগ্রহন, আর এস এর তথ্যও দাখিল করা হয়েছে।
                 </p>
             </div>
             @elseif($compensation->acquisition_record_basis === 'SA' && (!$compensation->ownership_details || !isset($compensation->ownership_details['rs_records']) || count($compensation->ownership_details['rs_records']) == 0))
