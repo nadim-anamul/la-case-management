@@ -123,6 +123,7 @@
             রোয়েদাদের তথ্য
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            <!-- 1) Award holders -->
             <div class="md:col-span-2 lg:col-span-3">
                 <label class="font-semibold text-gray-700">রোয়েদাদভুক্ত মালিকের তথ্য:</label>
                 <div class="text-gray-900">
@@ -151,49 +152,46 @@
                     @endforeach
                 </div>
             </div>
+
+            <!-- 2) Plot no and 3) Khatian no (side-by-side) -->
+            @if($compensation->acquisition_record_basis === 'SA')
             <div>
-                <label class="font-semibold text-gray-700">আবেদনকারীর নাম রোয়েদাদে আছে কিনা:</label>
-                <p class="text-gray-900">{{ $compensation->is_applicant_in_award ? 'হ্যাঁ' : 'না' }}</p>
+                <label class="font-semibold text-gray-700">দাগ নং (SA):</label>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('sa_plot_no') }}</p>
             </div>
-            
             <div>
-                <label class="font-semibold text-gray-700">উৎস কর %:</label>
-                <p class="text-gray-900">{{ $compensation->getBengaliValue('source_tax_percentage') }}</p>
+                <label class="font-semibold text-gray-700">খতিয়ান নং (SA):</label>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('plot_no') }}</p>
             </div>
-            @if($compensation->tree_award_serial_no)
+            @elseif($compensation->acquisition_record_basis === 'RS')
             <div>
-                <label class="font-semibold text-gray-700">গাছপালা/ফসলের রোয়েদাদ নং</label>
-                <p class="text-gray-900">{{ $compensation->getBengaliValue('tree_award_serial_no') }}</p>
+                <label class="font-semibold text-gray-700">দাগ নং (RS):</label>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('rs_plot_no') }}</p>
             </div>
-            @endif
-            @if($compensation->tree_compensation)
             <div>
-                <label class="font-semibold text-gray-700">গাছপালার মোট ক্ষতিপূরণ:</label>
-                <p class="text-gray-900">{{ $compensation->getBengaliValue('tree_compensation') }}</p>
-            </div>
-            @endif
-            @if($compensation->infrastructure_award_serial_no)
-            <div>
-                <label class="font-semibold text-gray-700">অবকাঠামোর রোয়েদাদ নং:</label>
-                <p class="text-gray-900">{{ $compensation->getBengaliValue('infrastructure_award_serial_no') }}</p>
+                <label class="font-semibold text-gray-700">খতিয়ান নং (RS):</label>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('plot_no') }}</p>
             </div>
             @endif
-            @if($compensation->infrastructure_compensation)
+
+            <!-- 4) Award type -->
+            @if($compensation->award_type)
             <div>
-                <label class="font-semibold text-gray-700">অবকাঠামোর মোট ক্ষতিপূরণ:</label>
-                <p class="text-gray-900">{{ $compensation->getBengaliValue('infrastructure_compensation') }}</p>
+                <label class="font-semibold text-gray-700">রোয়েদাদের ধরণ:</label>
+                <p class="text-gray-900">{{ is_array($compensation->award_type) ? implode(', ', $compensation->award_type) : $compensation->award_type }}</p>
             </div>
             @endif
-            @if($compensation->land_award_serial_no)
-            <div>
-                <label class="font-semibold text-gray-700">জমির রোয়েদাদ নং:</label>
-                <p class="text-gray-900">{{ $compensation->getBengaliValue('land_award_serial_no') }}</p>
-            </div>
-            @endif
+
+            <!-- 5) Land award serial and category info -->
 
             @if($compensation->land_category && count($compensation->land_category) > 0)
             <div class="md:col-span-2 lg:col-span-3">
                 <label class="font-semibold text-gray-700">অধিগ্রহণকৃত জমির শ্রেণী:</label>
+                @if($compensation->land_award_serial_no)
+                <div>
+                    <label class="font-semibold text-gray-700">জমির রোয়েদাদ নং: {{ $compensation->getBengaliValue('land_award_serial_no') }}</label>
+                </div>
+                @endif
                 <div class="mt-2 space-y-2">
                     @foreach($compensation->land_category as $index => $category)
                     <div class="bg-gray-50 p-3 rounded-md border border-gray-200">
@@ -220,32 +218,39 @@
                 </div>
             </div>
             @endif
-            @if($compensation->award_type)
+
+            <!-- 6) Infrastructure/Trees award serial + total compensation -->
+            @if($compensation->infrastructure_award_serial_no)
             <div>
-                <label class="font-semibold text-gray-700">রোয়েদাদের ধরন:</label>
-                <p class="text-gray-900">{{ is_array($compensation->award_type) ? implode(', ', $compensation->award_type) : $compensation->award_type }}</p>
+                <label class="font-semibold text-gray-700">অবকাঠামোর রোয়েদাদ নং:</label>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('infrastructure_award_serial_no') }}</p>
             </div>
             @endif
-            @if($compensation->acquisition_record_basis === 'SA')
+            @if($compensation->infrastructure_compensation)
             <div>
-                <label class="font-semibold text-gray-700">SA দাগ নং:</label>
-                <p class="text-gray-900">{{ $compensation->getBengaliValue('sa_plot_no') }}</p>
-            </div>
-            <div>
-                <label class="font-semibold text-gray-700">SA খতিয়ান নং:</label>
-                <p class="text-gray-900">{{ $compensation->getBengaliValue('plot_no') }}</p>
+                <label class="font-semibold text-gray-700">অবকাঠামোর মোট ক্ষতিপূরণ:</label>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('infrastructure_compensation') }}</p>
             </div>
             @endif
-            @if($compensation->acquisition_record_basis === 'RS')
+            @if($compensation->tree_award_serial_no)
             <div>
-                <label class="font-semibold text-gray-700">RS দাগ নং:</label>
-                <p class="text-gray-900">{{ $compensation->getBengaliValue('rs_plot_no') }}</p>
-            </div>
-            <div>
-                <label class="font-semibold text-gray-700">RS খতিয়ান নং:</label>
-                <p class="text-gray-900">{{ $compensation->getBengaliValue('plot_no') }}</p>
+                <label class="font-semibold text-gray-700">গাছপালা/ফসলের রোয়েদাদ নং:</label>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('tree_award_serial_no') }}</p>
             </div>
             @endif
+            @if($compensation->tree_compensation)
+            <div>
+                <label class="font-semibold text-gray-700">গাছপালার মোট ক্ষতিপূরণ:</label>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('tree_compensation') }}</p>
+            </div>
+            @endif
+
+            <!-- 7) Source tax at last -->
+            <div class="md:col-span-2 lg:col-span-3">
+                <label class="font-semibold text-gray-700">উৎস কর %:</label>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('source_tax_percentage') }}</p>
+            </div>
+
             @if($compensation->objector_details)
             <div class="md:col-span-2 lg:col-span-3">
                 <label class="font-semibold text-gray-700">রোয়েদাদে কোন আপত্তি অন্তর্ভুক্ত থাকলে আপত্তিকারীর নাম ও ঠিকানা:</label>

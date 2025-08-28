@@ -54,7 +54,7 @@
     <!-- Award Information -->
     <h2 class="section-header">রোয়েদাদের তথ্য</h2>
 
-    <!-- Award Holders -->
+    <!-- 1) Award Holders -->
     @if($compensation->award_holder_names && count($compensation->award_holder_names) > 0)
     <div class="award-holders">
         <h3 class="subsection-title">রোয়েদাদভুক্ত মালিকের তথ্য</h3>
@@ -75,117 +75,133 @@
     </div>
     @endif
 
-        <!-- Additional Compensation Details -->
-        @if($compensation->tree_compensation || $compensation->infrastructure_compensation || $compensation->applicant_acquired_land)
-        <div class="additional-compensation">
-            <h3 class="subsection-title">অতিরিক্ত ক্ষতিপূরণের তথ্য</h3>
-            <div class="compensation-grid">
-                @if($compensation->tree_award_serial_no)
-                    <div>
-                        <label class="font-semibold text-gray-700">উৎস কর %: {{ $compensation->getBengaliValue('source_tax_percentage') }}</label>
-                    </div>
-                @endif
-                @if($compensation->tree_award_serial_no)
-                <div>
-                    <label class="font-semibold text-gray-700">গাছপালা/ফসলের রোয়েদাদ নং: {{ $compensation->getBengaliValue('tree_award_serial_no') }}</label>
+    <!-- 2) Plot no and 3) Khatian no (side-by-side) -->
+    <div class="award-details">
+        @if($compensation->acquisition_record_basis === 'SA')
+        <div class="record-info">
+            <div class="info-row">
+                <div class="info-col">
+                    <label>দাগ নং (SA): {{ $compensation->getBengaliValue('sa_plot_no') }}</label>
                 </div>
-                @endif
-                @if($compensation->tree_compensation)
-                <div class="compensation-item">
-                    <label>গাছপালার ক্ষতিপূরণ: {{ $compensation->tree_compensation }}</label>
+                <div class="info-col">
+                    <label>খতিয়ান নং (SA): {{ $compensation->getBengaliValue('plot_no') }}</label>
                 </div>
-                @endif
-                @if($compensation->infrastructure_award_serial_no)
-                <div class="compensation-item">
-                    <label class="font-semibold text-gray-700">অবকাঠামোর রোয়েদাদ নং: {{ $compensation->getBengaliValue('infrastructure_award_serial_no') }}</label>
-                </div>
-                @endif
-                @if($compensation->infrastructure_compensation)
-                <div class="compensation-item">
-                    <label>অবকাঠামোর ক্ষতিপূরণ: {{ $compensation->infrastructure_compensation }}</label>
-                </div>
-                @endif
-                @if($compensation->land_award_serial_no)
-                <div class="compensation-item">
-                    <label class="font-semibold text-gray-700">জমির রোয়েদাদ নং: {{ $compensation->getBengaliValue('land_award_serial_no') }}</label>
-                </div>
-                @endif
             </div>
         </div>
-        @endif
-
-        <!-- Land Categories -->
-        @if($compensation->land_category && count($compensation->land_category) > 0)
-        <div class="land-categories">
-            <h3 class="subsection-title">জমির শ্রেণী অনুযায়ী তথ্য</h3>
-            <div class="category-table">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>জমির শ্রেণী</th>
-                            <th>মোট জমি</th>
-                            <th>মোট ক্ষতিপূরণ</th>
-                            <th>আবেদনকারীর জমি</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($compensation->land_category as $category)
-                        <tr>
-                            <td>{{ $category['category_name'] ?? '' }}</td>
-                            <td>{{ $compensation->bnDigits($category['total_land'] ?? '') }} একর</td>
-                            <td>{{ $compensation->bnDigits($category['total_compensation'] ?? '') }}</td>
-                            <td>{{ $category['applicant_land'] ? $compensation->bnDigits($category['applicant_land']) . ' একর' : 'তথ্য নেই' }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        @endif
-
-        <!-- Award Type and Records -->
-        <div class="award-details">
-            @if($compensation->award_type)
+        @elseif($compensation->acquisition_record_basis === 'RS')
+        <div class="record-info">
             <div class="detail-item">
-                <label>রোয়েদাদের ধরন:</label>
-                <span>{{ is_array($compensation->award_type) ? implode(', ', $compensation->award_type) : $compensation->award_type }}</span>
-            </div>
-            @endif
-            
-            @if($compensation->acquisition_record_basis === 'SA')
-            <div class="record-info">
-                <h4>SA রেকর্ড তথ্য</h4>
-                <div class="info-row">
-                    <div class="info-col">
-                        <label>SA দাগ নং: {{ $compensation->getBengaliValue('sa_plot_no') }}</label>
-                    </div>
-                    <div class="info-col">
-                        <label>SA খতিয়ান নং: {{ $compensation->getBengaliValue('plot_no') }}</label>
-                    </div>
+                <div class="info-col">
+                    <label>দাগ নং (RS): {{ $compensation->getBengaliValue('rs_plot_no') }}</label>
+                </div>
+                <div class="info-col">
+                    <label>খতিয়ান নং (RS): {{ $compensation->getBengaliValue('plot_no') }}</label>
                 </div>
             </div>
-            @endif
-            
-            @if($compensation->acquisition_record_basis === 'RS')
-            <div class="record-info">
-                <h4>RS রেকর্ড তথ্য</h4>
-                <div class="info-row">
-                    <div class="info-col">
-                        <label>RS দাগ নং: {{ $compensation->getBengaliValue('rs_plot_no') }}</label>
-                    </div>
-                    <div class="info-col">
-                        <label>RS খতিয়ান নং: {{ $compensation->getBengaliValue('plot_no') }}</label>
-                    </div>
-                </div>
+        </div>
+        @endif
+    </div>
+    @if($compensation->award_type)
+    <div class="record-info">
+        <div class="detail-item">
+            <label>রোয়েদাদের ধরণ: {{ is_array($compensation->award_type) ? implode(', ', $compensation->award_type) : $compensation->award_type }}</label>
+        </div>
+    </div>
+    @endif
+
+    <!-- 4) Award type -->
+
+    @if($compensation->land_category && count($compensation->land_category) > 0)
+    <div class="land-categories">
+        <h3 class="subsection-title">জমির শ্রেণী অনুযায়ী তথ্য</h3>
+        @if($compensation->land_award_serial_no)
+        <div class="award-details">
+            <div class="detail-item">
+                <label>জমির রোয়েদাদ নং:</label>
+                <span>{{ $compensation->getBengaliValue('land_award_serial_no') }}</span>
+            </div>
+        </div>
+        @endif
+        <div class="category-table">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>জমির শ্রেণী</th>
+                        <th>মোট জমি</th>
+                        <th>মোট ক্ষতিপূরণ</th>
+                        <th>আবেদনকারীর জমি</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($compensation->land_category as $category)
+                    <tr>
+                        <td>{{ $category['category_name'] ?? '' }}</td>
+                        <td>{{ $compensation->bnDigits($category['total_land'] ?? '') }} একর</td>
+                        <td>{{ $compensation->bnDigits($category['total_compensation'] ?? '') }}</td>
+                        <td>{{ $category['applicant_land'] ? $compensation->bnDigits($category['applicant_land']) . ' একর' : 'তথ্য নেই' }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @endif
+
+    <!-- 6) Infrastructure/Trees award serial + total compensation -->
+    @if($compensation->infrastructure_award_serial_no || $compensation->infrastructure_compensation)
+    <div class="award-details">
+        <div class="record-info info-row">
+            @if($compensation->infrastructure_award_serial_no)
+            <div class="detail-item">
+                <label>অবকাঠামোর রোয়েদাদ নং:</label>
+                <span>{{ $compensation->getBengaliValue('infrastructure_award_serial_no') }}</span>
             </div>
             @endif
-            
-            @if($compensation->objector_details)
-            <div class="objector-info">
-                <label>আপত্তিকারীর তথ্য: {{ $compensation->objector_details }}</label>
+            @if($compensation->infrastructure_compensation)
+            <div class="detail-item">
+                <label>অবকাঠামোর মোট ক্ষতিপূরণ:</label>
+                <span>{{ $compensation->bnDigits($compensation->infrastructure_compensation) }}</span>
             </div>
             @endif
         </div>
+    </div>
+    @endif
+
+    @if($compensation->tree_award_serial_no || $compensation->tree_compensation)
+    <div class="award-details">
+        <div class="record-info info-row">
+            @if($compensation->tree_award_serial_no)
+            <div class="detail-item">
+                <label>গাছপালা/ফসলের রোয়েদাদ নং:</label>
+                <span>{{ $compensation->getBengaliValue('tree_award_serial_no') }}</span>
+            </div>
+            @endif
+            @if($compensation->tree_compensation)
+            <div class="detail-item">
+                <label>গাছপালার মোট ক্ষতিপূরণ:</label>
+                <span>{{ $compensation->bnDigits($compensation->tree_compensation) }}</span>
+            </div>
+            @endif
+        </div>
+    </div>
+    @endif
+
+    <!-- 7) Source tax at last -->
+    <div class="award-details">
+        <div class="detail-item">
+            <label>উৎস কর %:</label>
+            <span>{{ $compensation->getBengaliValue('source_tax_percentage') }}</span>
+        </div>
+    </div>
+
+    @if($compensation->objector_details)
+    <div class="award-details">
+        <div class="detail-item">
+            <label>আপত্তিকারীর তথ্য:</label>
+            <span>{{ $compensation->objector_details }}</span>
+        </div>
+    </div>
+    @endif
     </div>
 
     <!-- Land Schedule -->
@@ -1483,11 +1499,11 @@ label,p {
     grid-column: 1 / -1;
 }
 
-.info-col label {
+/* .info-col label {
     font-weight: 600;
     color: #374151;
     font-size: 14px;
-}
+} */
 
 .info-col span {
     color: #111827;
