@@ -12,15 +12,6 @@ RUN apt-get update && apt-get install -y \
     wget \
     gnupg \
     ca-certificates \
-    fonts-liberation \
-    fonts-dejavu-core \
-    fonts-noto \
-    fonts-noto-color-emoji \
-    fonts-lohit-beng-bengali \
-    fonts-lohit-beng-assamese \
-    fonts-kacst \
-    fonts-indic \
-    fontconfig \
     libasound2 \
     libatk-bridge2.0-0 \
     libatk1.0-0 \
