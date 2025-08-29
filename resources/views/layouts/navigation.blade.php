@@ -13,7 +13,7 @@
                 <!-- Logo Text with Fade-in Animation -->
                 <div class="text-left animate-fade-in-left">
                     <div class="text-lg sm:text-2xl font-bold text-slate-800 leading-tight group-hover:text-blue-600 transition-colors duration-300">LA ক্ষতিপূরণ</div>
-                    <div class="text-xs sm:text-sm font-medium text-slate-600 leading-tight group-hover:text-slate-700 transition-colors duration-300">ম্যানেজমেন্ট সিস্টেম</div>
+                    <div class="text-xs sm:text-sm font-medium text-slate-600 leading-tight group-hover:text-slate-700 transition-colors duration-300">কেস ম্যানেজমেন্ট সিস্টেম</div>
                 </div>
             </a>
             

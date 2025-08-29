@@ -1256,7 +1256,7 @@
                 </div>
             </a>
             
-            <a href="{{ route('compensation.notice.preview', $compensation->id) }}" class="action-card bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700">
+            <a href="{{ route('compensation.notice.preview', $compensation->id) }}" class="action-card bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700" target="_blank">
                 <div class="flex items-center justify-center space-x-2">
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"></path>

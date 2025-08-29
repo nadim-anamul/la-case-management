@@ -106,7 +106,7 @@
             @if($compensation->award_type && is_array($compensation->award_type))
               @if(in_array('জমি', $compensation->award_type) && $compensation->land_category && is_array($compensation->land_category))
                   @foreach($compensation->land_category as $index => $category)
-                      <p class="ml-4">• জমির রোয়েদাদ নং {{ $compensation->bnDigits($compensation->land_award_serial_no ?? 'N/A') }}: {{ $category['category_name'] ?? 'N/A' }} - {{ $compensation->bnDigits(number_format($category['total_land'] ?? 0, 4)) }} একর জমি, ক্ষতিপূরণ: {{ $compensation->bnDigits(number_format($category['total_compensation'] ?? 0, 2)) }} টাকা</p>
+                      <p class="ml-4">• জমির রোয়েদাদ নং {{ $compensation->bnDigits($compensation->land_award_serial_no ?? 'N/A') }}: {{ $category['category_name'] ?? 'N/A' }} - {{ $compensation->bnDigits(number_format($category['total_land'] ?? 0, 4)) }} একর জমি, ক্ষতিপূরণ: {{ $compensation->bnDigits(number_format($category['total_compensation'] ?? 0, 2)) }} টাকা, আবেদনকারীর দাবী :{{ (isset($category['applicant_land']) && is_numeric($category['applicant_land'])) ? $compensation->bnDigits(number_format($category['applicant_land'], 4)) : '..............' }} একর।</p>
                   @endforeach
               @endif
               
