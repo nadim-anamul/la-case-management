@@ -99,8 +99,11 @@
             <table class="notice-table">
                 <thead>
                     <tr>
-                        <th class="border border-black p-2 w-1/2">আবেদনকারীর নাম ও ঠিকানা</th>
-                        <th class="border border-black p-2 w-1/2">রোয়েদাদভুক্ত মালিকের নাম ও ঠিকানা</th>
+                        <th class="border border-black p-2 {{ $compensation->objector_details ? 'w-1/3' : 'w-1/2' }}">আবেদনকারীর নাম ও ঠিকানা</th>
+                        <th class="border border-black p-2 {{ $compensation->objector_details ? 'w-1/3' : 'w-1/2' }}">রোয়েদাদভুক্ত মালিকের নাম ও ঠিকানা</th>
+                        @if($compensation->objector_details)
+                        <th class="border border-black p-2 w-1/3">আপত্তিকারীর নাম ও ঠিকানা</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -131,6 +134,11 @@
                                 <span style="color: #6b7280;">কোন রোয়েদাদভুক্ত মালিক নেই</span>
                             @endif
                         </td>
+                        @if($compensation->objector_details)
+                        <td style="vertical-align: top;">
+                            {{ $compensation->objector_details }}
+                        </td>
+                        @endif
                     </tr>
                 </tbody>
             </table>
