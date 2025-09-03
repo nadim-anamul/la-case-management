@@ -261,222 +261,248 @@
 
 
         
-        <!-- Deed Transfer Forms -->
-        <template x-for="(deed, index) in deed_transfers" :key="'deed_' + index">
+        <!-- Sequential Transfer Forms (Unified) -->
+        <template x-for="(item, index) in getSortedTransferSequence()" :key="item.id">
             <div class="record-card mb-4">
-                <h5 x-text="'দলিল #' + (index + 1)" class="text-lg font-semibold mb-3"></h5>
-                
-
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Multiple Donors -->
-                    <div>
-                        <template x-for="(donor, donorIdx) in deed.donor_names" :key="donorIdx">
-                            <div class="flex items-center mb-2">
-                                <input type="text" :id="'deed_donor_name_' + index + '_' + donorIdx" x-model="donor.name" class="form-input flex-1" placeholder="দলিলের দাতা ও পিতা/স্বামীর নাম">
-                                <label :for="'deed_donor_name_' + index + '_' + donorIdx" class="ml-2">দলিলের দাতা ও পিতা/স্বামীর নাম</label>
-                                <button type="button" @click="removeDeedDonor(index, donorIdx)" x-show="deed.donor_names.length > 1" class="btn-danger ml-2" title="দাতার নাম মুছুন">×</button>
-                            </div>
-                        </template>
-                        <button type="button" @click="addDeedDonor(index)" class="btn-success mt-2">+ দলিলের দাতা ও পিতা/স্বামীর নাম যোগ করুন</button>
-                    </div>
-                    <!-- Multiple Recipients -->
-                    <div>
-                        <template x-for="(recipient, recipientIdx) in deed.recipient_names" :key="recipientIdx">
-                            <div class="flex items-center mb-2">
-                                <input type="text" :id="'deed_recipient_name_' + index + '_' + recipientIdx" x-model="recipient.name" class="form-input flex-1" placeholder="দলিলের গ্রহীতা ও পিতা/স্বামীর নাম">
-                                <label :for="'deed_recipient_name_' + index + '_' + recipientIdx" class="ml-2">দলিলের গ্রহীতা ও পিতা/স্বামীর নাম</label>
-                                <button type="button" @click="removeDeedRecipient(index, recipientIdx)" x-show="deed.recipient_names.length > 1" class="btn-danger ml-2" title="গ্রহীতার নাম মুছুন">×</button>
-                            </div>
-                        </template>
-                        <button type="button" @click="addDeedRecipient(index)" class="btn-success mt-2">+ দলিলের গ্রহীতা ও পিতা/স্বামীর নাম যোগ করুন</button>
-                    </div>
-                    <div class="floating-label">
-                        <input type="text" :id="'deed_number_' + index" x-model="deed.deed_number" placeholder=" ">
-                        <label :for="'deed_number_' + index">দলিল নম্বর<span class="text-red-500">*</span></label>
-                    </div>
-                    <div class="floating-label">
-                        <input type="text" :id="'deed_date_' + index" x-model="deed.deed_date" placeholder="দিন/মাস/বছর">
-                        <label :for="'deed_date_' + index">দলিলের তারিখ<span class="text-red-500">*</span></label>
-                    </div>
-                    <div class="floating-label">
-                        <input type="text" x-model="deed.sale_type">
-                        <label>দলিলের ধরন</label>
-                    </div>
-
-                    
-                    <!-- Application Area Section -->
-                    <div class="form-section md:col-span-2">
-                        <label class="font-semibold text-gray-700 mb-2"> আবেদনকৃত দাগে বিক্রয়ের ধরন: <span class="text-red-500">*</span></label>
-                        <div class="space-y-4">
-                            <!-- Radio button selection -->
-                            <div class="mb-4">
-                                <div class="radio-group">
-                                    <label class="flex items-center mb-2 p-2 rounded" :class="deed.application_type === 'specific' ? 'bg-blue-100 border border-blue-300' : 'bg-gray-50 border border-gray-200'">
-                                        <input type="radio" :name="'application_type_' + index" value="specific" x-model="deed.application_type" @change="handleApplicationTypeChange(deed)" class="mr-2">
-                                        <span class="font-medium">সুনির্দিষ্ট দাগ</span>
-                                    </label>
-                                    <label class="flex items-center p-2 rounded" :class="deed.application_type === 'multiple' ? 'bg-green-100 border border-green-300' : 'bg-gray-50 border border-gray-200'">
-                                        <input type="radio" :name="'application_type_' + index" value="multiple" x-model="deed.application_type" @change="handleApplicationTypeChange(deed)" class="mr-2">
-                                        <span class="font-medium">বিভিন্ন দাগ</span>
-                                    </label>
-                                </div>
-                                <!-- Validation Error Message -->
-                                <div x-show="getApplicationAreaValidation(deed).hasError" class="mt-2 text-red-500 text-sm">
-                                    <span x-text="getApplicationAreaValidation(deed).message"></span>
-                                </div>
-                            </div>
-                            
-                            <!-- Specific Plot Option -->
-                            <div x-show="deed.application_type === 'specific'" class="p-4 border border-blue-200 rounded-lg bg-blue-50">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    আবেদনকৃত 
-                                    <input type="text" x-model="deed.application_specific_area" @input="validateApplicationAreaFields(deed)" class="form-input mx-2" style="width: 100px; display: inline;" placeholder=" " :class="{'border-red-500': deed.application_type === 'specific' && !deed.application_specific_area}">
-                                    <span class="text-red-500">*</span> দাগে সুনির্দিষ্টভাবে 
-                                    <input type="text" x-model="deed.application_sell_area" @input="validateApplicationAreaFields(deed)" class="form-input mx-2" style="width: 100px; display: inline;" placeholder=" " :class="{'border-red-500': deed.application_type === 'specific' && !deed.application_sell_area}">
-                                    <span class="text-red-500">*</span> একর বিক্রয়
-                                </label>
-                                <div x-show="deed.application_type === 'specific' && (!deed.application_specific_area || !deed.application_sell_area)" class="mt-2 text-red-500 text-sm">
-                                    সুনির্দিষ্ট দাগের জন্য সকল তথ্য পূরণ করুন
-                                </div>
-                            </div>
-                            
-                            <!-- Multiple Plots Option -->
-                            <div x-show="deed.application_type === 'multiple'" class="p-4 border border-green-200 rounded-lg bg-green-50">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    আবেদনকৃত 
-                                    <input type="text" x-model="deed.application_other_areas" @input="validateApplicationAreaFields(deed)" class="form-input mx-2" style="width: 100px; display: inline;" placeholder=" " :class="{'border-red-500': deed.application_type === 'multiple' && !deed.application_other_areas}">
-                                    <span class="text-red-500">*</span> দাগসহ বিভিন্ন দাগ উল্লেখ করে মোট 
-                                    <input type="text" x-model="deed.application_total_area" @input="validateApplicationAreaFields(deed)" class="form-input mx-2" style="width: 100px; display: inline;" placeholder=" " :class="{'border-red-500': deed.application_type === 'multiple' && !deed.application_total_area}">
-                                    <span class="text-red-500">*</span> একরের কাতে 
-                                    <input type="text" x-model="deed.application_sell_area_other" @input="validateApplicationAreaFields(deed)" class="form-input mx-2" style="width: 100px; display: inline;" placeholder=" " :class="{'border-red-500': deed.application_type === 'multiple' && !deed.application_sell_area_other}">
-                                    <span class="text-red-500">*</span> একর বিক্রয়
-                                </label>
-                                <div x-show="deed.application_type === 'multiple' && (!deed.application_other_areas || !deed.application_total_area || !deed.application_sell_area_other)" class="mt-2 text-red-500 text-sm">
-                                    বিভিন্ন দাগের জন্য সকল তথ্য পূরণ করুন
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- New Possession Section -->
-                    <div class="form-section md:col-span-2">
-                        <label class="font-semibold text-gray-700 mb-2"> দখলের বর্ণনা:</label>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">i) দলিলের বিবরণ ও হাতনকশায় আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা?</label>
-                                <div class="radio-group">
-                                    <label class="flex items-center">
-                                        <input type="radio" :name="'possession_deed_' + index" value="yes" x-model="deed.possession_deed" class="mr-2">
-                                        <span>হ্যাঁ</span>
-                                    </label>
-                                    <label class="flex items-center">
-                                        <input type="radio" :name="'possession_deed_' + index" value="no" x-model="deed.possession_deed" class="mr-2">
-                                        <span>না</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    iii) যে সকল দাগে দখল উল্লেখ করা 
-                                    <input type="text" x-model="deed.mentioned_areas" class="form-input ml-2" style="width: 250px; display: inline;" placeholder=" ">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Special Details Section -->
-                    <div class="form-section md:col-span-2">
-                        <label class="font-semibold text-gray-700 mb-2">প্রযোজ্যক্ষেত্রে দলিলের বিশেষ বিবরণ:</label>
-                        <textarea x-model="deed.special_details" rows="4" class="form-input w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical" placeholder="বিশেষ বিবরণ লিখুন..."></textarea>
-                    </div>
-                    
-                    <!-- Tax Information Section -->
-                    <div class="form-section md:col-span-2">
-                        <label class="font-semibold text-gray-700 mb-2">খারিজের তথ্য:</label>
-                        <textarea x-model="deed.tax_info" rows="4" class="form-input w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical" placeholder="খারিজের তথ্য লিখুন..."></textarea>
-                    </div>
-
-                </div>
-            </div>
-        </template>
-
-        <!-- Inheritance Transfer Forms -->
-        <template x-for="(inheritance, index) in inheritance_records" :key="'inheritance_' + index">
-            <div class="record-card mb-4">
-                <h5 x-text="'ওয়ারিশ #' + (index + 1)" class="text-lg font-semibold mb-3"></h5>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="floating-label">
-                        <input type="text" :id="'inheritance_previous_owner_name_' + index" x-model="inheritance.previous_owner_name" placeholder=" ">
-                        <label :for="'inheritance_previous_owner_name_' + index">পূর্ববর্তী মালিকের নাম<span class="text-red-500">*</span></label>
-                    </div>
-
-                    <div class="floating-label">
-                        <select x-model="inheritance.has_death_cert">
-                            <option value="yes">হ্যাঁ</option>
-                            <option value="no">না</option>
-                        </select>
-                        <label>ওয়ারিশান সনদ দাখিল করা হয়েছে কিনা</label>
-                    </div>
-                    <div class="floating-label md:col-span-2">
-                        <textarea rows="3" x-model="inheritance.heirship_certificate_info" class="form-input w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical" placeholder="ওয়ারিশ সনদের বিবরণ লিখুন..."></textarea>
-                        <label>ওয়ারিশান সনদের বিবরণ <span class="text-red-500">*</span></label>
-                    </div>
-                </div>
-            </div>
-        </template>
-
-        <!-- RS Record Form -->
-        <template x-for="(rs, index) in rs_records" :key="'rs_' + index">
-            <div class="record-card mb-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <h5 x-text="'আরএস রেকর্ড #' + (index + 1)" class="text-lg font-semibold mb-3"></h5>
+                <!-- Card Header with Type and Title -->
+                <div class="flex items-center justify-between mb-3">
+                    <h5 x-text="item.title" class="text-lg font-semibold"></h5>
                     <div class="flex items-center space-x-2">
-                        <label for="">
-                            <input type="checkbox" :id="'rs_record_dp_khatian_' + index" x-model="rs.dp_khatian" class="form-checkbox mr-2">
-                            ডিপি খতিয়ান
-                        </label>
+                        <span x-text="item.description" class="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded"></span>
+                        <button type="button" @click="removeFromTransferSequence(item.id)" class="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-50 transition-colors duration-200" title="মুছুন">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </button>
                     </div>
                 </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <template x-for="(owner, ownerIdx) in rs.owner_names" :key="ownerIdx">
-                            <div class="flex items-center mb-2">
-                                <input type="text" :id="'rs_record_owner_name_' + index + '_' + ownerIdx" x-model="owner.name" class="form-input flex-1" placeholder="আরএস মালিকের নাম">
-                                <label :for="'rs_record_owner_name_' + index + '_' + ownerIdx" class="ml-2">আরএস মালিকের নাম</label>
-                                <button type="button" @click="removeRsRecordOwner(index, ownerIdx)" x-show="rs.owner_names.length > 1" class="btn-danger ml-2" title="মালিকের নাম মুছুন">×</button>
+
+                <!-- Deed Transfer Form -->
+                <template x-if="item.type === 'deed'">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Multiple Donors -->
+                        <div>
+                            <template x-for="(donor, donorIdx) in item.data.donor_names" :key="donorIdx">
+                                <div class="flex items-center mb-2">
+                                    <input type="text" :id="'deed_donor_name_' + item.id + '_' + donorIdx" x-model="donor.name" class="form-input flex-1" placeholder="দলিলের দাতা ও পিতা/স্বামীর নাম">
+                                    <label :for="'deed_donor_name_' + item.id + '_' + donorIdx" class="ml-2">দলিলের দাতা ও পিতা/স্বামীর নাম</label>
+                                    <button type="button" @click="item.data.donor_names.splice(donorIdx, 1)" x-show="item.data.donor_names.length > 1" class="btn-danger ml-2" title="দাতার নাম মুছুন">×</button>
+                                </div>
+                            </template>
+                            <button type="button" @click="item.data.donor_names.push({'name': ''})" class="btn-success mt-2">+ দলিলের দাতা ও পিতা/স্বামীর নাম যোগ করুন</button>
+                        </div>
+                        <!-- Multiple Recipients -->
+                        <div>
+                            <template x-for="(recipient, recipientIdx) in item.data.recipient_names" :key="recipientIdx">
+                                <div class="flex items-center mb-2">
+                                    <input type="text" :id="'deed_recipient_name_' + item.id + '_' + recipientIdx" x-model="recipient.name" class="form-input flex-1" placeholder="দলিলের গ্রহীতা ও পিতা/স্বামীর নাম">
+                                    <label :for="'deed_recipient_name_' + item.id + '_' + recipientIdx" class="ml-2">দলিলের গ্রহীতা ও পিতা/স্বামীর নাম</label>
+                                    <button type="button" @click="item.data.recipient_names.splice(recipientIdx, 1)" x-show="item.data.recipient_names.length > 1" class="btn-danger ml-2" title="গ্রহীতার নাম মুছুন">×</button>
+                                </div>
+                            </template>
+                            <button type="button" @click="item.data.recipient_names.push({'name': ''})" class="btn-success mt-2">+ দলিলের গ্রহীতা ও পিতা/স্বামীর নাম যোগ করুন</button>
+                        </div>
+                        <div class="floating-label">
+                            <input type="text" :id="'deed_number_' + item.id" x-model="item.data.deed_number" placeholder=" ">
+                            <label :for="'deed_number_' + item.id">দলিল নম্বর<span class="text-red-500">*</span></label>
+                        </div>
+                        <div class="floating-label">
+                            <input type="text" :id="'deed_date_' + item.id" x-model="item.data.deed_date" placeholder="দিন/মাস/বছর">
+                            <label :for="'deed_date_' + item.id">দলিলের তারিখ<span class="text-red-500">*</span></label>
+                        </div>
+                        <div class="floating-label">
+                            <input type="text" x-model="item.data.sale_type">
+                            <label>দলিলের ধরন</label>
+                        </div>
+
+                        <!-- Application Area Section -->
+                        <div class="form-section md:col-span-2">
+                            <label class="font-semibold text-gray-700 mb-2"> আবেদনকৃত দাগে বিক্রয়ের ধরন: <span class="text-red-500">*</span></label>
+                            <div class="space-y-4">
+                                <!-- Radio button selection -->
+                                <div class="mb-4">
+                                    <div class="radio-group">
+                                        <label class="flex items-center mb-2 p-2 rounded" :class="item.data.application_type === 'specific' ? 'bg-blue-100 border border-blue-300' : 'bg-gray-50 border border-gray-200'">
+                                            <input type="radio" :name="'application_type_' + item.id" value="specific" x-model="item.data.application_type" @change="handleApplicationTypeChange(item.data)" class="mr-2">
+                                            <span class="font-medium">সুনির্দিষ্ট দাগ</span>
+                                        </label>
+                                        <label class="flex items-center p-2 rounded" :class="item.data.application_type === 'multiple' ? 'bg-green-100 border border-green-300' : 'bg-gray-50 border border-gray-200'">
+                                            <input type="radio" :name="'application_type_' + item.id" value="multiple" x-model="item.data.application_type" @change="handleApplicationTypeChange(item.data)" class="mr-2">
+                                            <span class="font-medium">বিভিন্ন দাগ</span>
+                                        </label>
+                                    </div>
+                                    <!-- Validation Error Message -->
+                                    <div x-show="getApplicationAreaValidation(item.data).hasError" class="mt-2 text-red-500 text-sm">
+                                        <span x-text="getApplicationAreaValidation(item.data).message"></span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Specific Plot Option -->
+                                <div x-show="item.data.application_type === 'specific'" class="p-4 border border-blue-200 rounded-lg bg-blue-50">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        আবেদনকৃত 
+                                        <input type="text" x-model="item.data.application_specific_area" @input="validateApplicationAreaFields(item.data)" class="form-input mx-2" style="width: 100px; display: inline;" placeholder=" " :class="{'border-red-500': item.data.application_type === 'specific' && !item.data.application_specific_area}">
+                                        <span class="text-red-500">*</span> দাগে সুনির্দিষ্টভাবে 
+                                        <input type="text" x-model="item.data.application_sell_area" @input="validateApplicationAreaFields(item.data)" class="form-input mx-2" style="width: 100px; display: inline;" placeholder=" " :class="{'border-red-500': item.data.application_type === 'specific' && !item.data.application_sell_area}">
+                                        <span class="text-red-500">*</span> একর বিক্রয়
+                                    </label>
+                                    <div x-show="item.data.application_type === 'specific' && (!item.data.application_specific_area || !item.data.application_sell_area)" class="mt-2 text-red-500 text-sm">
+                                        সুনির্দিষ্ট দাগের জন্য সকল তথ্য পূরণ করুন
+                                    </div>
+                                </div>
+                                
+                                <!-- Multiple Plots Option -->
+                                <div x-show="item.data.application_type === 'multiple'" class="p-4 border border-green-200 rounded-lg bg-green-50">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        আবেদনকৃত 
+                                        <input type="text" x-model="item.data.application_other_areas" @input="validateApplicationAreaFields(item.data)" class="form-input mx-2" style="width: 100px; display: inline;" placeholder=" " :class="{'border-red-500': item.data.application_type === 'multiple' && !item.data.application_other_areas}">
+                                        <span class="text-red-500">*</span> দাগসহ বিভিন্ন দাগ উল্লেখ করে মোট 
+                                        <input type="text" x-model="item.data.application_total_area" @input="validateApplicationAreaFields(item.data)" class="form-input mx-2" style="width: 100px; display: inline;" placeholder=" " :class="{'border-red-500': item.data.application_type === 'multiple' && !item.data.application_total_area}">
+                                        <span class="text-red-500">*</span> একরের কাতে 
+                                        <input type="text" x-model="item.data.application_sell_area_other" @input="validateApplicationAreaFields(item.data)" class="form-input mx-2" style="width: 100px; display: inline;" placeholder=" " :class="{'border-red-500': item.data.application_type === 'multiple' && !item.data.application_sell_area_other}">
+                                        <span class="text-red-500">*</span> একর বিক্রয়
+                                    </label>
+                                    <div x-show="item.data.application_type === 'multiple' && (!item.data.application_other_areas || !item.data.application_total_area || !item.data.application_sell_area_other)" class="mt-2 text-red-500 text-sm">
+                                        বিভিন্ন দাগের জন্য সকল তথ্য পূরণ করুন
+                                    </div>
+                                </div>
                             </div>
-                        </template>
-                        <button type="button" @click="addRsRecordOwner(index)" class="btn-success mt-2">+ আরএস মালিকের নাম যোগ করুন</button>
+                        </div>
+                        
+                        <!-- New Possession Section -->
+                        <div class="form-section md:col-span-2">
+                            <label class="font-semibold text-gray-700 mb-2"> দখলের বর্ণনা:</label>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">i) দলিলের বিবরণ ও হাতনকশায় আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা?</label>
+                                    <div class="radio-group">
+                                        <label class="flex items-center">
+                                            <input type="radio" :name="'possession_deed_' + item.id" value="yes" x-model="item.data.possession_deed" class="mr-2">
+                                            <span>হ্যাঁ</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="radio" :name="'possession_deed_' + item.id" value="no" x-model="item.data.possession_deed" class="mr-2">
+                                            <span>না</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        iii) যে সকল দাগে দখল উল্লেখ করা 
+                                        <input type="text" x-model="item.data.mentioned_areas" class="form-input ml-2" style="width: 250px; display: inline;" placeholder=" ">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Special Details Section -->
+                        <div class="form-section md:col-span-2">
+                            <label class="font-semibold text-gray-700 mb-2">প্রযোজ্যক্ষেত্রে দলিলের বিশেষ বিবরণ:</label>
+                            <textarea x-model="item.data.special_details" rows="4" class="form-input w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical" placeholder="বিশেষ বিবরণ লিখুন..."></textarea>
+                        </div>
+                        
+                        <!-- Tax Information Section -->
+                        <div class="form-section md:col-span-2">
+                            <label class="font-semibold text-gray-700 mb-2">খারিজের তথ্য:</label>
+                            <textarea x-model="item.data.tax_info" rows="4" class="form-input w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical" placeholder="খারিজের তথ্য লিখুন..."></textarea>
+                        </div>
                     </div>
-                    <div class="floating-label">
-                        <input type="text" :id="'rs_record_plot_no_' + index" x-model="rs.plot_no" placeholder=" ">
-                        <label :for="'rs_record_plot_no_' + index">আরএস দাগ নম্বর</label>
+                </template>
+
+                <!-- Inheritance Transfer Form -->
+                <template x-if="item.type === 'inheritance'">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="floating-label">
+                            <input type="text" :id="'inheritance_previous_owner_name_' + item.id" x-model="item.data.previous_owner_name" placeholder=" ">
+                            <label :for="'inheritance_previous_owner_name_' + item.id">পূর্ববর্তী মালিকের নাম<span class="text-red-500">*</span></label>
+                        </div>
+
+                        <div class="floating-label">
+                            <select x-model="item.data.has_death_cert">
+                                <option value="yes">হ্যাঁ</option>
+                                <option value="no">না</option>
+                            </select>
+                            <label>ওয়ারিশান সনদ দাখিল করা হয়েছে কিনা</label>
+                        </div>
+                        <div class="floating-label md:col-span-2">
+                            <textarea rows="3" x-model="item.data.heirship_certificate_info" class="form-input w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-vertical" placeholder="ওয়ারিশ সনদের বিবরণ লিখুন..."></textarea>
+                            <label>ওয়ারিশান সনদের বিবরণ <span class="text-red-500">*</span></label>
+                        </div>
                     </div>
-                    <div class="floating-label">
-                        <input type="text" :id="'rs_record_khatian_no_' + index" x-model="rs.khatian_no" placeholder=" ">
-                        <label :for="'rs_record_khatian_no_' + index">আরএস খতিয়ান নম্বর</label>
+                </template>
+
+                <!-- RS Record Form -->
+                <template x-if="item.type === 'rs'">
+                    <div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                            <div></div>
+                            <div class="flex items-center space-x-2">
+                                <label for="">
+                                    <input type="checkbox" :id="'rs_record_dp_khatian_' + item.id" x-model="item.data.dp_khatian" class="form-checkbox mr-2">
+                                    ডিপি খতিয়ান
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <template x-for="(owner, ownerIdx) in item.data.owner_names" :key="ownerIdx">
+                                    <div class="flex items-center mb-2">
+                                        <input type="text" :id="'rs_record_owner_name_' + item.id + '_' + ownerIdx" x-model="owner.name" class="form-input flex-1" placeholder="আরএস মালিকের নাম">
+                                        <label :for="'rs_record_owner_name_' + item.id + '_' + ownerIdx" class="ml-2">আরএস মালিকের নাম</label>
+                                        <button type="button" @click="item.data.owner_names.splice(ownerIdx, 1)" x-show="item.data.owner_names.length > 1" class="btn-danger ml-2" title="মালিকের নাম মুছুন">×</button>
+                                    </div>
+                                </template>
+                                <button type="button" @click="item.data.owner_names.push({'name': ''})" class="btn-success mt-2">+ আরএস মালিকের নাম যোগ করুন</button>
+                            </div>
+                            <div class="floating-label">
+                                <input type="text" :id="'rs_record_plot_no_' + item.id" x-model="item.data.plot_no" placeholder=" ">
+                                <label :for="'rs_record_plot_no_' + item.id">আরএস দাগ নম্বর</label>
+                            </div>
+                            <div class="floating-label">
+                                <input type="text" :id="'rs_record_khatian_no_' + item.id" x-model="item.data.khatian_no" placeholder=" ">
+                                <label :for="'rs_record_khatian_no_' + item.id">আরএস খতিয়ান নম্বর</label>
+                            </div>
+                            <div class="floating-label">
+                                <input type="text" :id="'rs_record_land_amount_' + item.id" x-model="item.data.land_amount" placeholder=" " 
+                                       @input="item.data.land_amount = formatNumberInput($event.target.value)"
+                                       pattern="[০-৯0-9\.]+" title="শুধুমাত্র সংখ্যা এবং দশমিক বিন্দু অনুমোদিত">
+                                <label :for="'rs_record_land_amount_' + item.id">আরএস দাগে জমির পরিমাণ (একর)</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="floating-label">
-                        <input type="text" :id="'rs_record_land_amount_' + index" x-model="rs.land_amount" placeholder=" " 
-                               @input="rs.land_amount = $parent.formatNumberInput($event.target.value)"
-                               pattern="[০-৯0-9\.]+" title="শুধুমাত্র সংখ্যা এবং দশমিক বিন্দু অনুমোদিত">
-                        <label :for="'rs_record_land_amount_' + index">আরএস দাগে জমির পরিমাণ (একর)</label>
-                    </div>
-                    
-                    
-                </div>
+                </template>
             </div>
         </template>
         
         <!-- Action Buttons at Bottom -->
         <div class="flex flex-wrap gap-4 mt-6">
-            <button type="button" @click="addDeedTransfer()" class="btn-primary">দলিলমূলে হস্তান্তর যোগ করুন</button>
-            <button type="button" @click="addInheritanceRecord()" class="btn-primary">ওয়ারিশমূলে হস্তান্তর যোগ করুন</button>
-            <button type="button" @click="addRsRecord()" :disabled="rs_record_disabled" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200" :class="{ 'opacity-50 cursor-not-allowed': rs_record_disabled }" x-show="acquisition_record_basis === 'SA'">আরএস রেকর্ড যোগ করুন</button>
-            <button type="button" @click="nextStep()" class="btn-success">উপরোক্ত মালিকই আবেদনকারী</button>
+            <button type="button" @click="addDeedTransfer()" class="btn-primary flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                দলিলমূলে হস্তান্তর যোগ করুন
+            </button>
+            <button type="button" @click="addInheritanceRecord()" class="btn-primary flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                ওয়ারিশমূলে হস্তান্তর যোগ করুন
+            </button>
+            <button type="button" @click="addRsRecord()" :disabled="getRsRecordCount() >= 1" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center" :class="{ 'opacity-50 cursor-not-allowed': getRsRecordCount() >= 1 }" x-show="acquisition_record_basis === 'SA'">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                <span x-show="getRsRecordCount() === 0">আরএস রেকর্ড যোগ করুন</span>
+                <span x-show="getRsRecordCount() >= 1">আরএস রেকর্ড যোগ করা হয়েছে</span>
+            </button>
+            <button type="button" @click="nextStep()" class="btn-success flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                উপরোক্ত মালিকই আবেদনকারী
+            </button>
         </div>
     </div>
 

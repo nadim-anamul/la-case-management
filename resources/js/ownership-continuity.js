@@ -35,6 +35,9 @@
                 inheritance_records: [],
                 rs_records: [],
                 storySequence: [],
+                
+                // Unified sequence for chronological form rendering
+                transferSequence: [], // Will contain objects like {type: 'deed'|'inheritance'|'rs', data: {...}, order: number}
                 completedSteps: [],
                 currentStep: 'info',
                 rs_record_disabled: false,
@@ -60,6 +63,9 @@
                     
                     // Ensure all existing items have creation orders
                     this.ensureCreationOrders();
+                    
+                    // Rebuild transfer sequence from existing data
+                    this.rebuildTransferSequence();
                     
                     // Generate story sequence if empty
                     if (this.storySequence.length === 0) {
@@ -354,7 +360,8 @@
                 addDeedTransfer() {
                     const creationOrder = this.getNextCreationOrder();
                     console.log('Adding deed transfer with creation order:', creationOrder);
-                    this.deed_transfers.push({
+                    
+                    const newDeedData = {
                         donor_names: [{'name': ''}],
                         recipient_names: [{'name': ''}],
                         deed_number: '',
@@ -371,8 +378,26 @@
                         special_details: '',
                         tax_info: '',
                         creationOrder: creationOrder
+                    };
+                    
+                    // Add to both old array (for backward compatibility) and new sequence
+                    this.deed_transfers.push(newDeedData);
+                    
+                    // Add to unified sequence
+                    this.transferSequence.push({
+                        type: 'deed',
+                        data: newDeedData,
+                        order: creationOrder,
+                        id: `deed_${creationOrder}`,
+                        title: `দলিল #${this.toBengaliNumber(this.deed_transfers.length)}`,
+                        description: 'দলিলমূলে হস্তান্তর'
                     });
+                    
                     this.updateStorySequence();
+                },
+                
+                getDeedCount() {
+                    return this.transferSequence.filter(item => item.type === 'deed').length;
                 },
                 
                 // Remove deed transfer
@@ -385,13 +410,32 @@
                 addInheritanceRecord() {
                     const creationOrder = this.getNextCreationOrder();
                     console.log('Adding inheritance record with creation order:', creationOrder);
-                    this.inheritance_records.push({
+                    
+                    const newInheritanceData = {
                         previous_owner_name: '',
                         has_death_cert: 'yes',
                         heirship_certificate_info: '',
                         creationOrder: creationOrder
+                    };
+                    
+                    // Add to both old array (for backward compatibility) and new sequence
+                    this.inheritance_records.push(newInheritanceData);
+                    
+                    // Add to unified sequence
+                    this.transferSequence.push({
+                        type: 'inheritance',
+                        data: newInheritanceData,
+                        order: creationOrder,
+                        id: `inheritance_${creationOrder}`,
+                        title: `ওয়ারিশ #${this.toBengaliNumber(this.inheritance_records.length)}`,
+                        description: 'ওয়ারিশমূলে হস্তান্তর'
                     });
+                    
                     this.updateStorySequence();
+                },
+                
+                getInheritanceCount() {
+                    return this.transferSequence.filter(item => item.type === 'inheritance').length;
                 },
                 
                 // Remove inheritance record
@@ -402,17 +446,129 @@
                 
                 // Add new RS record
                 addRsRecord() {
+                    // Check if we already have an RS record and this is SA basis
+                    if (this.acquisition_record_basis === 'SA' && this.rs_records.length >= 1) {
+                        console.log('Cannot add more than one RS record for SA basis');
+                        return;
+                    }
+                    
                     const creationOrder = this.getNextCreationOrder();
                     console.log('Adding RS record with creation order:', creationOrder);
-                    this.rs_records.push({
+                    
+                    const newRsData = {
                         owner_names: [{'name': ''}],
                         plot_no: '',
                         khatian_no: '',
                         land_amount: '',
                         dp_khatian: false,
                         creationOrder: creationOrder
+                    };
+                    
+                    // Add to both old array (for backward compatibility) and new sequence
+                    this.rs_records.push(newRsData);
+                    
+                    // Add to unified sequence
+                    this.transferSequence.push({
+                        type: 'rs',
+                        data: newRsData,
+                        order: creationOrder,
+                        id: `rs_${creationOrder}`,
+                        title: `আরএস রেকর্ড #${this.toBengaliNumber(this.rs_records.length)}`,
+                        description: 'আরএস রেকর্ড'
                     });
+                    
                     this.updateStorySequence();
+                },
+                
+                getRsCount() {
+                    return this.transferSequence.filter(item => item.type === 'rs').length;
+                },
+                
+                // Get RS record count for button logic
+                getRsRecordCount() {
+                    return this.rs_records.length;
+                },
+                
+                // Get transfer sequence sorted by order
+                getSortedTransferSequence() {
+                    return this.transferSequence.sort((a, b) => a.order - b.order);
+                },
+                
+                // Remove item from transfer sequence
+                removeFromTransferSequence(sequenceId) {
+                    const index = this.transferSequence.findIndex(item => item.id === sequenceId);
+                    if (index !== -1) {
+                        const item = this.transferSequence[index];
+                        
+                        // Remove from the appropriate array as well
+                        if (item.type === 'deed') {
+                            const deedIndex = this.deed_transfers.findIndex(deed => deed.creationOrder === item.order);
+                            if (deedIndex !== -1) {
+                                this.deed_transfers.splice(deedIndex, 1);
+                            }
+                        } else if (item.type === 'inheritance') {
+                            const inheritanceIndex = this.inheritance_records.findIndex(inheritance => inheritance.creationOrder === item.order);
+                            if (inheritanceIndex !== -1) {
+                                this.inheritance_records.splice(inheritanceIndex, 1);
+                            }
+                        } else if (item.type === 'rs') {
+                            const rsIndex = this.rs_records.findIndex(rs => rs.creationOrder === item.order);
+                            if (rsIndex !== -1) {
+                                this.rs_records.splice(rsIndex, 1);
+                                console.log('RS record removed, button should be re-enabled');
+                            }
+                        }
+                        
+                        // Remove from transfer sequence
+                        this.transferSequence.splice(index, 1);
+                        
+                        // Update story sequence
+                        this.updateStorySequence();
+                    }
+                },
+                
+                // Rebuild transfer sequence from existing data (for data loading)
+                rebuildTransferSequence() {
+                    this.transferSequence = [];
+                    
+                    // Add all deed transfers
+                    this.deed_transfers.forEach((deed, index) => {
+                        this.transferSequence.push({
+                            type: 'deed',
+                            data: deed,
+                            order: deed.creationOrder || (index + 1),
+                            id: `deed_${deed.creationOrder || (index + 1)}`,
+                            title: `দলিল #${this.toBengaliNumber(index + 1)}`,
+                            description: 'দলিলমূলে হস্তান্তর'
+                        });
+                    });
+                    
+                    // Add all inheritance records
+                    this.inheritance_records.forEach((inheritance, index) => {
+                        this.transferSequence.push({
+                            type: 'inheritance',
+                            data: inheritance,
+                            order: inheritance.creationOrder || (index + 1000), // Use high number to ensure order
+                            id: `inheritance_${inheritance.creationOrder || (index + 1000)}`,
+                            title: `ওয়ারিশ #${this.toBengaliNumber(index + 1)}`,
+                            description: 'ওয়ারিশমূলে হস্তান্তর'
+                        });
+                    });
+                    
+                    // Add all RS records
+                    this.rs_records.forEach((rs, index) => {
+                        this.transferSequence.push({
+                            type: 'rs',
+                            data: rs,
+                            order: rs.creationOrder || (index + 2000), // Use high number to ensure order
+                            id: `rs_${rs.creationOrder || (index + 2000)}`,
+                            title: `আরএস রেকর্ড #${this.toBengaliNumber(index + 1)}`,
+                            description: 'আরএস রেকর্ড'
+                        });
+                    });
+                    
+                    // Sort by order
+                    this.transferSequence.sort((a, b) => a.order - b.order);
                 },
                 
                 // Remove RS record
@@ -755,6 +911,16 @@
                     }
                     
                     return formatted;
+                },
+                
+                // Convert English numbers to Bengali
+                toBengaliNumber(number) {
+                    const englishToBengali = {
+                        '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪',
+                        '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯'
+                    };
+                    
+                    return number.toString().replace(/[0-9]/g, (digit) => englishToBengali[digit]);
                 }
             }));
             console.log('ownershipContinuity component registered successfully');
