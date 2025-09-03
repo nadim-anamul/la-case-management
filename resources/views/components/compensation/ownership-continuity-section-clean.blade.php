@@ -313,11 +313,11 @@
                             <div class="mb-4">
                                 <div class="radio-group">
                                     <label class="flex items-center mb-2 p-2 rounded" :class="deed.application_type === 'specific' ? 'bg-blue-100 border border-blue-300' : 'bg-gray-50 border border-gray-200'">
-                                        <input type="radio" :name="'application_type_' + index" value="specific" x-model="deed.application_type" @change="handleApplicationTypeChange(deed)" class="mr-2">
+                                        <input type="radio" value="specific" x-model="deed.application_type" @change="handleApplicationTypeChange(deed)" class="mr-2">
                                         <span class="font-medium">সুনির্দিষ্ট দাগ</span>
                                     </label>
                                     <label class="flex items-center p-2 rounded" :class="deed.application_type === 'multiple' ? 'bg-green-100 border border-green-300' : 'bg-gray-50 border border-gray-200'">
-                                        <input type="radio" :name="'application_type_' + index" value="multiple" x-model="deed.application_type" @change="handleApplicationTypeChange(deed)" class="mr-2">
+                                        <input type="radio" value="multiple" x-model="deed.application_type" @change="handleApplicationTypeChange(deed)" class="mr-2">
                                         <span class="font-medium">বিভিন্ন দাগ</span>
                                     </label>
                                 </div>
@@ -366,14 +366,14 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">i) দলিলের বিবরণ ও হাতনকশায় আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা?</label>
                                 <div class="radio-group">
-                                    <label class="flex items-center">
-                                        <input type="radio" :name="'possession_deed_' + index" value="yes" x-model="deed.possession_deed" class="mr-2">
-                                        <span>হ্যাঁ</span>
-                                    </label>
-                                    <label class="flex items-center">
-                                        <input type="radio" :name="'possession_deed_' + index" value="no" x-model="deed.possession_deed" class="mr-2">
-                                        <span>না</span>
-                                    </label>
+                                                                    <label class="flex items-center">
+                                    <input type="radio" value="yes" x-model="deed.possession_deed" class="mr-2">
+                                    <span>হ্যাঁ</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" value="no" x-model="deed.possession_deed" class="mr-2">
+                                    <span>না</span>
+                                </label>
                                 </div>
                             </div>
 
