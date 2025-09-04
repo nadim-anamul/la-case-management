@@ -43,6 +43,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Use CDN for Assets
+    |--------------------------------------------------------------------------
+    |
+    | This option allows you to force the use of CDN for Tailwind CSS and
+    | Alpine.js even in development environment. Set to true to use CDN.
+    |
+    */
+
+    'use_cdn' => (bool) env('USE_CDN', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application URL
     |--------------------------------------------------------------------------
     |

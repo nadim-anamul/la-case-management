@@ -348,7 +348,7 @@
                     <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.sa_info.sa_total_land_in_plot') ?? '' }}</p>
                 </div>
                 <div>
-                    <label class="font-semibold text-gray-700">SA উক্ত খতিয়ানে জমির পরিমাণ:</label>
+                    <label class="font-semibold text-gray-700">SA খতিয়ানে উক্ত দাগে জমির পরিমাণ:</label>
                     <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.sa_info.sa_land_in_khatian') ?? '' }}</p>
                 </div>
             </div>

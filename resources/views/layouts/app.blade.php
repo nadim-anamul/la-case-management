@@ -6,8 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'LA ক্ষতিপূরণ ম্যানেজমেন্ট')</title>
     
-    @if(app()->environment('production'))
-        <!-- Production: Use CDN for Tailwind CSS and Alpine.js -->
+    @if(app()->environment('production') || config('app.use_cdn', false))
+        <!-- Production or CDN: Use CDN for Tailwind CSS and Alpine.js -->
         <script src="https://cdn.tailwindcss.com"></script>
         <script>
             tailwind.config = {
@@ -40,12 +40,15 @@
     @else
         <!-- Development: Use Vite for local build -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <!-- Include Alpine.js for development if not using CDN -->
+        <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @endif
     
     <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap" rel="stylesheet">
 
     <!-- Page-specific Styles -->
     @yield('styles')
+    @stack('styles')
 
     <style>
         body { font-family: 'Tiro Bangla', serif; }
@@ -59,5 +62,6 @@
     </main>
     <!-- Page-specific Scripts -->
     @yield('scripts')
+    @stack('scripts')
 </body>
 </html>

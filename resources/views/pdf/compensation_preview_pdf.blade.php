@@ -286,7 +286,7 @@
                     <label>SA দাগে মোট জমি: {{ $compensation->bnDigits($compensation->ownership_details['sa_info']['sa_total_land_in_plot'] ?? '') }}</label>
                 </div>
                 <div class="info-item">
-                    <label>SA উক্ত খতিয়ানে জমির পরিমাণ: {{ $compensation->getBengaliNestedValue('ownership_details.sa_info.sa_land_in_khatian') ?? '' }}</label>
+                    <label>SA খতিয়ানে উক্ত দাগে জমির পরিমাণ: {{ $compensation->getBengaliNestedValue('ownership_details.sa_info.sa_land_in_khatian') ?? '' }}</label>
                 </div>
             </div>
             
