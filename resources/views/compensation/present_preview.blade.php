@@ -140,7 +140,7 @@
                 <br><br>
                 <div class="text-right font-bold">
                   ভূমি অধিগ্রহণ কর্মকর্তা <br>
-                  বগুড়া
+                  {{ $compensation->district ?? '…………………………….' }}
                 </div>
               </td>
               <td class="border border-black p-4"></td>

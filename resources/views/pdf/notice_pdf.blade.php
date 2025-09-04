@@ -78,7 +78,7 @@
         <div class="notice-header">
             <h1 style="font-size: 16px; font-weight: bold; margin: 0;">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</h1>
             <h2 style="font-size: 14px; font-weight: bold; margin: 3px 0;">জেলা প্রশাসকের কার্যালয়</h2>
-            <h2 style="font-size: 14px; font-weight: bold; margin: 3px 0;">বগুড়া</h2>
+            <h2 style="font-size: 14px; font-weight: bold; margin: 3px 0;">{{ $compensation->district ?? '…………………………….' }}</h2>
             <h3 style="font-size: 13px; margin: 3px 0;">(ভূমি অধিগ্রহণ শাখা)</h3>
         </div>
 
@@ -210,7 +210,7 @@
 
             <div class="notice-signature">
                 <p style="margin: 5px 0;">ভূমি অধিগ্রহণ কর্মকর্তা</p>
-                <p style="margin: 5px 0;">বগুড়া</p>
+                <p style="margin: 5px 0;">{{ $compensation->district ?? '…………………………….' }}</p>
             </div>
         </div>
     </div>

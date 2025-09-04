@@ -152,7 +152,7 @@
             <br><br>
             <div class="text-right font-bold">
               <p>ভূমি অধিগ্রহণ কর্মকর্তা</p>
-              <p>বগুড়া</p>
+              <p>{{ $compensation->district ?? '…………………………….' }}</p>
             </div>
           </td>
           <td class="border border-black p-4"></td>

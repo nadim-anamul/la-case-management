@@ -33,7 +33,7 @@
         <div class="text-center">
             <h1 class="text-xl font-bold">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</h1>
             <h2 class="text-lg font-bold">জেলা প্রশাসকের কার্যালয়</h2>
-            <h2 class="text-lg font-bold">বগুড়া</h2>
+            <h2 class="text-lg font-bold">{{ $compensation->district ?? '…………………………….' }}</h2>
             <h3>(ভূমি অধিগ্রহণ শাখা)</h3>
         </div>
 
@@ -162,7 +162,7 @@
 
         <div class="mt-20 text-right font-bold">
             <p>ভূমি অধিগ্রহণ কর্মকর্তা</p>
-            <p>বগুড়া</p>
+            <p>{{ $compensation->district ?? '…………………………….' }}</p>
         </div>
     </div>
 </div>
