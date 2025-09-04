@@ -801,6 +801,17 @@
                         this.currentStep = 'transfers';
                     } else if (this.currentStep === 'transfers') {
                         this.currentStep = 'applicant';
+                        this.$nextTick(() => {
+                            const section = this.$refs.applicantSection;
+                            if (section && typeof section.scrollIntoView === 'function') {
+                                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                            // Focus first input in applicant section
+                            const firstInput = this.$refs.applicantName;
+                            if (firstInput && typeof firstInput.focus === 'function') {
+                                firstInput.focus();
+                            }
+                        });
                     }
                     this.updateCompletedSteps();
                 },

@@ -162,7 +162,7 @@
                     </div>
                     <div class="floating-label">
                         <input type="text" id="ownership_sa_land_in_khatian" x-model="sa_info.sa_land_in_khatian" placeholder=" " pattern="[০-৯0-9\.]+" @input="formatNumberInput($event.target.value, $event.target)">
-                        <label for="ownership_sa_land_in_khatian">উক্ত SA খতিয়ানে জমির পরিমাণ (একর)</label>
+                        <label for="ownership_sa_land_in_khatian">SA খতিয়ানে উক্ত দাগে জমির পরিমাণ</label>
                     </div>
                 </div>
             </div>

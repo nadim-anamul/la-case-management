@@ -162,7 +162,7 @@
                     </div>
                     <div class="floating-label">
                         <input type="text" id="ownership_sa_land_in_khatian" x-model="sa_info.sa_land_in_khatian" placeholder=" " pattern="[০-৯0-9\.]+" @input="formatNumberInput($event.target.value, $event.target)">
-                        <label for="ownership_sa_land_in_khatian">উক্ত SA খতিয়ানে জমির পরিমাণ (একর)</label>
+                        <label for="ownership_sa_land_in_khatian">SA খতিয়ানে উক্ত দাগে জমির পরিমাণ</label>
                     </div>
                 </div>
             </div>
@@ -507,7 +507,7 @@
     </div>
 
     <!-- Step 3: Applicant Owner Information -->
-    <div x-show="currentStep === 'applicant'" class="space-y-6">
+    <div x-show="currentStep === 'applicant'" class="space-y-6" x-ref="applicantSection">
         <h3 class="text-lg font-bold mb-4">ধাপ ৩: আবেদনকারীর খারিজ ও খাজনা</h3>
         
         <!-- Summary Section -->
@@ -601,7 +601,7 @@
             <h5 class="font-semibold text-blue-700 mb-2">খারিজের তথ্য</h5>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="floating-label">
-                    <input type="text" x-model="applicant_info.applicant_name" placeholder=" ">
+                    <input type="text" x-model="applicant_info.applicant_name" placeholder=" " x-ref="applicantName">
                     <label>আবেদনকারীর নাম</label>
                 </div>
                 <div class="floating-label">

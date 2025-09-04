@@ -82,8 +82,10 @@ trait BengaliDateTrait
      */
     public function amountToBengaliWords($amount): string
     {
-        $integerPart = (int) floor((float)$amount);
-        $fractionPart = (int) round(((float)$amount - $integerPart) * 100);
+        // Normalize to paisa first to avoid floating precision mismatch with number_format
+        $totalPaisa = (int) round(((float)$amount) * 100);
+        $integerPart = intdiv($totalPaisa, 100);
+        $fractionPart = $totalPaisa % 100;
 
         $takaWords = $this->toBanglaWordsInt($integerPart);
         $result = $takaWords . ' টাকা';
