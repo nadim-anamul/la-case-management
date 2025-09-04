@@ -871,17 +871,23 @@
                               @endif
                           @endif
                           
-                          @php $sourceTax = ($totalCompensation * floatval($compensation->source_tax_percentage)) / 100; $finalAmount = $totalCompensation - $sourceTax; @endphp
+                          @php
+                              // Round totals first, then compute tax and final to avoid display mismatches
+                              $displayTotal = round($totalCompensation, 2);
+                              $rawSourceTax = ($displayTotal * floatval($compensation->source_tax_percentage)) / 100;
+                              $displaySourceTax = round($rawSourceTax, 2);
+                              $finalAmount = round($displayTotal - $displaySourceTax, 2);
+                          @endphp
                           <!-- Total Row -->
                           <tr class="font-bold">
                               <td class="border border-black p-2 text-center" colspan="5">উৎস করসহ মোট প্রদেয় =</td>
-                              <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($totalCompensation, 2)) }}</td>
+                              <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($displayTotal, 2)) }}</td>
                           </tr>
                           
                           <!-- Source Tax Row -->
                           <tr>
                               <td class="border border-black p-2 text-center" colspan="5">{{ $compensation->bnDigits($compensation->source_tax_percentage) }}% উৎস কর (-)</td>
-                              <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($sourceTax, 2)) }}</td>
+                              <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($displaySourceTax, 2)) }}</td>
                           </tr>
                           
                           <!-- Final Amount Row -->
