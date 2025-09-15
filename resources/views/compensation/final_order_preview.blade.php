@@ -649,7 +649,7 @@
                   <br>
                   <strong>সার্বিক পর্যালোচনাঃ</strong></br>
                     @if(!empty($compensation->final_order['summary']))
-                        {{ $compensation->final_order['summary'] }}।
+                        {{ $compensation->final_order['summary'] }}
                     @endif
                   সার্বিক কাগজপত্রাদি পর্যালোচনা ও শুনানি অন্তে  প্রতীয়মান হয় যে আবেদনকারী 
                   @if($compensation->applicants && is_array($compensation->applicants) && count($compensation->applicants) > 0)
