@@ -5,7 +5,7 @@ echo "=================================="
 
 # Stop existing containers
 echo "🛑 Stopping existing containers..."
-docker compose -f docker-compose.server.yml down
+docker compose docker-compose.server.yml down
 
 # Clean up old builds
 echo "🧹 Cleaning up old builds..."
@@ -13,7 +13,7 @@ docker system prune -f
 
 # Rebuild and start containers
 echo "🐳 Rebuilding and starting containers..."
-docker compose -f docker-compose.server.yml up -d --build
+docker compose docker-compose.server.yml up -d --build
 
 # Wait for containers to be ready
 echo "⏳ Waiting for containers to be ready..."
@@ -21,11 +21,11 @@ sleep 30
 
 # Run database migrations first
 echo "🗄️ Running database migrations..."
-docker compose -f docker-compose.server.yml exec -T app php artisan migrate --force
+docker compose docker-compose.server.yml exec -T app php artisan migrate --force
 
 # Run database seeder
 echo "🌱 Running database seeder..."
-# docker compose -f docker-compose.server.yml exec -T app php artisan db:seed --force
+# docker compose docker-compose.server.yml exec -T app php artisan db:seed --force
 
 # Check if the application is responding
 echo "🔍 Checking application status..."
@@ -45,7 +45,7 @@ done
 
 if [ $attempt -gt $max_attempts ]; then
     echo "❌ Application failed to start"
-    docker compose -f docker-compose.server.yml logs app
+    docker compose docker-compose.server.yml logs app
     exit 1
 fi
 
