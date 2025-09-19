@@ -665,16 +665,9 @@
                       @endphp
                       
                       @if($hasTaxInfo)
-                          <div class="ml-4 mt-2">                 
-                              <strong>{{ $compensation->bnDigits($taxSectionNumber) }}. খাজনার বর্ণনা:</strong></br> দাখিলকৃত খাজনার রশিদ যাচাই করে দেখা যায়, {{ $paidInName }}
-                              নামে {{ $compensation->bnDigits($holdingNo) }} নং হোল্ডিং এ {{ $compensation->bnDigits($paidLandAmount) }} একর জমির বিপরীতে বাংলা {{ $compensation->bnDigits($banglaYear) }} সন/ ইংরেজি {{ $compensation->bnDigits($englishYear) }} সাল পর্যন্ত ভূমি উন্নয়ন কর পরিশোধ অন্তে খাজনার রশিদ দাখিল করা হয়েছে।
-                          </div>
-                      @endif
-                      
-                      <!-- No-Claim Description Section (Independent) -->
-                      @if($kharijDetails)
                           <div class="ml-4 mt-2">
-                              <strong>{{ $compensation->bnDigits($noClaimSectionNumber) }}. না-দাবীর বর্ণনা</strong></br>{{ $kharijDetails }}
+                              <strong>{{ $compensation->bnDigits($taxSectionNumber) }}. খাজনার বর্ণনা:</strong></br> দাখিলকৃত খাজনার রশিদ যাচাই করে দেখা যায়, {{ $paidInName }}
+                              নামে {{ $compensation->bnDigits($holdingNo) }} নং হোল্ডিং এ {{ $compensation->bnDigits($paidLandAmount) }} একর জমির বিপরীতে বাংলা {{ $compensation->bnDigits($banglaYear) }} সন/ ইংরেজি {{ $compensation->bnDigits($englishYear) }} সাল পর্যন্ত ভূমি উন্নয়ন কর পরিশোধ অন্তে খাজনার রশিদ দাখিল করা হয়েছে। {{ $kharijDetails }}
                           </div>
                       @endif
                   @endif
