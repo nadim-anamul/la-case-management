@@ -25,7 +25,7 @@ docker compose -f docker-compose.server.yml exec -T app php artisan migrate --fo
 
 # Run database seeder
 echo "🌱 Running database seeder..."
-docker compose -f docker-compose.server.yml exec -T app php artisan db:seed --force
+# docker compose -f docker-compose.server.yml exec -T app php artisan db:seed --force
 
 # Check if the application is responding
 echo "🔍 Checking application status..."
