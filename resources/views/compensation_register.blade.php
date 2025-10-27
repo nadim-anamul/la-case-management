@@ -235,13 +235,18 @@
                             }
                             $scheduleText = implode("\n", $lines);
 
-                            // Order summary and officer signature
+                            // Order summary, comment, and officer signature
                             $officer = $item->signing_officer_name ?: '';
                             $orderSummary = '';
                             if (is_array($item->final_order ?? null) && !empty($item->final_order['summary'] ?? '')) {
                                 $orderSummary = (string) $item->final_order['summary'];
                             }
-                            $orderCell = trim(($orderSummary ? $orderSummary . "\n" : '') . ($officer ? ('স্বাক্ষরকারী: ' . $officer) : ''));
+                            $orderComment = $item->order_comment ?: '';
+                            $orderParts = [];
+                            if ($orderSummary) $orderParts[] = $orderSummary;
+                            if ($orderComment) $orderParts[] = $orderComment;
+                            if ($officer) $orderParts[] = 'স্বাক্ষরকারী: ' . $officer;
+                            $orderCell = implode("\n", $orderParts);
                         @endphp
                         <tr>
                             <td>{{ $item->getBengaliValue('case_number') }}</td>
