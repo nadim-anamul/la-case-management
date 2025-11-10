@@ -109,13 +109,19 @@ class Compensation extends Model
         $data = $this->toArray();
         
         // Convert numeric fields to Bengali for display
-        $numericFields = [
+		$numericFields = [
             'case_number', 'la_case_no', 'plot_no', 'sa_plot_no', 'rs_plot_no',
             'land_award_serial_no', 'tree_award_serial_no', 'infrastructure_award_serial_no',
             'jl_no', 'sa_khatian_no', 'rs_khatian_no',
-            'source_tax_percentage', 'tree_compensation', 'infrastructure_compensation',
+			'source_tax_percentage', 'tree_compensation', 'infrastructure_compensation',
             'land_schedule_sa_plot_no', 'land_schedule_rs_plot_no'
         ];
+		$amountFields = ['tree_compensation', 'infrastructure_compensation'];
+		foreach ($amountFields as $field) {
+			if (isset($data[$field]) && $data[$field] !== null && $data[$field] !== '') {
+				$data[$field] = $this->formatAmountBangla($data[$field]);
+			}
+		}
         
         foreach ($numericFields as $field) {
             if (isset($data[$field]) && $data[$field] !== null) {
@@ -141,8 +147,8 @@ class Compensation extends Model
                 if (isset($category['total_land'])) {
                     $category['total_land'] = $this->bnDigits($category['total_land']);
                 }
-                if (isset($category['total_compensation'])) {
-                    $category['total_compensation'] = $this->bnDigits($category['total_compensation']);
+				if (isset($category['total_compensation'])) {
+					$category['total_compensation'] = $this->formatAmountBangla($category['total_compensation'], null);
                 }
                 if (isset($category['applicant_land'])) {
                     $category['applicant_land'] = $this->bnDigits($category['applicant_land']);
@@ -239,11 +245,11 @@ class Compensation extends Model
         
         // Convert final order numeric fields
         if (isset($data['final_order']) && is_array($data['final_order'])) {
-            if (isset($data['final_order']['trees_crops']['amount'])) {
-                $data['final_order']['trees_crops']['amount'] = $this->bnDigits($data['final_order']['trees_crops']['amount']);
+			if (isset($data['final_order']['trees_crops']['amount'])) {
+				$data['final_order']['trees_crops']['amount'] = $this->formatAmountBangla($data['final_order']['trees_crops']['amount']);
             }
-            if (isset($data['final_order']['infrastructure']['amount'])) {
-                $data['final_order']['infrastructure']['amount'] = $this->bnDigits($data['final_order']['infrastructure']['amount']);
+			if (isset($data['final_order']['infrastructure']['amount'])) {
+				$data['final_order']['infrastructure']['amount'] = $this->formatAmountBangla($data['final_order']['infrastructure']['amount']);
             }
         }
         

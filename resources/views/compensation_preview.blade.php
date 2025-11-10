@@ -206,7 +206,7 @@
                             </div>
                             <div>
                                 <span class="font-medium text-gray-600">মোট ক্ষতিপূরণ:</span>
-                                <span class="text-gray-900">{{ $compensation->bnDigits($category['total_compensation'] ?? '') }}</span>
+                                <span class="text-gray-900">{{ $compensation->formatAmountBangla($category['total_compensation'] ?? null, null) }}</span>
                             </div>
                             <div>
                                 <span class="font-medium text-gray-600">আবেদনকারীর অধিগ্রহণকৃত জমি:</span>
@@ -1175,7 +1175,7 @@
                 @foreach($compensation->land_category as $index => $category)
                     @if($category['total_land'] && $category['total_compensation'])
                     <p class="text-gray-800 mb-2">
-                        আবেদনকারী উল্লিখিত দাগে <strong>{{ $compensation->bnDigits($category['category_name'] ?? '') }}</strong> জমি শ্রেণীর অধিগ্রহণকৃত {{ $compensation->bnDigits($category['total_land']) }} একর জমির মোট ক্ষতিপূরণ {{ $compensation->bnDigits($category['total_compensation']) }}
+                        আবেদনকারী উল্লিখিত দাগে <strong>{{ $compensation->bnDigits($category['category_name'] ?? '') }}</strong> জমি শ্রেণীর অধিগ্রহণকৃত {{ $compensation->bnDigits($category['total_land']) }} একর জমির মোট ক্ষতিপূরণ {{ $compensation->formatAmountBangla($category['total_compensation'], null) }}
                     </p>
                     @endif
                 @endforeach
@@ -1361,7 +1361,7 @@
                     </div>
                     <div>
                         <label class="font-semibold text-gray-700">ক্ষতিপূরণের পরিমাণ:</label>
-                        <p class="text-gray-900">{{ $compensation->bnDigits($compensation->final_order['trees_crops']['amount'] ?? '') }}</p>
+                        <p class="text-gray-900">{{ $compensation->formatAmountBangla($compensation->final_order['trees_crops']['amount'] ?? null) }}</p>
                     </div>
                 </div>
             </div>
@@ -1379,7 +1379,7 @@
                     </div>
                     <div>
                         <label class="font-semibold text-gray-700">ক্ষতিপূরণের পরিমাণ:</label>
-                        <p class="text-gray-900">{{ $compensation->bnDigits($compensation->final_order['infrastructure']['amount'] ?? '') }}</p>
+                        <p class="text-gray-900">{{ $compensation->formatAmountBangla($compensation->final_order['infrastructure']['amount'] ?? null) }}</p>
                     </div>
                 </div>
             </div>

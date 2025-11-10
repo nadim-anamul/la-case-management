@@ -94,16 +94,16 @@
                 @if($compensation->award_type && is_array($compensation->award_type))
                     @if(in_array('জমি', $compensation->award_type) && $compensation->land_category && is_array($compensation->land_category))
                         @foreach($compensation->land_category as $index => $category)
-                            <p class="ml-4">• জমির রোয়েদাদ নং {{ $compensation->bnDigits($compensation->land_award_serial_no ?? 'N/A') }}: {{ $category['category_name'] ?? 'N/A' }} - {{ $compensation->bnDigits(number_format($category['total_land'] ?? 0, 4)) }} একর জমি, ক্ষতিপূরণ: {{ $compensation->bnDigits(number_format($category['total_compensation'] ?? 0, 2)) }} টাকা, আবেদনকারীর দাবী :{{ (isset($category['applicant_land']) && is_numeric($category['applicant_land'])) ? $compensation->bnDigits(number_format($category['applicant_land'], 4)) : '..............' }} একর।</p>
+                            <p class="ml-4">• জমির রোয়েদাদ নং {{ $compensation->bnDigits($compensation->land_award_serial_no ?? 'N/A') }}: {{ $category['category_name'] ?? 'N/A' }} - {{ $compensation->bnDigits(number_format($category['total_land'] ?? 0, 4)) }} একর জমি, ক্ষতিপূরণ: {{ $compensation->formatAmountBangla($category['total_compensation'] ?? 0) }} টাকা, আবেদনকারীর দাবী :{{ (isset($category['applicant_land']) && is_numeric($category['applicant_land'])) ? $compensation->bnDigits(number_format($category['applicant_land'], 4)) : '..............' }} একর।</p>
                         @endforeach
                     @endif
                     
                     @if(in_array('গাছপালা/ফসল', $compensation->award_type) && $compensation->tree_compensation)
-                        <p class="ml-4">• গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->bnDigits($compensation->tree_award_serial_no ?? 'N/A') }}: ক্ষতিপূরণ {{ $compensation->bnDigits(number_format($compensation->tree_compensation, 2)) }} টাকা</p>
+                        <p class="ml-4">• গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->bnDigits($compensation->tree_award_serial_no ?? 'N/A') }}: ক্ষতিপূরণ {{ $compensation->formatAmountBangla($compensation->tree_compensation) }} টাকা</p>
                     @endif
                     
                     @if(in_array('অবকাঠামো', $compensation->award_type) && $compensation->infrastructure_compensation)
-                        <p class="ml-4">• অবকাঠামোর রোয়েদাদ নং {{ $compensation->bnDigits($compensation->infrastructure_award_serial_no ?? 'N/A') }}: ক্ষতিপূরণ {{ $compensation->bnDigits(number_format($compensation->infrastructure_compensation, 2)) }} টাকা</p>
+                        <p class="ml-4">• অবকাঠামোর রোয়েদাদ নং {{ $compensation->bnDigits($compensation->infrastructure_award_serial_no ?? 'N/A') }}: ক্ষতিপূরণ {{ $compensation->formatAmountBangla($compensation->infrastructure_compensation) }} টাকা</p>
                     @endif
                 @else
                     <p class="ml-4">কোন রোয়েদাদ পাওয়া যায়নি</p>

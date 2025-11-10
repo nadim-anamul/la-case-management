@@ -13,29 +13,14 @@ trait BengaliDateTrait
             return null;
         }
 
-        // If the date is already in Bengali format, return it as-is
-        if (preg_match('/^[০-৯]+\/[০-৯]+\/[০-৯]+$/', $englishDate)) {
-            return $englishDate;
-        }
-
-        // If the date contains Bengali numerals but is in Y-m-d format, convert numerals first
-        if (preg_match('/[০-৯]/u', $englishDate)) {
-            $englishDate = $this->enDigits($englishDate);
-        }
-
-        try {
-            $date = \Carbon\Carbon::parse($englishDate);
-            
-            // Convert day, month, year to Bengali numerals with proper padding
-            $day = $this->convertToBengaliNumerals(str_pad($date->day, 2, '0', STR_PAD_LEFT));
-            $month = $this->convertToBengaliNumerals(str_pad($date->month, 2, '0', STR_PAD_LEFT));
-            $year = $this->convertToBengaliNumerals($date->year);
-            
-            return $day . '/' . $month . '/' . $year;
-        } catch (\Exception $e) {
-            // If parsing fails, return the original value
-            return $englishDate;
-        }
+        $date = \Carbon\Carbon::parse($englishDate);
+        
+        // Convert day, month, year to Bengali numerals with proper padding
+        $day = $this->convertToBengaliNumerals(str_pad($date->day, 2, '0', STR_PAD_LEFT));
+        $month = $this->convertToBengaliNumerals(str_pad($date->month, 2, '0', STR_PAD_LEFT));
+        $year = $this->convertToBengaliNumerals($date->year);
+        
+        return $day . '/' . $month . '/' . $year;
     }
 
     /**
@@ -47,10 +32,6 @@ trait BengaliDateTrait
         $bengaliNumerals = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
         return str_replace($englishNumerals, $bengaliNumerals, (string)$number);
     }
-
-
-
-
 
     /**
      * Public helper: Convert any string or number's digits to Bengali.
@@ -65,89 +46,16 @@ trait BengaliDateTrait
         return $this->convertToBengaliNumerals((string)$value);
     }
 
-	/**
-	 * Format a money amount using Bengali digits with Bangla comma grouping
-	 * Example: 287734.59 -> ২,৮৭,৭৩৪.৫৯
-	 */
-	public function formatAmountBangla($amount, ?int $precision = 2, bool $trimTrailingZeros = false): string
-	{
-		if ($amount === null || $amount === '') {
-			return '';
-		}
-
-		$numericString = $this->enDigits((string)$amount);
-		$numericString = str_replace([',', ' '], '', $numericString);
-
-		$isNegative = false;
-		if (str_starts_with($numericString, '-')) {
-			$isNegative = true;
-			$numericString = substr($numericString, 1);
-		}
-
-		if ($numericString === '' || !preg_match('/^\d+(\.\d+)?$/', $numericString)) {
-			return $this->bnDigits($amount);
-		}
-
-		if ($precision !== null) {
-			$workingValue = number_format(
-				(float)($isNegative ? '-' . $numericString : $numericString),
-				$precision,
-				'.',
-				''
-			);
-
-			if ($workingValue[0] === '-') {
-				$isNegative = true;
-				$workingValue = substr($workingValue, 1);
-			}
-		} else {
-			$workingValue = $numericString;
-		}
-
-		[$integerPart, $fractionPart] = array_pad(explode('.', $workingValue, 2), 2, '');
-
-		$integerPart = ltrim($integerPart, '0');
-		if ($integerPart === '') {
-			$integerPart = '0';
-		}
-
-		$groupedInteger = $this->formatBanglaGrouping($integerPart);
-
-		if ($fractionPart !== '' && $trimTrailingZeros) {
-			$fractionPart = rtrim($fractionPart, '0');
-		}
-
-		$formatted = $groupedInteger;
-		if ($fractionPart !== '') {
-			$formatted .= '.' . $fractionPart;
-		} elseif ($precision !== null && $trimTrailingZeros && $precision > 0) {
-			// All zeros trimmed, nothing to append
-		} elseif ($precision !== null && !$trimTrailingZeros && $precision > 0) {
-			$formatted .= '.' . str_pad('', $precision, '0');
-		}
-
-		if ($isNegative && $formatted !== '0' && $formatted !== '0.' . str_repeat('0', (int)($precision ?? 0))) {
-			$formatted = '-' . $formatted;
-		}
-
-		return $this->convertToBengaliNumerals($formatted);
-	}
-
-	/**
-	 * Apply Bangla comma grouping (2-2-2-3) to an integer string
-	 */
-	private function formatBanglaGrouping(string $integerPart): string
-	{
-		if (strlen($integerPart) <= 3) {
-			return $integerPart;
-		}
-
-		$lastThree = substr($integerPart, -3);
-		$rest = substr($integerPart, 0, -3);
-		$restFormatted = preg_replace('/\B(?=(\d{2})+(?!\d))/', ',', $rest);
-
-		return ($restFormatted !== '' ? $restFormatted . ',' : '') . $lastThree;
-	}
+    /**
+     * Format a money amount using Bengali digits and fraction as "/xx"
+     * Example: 287734.59 -> ২,৮৭,৭৩৪/৫৯
+     */
+    public function formatAmountBangla($amount): string
+    {
+        $formatted = number_format((float)$amount, 2, '.', ',');
+        $formatted = str_replace('.', '/', $formatted);
+        return $this->convertToBengaliNumerals($formatted);
+    }
 
     /**
      * Convert amount to Bengali words (Taka and Poisha, no trailing "মাত্র")
@@ -155,10 +63,8 @@ trait BengaliDateTrait
      */
     public function amountToBengaliWords($amount): string
     {
-        // Normalize to paisa first to avoid floating precision mismatch with number_format
-        $totalPaisa = (int) round(((float)$amount) * 100);
-        $integerPart = intdiv($totalPaisa, 100);
-        $fractionPart = $totalPaisa % 100;
+        $integerPart = (int) floor((float)$amount);
+        $fractionPart = (int) round(((float)$amount - $integerPart) * 100);
 
         $takaWords = $this->toBanglaWordsInt($integerPart);
         $result = $takaWords . ' টাকা';
@@ -264,24 +170,6 @@ trait BengaliDateTrait
     }
 
     /**
-     * Convert Bengali numerals to English numerals (internal)
-     */
-    private function convertToEnglishNumerals($number)
-    {
-        $bengaliNumerals = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
-        $englishNumerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-        return str_replace($bengaliNumerals, $englishNumerals, (string)$number);
-    }
-
-    /**
-     * Public helper: Convert Bengali numerals to English numerals
-     */
-    public function enDigits($value)
-    {
-        return $this->convertToEnglishNumerals((string)$value);
-    }
-
-    /**
      * Process date fields in the request data
      */
     public function processBengaliDates($data)
@@ -289,6 +177,7 @@ trait BengaliDateTrait
         $dateFields = [
             'case_date',
             'ownership_details.deed_transfers.*.deed_date',
+            'ownership_details.inheritance_records.*.death_date',
             'ownership_details.applicant_info.kharij_date',
             'order_signature_date'
         ];

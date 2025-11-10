@@ -171,7 +171,7 @@
                           …………………………. নং ক্রমিকে
                       @endif
                       @if($compensation->tree_compensation)
-                          {{ $compensation->bnDigits(number_format($compensation->tree_compensation, 0)) }}
+                          {{ $compensation->formatAmountBangla($compensation->tree_compensation, 0) }}
                       @else
                           ………………………….
                       @endif
@@ -189,7 +189,7 @@
                           …………………………. নং ক্রমিকে
                       @endif
                       @if($compensation->infrastructure_compensation)
-                          {{ $compensation->bnDigits(number_format($compensation->infrastructure_compensation, 0)) }}
+                          {{ $compensation->formatAmountBangla($compensation->infrastructure_compensation, 0) }}
                       @else
                           ………………………….
                       @endif
@@ -807,7 +807,7 @@
                                           <td class="border border-black p-2 text-center">
                                               {{ $compensation->bnDigits(number_format($categoryAcquiredLand, 4)) }} একর @if(!empty($categoryName)) ({{ $categoryName }}) @endif জমির ক্ষতিপূরণ বাবদ
                                           </td>
-                                          <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($displayCompensation, 2)) }}</td>
+                                          <td class="border border-black p-2 text-center">{{ $compensation->formatAmountBangla($displayCompensation) }}</td>
                                       </tr>
                                       @endif
                                   @endforeach
@@ -829,7 +829,7 @@
                                   <td class="border border-black p-2 text-center">{{ $plotNo }}</td>
                                   <td class="border border-black p-2 text-center">-</td>
                                   <td class="border border-black p-2 text-center">গাছপালা/ফসলের ক্ষতিপূরণ বাবদ</td>
-                                  <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($treeCompensation, 2)) }}</td>
+                                  <td class="border border-black p-2 text-center">{{ $compensation->formatAmountBangla($treeCompensation) }}</td>
                               </tr>
                               @endif
                           @endif
@@ -849,7 +849,7 @@
                                   <td class="border border-black p-2 text-center">{{ $plotNo }}</td>
                                   <td class="border border-black p-2 text-center">-</td>
                                   <td class="border border-black p-2 text-center">অবকাঠামোর ক্ষতিপূরণ বাবদ</td>
-                                  <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($infrastructureCompensation, 2)) }}</td>
+                                  <td class="border border-black p-2 text-center">{{ $compensation->formatAmountBangla($infrastructureCompensation) }}</td>
                               </tr>
                               @endif
                           @endif
@@ -864,19 +864,19 @@
                           @endphp
                           <tr class="font-bold">
                               <td class="border border-black p-2 text-center" colspan="5">উৎস করসহ মোট প্রদেয় =</td>
-                              <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($displayTotal, 2)) }}</td>
+                              <td class="border border-black p-2 text-center">{{ $compensation->formatAmountBangla($displayTotal) }}</td>
                           </tr>
                           
                           <!-- Source Tax Row -->
                           <tr>
                               <td class="border border-black p-2 text-center" colspan="5">{{ $compensation->bnDigits($compensation->source_tax_percentage) }}% উৎস কর (-)</td>
-                              <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($displaySourceTax, 2)) }}</td>
+                              <td class="border border-black p-2 text-center">{{ $compensation->formatAmountBangla($displaySourceTax) }}</td>
                           </tr>
                           
                           <!-- Final Amount Row -->
                           <tr class="font-bold">
                               <td class="border border-black p-2 text-center" colspan="5">উৎস কর বাদে প্রদেয় টাকা =</td>
-                              <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($finalAmount, 2)) }}</td>
+                              <td class="border border-black p-2 text-center">{{ $compensation->formatAmountBangla($finalAmount) }}</td>
                           </tr>
                       </tbody>
                   </table>

@@ -137,7 +137,7 @@
                     <tr>
                         <td>{{ $category['category_name'] ?? '' }}</td>
                         <td>{{ $compensation->bnDigits($category['total_land'] ?? '') }} একর</td>
-                        <td>{{ $compensation->bnDigits($category['total_compensation'] ?? '') }}</td>
+                        <td>{{ $compensation->formatAmountBangla($category['total_compensation'] ?? null, null) }}</td>
                         <td>{{ $category['applicant_land'] ? $compensation->bnDigits($category['applicant_land']) . ' একর' : 'তথ্য নেই' }}</td>
                     </tr>
                     @endforeach
@@ -160,7 +160,7 @@
             @if($compensation->infrastructure_compensation)
             <div class="detail-item">
                 <label>অবকাঠামোর মোট ক্ষতিপূরণ:</label>
-                <span>{{ $compensation->bnDigits($compensation->infrastructure_compensation) }}</span>
+                <span>{{ $compensation->formatAmountBangla($compensation->infrastructure_compensation) }}</span>
             </div>
             @endif
         </div>
@@ -179,7 +179,7 @@
             @if($compensation->tree_compensation)
             <div class="detail-item">
                 <label>গাছপালার মোট ক্ষতিপূরণ:</label>
-                <span>{{ $compensation->bnDigits($compensation->tree_compensation) }}</span>
+                <span>{{ $compensation->formatAmountBangla($compensation->tree_compensation) }}</span>
             </div>
             @endif
         </div>
@@ -1182,7 +1182,7 @@
                 @foreach($compensation->land_category as $index => $category)
                     @if($category['total_land'] && $category['total_compensation'])
                     <p class="analysis-text mb-2">
-                        আবেদনকারী উল্লিখিত দাগে <strong>{{ $compensation->bnDigits($category['category_name'] ?? '') }}</strong> জমি শ্রেণীর অধিগ্রহণকৃত {{ $compensation->bnDigits($category['total_land']) }} একর জমির মোট ক্ষতিপূরণ {{ $compensation->bnDigits($category['total_compensation']) }}
+                        আবেদনকারী উল্লিখিত দাগে <strong>{{ $compensation->bnDigits($category['category_name'] ?? '') }}</strong> জমি শ্রেণীর অধিগ্রহণকৃত {{ $compensation->bnDigits($category['total_land']) }} একর জমির মোট ক্ষতিপূরণ {{ $compensation->formatAmountBangla($category['total_compensation'], null) }}
                     </p>
                     @endif
                 @endforeach
