@@ -50,7 +50,6 @@
       text-align: right;
       font-size: 10px;
       color: #94a3b8;
-      text-transform: uppercase;
     }
     /* Calculation table print safety and compact spacing */
     .calc-table { 
@@ -924,7 +923,7 @@
           </tbody>
         </table>
         <div class="pdf-signature">
-        ক্ষতিপূরণ কেস নং:{{ $compensation->bnDigits($compensation->case_number ?? '…………') }}, সিরিয়াল:{{ $compensation->bnDigits($compensation->id ?? '…………') }}
+        Compensation order:case no {{ $compensation->bnDigits($compensation->case_number ?? '…………') }}: SI {{ $compensation->bnDigits($compensation->id ?? '…………') }}
         </div>
     </div>
   </div>
