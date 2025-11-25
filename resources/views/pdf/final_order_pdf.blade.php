@@ -40,9 +40,17 @@
       padding: 6mm;
       background: white;
       box-sizing: border-box;
+      position: relative;
     }
     table {
       table-layout: fixed;
+    }
+    .pdf-signature {
+      margin-top: 20px;
+      text-align: right;
+      font-size: 10px;
+      color: #94a3b8;
+      text-transform: uppercase;
     }
     /* Calculation table print safety and compact spacing */
     .calc-table { 
@@ -915,6 +923,9 @@
             </tr>
           </tbody>
         </table>
+        <div class="pdf-signature">
+        ক্ষতিপূরণ কেস নং:{{ $compensation->bnDigits($compensation->case_number ?? '…………') }}, সিরিয়াল:{{ $compensation->bnDigits($compensation->id ?? '…………') }}
+        </div>
     </div>
   </div>
 </body>
